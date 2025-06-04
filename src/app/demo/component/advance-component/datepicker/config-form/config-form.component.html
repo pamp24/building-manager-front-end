@@ -1,0 +1,144 @@
+<div class="dp-page-content">
+  <div class="row">
+    <div class="col-sm-6 col-lg-4">
+      @if (isValidConfig('minValidation')) {
+        <div class="dp-option">
+          <app-card cardTitle="Min-Date Validation (minDate)">
+            <div class="">
+              <div class="dp-option-playground">
+                <dp-date-picker
+                  [config]="{ format: localFormat }"
+                  [formControl]="minValidation"
+                  [mode]="pickerMode().startsWith('daytime') ? 'daytime' : 'day'"
+                  id="minDatePicker"
+                  placeholder="Select a min date"
+                  theme="dp-material"
+                ></dp-date-picker>
+              </div>
+            </div>
+          </app-card>
+        </div>
+      }
+    </div>
+
+    <div class="col-sm-6 col-lg-4">
+      @if (isValidConfig('maxValidation')) {
+        <div class="dp-option">
+          <app-card cardTitle="Max-Date Validation (maxDate)">
+            <div class="">
+              <div class="dp-option-playground">
+                <dp-date-picker
+                  [config]="{ format: localFormat }"
+                  [formControl]="maxValidation"
+                  [mode]="pickerMode().startsWith('daytime') ? 'daytime' : 'day'"
+                  id="maxDatePicker"
+                  placeholder="Select a max date"
+                  theme="dp-material"
+                ></dp-date-picker>
+              </div>
+            </div>
+          </app-card>
+        </div>
+      }
+    </div>
+
+    <div class="col-sm-6 col-lg-4">
+      @if (isValidConfig('firstDayOfWeek')) {
+        <div class="dp-option">
+          <app-card cardTitle="First Day of The week">
+            <div class="dp-option-playground">
+              <select class="form-select" [formControl]="firstDayOfWeek" aria-label="Default select example" id="firstDayOfWeekSelect">
+                @for (day of DAYS; track day) {
+                  <option [value]="day">{{ day }}</option>
+                }
+              </select>
+            </div>
+          </app-card>
+        </div>
+      }
+    </div>
+
+    <div class="col-sm-6 col-lg-4">
+      @if (isValidConfig('monthFormat')) {
+        <div class="dp-option">
+          <app-card cardTitle="Month Format (monthFormat)">
+            <div class="dp-option-playground">
+              <input [formControl]="monthFormat" id="monthFormatInput" />
+            </div>
+          </app-card>
+        </div>
+      }
+    </div>
+
+    <div class="col-sm-6 col-lg-4">
+      @if (isValidConfig('min')) {
+        <div class="dp-option">
+          <app-card cardTitle="Min Selectable Date (min)">
+            <div class="dp-option-playground">
+              <dp-date-picker
+                [config]="{ format: localFormat }"
+                [formControl]="min"
+                [mode]="pickerMode().startsWith('daytime') ? 'daytime' : 'day'"
+                id="minSelectable"
+                placeholder="Select a min date"
+                theme="dp-material"
+              ></dp-date-picker>
+            </div>
+          </app-card>
+        </div>
+      }
+    </div>
+
+    <div class="col-sm-6 col-lg-4">
+      @if (isValidConfig('max')) {
+        <div class="dp-option">
+          <app-card cardTitle="Max Selectable Date (max)">
+            <div class="dp-option-playground">
+              <dp-date-picker
+                [config]="{ format: localFormat }"
+                [formControl]="max"
+                [mode]="pickerMode().startsWith('daytime') ? 'daytime' : 'day'"
+                id="maxSelectable"
+                placeholder="Select a max date"
+                theme="dp-material"
+              ></dp-date-picker>
+            </div>
+          </app-card>
+        </div>
+      }
+    </div>
+
+    <div class="col-sm-6 col-lg-4">
+      @if (isValidConfig('showNearMonthDays')) {
+        <div class="dp-option">
+          <app-card cardTitle="Show near Month Days (Show Near Month Days)">
+            <div class="dp-option-playground">
+              <label class="px-2 monthdayshow">
+                Show
+                <input
+                  class="ms-2"
+                  [formControl]="showNearMonthDays"
+                  [value]="true"
+                  id="showNearMonthDaysRadio"
+                  name="showNearMonthDays"
+                  type="radio"
+                />
+              </label>
+              <label class="monthdayshow">
+                Hide
+                <input
+                  class="ms-2"
+                  [formControl]="showNearMonthDays"
+                  [value]="false"
+                  id="hideNearMonthDaysRadio"
+                  name="showNearMonthDays"
+                  type="radio"
+                />
+              </label>
+            </div>
+          </app-card>
+        </div>
+      }
+    </div>
+  </div>
+</div>
