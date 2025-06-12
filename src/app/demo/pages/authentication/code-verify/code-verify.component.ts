@@ -23,6 +23,12 @@ export class CodeVerifyComponent {
     },
     {
       mas: 'Please enter verification code. Character 4'
-    }
+    },
+    {
+      mas: 'Please enter verification code. Character 3'
+    },
+    {
+      mas: 'Please enter verification code. Character 3'
+    },
   ];
 }
