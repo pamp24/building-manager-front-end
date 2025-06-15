@@ -84,7 +84,7 @@ export const NavigationItems: NavigationItem[] = [
     title: 'Widget',
     type: 'group',
     icon: 'icon-navigation',
-    role: [Role.Admin, Role.User],
+    role: [Role.Admin],
     children: [
       {
         id: 'statistics',

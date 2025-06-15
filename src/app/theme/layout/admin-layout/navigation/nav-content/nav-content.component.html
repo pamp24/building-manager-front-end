@@ -46,9 +46,9 @@
         <div class="avatar avatar-xs btn-link-secondary" ngbDropdown>
           <i antIcon theme="outline" type="right" ngbDropdownToggle></i>
           <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-            <button ngbDropdownItem (click)="logout()">Logout</button>
-            <button ngbDropdownItem [routerLink]="['/user/user-profile']">Profile</button>
-            <button ngbDropdownItem [routerLink]="['/user/account-profile']">My Account</button>
+            <button ngbDropdownItem (click)="logout()">{{'Logout' | translate}}</button>
+            <button ngbDropdownItem [routerLink]="['/user/user-profile']">{{'Profile' | translate}}</button>
+            <button ngbDropdownItem [routerLink]="['/user/account-profile']">{{'My Account' | translate}}</button>
           </div>
         </div>
       </div>

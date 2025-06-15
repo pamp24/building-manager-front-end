@@ -209,12 +209,14 @@ export class NavRightComponent implements OnInit {
 
   profile = [
     {
-      icon: 'edit',
-      title: 'Edit Profile'
+      icon: 'user',
+      title: 'View Profile',
+      url: '/user/account-profile'
     },
     {
-      icon: 'user',
-      title: 'View Profile'
+      icon: 'edit',
+      title: 'Edit Profile',
+      url: '/user/user-profile',
     },
     {
       icon: 'profile',

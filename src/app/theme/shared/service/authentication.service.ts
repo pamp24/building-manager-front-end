@@ -40,6 +40,7 @@ export class AuthenticationService {
   login(email: string, password: string) {
     return this.http.post<User>(`${environment.apiUrl}/api/account/login`, { email, password }).pipe(
       map((user: User) => {
+        console.log('User role from backend:', user.user.role);
         // Explicitly define the type for 'user'
         // Store user details and JWT token in local storage
         localStorage.setItem('currentUser', JSON.stringify(user));

@@ -26,10 +26,10 @@
             <a class="nav-link" [routerLink]="['/components/basic/alert']">Components</a>
           </li>
           <li class="nav-item ms-3 landing-header-title">
-            <a class="nav-link me-2" href="https://codedthemes.gitbook.io/mantis-angular/" target="_blank">Documentation</a>
+            <a class="nav-link me-2">Documentation</a>
           </li>
           <li class="nav-item ms-2">
-            <a class="btn btn-primary" href="https://codedthemes.com/item/mantis-angular-admin-template/" target="_blank">Purchase Now</a>
+            <a class="btn btn-primary" [routerLink]="['/register']">Εγγραφή</a>
           </li>
         </ul>
       </div>
@@ -50,18 +50,20 @@
         <div class="col-md-12 col-xl-5">
           <div class="hero-content">
             <h1 class="text-white mb-3 f-w-600 animate__animated animate__delay-1s animate__fadeInUpBig">
-              Carefully Crafted for your
-              <span class="text-primary">Caring Angular</span>
-              Project
+              Προσεκτικά σχεδιασμένο για το
+              <span class="text-primary">Φροντισμένο Angular</span>
+              Project σου
             </h1>
             <div class="mb-4 f-16 text-white animate__animated animate__delay-2s animate__fadeInUpBig">
-              Mantis Angular is a blazing-fast dashboard template built using the Bootstrap library.
+              Το Mantis Angular είναι ένα ταχύτατο template πίνακα ελέγχου που δημιουργήθηκε με τη βιβλιοθήκη Bootstrap.
             </div>
             <div class="live-button animate__animated animate__delay-4s animate__fadeInUpBig">
-              <a [routerLink]="['/components/basic/alert']" class="btn btn-outline-primary me-3 mt-3" target="_blank">Explore Components</a>
+              <a [routerLink]="['/components/basic/alert']" class="btn btn-outline-primary me-3 mt-3" target="_blank">
+                Εξερεύνησε τα Components
+              </a>
               <a [routerLink]="['/login']" class="btn btn-primary mt-3" target="_blank">
                 <i class="me-1" antIcon theme="outline" type="eye"></i>
-                Live Preview
+                Ζωντανή Προεπισκόπηση
               </a>
             </div>
             <img
@@ -78,16 +80,17 @@
     </div>
   </div>
 </header>
+
 <!-- [ Header ] End -->
 <!-- [ Why Mantis ] start -->
 <section class="why-mantis">
   <div class="container title">
     <div class="row justify-content-center text-center">
       <div class="col-md-10 col-xl-6">
-        <h6 class="text-primary mb-0">Mantis nailed it!</h6>
-        <h2 class="my-3 pt-2">Why Mantis?</h2>
+        <h6 class="text-primary mb-0">Το Mantis τα κατάφερε!</h6>
+        <h2 class="my-3 pt-2">Γιατί το Mantis;</h2>
         <p class="mb-0">
-          Customize everything with the Mantis Admin Dashboard Template built with the latest Angular 20 component library.
+          Προσαρμόστε τα πάντα με το πρότυπο διαχείρισης Mantis Admin Dashboard, κατασκευασμένο με τη νεότερη βιβλιοθήκη Angular 20.
         </p>
       </div>
     </div>
@@ -99,8 +102,8 @@
           <div class="card animate__animated animate__delay-1s animate__fadeInUp">
             <div class="card-body">
               <img src="assets/images/landing/img-feature1.svg" alt="img" class="img-fluid" />
-              <h5 class="my-3 pt-2">Professional Design</h5>
-              <p class="mb-0 text-muted">Mantis has a fully professional-grade user interface for any kind of backend project.</p>
+              <h5 class="my-3 pt-2">Επαγγελματικός Σχεδιασμός</h5>
+              <p class="mb-0 text-muted">Το Mantis διαθέτει μια πλήρως επαγγελματική διεπαφή χρήστη για κάθε είδους backend έργο.</p>
             </div>
           </div>
         } @placeholder {
@@ -113,8 +116,8 @@
           <div class="card animate__animated animate__delay-2s animate__fadeInUp">
             <div class="card-body">
               <img src="assets/images/landing/img-feature2.svg" alt="img" class="img-fluid" />
-              <h5 class="my-3 pt-2">Flexible Solution</h5>
-              <p class="mb-0 text-muted">Highly flexible to work around using the Mantis Angular Template.</p>
+              <h5 class="my-3 pt-2">Ευέλικτη Λύση</h5>
+              <p class="mb-0 text-muted">Πολύ ευέλικτο για να λειτουργεί με το Mantis Angular Template.</p>
             </div>
           </div>
         } @placeholder {
@@ -126,8 +129,8 @@
           <div class="card animate__animated animate__delay-3s animate__fadeInUp">
             <div class="card-body">
               <img src="assets/images/landing/img-feature3.svg" alt="img" class="img-fluid" />
-              <h5 class="my-3">Effective Documentation</h5>
-              <p class="mb-0 text-muted">Need help? Check out the detailed Documentation guide.</p>
+              <h5 class="my-3">Αποτελεσματική Τεκμηρίωση</h5>
+              <p class="mb-0 text-muted">Χρειάζεστε βοήθεια; Δείτε τον λεπτομερή οδηγό Τεκμηρίωσης.</p>
             </div>
           </div>
         } @placeholder {
@@ -137,16 +140,17 @@
     </div>
   </div>
 </section>
+
 <!-- [ Why Mantis ] End -->
 <!-- [ Complete Combo ] start -->
 <section class="pt-0">
   <div class="container title">
     <div class="row justify-content-center text-center">
       <div class="col-md-10 col-xl-6">
-        <h6 class="text-primary mb-0">Mantis for all</h6>
-        <h2 class="my-3">Complete Combo</h2>
+        <h6 class="text-primary mb-0">Mantis για όλους</h6>
+        <h2 class="my-3">Ολοκληρωμένο Πακέτο</h2>
         <p class="mb-0">
-          Whether you are a developer or a designer, Mantis serves the needs of all, No matter you are a novice or an expert.
+          Είτε είστε προγραμματιστής είτε σχεδιαστής, το Mantis καλύπτει τις ανάγκες όλων, είτε είστε αρχάριος είτε έμπειρος.
         </p>
       </div>
     </div>
@@ -156,14 +160,14 @@
       @defer (on viewport; prefetch on viewport) {
         <div class="card animate__animated animate__delay-1s animate__fadeInUp">
           <div class="card-body">
-            <h3 class="mb-3">Design Source File</h3>
-            <p class="mb-4 text-muted">Check the live preview of Mantis figma design file.</p>
+            <h3 class="mb-3">Αρχείο Σχεδίασης</h3>
+            <p class="mb-4 text-muted">Δείτε το live preview του αρχείου σχεδίασης Mantis στο Figma.</p>
             <a
               class="btn btn-outline-primary com-btn"
               href="https://www.figma.com/design/Phs1kIJuU0pfel0DapbhiW/Mantis-v2.1.3-Preview?node-id=117228-901&t=2c0arltUT0Jsx1nc-1"
               target="_blank"
             >
-              Preview Figma
+              Προβολή στο Figma
               <i theme="outline" type="send" antIcon class="ms-2"></i>
             </a>
           </div>
@@ -177,11 +181,11 @@
       @defer (on viewport; prefetch on viewport) {
         <div class="card animate__animated animate__delay-3s animate__fadeInUp">
           <div class="card-body bg-light-primary">
-            <h3 class="mb-3">Components</h3>
+            <h3 class="mb-3">Συστατικά (Components)</h3>
             <p class="mb-4 text-muted">
-              Check all components of Mantis in a single place with a search feature to ease your development while working.
+              Δείτε όλα τα components του Mantis σε ένα σημείο με δυνατότητα αναζήτησης για να διευκολύνετε την ανάπτυξή σας.
             </p>
-            <a class="btn btn-primary" [routerLink]="['/components/basic/alert']">View all components</a>
+            <a class="btn btn-primary" [routerLink]="['/components/basic/alert']">Προβολή όλων των components</a>
           </div>
           <div class="card-body bg-light-primary pb-0 pe-0">
             <img src="assets/images/landing/img-demo1.jpg" alt="img" class="img-fluid w-100" />
@@ -193,13 +197,13 @@
       @defer (on viewport; prefetch on viewport) {
         <div class="card animate__animated animate__delay-5s animate__fadeInUp">
           <div class="card-body">
-            <h3 class="mb-3">Documentation</h3>
+            <h3 class="mb-3">Τεκμηρίωση</h3>
             <p class="mb-4 text-muted">
-              From a quick start to detailed installation, the easy-to-use documentation guide helps you find answers and get started
-              quickly.
+              Από γρήγορη εκκίνηση μέχρι λεπτομερή εγκατάσταση, ο εύχρηστος οδηγός τεκμηρίωσης σας βοηθά να βρείτε απαντήσεις και να
+              ξεκινήσετε γρήγορα.
             </p>
             <a class="btn btn-outline-primary" href="https://codedthemes.gitbook.io/mantis-angular/" target="_blank">
-              Explore Documentation
+              Εξερεύνηση Τεκμηρίωσης
             </a>
           </div>
           <div class="card-body pb-0 pe-0">
@@ -212,16 +216,18 @@
     </div>
   </div>
 </section>
+
 <!-- [ Complete Combo ] End -->
 <!-- [ Figma Section ] Start -->
 <section class="pt-0">
   <div class="container title">
     <div class="row justify-content-center text-center">
       <div class="col-md-10 col-xl-6">
-        <h2 class="my-3">The Complete Figma Design System to Save Hundreds of Hours</h2>
+        <h2 class="my-3">Το πλήρες Figma Design System που εξοικονομεί εκατοντάδες ώρες</h2>
         <p class="mb-0">
-          Optimize your workflow with 100% auto layout, variables, smart variants, and WCAG accessibility. Enjoy super-smart global colors,
-          typography, and effects styles + variables, crafted for seamless design efficiency!
+          Βελτιστοποιήστε τη ροή εργασίας σας με 100% αυτόματο layout, μεταβλητές, έξυπνες παραλλαγές και συμμόρφωση WCAG για
+          προσβασιμότητα. Απολαύστε πανέξυπνα παγκόσμια χρώματα, τυπογραφία και στυλ εφέ + μεταβλητές, σχεδιασμένα για απόλυτη αποδοτικότητα
+          στο design!
         </p>
       </div>
     </div>
@@ -248,18 +254,19 @@
       <div class="col-6 d-flex justify-content-end">
         <a href="https://codedthemes.com/item/mantis-free-figma-ui-kit/" target="_blank" class="btn btn-primary d-flex align-items-center">
           <i class="ti ti-download me-2"></i>
-          Free Figma
+          Δωρεάν Figma
         </a>
       </div>
       <div class="col-6 d-flex justify-content-start">
         <a href="https://codedthemes.com/item/mantis-figma-ui-kit/" target="_blank" class="btn btn-primary d-flex align-items-center">
           <i class="ti ti-shopping-cart me-2"></i>
-          Buy Figma
+          Αγορά Figma
         </a>
       </div>
     </div>
   </div>
 </section>
+
 <!-- [ Figma Section ] End -->
 <!-- [ CTA ] start -->
 <section class="cta-block">
@@ -269,9 +276,9 @@
       <div class="row">
         <div class="col-md-12 col-xl-7 text-center text-xl-start">
           <h2 class="text-white mb-4 animate__animated animate__delay-1s animate__fadeInLeft">
-            Check Mantis
-            <span class="text-primary">Free</span>
-            Version Before Purchase
+            Δοκίμασε τη δωρεάν
+            <span class="text-primary">έκδοση</span>
+            του Mantis πριν την αγορά
           </h2>
           <a
             href="https://codedthemes.com/item/mantis-angular-free-admin-template/"
@@ -279,7 +286,7 @@
             class="btn btn-primary text-white animate__animated animate__delay-2s animate__fadeInLeft"
           >
             <i class="me-2" antIcon theme="outline" type="download"></i>
-            Download Now
+            Κατέβασε τώρα
           </a>
         </div>
       </div>
@@ -288,6 +295,7 @@
     <div></div>
   }
 </section>
+
 <!-- [ CTA ] End -->
 <!-- [ number ] start -->
 <section class="bg-white">
@@ -302,8 +310,8 @@
                   <h2 class="m-0">100+</h2>
                 </div>
                 <div class="flex-grow-1 ms-3">
-                  <h4 class="mb-1">Pages</h4>
-                  <p class="mb-0">Hand-crafted useful pages with the best user experience.</p>
+                  <h4 class="mb-1">Σελίδες</h4>
+                  <p class="mb-0">Χειροποίητες χρήσιμες σελίδες με την καλύτερη εμπειρία χρήστη.</p>
                 </div>
               </div>
             </div>
@@ -317,8 +325,8 @@
                   <h2 class="m-0">54+</h2>
                 </div>
                 <div class="flex-grow-1 ms-3">
-                  <h4 class="mb-1">Bootstrap Components</h4>
-                  <p class="mb-0">For consistent design and smooth user experience in your Angular projects.</p>
+                  <h4 class="mb-1">Συστατικά Bootstrap</h4>
+                  <p class="mb-0">Για συνεπή σχεδίαση και ομαλή εμπειρία χρήστη στα Angular projects σας.</p>
                 </div>
               </div>
             </div>
@@ -332,8 +340,8 @@
                   <h2 class="m-0">5+</h2>
                 </div>
                 <div class="flex-grow-1 ms-3">
-                  <h4 class="mb-1">Conceptual Apps</h4>
-                  <p class="mb-0">Find out 5+ working apps that suit your Angular Project.</p>
+                  <h4 class="mb-1">Εφαρμογές Conceptual</h4>
+                  <p class="mb-0">Ανακάλυψε πάνω από 5 λειτουργικές εφαρμογές που ταιριάζουν στο Angular project σου.</p>
                 </div>
               </div>
             </div>
@@ -345,6 +353,7 @@
     </div>
   </div>
 </section>
+
 <!-- [ number ] End -->
 <!-- [ light/dark ] start -->
 <section class="position-relative p-0 overflow-hidden">
@@ -376,11 +385,13 @@
     <div class="row justify-content-center text-center">
       <div class="col-md-10 col-xl-6">
         <h2 class="mb-3">
-          Create Beautiful Yet Powerful
+          Δημιουργήστε όμορφα αλλά και ισχυρά
           <span class="text-primary">Web Apps</span>
-          with Mantis Angular
+          με το Mantis Angular
         </h2>
-        <p class="mb-0">Create your powerful backend project using powerful design system of Mantis Angular Template.</p>
+        <p class="mb-0">
+          Δημιουργήστε το ισχυρό backend project σας χρησιμοποιώντας το πανίσχυρο design system του Mantis Angular Template.
+        </p>
       </div>
     </div>
   </div>
@@ -428,19 +439,22 @@
 </section>
 <!-- [ webapp ] End -->
 <!-- [ Why Mantis ] start -->
+
 <section class="client-block">
   <div class="container title">
     <div class="row justify-content-center text-center">
       <div class="col-md-10 col-xl-6">
-        <h6 class="text-primary mb-0">Multiple Tech Stack</h6>
-        <h2 class="my-3">Available Technology</h2>
+        <h6 class="text-primary mb-0">Πολλαπλά Τεχνολογικά Stack</h6>
+        <h2 class="my-3">Διαθέσιμες Τεχνολογίες</h2>
         <p class="mb-0">
-          Mantis is available in multiple technologies. Simply click to dive in and discover the perfect solution for your needs. Each sold
-          <a href="https://codedthemes.gitbook.io/mantis/mantis-eco-system" target="_blank" class="text-primary">separately.</a>
+          Το Mantis είναι διαθέσιμο σε πολλές τεχνολογίες. Απλά κάντε κλικ για να εξερευνήσετε και να ανακαλύψετε την ιδανική λύση για τις
+          ανάγκες σας. Κάθε πώληση
+          <a href="https://codedthemes.gitbook.io/mantis/mantis-eco-system" target="_blank" class="text-primary">ξεχωριστά.</a>
         </p>
       </div>
     </div>
   </div>
+
   <div class="container">
     <div class="row align-items-center justify-content-center mb-4 mb-md-5">
       @for (tech of techList; track tech; let i = $index) {

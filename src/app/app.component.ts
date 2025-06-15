@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
   private router = inject(Router);
 
   // public props
-  title = 'mantis';
+  title = 'Building Manager';
 
   // Life cycle events
   ngOnInit() {
