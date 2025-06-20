@@ -138,7 +138,7 @@ export class NavContentComponent implements AfterViewInit, OnInit {
   ngOnInit() {
     this.layout = MantisConfig.layout;
     const currentUser = this.authenticationService.currentUserValue;
-    const userRoles = currentUser?.user.role ? [currentUser.user.role] : [Role.Admin];
+    const userRoles = currentUser?.role ? [currentUser.role] : [Role.Admin];
     this.navigation = this.filterMenu(NavigationItems, userRoles);
   }
 
