@@ -1,67 +1,54 @@
-﻿// angular import
-import { Injectable, signal, inject } from '@angular/core';
+﻿import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-
-// project import
-import { environment } from 'src/environments/environment';
-import { User } from '../components/_helpers/user';
-
-// Import the 'map' operator from 'rxjs/operators'
 import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+
+import { AuthenticationResponse } from '../models/authentication-response.model';
+import { User } from 'src/app/theme/shared/components/_helpers/user';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
   private router = inject(Router);
   private http = inject(HttpClient);
 
-  private currentUserSignal = signal<User | null>(null);
-  isLogin: boolean = false;
+  private currentUser: User | null = null;
 
   constructor() {
-    // Initialize the signal with the current user from localStorage
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
-      this.currentUserSignal.set(JSON.parse(storedUser) as User);
-      this.isLogin = true;
+      this.currentUser = JSON.parse(storedUser) as User;
     }
   }
 
   public get currentUserValue(): User | null {
-    // Access the current user value from the signal
-    return this.currentUserSignal();
+    return this.currentUser;
   }
 
-  public get currentUserName(): string | null {
-    const currentUser = this.currentUserValue;
-    return currentUser ? currentUser.user.name : 'John Doe';
-  }
+  login(email: string, password: string): Observable<AuthenticationResponse> {
+    return this.http.post<AuthenticationResponse>(
+      'http://localhost:8080/api/v1/auth/authenticate',
+      { email, password }
+    ).pipe(
+      map((response: AuthenticationResponse) => {
+        localStorage.setItem('currentUser', JSON.stringify(response.user));
+        localStorage.setItem('token', response.token);
 
-  login(email: string, password: string) {
-    return this.http.post<User>(`${environment.apiUrl}/api/account/login`, { email, password }).pipe(
-      map((user: User) => {
-        console.log('User role from backend:', user.user.role);
-        // Explicitly define the type for 'user'
-        // Store user details and JWT token in local storage
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        this.isLogin = true;
-        // Update the signal with the new user
-        this.currentUserSignal.set(user);
-        return user;
+        this.currentUser = response.user;
+
+        return response;
       })
     );
   }
 
-  isLoggedIn() {
-    return this.isLogin;
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('token');
   }
 
   logout() {
-    // Remove user from local storage to log user out
     localStorage.removeItem('currentUser');
-    this.isLogin = false;
-    // Update the signal to null
-    this.currentUserSignal.set(null);
+    localStorage.removeItem('token');
+    this.currentUser = null;
     this.router.navigate(['/login']);
   }
 }

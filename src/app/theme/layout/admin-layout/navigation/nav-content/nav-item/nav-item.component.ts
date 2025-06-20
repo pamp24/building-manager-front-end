@@ -35,7 +35,7 @@ export class NavItemComponent implements OnInit {
     /*
     if any current user type not give to auto take admin role
     */
-    const CurrentUserRole = this.authenticationService.currentUserValue?.user.role || Role.Admin;
+    const CurrentUserRole = this.authenticationService.currentUserValue?.role || Role.Admin;
 
     /**
      * item parent role

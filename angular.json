@@ -93,7 +93,8 @@
               "buildTarget": "mantis:build:production"
             },
             "development": {
-              "buildTarget": "mantis:build:development"
+              "buildTarget": "mantis:build:development",
+              "proxyConfig": "src/proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

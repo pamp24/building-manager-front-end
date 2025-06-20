@@ -6,7 +6,7 @@
       </div>
       <div class="my-5">
         <ul class="nav nav-tabs admin-role d-block">
-          <div class="row g-2">
+          <!-- <div class="row g-2">
             @for (role of roles; track role.role) {
               <div class="col-sm-6">
                 <li class="nav-item">
@@ -16,7 +16,7 @@
                 </li>
               </div>
             }
-          </div>
+          </div> -->
         </ul>
         <div class="card">
           <div class="card-body">
@@ -32,7 +32,7 @@
                 <input
                   type="email"
                   id="email"
-                  [(ngModel)]="selectedRole.email"
+
                   formControlName="email"
                   class="form-control"
                   [ngClass]="{ 'is-invalid': submitted && formValues?.['email'].errors }"
@@ -50,12 +50,12 @@
                 <input
                   type="{{ showPassword ? 'text' : 'password' }}"
                   id="password"
-                  [(ngModel)]="selectedRole.password"
+
                   formControlName="password"
                   class="form-control"
                   [ngClass]="{ 'is-invalid': submitted && formValues?.['password'].errors }"
                 />
-                @if (selectedRole.password) {
+                <!-- @if (selectedRole.password) { -->
                   <i
                     antIcon
                     theme="outline"
@@ -63,7 +63,7 @@
                     id="togglePassword"
                     (click)="togglePasswordVisibility()"
                   ></i>
-                }
+                <!-- } -->
                 @if (submitted && formValues?.['password'].errors) {
                   <div class="invalid-feedback">
                     @if (formValues?.['password'].errors.required) {

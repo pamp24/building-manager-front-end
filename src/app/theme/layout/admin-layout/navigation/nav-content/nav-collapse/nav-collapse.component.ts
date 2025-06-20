@@ -42,7 +42,7 @@ export class NavCollapseComponent implements OnInit {
 
   ngOnInit() {
     this.themeLayout = MantisConfig.layout;
-    const currentUserRole = this.authenticationService.currentUserValue?.user.role || Role.Admin;
+    const currentUserRole = this.authenticationService.currentUserValue?.role || Role.Admin;
     const parentRoleValue = this.parentRole();
     const item = this.item();
     if (item.role && item.role.length > 0) {

@@ -6,20 +6,16 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 // project import
-import { SharedModule } from 'src/app/theme/shared/shared.module';
+
 import { AuthenticationService } from 'src/app/theme/shared/service/authentication.service';
 
 // rxjs import
-import { first } from 'rxjs/operators';
 import { IconService } from '@ant-design/icons-angular';
 import { EyeInvisibleOutline, EyeOutline } from '@ant-design/icons-angular/icons';
+import { AuthenticationResponse } from '../../../../theme/shared/models/authentication-response.model';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
 
-interface Roles {
-  name: string;
-  email: string;
-  password: string;
-  role: string;
-}
+
 
 @Component({
   selector: 'app-auth-login',
@@ -37,27 +33,7 @@ export class AuthLoginComponent implements OnInit {
   // public method
   showPassword: boolean = false;
 
-  roles: Roles[] = [
-    {
-      name: 'Admin',
-      email: 'admin@gmail.com',
-      password: 'Admin@123',
-      role: 'Admin'
-    },
-    {
-      name: 'User',
-      email: 'user@gmail.com',
-      password: 'User@123',
-      role: 'User'
-    }
-  ];
 
-  // Default to the first role
-  selectedRole = this.roles[0];
-
-  onSelectRole(role: Roles) {
-    this.selectedRole = role;
-  }
 
   loginForm!: FormGroup;
   loading = false;
@@ -102,29 +78,28 @@ export class AuthLoginComponent implements OnInit {
     return this.loginForm.controls;
   }
 
-  onSubmit() {
-    this.submitted = true;
+onSubmit() {
+  this.submitted = true;
 
-    // stop here if form is invalid
-    if (this.loginForm.invalid) {
-      return;
+  if (this.loginForm.invalid) return;
+
+  const { email, password } = this.loginForm.value;
+
+  this.authenticationService.login(email, password).subscribe({
+    next: (response: AuthenticationResponse) => {
+      console.log('User role from backend:', response.user.role);
+      localStorage.setItem('currentUser', JSON.stringify(response.user));
+      if (response.user.role && response.user.role.includes('Admin')) {
+        this.router.navigate(['/dashboard/default']);
+      } else {
+        this.router.navigate(['/dashboard/default']);
+      }
+    },
+    error: (err) => {
+      this.error = 'Λάθος email ή κωδικός';
     }
-
-    this.error = '';
-    this.loading = true;
-    this.authenticationService
-      .login(this.formValues?.['email']?.value, this.formValues?.['password']?.value)
-      .pipe(first())
-      .subscribe({
-        next: () => {
-          this.router.navigate(['/dashboard/default']);
-        },
-        error: (error) => {
-          this.error = error;
-          this.loading = false;
-        }
-      });
-  }
+  });
+}
 
   socialMedia = [
     { name: 'Google', logo: 'google.svg' },

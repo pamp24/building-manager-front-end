@@ -42,7 +42,7 @@ const routes: Routes = [
         canActivateChild: [AuthGuardChild],
         loadChildren: () => import('./demo/pages/authentication/authentication.module').then((m) => m.AuthenticationModule),
         data: {
-          roles: [Role.Admin, Role.User]
+          roles: ['Admin', 'User']
         }
       },
       {
@@ -50,7 +50,7 @@ const routes: Routes = [
         canActivateChild: [AuthGuardChild],
         loadChildren: () => import('./demo/pages/maintenance/maintenance.module').then((m) => m.MaintenanceModule),
         data: {
-          roles: [Role.Admin, Role.User]
+          roles: ['Admin', 'User']
         }
       }
     ]
@@ -63,27 +63,29 @@ const routes: Routes = [
       {
         path: 'dashboard',
         loadChildren: () => import('./demo/dashboard/dashboard.module').then((m) => m.DashboardModule),
-        data: { roles: [Role.Admin, Role.User] }
+        data: { 
+          roles: ['Admin', 'User'] 
+        }
       },
       {
         path: 'widget/statistics',
         loadComponent: () => import('./demo/widget/statistics/statistics.component').then((c) => c.StatisticsComponent),
         data: {
-          roles: [Role.Admin, Role.User]
+          roles: ['Admin', 'User']
         }
       },
       {
         path: 'widget/data',
         loadComponent: () => import('./demo/widget/widget-data/widget-data.component').then((c) => c.WidgetDataComponent),
         data: {
-          roles: [Role.Admin, Role.User]
+          roles: ['Admin', 'User']
         }
       },
       {
         path: 'widget/chart',
         loadComponent: () => import('./demo/widget/widget-chart/widget-chart.component').then((c) => c.WidgetChartComponent),
         data: {
-          roles: [Role.Admin, Role.User]
+          roles: ['Admin', 'User']
         }
       },
       {
