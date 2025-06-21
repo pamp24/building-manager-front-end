@@ -39,11 +39,12 @@ const routes: Routes = [
       },
       {
         path: 'auth',
-        canActivateChild: [AuthGuardChild],
         loadChildren: () => import('./demo/pages/authentication/authentication.module').then((m) => m.AuthenticationModule),
-        data: {
-          roles: ['Admin', 'User']
-        }
+        data: {}
+      },
+      {
+        path: 'code-verify',
+        loadComponent: () => import('./demo/pages/authentication/code-verify/code-verify.component').then((c) => c.CodeVerifyComponent)
       },
       {
         path: 'maintenance',
@@ -63,8 +64,8 @@ const routes: Routes = [
       {
         path: 'dashboard',
         loadChildren: () => import('./demo/dashboard/dashboard.module').then((m) => m.DashboardModule),
-        data: { 
-          roles: ['Admin', 'User'] 
+        data: {
+          roles: ['Admin', 'User']
         }
       },
       {

@@ -7,21 +7,31 @@
       <app-card [showHeader]="false" [padding]="30" cardClass="my-5">
         <div class="d-flex justify-content-between align-items-end mb-4">
           <h3 class="mb-0"><b>Εγγραφή</b></h3>
-          <a [routerLink]="[this.authenticationService.isLoggedIn() ? '/auth/login' : '/login']" class="link-primary">
-            Έχετε ήδη λογαριασμό;
-          </a>
+          <a [routerLink]="['/login']" class="link-primary">Έχετε ήδη λογαριασμό;</a>
         </div>
         <div class="row">
           <div class="col-md-6">
             <div class="form-group mb-3">
               <label class="form-label" for="First Name">Όνομα*</label>
-              <input type="text" id="First Name" class="form-control" placeholder="Όνομα" />
+              <input 
+              name="firstname"
+              [(ngModel)]="registerRequest.firstName" 
+              type="text" 
+              id="First Name" 
+              class="form-control" 
+              placeholder="Όνομα" />
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group mb-3">
               <label class="form-label" for="Last Name">Επίθετο</label>
-              <input type="text" id="Last Name" class="form-control" placeholder="Επίθετο" />
+              <input 
+              name="lastname"
+              [(ngModel)]="registerRequest.lastName" 
+              type="text" 
+              id="Last Name" 
+              class="form-control"
+               placeholder="Επίθετο" />
             </div>
           </div>
         </div>
@@ -31,11 +41,23 @@
         </div> -->
         <div class="form-group mb-3">
           <label class="form-label" for="Email">Διεύθυνση Email*</label>
-          <input type="email" id="Email" class="form-control" placeholder="Διεύθυνση Email" />
+          <input 
+          name="email"
+          [(ngModel)]="registerRequest.email" 
+          type="email" 
+          id="Email" 
+          class="form-control" 
+          placeholder="Διεύθυνση Email" />
         </div>
         <div class="form-group mb-3">
           <label class="form-label" for="Password">Κωδικός</label>
-          <input type="password" id="Password" class="form-control" placeholder="Κωδικός" />
+          <input 
+          name="password"
+          [(ngModel)]="registerRequest.password" 
+          type="password" 
+          id="Password" 
+          class="form-control" 
+          placeholder="Κωδικός" />
         </div>
         <p class="mt-4 text-sm text-muted">
           Με την εγγραφή σας, αποδέχεστε τους
@@ -44,7 +66,10 @@
           <a href="javascript:" class="text-primary">Πολιτική Απορρήτου</a>
         </p>
         <div class="d-grid mt-3">
-          <button type="button" class="btn btn-primary">Δημιουργία Λογαριασμού</button>
+          <button type="button" (click)="register()" class="btn btn-primary">Δημιουργία Λογαριασμού</button>
+        </div>
+        <div class="alert alert-danger" role="alert" *ngIf="errorMsg.length">
+          <p *ngFor="let msg of errorMsg">{{ msg }}</p>
         </div>
         <div class="saprator mt-3">
           <span>Εγγραφή μέσω</span>
@@ -80,13 +105,13 @@
         <div class="col my-1">
           <p class="m-0">
             Copyrights©
-            <a href="https://codedthemes.com/" target="_blank">Building Manager</a>
+            <a href="/" target="_blank">Building Manager</a>
           </p>
         </div>
         <div class="col-auto my-1">
           <ul class="list-inline footer-link mb-0">
             <li class="list-inline-item"><a [routerLink]="['/']">Αρχική Σελίδα</a></li>
-            <li class="list-inline-item"><a href="https://codedthemes.com/privacy-policy/">Πολιτική Απορρήτου</a></li>
+            <li class="list-inline-item"><a href="/">Πολιτική Απορρήτου</a></li>
             <li class="list-inline-item"><a [routerLink]="['/contact-us']">Επικοινωνία</a></li>
           </ul>
         </div>
