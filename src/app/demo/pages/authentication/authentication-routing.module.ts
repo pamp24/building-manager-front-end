@@ -48,7 +48,6 @@ const routes: Routes = [
         path: 'code-verify',
         loadComponent: () => import('./code-verify/code-verify.component').then((c) => c.CodeVerifyComponent),
         data: {
-          roles: [Role.Admin, Role.User]
         }
       }
     ]

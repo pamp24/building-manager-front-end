@@ -210,12 +210,12 @@ export class NavRightComponent implements OnInit {
   profile = [
     {
       icon: 'user',
-      title: 'View Profile',
+      title: 'Προβολή προφίλ',
       url: '/user/account-profile'
     },
     {
       icon: 'edit',
-      title: 'Edit Profile',
+      title: 'Επεξεργασία προφίλ',
       url: '/user/user-profile',
     },
     {
@@ -231,11 +231,11 @@ export class NavRightComponent implements OnInit {
   setting = [
     {
       icon: 'question-circle',
-      title: 'Support'
+      title: 'Υποστήριξη'
     },
     {
       icon: 'user',
-      title: 'Account Settings'
+      title: 'Ρυθμίσεις λογαριασμού'
     },
     {
       icon: 'lock',
@@ -247,7 +247,7 @@ export class NavRightComponent implements OnInit {
     },
     {
       icon: 'unordered-list',
-      title: 'History'
+      title: 'Ιστορικό'
     }
   ];
 

@@ -23,13 +23,15 @@ import {
   NgbModule,
   NgbAccordionModule,
   NgbCollapseModule,
-  NgbDatepickerModule
+  NgbDatepickerModule,
 } from '@ng-bootstrap/ng-bootstrap';
+import { CodeInputModule } from 'angular-code-input';
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
+    CodeInputModule,
     NgbDropdownModule,
     NgbNavModule,
     NgbTooltipModule,

@@ -29,7 +29,7 @@ export class AuthLoginComponent implements OnInit {
   private router = inject(Router);
   authenticationService = inject(AuthenticationService);
   private iconService = inject(IconService);
-
+  private errorMsg: string[] = [];
   // public method
   showPassword: boolean = false;
 
@@ -96,7 +96,12 @@ onSubmit() {
       }
     },
     error: (err) => {
-      this.error = 'Λάθος email ή κωδικός';
+      console.log(err);
+        if (err.error.validationErrors) {
+          this.errorMsg = err.error.validationErrors;
+        } else {
+          this.errorMsg.push(err.error.errorMsg);
+        }
     }
   });
 }

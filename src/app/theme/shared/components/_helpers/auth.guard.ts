@@ -20,22 +20,26 @@ export class AuthGuardChild implements CanActivateChild {
    * If the user is not logged in, redirects to the login page with the return URL and returns false.
    */
 
-  canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    const currentUser = this.authenticationService.currentUserValue;
+canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+  const currentUser = this.authenticationService.currentUserValue;
+  console.log('AuthGuardChild - currentUser:', currentUser);
+  console.log('AuthGuardChild - route.data:', route.data);
 
-    if (currentUser && this.authenticationService.isLoggedIn()) {
-      const { roles } = route.data;
-      if (roles && !roles.includes(currentUser.role)) {
-        // User not authorized, redirect to unauthorized page
-        this.router.navigate(['/unauthorized']);
-        return false;
-      }
-      // User is logged in and authorized for child routes
-      return true;
+  const roles: string[] = route.data && route.data['roles'] ? route.data['roles'] : [];
+  console.log('AuthGuardChild - roles:', roles);
+
+  if (currentUser && this.authenticationService.isLoggedIn()) {
+    if (roles.length > 0 && !roles.includes(currentUser.role)) {
+      console.log('AuthGuardChild - User not authorized, redirecting to /unauthorized');
+      this.router.navigate(['/unauthorized']);
+      return false;
     }
-
-    // User not logged in, redirect to login page
-    this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
-    return false;
+    console.log('AuthGuardChild - User logged in and authorized, allowing route');
+    return true;
   }
+
+  console.log('AuthGuardChild - User not logged in, redirecting to /login');
+  this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+  return false;
+}
 }

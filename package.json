@@ -38,6 +38,7 @@
     "@popperjs/core": "2.11.8",
     "@sweetalert2/ngx-sweetalert2": "13.0.0",
     "angular-calendar": "0.31.1",
+    "angular-code-input": "^2.0.0",
     "angular-notifier": "14.0.0",
     "angular-uploader": "8.41.1",
     "angularx-flatpickr": "8.1.0",

@@ -63,9 +63,18 @@ export const NavigationItems: NavigationItem[] = [
             url: '/dashboard/finance',
             breadcrumbs: false,
             role: [Role.Admin]
+          },
+          {
+            id: 'calendar',
+            title: 'Calendar',
+            type: 'item',
+            classes: 'nav-item',
+            url: '/calendar',
+            icon: 'calendar',
+            role: [Role.Admin, Role.User]
           }
         ]
-      },
+      }
       // {
       //   id: 'component',
       //   title: 'Components',
@@ -453,7 +462,7 @@ export const NavigationItems: NavigationItem[] = [
             url: '/user/user-card'
           }
         ]
-      },
+      }
       // {
       //   id: 'E Commerce',
       //   title: 'E-commerce',
@@ -909,14 +918,14 @@ export const NavigationItems: NavigationItem[] = [
             target: true,
             breadcrumbs: false
           },
-          {
-            id: 'code-verify',
-            title: 'Code Verification',
-            type: 'item',
-            url: '/auth/code-verify',
-            target: true,
-            breadcrumbs: false
-          }
+          // {
+          //   id: 'code-verify',
+          //   title: 'Code Verification',
+          //   type: 'item',
+          //   url: '/auth/code-verify',
+          //   target: true,
+          //   breadcrumbs: false
+          // }
         ]
       },
       {
@@ -987,7 +996,7 @@ export const NavigationItems: NavigationItem[] = [
         icon: 'dollar'
       }
     ]
-  },
+  }
   // {
   //   id: 'other',
   //   title: 'Other',

@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 
 import { AuthenticationResponse } from '../models/authentication-response.model';
 import { User } from 'src/app/theme/shared/components/_helpers/user';
+import { RegistrationRequest } from '../models/registration-request';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -26,10 +27,7 @@ export class AuthenticationService {
   }
 
   login(email: string, password: string): Observable<AuthenticationResponse> {
-    return this.http.post<AuthenticationResponse>(
-      'http://localhost:8080/api/v1/auth/authenticate',
-      { email, password }
-    ).pipe(
+    return this.http.post<AuthenticationResponse>('http://localhost:8080/api/v1/auth/authenticate', { email, password }).pipe(
       map((response: AuthenticationResponse) => {
         localStorage.setItem('currentUser', JSON.stringify(response.user));
         localStorage.setItem('token', response.token);
@@ -45,10 +43,17 @@ export class AuthenticationService {
     return !!localStorage.getItem('token');
   }
 
+  register(request: RegistrationRequest): Observable<AuthenticationResponse> {
+    return this.http.post<AuthenticationResponse>('http://localhost:8080/api/v1/auth/register', request);
+  }
+
   logout() {
     localStorage.removeItem('currentUser');
     localStorage.removeItem('token');
     this.currentUser = null;
     this.router.navigate(['/login']);
+  }
+  confirm(token: string) {
+    return this.http.post('http://localhost:8080/api/v1/auth/activate-account', { token });
   }
 }
