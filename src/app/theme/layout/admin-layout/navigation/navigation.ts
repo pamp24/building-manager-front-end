@@ -918,14 +918,14 @@ export const NavigationItems: NavigationItem[] = [
             target: true,
             breadcrumbs: false
           },
-          {
-            id: 'code-verify',
-            title: 'Code Verification',
-            type: 'item',
-            url: '/auth/code-verify',
-            target: true,
-            breadcrumbs: false
-          }
+          // {
+          //   id: 'code-verify',
+          //   title: 'Code Verification',
+          //   type: 'item',
+          //   url: '/auth/code-verify',
+          //   target: true,
+          //   breadcrumbs: false
+          // }
         ]
       },
       {
