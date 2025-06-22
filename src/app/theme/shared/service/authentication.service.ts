@@ -56,4 +56,14 @@ export class AuthenticationService {
   confirm(token: string) {
     return this.http.post('http://localhost:8080/api/v1/auth/activate-account', { token });
   }
+  sendResetPasswordEmail(email: string) {
+    console.log('Κλήση API για forgot-password με email:', email);
+    return this.http.post('http://localhost:8080/api/v1/auth/forgot-password', { email });
+  }
+  resetPassword(token: string, newPassword: string): Observable<any> {
+    return this.http.post('http://localhost:8080/api/v1/auth/reset-password', {
+      token,
+      newPassword
+    });
+  }
 }
