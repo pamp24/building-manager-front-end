@@ -871,112 +871,112 @@ export const NavigationItems: NavigationItem[] = [
     icon: 'icon-navigation',
     role: [Role.Admin, Role.User],
     children: [
-      {
-        id: 'authentication',
-        title: 'Authentication',
-        type: 'collapse',
-        icon: 'login',
-        role: [Role.Admin, Role.User],
-        children: [
-          {
-            id: 'login',
-            title: 'Login',
-            type: 'item',
-            url: '/auth/login',
-            target: true,
-            breadcrumbs: false
-          },
-          {
-            id: 'register',
-            title: 'Register',
-            type: 'item',
-            url: '/auth/register',
-            target: true,
-            breadcrumbs: false
-          },
-          {
-            id: 'forgot',
-            title: 'Forgot Password',
-            type: 'item',
-            url: '/auth/forgot-password',
-            target: true,
-            breadcrumbs: false
-          },
-          {
-            id: 'reset',
-            title: 'Reset Password',
-            type: 'item',
-            url: '/auth/reset-password',
-            target: true,
-            breadcrumbs: false
-          },
-          {
-            id: 'check-mail',
-            title: 'Check Mail',
-            type: 'item',
-            url: '/auth/check-mail',
-            target: true,
-            breadcrumbs: false
-          },
-          // {
-          //   id: 'code-verify',
-          //   title: 'Code Verification',
-          //   type: 'item',
-          //   url: '/auth/code-verify',
-          //   target: true,
-          //   breadcrumbs: false
-          // }
-        ]
-      },
-      {
-        id: 'maintenance',
-        title: 'Maintenance',
-        type: 'collapse',
-        icon: 'rocket',
-        role: [Role.Admin, Role.User],
-        children: [
-          {
-            id: 'error-404',
-            title: 'Error 404',
-            type: 'item',
-            url: '/maintenance/error-404',
-            target: true,
-            breadcrumbs: false
-          },
-          {
-            id: 'error-500',
-            title: 'Error 500',
-            type: 'item',
-            url: '/maintenance/error-500',
-            target: true,
-            breadcrumbs: false
-          },
-          {
-            id: 'error-401',
-            title: 'Error 401',
-            type: 'item',
-            url: '/maintenance/error-401',
-            target: true,
-            breadcrumbs: false
-          },
-          {
-            id: 'coming-soon',
-            title: 'Coming Soon',
-            type: 'item',
-            url: '/maintenance/coming-soon',
-            target: true,
-            breadcrumbs: false
-          },
-          {
-            id: 'under',
-            title: 'Under Construction',
-            type: 'item',
-            url: '/maintenance/under-construct',
-            target: true,
-            breadcrumbs: false
-          }
-        ]
-      },
+      // {
+      //   id: 'authentication',
+      //   title: 'Authentication',
+      //   type: 'collapse',
+      //   icon: 'login',
+      //   role: [Role.Admin, Role.User],
+      //   children: [
+      //     {
+      //       id: 'login',
+      //       title: 'Login',
+      //       type: 'item',
+      //       url: '/auth/login',
+      //       target: true,
+      //       breadcrumbs: false
+      //     },
+      //     {
+      //       id: 'register',
+      //       title: 'Register',
+      //       type: 'item',
+      //       url: '/auth/register',
+      //       target: true,
+      //       breadcrumbs: false
+      //     },
+      //     {
+      //       id: 'forgot',
+      //       title: 'Forgot Password',
+      //       type: 'item',
+      //       url: '/auth/forgot-password',
+      //       target: true,
+      //       breadcrumbs: false
+      //     },
+      //     {
+      //       id: 'reset',
+      //       title: 'Reset Password',
+      //       type: 'item',
+      //       url: '/auth/reset-password',
+      //       target: true,
+      //       breadcrumbs: false
+      //     },
+      //     {
+      //       id: 'check-mail',
+      //       title: 'Check Mail',
+      //       type: 'item',
+      //       url: '/auth/check-mail',
+      //       target: true,
+      //       breadcrumbs: false
+      //     },
+      //     {
+      //       id: 'code-verify',
+      //       title: 'Code Verification',
+      //       type: 'item',
+      //       url: '/auth/code-verify',
+      //       target: true,
+      //       breadcrumbs: false
+      //     }
+      //   ]
+      // },
+      // {
+      //   id: 'maintenance',
+      //   title: 'Maintenance',
+      //   type: 'collapse',
+      //   icon: 'rocket',
+      //   role: [Role.Admin, Role.User],
+      //   children: [
+      //     {
+      //       id: 'error-404',
+      //       title: 'Error 404',
+      //       type: 'item',
+      //       url: '/maintenance/error-404',
+      //       target: true,
+      //       breadcrumbs: false
+      //     },
+      //     {
+      //       id: 'error-500',
+      //       title: 'Error 500',
+      //       type: 'item',
+      //       url: '/maintenance/error-500',
+      //       target: true,
+      //       breadcrumbs: false
+      //     },
+      //     {
+      //       id: 'error-401',
+      //       title: 'Error 401',
+      //       type: 'item',
+      //       url: '/maintenance/error-401',
+      //       target: true,
+      //       breadcrumbs: false
+      //     },
+      //     {
+      //       id: 'coming-soon',
+      //       title: 'Coming Soon',
+      //       type: 'item',
+      //       url: '/maintenance/coming-soon',
+      //       target: true,
+      //       breadcrumbs: false
+      //     },
+      //     {
+      //       id: 'under',
+      //       title: 'Under Construction',
+      //       type: 'item',
+      //       url: '/maintenance/under-construct',
+      //       target: true,
+      //       breadcrumbs: false
+      //     }
+      //   ]
+      // },
       {
         id: 'contact-us',
         title: 'Contact Us',
