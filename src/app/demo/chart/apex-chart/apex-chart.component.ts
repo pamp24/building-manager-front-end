@@ -77,27 +77,27 @@ export class ApexChartComponent {
       mixedChart
     } = this.chartDB;
 
-    (this.barChart = barChart),
-      (this.barStackedChart = barStackedChart),
-      (this.barHorizontalChart = barHorizontalChart),
-      (this.barHStackChart = barHStackChart),
-      (this.pieChart = pieChart),
-      (this.donutChart = donutChart),
-      (this.radialChart = radialChart),
-      (this.customsAngleChart = customsAngleChart),
-      (this.lineChart = lineChart),
-      (this.realTimeChart = realTimeChart),
-      (this.areaChart = areaChart),
-      (this.dateTimeChart = dateTimeChart),
-      (this.mixedChart = mixedChart),
-      (this.lineAreaChart = lineAreaChart),
-      (this.candlestickChart = candlestickChart),
-      (this.bubbleChart = bubbleChart),
-      (this.bubble3DChart = bubble3DChart),
-      (this.scatterChart = scatterChart),
-      (this.scatterDateTimeChart = scatterDateTimeChart),
-      (this.heatmapChart = heatmapChart),
-      (this.heatmapRoundedChart = heatmapRoundedChart);
+    this.barChart = barChart;
+    this.barStackedChart = barStackedChart;
+    this.barHorizontalChart = barHorizontalChart;
+    this.barHStackChart = barHStackChart;
+    this.pieChart = pieChart;
+    this.donutChart = donutChart;
+    this.radialChart = radialChart;
+    this.customsAngleChart = customsAngleChart;
+    this.lineChart = lineChart;
+    this.realTimeChart = realTimeChart;
+    this.areaChart = areaChart;
+    this.dateTimeChart = dateTimeChart;
+    this.mixedChart = mixedChart;
+    this.lineAreaChart = lineAreaChart;
+    this.candlestickChart = candlestickChart;
+    this.bubbleChart = bubbleChart;
+    this.bubble3DChart = bubble3DChart;
+    this.scatterChart = scatterChart;
+    this.scatterDateTimeChart = scatterDateTimeChart;
+    this.heatmapChart = heatmapChart;
+    this.heatmapRoundedChart = heatmapRoundedChart;
 
     effect(() => {
       this.isDarkTheme(this.themeService.isDarkMode());
