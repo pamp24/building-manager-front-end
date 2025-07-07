@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 // project import
-import { AdminLayout } from './theme/layout/admin-layout/admin-layout.component';
+import { AdminLayoutComponent } from './theme/layout/admin-layout/admin-layout.component';
 import { GuestLayouts } from './theme/layout/guest-layout/guest-layout.component';
 import { AuthGuardChild } from './theme/shared/components/_helpers/auth.guard';
 import { SimpleLayouts } from './theme/layout/simple-layout/simple-layout.component';
@@ -58,7 +58,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    component: AdminLayout,
+    component: AdminLayoutComponent,
     canActivateChild: [AuthGuardChild],
     children: [
       {

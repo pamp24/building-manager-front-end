@@ -87,9 +87,9 @@ onSubmit() {
 
   this.authenticationService.login(email, password).subscribe({
     next: (response: AuthenticationResponse) => {
-      console.log('User role from backend:', response.user.role);
+      console.log('User role from backend:', response.user.roles);
       localStorage.setItem('currentUser', JSON.stringify(response.user));
-      if (response.user.role && response.user.role.includes('Admin')) {
+      if (response.user.roles && response.user.roles.includes('Admin')) {
         this.router.navigate(['/dashboard/default']);
       } else {
         this.router.navigate(['/dashboard/default']);

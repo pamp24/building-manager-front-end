@@ -27,17 +27,38 @@ export class AuthenticationService {
   }
 
   login(email: string, password: string): Observable<AuthenticationResponse> {
-    return this.http.post<AuthenticationResponse>('http://localhost:8080/api/v1/auth/authenticate', { email, password }).pipe(
+  return this.http
+    .post<AuthenticationResponse>('http://localhost:8080/api/v1/auth/authenticate', {
+      email,
+      password
+    })
+    .pipe(
       map((response: AuthenticationResponse) => {
-        localStorage.setItem('currentUser', JSON.stringify(response.user));
+        const rawRoles = response.user.roles;
+        const normalizedRoles: string[] = Array.isArray(rawRoles)
+          ? rawRoles.filter((r): r is string => typeof r === 'string')
+          : typeof rawRoles === 'string'
+          ? [rawRoles]
+          : [];
+
+        const user: User = {
+          ...response.user,
+          roles: normalizedRoles
+        };
+
+        localStorage.setItem('currentUser', JSON.stringify(user));
         localStorage.setItem('token', response.token);
 
-        this.currentUser = response.user;
+        this.currentUser = user;
 
-        return response;
+        return {
+          token: response.token,
+          user: user
+        };
       })
     );
-  }
+}
+
 
   isLoggedIn(): boolean {
     return !!localStorage.getItem('token');
@@ -60,8 +81,8 @@ export class AuthenticationService {
     console.log('Κλήση API για forgot-password με email:', email);
     return this.http.post('http://localhost:8080/api/v1/auth/forgot-password', { email });
   }
-  resetPassword(token: string, newPassword: string): Observable<any> {
-    return this.http.post('http://localhost:8080/api/v1/auth/reset-password', {
+  resetPassword(token: string, newPassword: string): Observable<AuthenticationResponse> {
+    return this.http.post<AuthenticationResponse>('http://localhost:8080/api/v1/auth/reset-password', {
       token,
       newPassword
     });

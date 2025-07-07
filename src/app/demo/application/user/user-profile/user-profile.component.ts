@@ -1,21 +1,16 @@
 // angular import
 import { Component, OnInit, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { DataService } from 'src/app/demo/forms/forms-plugins/forms-select/data.service';
 import { ThemeService } from 'src/app/theme/shared/service/customs-theme.service';
-
 // rxjs import
 import { Observable } from 'rxjs';
-
 // third party
 import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
-
 // bootstrap import
-import { NgSelectModule, NgSelectComponent } from '@ng-select/ng-select';
-
+import { NgSelectModule } from '@ng-select/ng-select';
 // icons
 import { IconService } from '@ant-design/icons-angular';
 import {
@@ -34,10 +29,17 @@ import {
   UserOutline,
   PlusOutline
 } from '@ant-design/icons-angular/icons';
+import { AuthenticationService } from 'src/app/theme/shared/service/authentication.service';
+import { UserService } from 'src/app/theme/shared/service';
+import { User } from 'src/app/theme/shared/components/_helpers/user';
+import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
+
+//UserUpdateDTO
+import { UserUpdateDTO } from 'src/app/theme/shared/models/UserUpdateDTO';
 
 @Component({
   selector: 'app-user-profile',
-  imports: [CommonModule, SharedModule, NgSelectModule, NgSelectComponent, NgApexchartsModule],
+  imports: [CommonModule, SharedModule, NgSelectModule, NgApexchartsModule, ReactiveFormsModule],
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.scss']
 })
@@ -45,16 +47,22 @@ export class UserProfileComponent implements OnInit {
   private dataService = inject(DataService);
   private iconService = inject(IconService);
   private themeService = inject(ThemeService);
+  userForm!: FormGroup;
+  user!: User;
 
   // eslint-disable-next-line
   people$: Observable<any[]> | undefined;
   selectedPeople = [{ name: 'Karyn Wright' }];
   isDarkMode!: boolean;
-
   chartOptions!: Partial<ApexOptions>;
+  currentUser$!: Observable<unknown>;
 
   // constructor
-  constructor() {
+  constructor(
+    public authenticationService: AuthenticationService,
+    private fb: FormBuilder,
+    private userService: UserService
+  ) {
     this.iconService.addIcon(
       ...[
         TwitterSquareFill,
@@ -100,7 +108,6 @@ export class UserProfileComponent implements OnInit {
             background: '#ffffff50',
             strokeWidth: '50%'
           },
-
           dataLabels: {
             show: true,
             name: {
@@ -124,8 +131,51 @@ export class UserProfileComponent implements OnInit {
         lineCap: 'round'
       }
     };
-    this.people$ = this.dataService.getPeople();
+
+    this.userForm = this.fb.group({
+      firstName: [''],
+      lastName: [''],
+      email: [''],
+      dateOfBirth: [''],
+      phoneNumber: [''],
+      profileImageUrl: [''],
+      address1: [''],
+      addressNumber1: [''],
+      address2: [''],
+      addressNumber2: [''],
+      country: [''],
+      region: [''],
+      postalCode: ['']
+    });
+
+    this.userService.getCurrentUser().subscribe({
+      next: (user) => {
+        this.user = user;
+        this.userForm.patchValue(user);
+      },
+      error: (err) => console.error('Δεν κατάφερε να φορτωθεί ο χρήστης', err)
+    });
   }
+  //apothikeusi allagon
+  savePersonalChanges(): void {
+    const updateData: UserUpdateDTO = this.userForm.value;
+
+    this.userService.updateUser(updateData).subscribe({
+      next: () => alert('Τα στοιχεία αποθηκεύτηκαν!'),
+      error: (err) => console.error('Σφάλμα κατά την αποθήκευση:', err)
+    });
+  }
+
+  onFileSelected(event: Event) {
+  const file = (event.target as HTMLInputElement).files?.[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.userForm.patchValue({ profileImageUrl: reader.result });
+    };
+    reader.readAsDataURL(file);
+  }
+}
 
   // private method
   private isDarkTheme(isDark: boolean) {

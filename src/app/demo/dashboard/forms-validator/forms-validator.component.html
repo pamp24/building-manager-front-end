@@ -7,8 +7,7 @@
           <div class="info-section">
             <h2 class="">Καλώς Ήρθατε στο Building Manager</h2>
             <h6 class="my-3 f-w-400">
-              Πάρτε τον έλεγχο των κοινωστήστων σας με το Building Manager. Παρακολουθήστε την πρόοδο, διαχειριστείτε τις εργασίες και
-              επικοινωνήστε με τους ενοίκους εύκολα και αποτελεσματικά.
+              Πάρτε τον έλεγχο των κοινωστήστων σας με το Building Manager. Παρακολουθήστε την πρόοδο, διαχειριστείτε τις εργασίες και επικοινωνήστε με τους ενοίκους εύκολα και αποτελεσματικά.
             </h6>
             <button routerLink="/dashboard/analytics" class="btn btn-outline-light">Δείτε Περισσότερα</button>
           </div>
@@ -26,7 +25,7 @@
   </div>
 </div>
 
-<!-- form -->
+<!-- forma 1 -->
 <div class="row">
   <div class="col-sm-12">
     <app-card cardTitle="Έλεγχος Στοιχείων">
@@ -37,13 +36,13 @@
             <label class="form-label">Επιλογή Ρόλου</label>
             <select
               class="form-control"
-              name="role"
-              [ngClass]="{
-                'is-invalid': !role.valid && (role.dirty || role.touched || isSubmit)
-              }"
-              #role="ngModel"
+              name="roles"
               required
-              [(ngModel)]="formInput.role"
+              [(ngModel)]="formInput.roles"
+              #roles="ngModel"
+              [ngClass]="{
+                'is-invalid': roles.invalid && (roles.touched || validationForm.submitted)
+              }"
             >
               <option value="">-- Επιλέξτε ρόλο --</option>
               <option value="PropertyManager">Διαχειριστής Ακινήτων</option>
@@ -51,185 +50,187 @@
               <option value="Owner">Ιδιοκτήτης</option>
               <option value="Resident">Ένοικος</option>
             </select>
-            <ng-container *ngIf="!role.valid && (role.dirty || role.touched || isSubmit)">
-              <label id="validation-role-error" class="error jquery-validation-error small form-text invalid-feedback">
-                Παρακαλώ επιλέξτε έναν ρόλο.
-              </label>
-            </ng-container>
+            <label *ngIf="roles.invalid && (roles.touched || validationForm.submitted)" class="error small form-text invalid-feedback">
+              Παρακαλώ επιλέξτε έναν ρόλο.
+            </label>
           </div>
         </div>
         <div class="form-group text-center">
-          <button type="submit" class="btn btn-primary" (click)="nextStep(validationForm)">Επόμενο Βήμα</button>
+          <button type="button" class="btn btn-primary" (click)="nextStep(validationForm, formInput.roles)">Επόμενο Βήμα</button>
         </div>
       </form>
-      <div class="form-step" *ngIf="currentStep === 2">
+      <!-- forma 2 -->
+      <form #userForm="ngForm" *ngIf="currentStep === 2" class="editForm" novalidate>
         <h5 class="mb-3">Βήμα 2: Εισαγωγή Στοιχείων Χρήστη</h5>
-        <form #userForm="ngForm" class="editForm" novalidate>
+        <!-- Τηλέφωνο -->
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label">Τηλέφωνο</label>
+            <input
+              type="text"
+              class="form-control"
+              name="phone"
+              required
+              minlength="10"
+              maxlength="12"
+              [(ngModel)]="formInput.phone"
+              #phone="ngModel"
+              [ngClass]="{
+                'is-invalid': phone.invalid && (phone.touched || userForm.submitted)
+              }"
+            />
+            <label *ngIf="phone.invalid && (phone.touched || userForm.submitted)" class="error small form-text invalid-feedback">
+              Παρακαλώ εισάγετε έγκυρο τηλέφωνο.
+            </label>
+          </div>
+        </div>
+        <!-- Διεύθυνση -->
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label">Διεύθυνση</label>
+            <textarea
+              class="form-control"
+              name="address"
+              required
+              [(ngModel)]="formInput.address"
+              #address="ngModel"
+              [ngClass]="{
+                'is-invalid': address.invalid && (address.touched || userForm.submitted)
+              }"
+            ></textarea>
+            <label *ngIf="address.invalid && (address.touched || userForm.submitted)" class="error small form-text invalid-feedback">
+              Η διεύθυνση είναι υποχρεωτική.
+            </label>
+          </div>
+        </div>
+        <!-- Buttons -->
+        <div class="form-group text-center">
+          <button type="button" class="btn btn-secondary me-2" (click)="previousStep()">Πίσω</button>
+          <button type="button" class="btn btn-primary" (click)="nextStep(userForm, { phone: formInput.phone, address: formInput.address })">Επόμενο Βήμα</button>
+        </div>
+      </form>
+      <!-- forma3 -->
+      <form #finalForm="ngForm" *ngIf="currentStep === 3" class="editForm" novalidate>
+        <h5 class="mb-3">Βήμα 3: Επιπλέον Στοιχεία</h5>
+        <div class="row">
+          <!-- Όνομα -->
           <div class="col-md-6">
             <div class="form-group">
-              <label class="form-label">Τηλέφωνο</label>
+              <label class="form-label">Όνομα</label>
               <input
                 type="text"
                 class="form-control"
-                name="validation-phone"
-                placeholder="Αριθμός Επικοινωνίας"
-                [ngClass]="{
-                  'is-invalid': !phone.valid && (phone.dirty || phone.touched || isSubmit)
-                }"
-                #phone="ngModel"
+                name="firstName"
                 required
-                maxlength="12"
-                minlength="10"
-                phone="IN"
-                [(ngModel)]="formInput.phone"
+                placeholder="Εισάγετε το όνομά σας"
+                [(ngModel)]="formInput.firstName"
+                #firstName="ngModel"
+                [ngClass]="{
+                  'is-invalid': firstName.invalid && (firstName.touched || finalForm.submitted)
+                }"
               />
-              <ng-container *ngIf="!phone.valid && (phone.dirty || phone.touched || isSubmit)">
-                <label id="validation-phone-error" class="error jquery-validation-error small form-text invalid-feedback">
-                  Παρακαλώ εισάγετε ένα έγκυρο τηλέφωνο.
-                </label>
-              </ng-container>
+              <label *ngIf="firstName.invalid && (firstName.touched || finalForm.submitted)" class="error small form-text invalid-feedback">
+                Το όνομα είναι υποχρεωτικό.
+              </label>
             </div>
           </div>
+          <!-- Επώνυμο -->
           <div class="col-md-6">
             <div class="form-group">
-              <label class="form-label">Διεύθυνση</label>
-              <textarea
+              <label class="form-label">Επώνυμο</label>
+              <input
+                type="text"
                 class="form-control"
-                placeholder="Εισάγετε τη διεύθυνσή σας"
-                name="validation-address"
-                [ngClass]="{
-                  'is-invalid': !address.valid && (address.dirty || address.touched || isSubmit)
-                }"
-                #address="ngModel"
+                name="lastName"
                 required
-                [(ngModel)]="formInput.address"
-              ></textarea>
-              <ng-container *ngIf="!address.valid && (address.dirty || address.touched || isSubmit)">
-                <label id="validation-address-error" class="error jquery-validation-error small form-text invalid-feedback">
-                  Η Διεύθυνση είναι υποχρεωτική.
-                </label>
-              </ng-container>
+                placeholder="Εισάγετε το επώνυμό σας"
+                [(ngModel)]="formInput.lastName"
+                #lastName="ngModel"
+                [ngClass]="{
+                  'is-invalid': lastName.invalid && (lastName.touched || finalForm.submitted)
+                }"
+              />
+              <label *ngIf="lastName.invalid && (lastName.touched || finalForm.submitted)" class="error small form-text invalid-feedback">
+                Το επώνυμο είναι υποχρεωτικό.
+              </label>
             </div>
           </div>
-          <div class="form-group text-center">
-            <button type="button" class="btn btn-primary me-2" (click)="previousStep()">Πίσω</button>
-            <button type="submit" class="btn btn-primary" (click)="nextStep(finalForm)">Επόμενο Βήμα</button>
-          </div>
-        </form>
-      </div>
-      <div class="form-step" *ngIf="currentStep === 3">
-        <form #finalForm="ngForm" class="editForm" novalidate>
-          <h5 class="mb-3">Βήμα 3: Δημιουργία Λογαριασμού</h5>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label class="form-label">Όνομα</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  name="firstName"
-                  placeholder="Εισάγετε το όνομά σας"
-                  [(ngModel)]="formInput.firstName"
-                  #firstName="ngModel"
-                  required
-                  [ngClass]="{
-                    'is-invalid': !firstName.valid && (firstName.dirty || firstName.touched || isSubmit)
-                  }"
-                />
-                <ng-container *ngIf="!firstName.valid && (firstName.dirty || firstName.touched || isSubmit)">
-                  <label class="error small form-text invalid-feedback">Το όνομα είναι υποχρεωτικό.</label>
-                </ng-container>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label class="form-label">Επώνυμο</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  name="lastName"
-                  placeholder="Εισάγετε το επώνυμό σας"
-                  [(ngModel)]="formInput.lastName"
-                  #lastName="ngModel"
-                  required
-                  [ngClass]="{
-                    'is-invalid': !lastName.valid && (lastName.dirty || lastName.touched || isSubmit)
-                  }"
-                />
-                <ng-container *ngIf="!lastName.valid && (lastName.dirty || lastName.touched || isSubmit)">
-                  <label class="error small form-text invalid-feedback">Το επώνυμο είναι υποχρεωτικό.</label>
-                </ng-container>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label class="form-label">Email</label>
-                <input
-                  type="email"
-                  class="form-control"
-                  name="email"
-                  placeholder="example@domain.com"
-                  [(ngModel)]="formInput.email"
-                  #email="ngModel"
-                  required
-                  email
-                  [ngClass]="{
-                    'is-invalid': !email.valid && (email.dirty || email.touched || isSubmit)
-                  }"
-                />
-                <ng-container *ngIf="!email.valid && (email.dirty || email.touched || isSubmit)">
-                  <label class="error small form-text invalid-feedback">Μη έγκυρο email.</label>
-                </ng-container>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label class="form-label">Κωδικός</label>
-                <input
-                  type="password"
-                  class="form-control"
-                  name="password"
-                  placeholder="********"
-                  [(ngModel)]="formInput.password"
-                  #password="ngModel"
-                  required
-                  minlength="6"
-                  [ngClass]="{
-                    'is-invalid': !password.valid && (password.dirty || password.touched || isSubmit)
-                  }"
-                />
-                <ng-container *ngIf="!password.valid && (password.dirty || password.touched || isSubmit)">
-                  <label class="error small form-text invalid-feedback">Ο κωδικός πρέπει να έχει τουλάχιστον 6 χαρακτήρες.</label>
-                </ng-container>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label class="form-label">Επιβεβαίωση Κωδικού</label>
-                <input
-                  type="password"
-                  class="form-control"
-                  name="confirmPassword"
-                  placeholder="********"
-                  [(ngModel)]="formInput.confirmPassword"
-                  #confirmPassword="ngModel"
-                  required
-                  [ngClass]="{
-                    'is-invalid': formInput.password !== formInput.confirmPassword && isSubmit
-                  }"
-                />
-                <ng-container *ngIf="formInput.password !== formInput.confirmPassword && isSubmit">
-                  <label class="error small form-text invalid-feedback">Οι κωδικοί δεν ταιριάζουν.</label>
-                </ng-container>
-              </div>
+          <!-- Email -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                name="email"
+                required
+                email
+                placeholder="example@domain.com"
+                [(ngModel)]="formInput.email"
+                #email="ngModel"
+                [ngClass]="{
+                  'is-invalid': email.invalid && (email.touched || finalForm.submitted)
+                }"
+              />
+              <label *ngIf="email.invalid && (email.touched || finalForm.submitted)" class="error small form-text invalid-feedback">
+                Μη έγκυρο email.
+              </label>
             </div>
           </div>
-          <div class="form-group text-center">
-            <button type="button" class="btn btn-primary me-2" (click)="previousStep()">Πίσω</button>
-            <button type="submit" class="btn btn-primary btn-raised" (click)="submitForm(finalForm)">Υποβολή</button>
+          <!-- Κωδικός -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label">Κωδικός</label>
+              <input
+                type="password"
+                class="form-control"
+                name="password"
+                required
+                minlength="6"
+                placeholder="********"
+                [(ngModel)]="formInput.password"
+                #password="ngModel"
+                [ngClass]="{
+                  'is-invalid': password.invalid && (password.touched || finalForm.submitted)
+                }"
+              />
+              <label *ngIf="password.invalid && (password.touched || finalForm.submitted)" class="error small form-text invalid-feedback">
+                Ο κωδικός πρέπει να έχει τουλάχιστον 6 χαρακτήρες.
+              </label>
+            </div>
           </div>
-        </form>
-      </div>
+
+          <!-- Confirm Password -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label">Επιβεβαίωση Κωδικού</label>
+              <input
+                type="password"
+                class="form-control"
+                name="confirmPassword"
+                required
+                placeholder="********"
+                [(ngModel)]="formInput.confirmPassword"
+                #confirmPassword="ngModel"
+                [ngClass]="{
+                  'is-invalid': formInput.password !== formInput.confirmPassword && (confirmPassword.touched || finalForm.submitted)
+                }"
+              />
+              <label
+                *ngIf="formInput.password !== formInput.confirmPassword && (confirmPassword.touched || finalForm.submitted)"
+                class="error small form-text invalid-feedback"
+              >
+                Οι κωδικοί δεν ταιριάζουν.
+              </label>
+            </div>
+          </div>
+        </div>
+        <!-- Buttons -->
+        <div class="form-group text-center">
+          <button type="button" class="btn btn-secondary me-2" (click)="previousStep()">Πίσω</button>
+          <button type="button" class="btn btn-success" (click)="submitForm(finalForm)">Υποβολή</button>
+        </div>
+      </form>
     </app-card>
   </div>
 </div>

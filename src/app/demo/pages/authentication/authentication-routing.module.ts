@@ -13,6 +13,7 @@ const routes: Routes = [
         path: 'login',
         loadComponent: () => import('./auth-login/auth-login.component').then((c) => c.AuthLoginComponent),
         data: {
+          roles: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {

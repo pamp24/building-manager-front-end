@@ -31,17 +31,11 @@ interface FormData {
 
 @Component({
   selector: 'app-forms-validator',
-  imports: [
-    CommonModule, 
-    SharedModule, 
-    NarikCustomValidatorsModule,
-    FormsModule],
+  imports: [CommonModule, SharedModule, NarikCustomValidatorsModule, FormsModule],
   templateUrl: './forms-validator.component.html',
   styleUrls: ['./forms-validator.component.scss']
 })
-
-export class FormsValidatorComponent{
-
+export class FormsValidatorComponent {
   isSubmitted = false;
 
   currentStep = 1;
@@ -70,16 +64,23 @@ export class FormsValidatorComponent{
     roleSpecific: {}
   };
 
-  nextStep(data: string | Record<string, unknown>) {
-    if (this.currentStep === 1 && typeof data === 'string') this.formData.role = data;
-    if (this.currentStep === 2 && typeof data === 'object' && data !== null) this.formData.basicInfo = data;
+  nextStep(form: NgForm, data?: string | Record<string, unknown>): void {
+    if (!form.valid) {
+      form.form.markAllAsTouched();
+      return;
+    }
+    if (this.currentStep === 1 && typeof data === 'string') {
+      this.formData.role = data;
+    } else if (this.currentStep === 2 && data && typeof data === 'object') {
+      this.formData.basicInfo = data;
+    }
     this.currentStep++;
   }
   previousStep() {
-  if (this.currentStep > 1) {
-    this.currentStep--;
+    if (this.currentStep > 1) {
+      this.currentStep--;
+    }
   }
-}
 
   isSubmit(data: Record<string, unknown>) {
     this.formData.roleSpecific = data;
@@ -87,6 +88,7 @@ export class FormsValidatorComponent{
     console.log('Sending to backend:', this.formData);
     // this.http.post('/api/register', this.formData).subscribe(...)
   }
+
   save(form: NgForm): void {
     this.isSubmitted = true;
     if (form.valid) {
@@ -97,9 +99,4 @@ export class FormsValidatorComponent{
       console.log('Form is invalid');
     }
   }
-
-
-  
-
-  
 }
