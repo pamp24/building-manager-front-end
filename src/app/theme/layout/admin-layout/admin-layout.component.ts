@@ -17,7 +17,7 @@ import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcru
   templateUrl: './admin-layout.component.html',
   styleUrls: ['./admin-layout.component.scss']
 })
-export class AdminLayout {
+export class AdminLayoutComponent {
   private location = inject(Location);
   private locationStrategy = inject(LocationStrategy);
 

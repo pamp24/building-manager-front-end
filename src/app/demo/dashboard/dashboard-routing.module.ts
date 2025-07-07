@@ -13,21 +13,28 @@ const routes: Routes = [
         path: 'default',
         loadComponent: () => import('./default/default.component').then((c) => c.DefaultComponent),
         data: {
-          roles: [Role.Admin, Role.User]
+          roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
-      {
-        path: 'analytics',
-        loadComponent: () => import('./analytics/analytics.component').then((c) => c.AnalyticsComponent),
-        data: {
-          roles: [Role.Admin]
-        }
-      },
+      // {
+      //   path: 'analytics',
+      //   loadComponent: () => import('./default/default.component').then((c) => c.DefaultComponent),
+      //   data: {
+      //     roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+      //   }
+      // },
       {
         path: 'finance',
         loadComponent: () => import('./finance/finance.component').then((c) => c.FinanceComponent),
         data: {
-          roles: [Role.Admin]
+          roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+        }
+      },
+      {
+        path: 'forms-validator',
+        loadComponent: () => import('./forms-validator/forms-validator.component').then((c) => c.FormsValidatorComponent),
+        data: {
+          roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       }
     ]

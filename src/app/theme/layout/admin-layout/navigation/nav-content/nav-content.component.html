@@ -19,11 +19,11 @@
             <div class="d-flex flex-column align-items-center">
               <img src="assets/images/user/avatar-group.png" alt="user" class="img-fluid" />
               <div class="m-t-20 text-center">
-                <h5 class="mb-0">Help ?</h5>
-                <span class="text-muted">Get to resolve query</span>
+                <h5 class="mb-0">Είδατε το πακέτο Pro?</h5>
+                <span class="text-muted">Δείτε τα προνόμια του Pro</span>
               </div>
               <div class="m-t-20 text-center">
-                <button class="btn btn-primary">Support</button>
+                <button class="btn btn-primary">Μάθετε περισσότερα</button>
               </div>
             </div>
           </div>
@@ -41,7 +41,7 @@
         </div>
         <div class="flex-grow-1">
           <span>{{ this.authenticationService.currentUserName }}</span>
-          <p class="mb-0 text-muted">UI/UX Designer</p>
+          <p class="mb-0 text-muted">{{ this.authenticationService.currentUserValue?.lastName}} {{this.authenticationService.currentUserValue?.firstName }}</p>
         </div>
         <div class="avatar avatar-xs btn-link-secondary" ngbDropdown>
           <i antIcon theme="outline" type="right" ngbDropdownToggle></i>
@@ -117,9 +117,9 @@
         <app-scrollbar [customStyle]="'calc(100vh - 70px)'">
           @for (item of collapseItem.children; track item) {
             @if (item.type === 'item') {
-              <app-nav-item [item]="item" [parentRole]="item.role && item.role.length > 0 ? item.role : null"></app-nav-item>
+              <app-nav-item [item]="item" [parentRole]="item.roles && item.roles.length > 0 ? item.roles : null"></app-nav-item>
             } @else if (item.type === 'collapse') {
-              <app-nav-collapse [item]="item" [parentRole]="item.role && item.role.length > 0 ? item.role : null"></app-nav-collapse>
+              <app-nav-collapse [item]="item" [parentRole]="item.roles && item.roles.length > 0 ? item.roles : null"></app-nav-collapse>
             }
           }
         </app-scrollbar>

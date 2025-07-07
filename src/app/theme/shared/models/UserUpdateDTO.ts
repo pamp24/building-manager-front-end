@@ -1,12 +1,11 @@
-﻿
-export interface User {
-  id?: number;
+export interface UserUpdateDTO {
   firstName: string;
   lastName: string;
-  email: string;
   dateOfBirth?: string;
+
   phoneNumber?: string;
   profileImageUrl?: string;
+
   address1?: string;
   addressNumber1?: string;
   address2?: string;
@@ -14,5 +13,4 @@ export interface User {
   country?: string;
   region?: string;
   postalCode?: string;
-  roles?: string[];
 }

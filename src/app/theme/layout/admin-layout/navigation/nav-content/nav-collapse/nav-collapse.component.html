@@ -64,12 +64,12 @@
         @if (items.type === 'item') {
           <app-nav-item
             [item]="items"
-            [parentRole]="item().role && item().role.length > 0 ? item().role : parentRole().role"
+            [parentRole]="item().roles && item().roles.length > 0 ? item().roles : parentRole().roles"
           ></app-nav-item>
         } @else if (items.type === 'collapse') {
           <app-nav-collapse
             [item]="items"
-            [parentRole]="item().role && item().role.length > 0 ? item().role : parentRole().role"
+            [parentRole]="item().roles && item().roles.length > 0 ? item().roles : parentRole().roles"
           ></app-nav-collapse>
         }
       }

@@ -10,21 +10,21 @@ const routes: Routes = [
         path: 'dashboard',
         loadComponent: () => import('./helpdesk-dashboard/helpdesk-dashboard.component').then((c) => c.HelpdeskDashboardComponent),
         data: {
-          roles: [Role.Admin]
+          roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'ticket',
         loadChildren: () => import('./helpdesk-ticket/helpdesk-ticket.module').then((m) => m.HelpdeskTicketModule),
         data: {
-          roles: [Role.Admin, Role.User]
+          roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'customer',
         loadComponent: () => import('./helpdesk-customer/helpdesk-customer.component').then((c) => c.HelpdeskCustomerComponent),
         data: {
-          roles: [Role.Admin, Role.User]
+          roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       }
     ]
