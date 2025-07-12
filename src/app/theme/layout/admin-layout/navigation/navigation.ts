@@ -42,6 +42,46 @@ export const NavigationItems: NavigationItem[] = [
         roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
       },
       {
+        id: 'invoice',
+        title: 'Invoice',
+        type: 'collapse',
+        icon: 'file-text',
+        roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+        children: [
+          {
+            id: 'dashboard',
+            title: 'Manager\'s Dashboard' ,
+            type: 'item',
+            url: '/invoice/dashboard'
+          },
+          {
+            id: 'create',
+            title: 'Create',
+            type: 'item',
+            url: '/invoice/create'
+          },
+          {
+            id: 'details',
+            title: 'Details',
+            type: 'item',
+            url: '/invoice/details'
+          },
+          {
+            id: 'list',
+            title: 'List',
+            type: 'item',
+            url: '/invoice/list'
+          },
+          {
+            id: 'edit',
+            title: 'Edit',
+            type: 'item',
+            url: '/invoice/edit',
+            roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          }
+        ]
+      },
+      {
         id: 'default',
         title: 'Dashboard',
         type: 'item',

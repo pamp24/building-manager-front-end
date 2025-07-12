@@ -144,6 +144,8 @@ export class UserProfileComponent implements OnInit {
       address2: [''],
       addressNumber2: [''],
       country: [''],
+      state: [''],
+      city: [''],
       region: [''],
       postalCode: ['']
     });
@@ -167,15 +169,15 @@ export class UserProfileComponent implements OnInit {
   }
 
   onFileSelected(event: Event) {
-  const file = (event.target as HTMLInputElement).files?.[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.userForm.patchValue({ profileImageUrl: reader.result });
-    };
-    reader.readAsDataURL(file);
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.userForm.patchValue({ profileImageUrl: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
   }
-}
 
   // private method
   private isDarkTheme(isDark: boolean) {
@@ -259,34 +261,34 @@ export class UserProfileComponent implements OnInit {
 
   passwords = [
     {
-      label: 'Old Password',
-      placeholder: 'Enter Old Password'
+      label: 'Παλαιός Κωδικός',
+      placeholder: 'Εισάγετε τον παλαιό κωδικό'
     },
     {
-      label: 'New Password',
-      placeholder: 'Enter New Password'
+      label: 'Νέος Κωδικός',
+      placeholder: 'Εισάγετε τον νέο κωδικό'
     },
     {
-      label: 'Confirm Password',
-      placeholder: 'Enter Confirm Password'
+      label: 'Επιβεβαίωση Κωδικού',
+      placeholder: 'Εισάγετε ξανά τον νέο κωδικό'
     }
   ];
 
   condition = [
     {
-      text: 'At least 8 characters'
+      text: 'Τουλάχιστον 8 χαρακτήρες'
     },
     {
-      text: 'At least 1 lower letter (a-z)'
+      text: 'Τουλάχιστον 1 πεζό γράμμα (a-z)'
     },
     {
-      text: 'At least 1 uppercase letter (A-Z)'
+      text: 'Τουλάχιστον 1 κεφαλαίο γράμμα (A-Z)'
     },
     {
-      text: 'At least 1 number (0-9)'
+      text: 'Τουλάχιστον 1 αριθμός (0-9)'
     },
     {
-      text: 'At least 1 special characters'
+      text: 'Τουλάχιστον 1 ειδικός χαρακτήρας'
     }
   ];
 

@@ -1,5 +1,5 @@
 // angular import
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // project import
@@ -8,6 +8,9 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 //icons
 import { IconService } from '@ant-design/icons-angular';
 import { AimOutline, EnvironmentOutline, MailOutline, PhoneOutline } from '@ant-design/icons-angular/icons';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { BuildingService } from '../../../../../theme/shared/service/building.service';
+import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
 
 @Component({
   selector: 'app-profiles',
@@ -15,43 +18,109 @@ import { AimOutline, EnvironmentOutline, MailOutline, PhoneOutline } from '@ant-
   templateUrl: './profiles.component.html',
   styleUrl: './profiles.component.scss'
 })
-export class ProfilesComponent {
+export class ProfilesComponent implements OnInit {
   private iconService = inject(IconService);
+  buildingForm: FormGroup;
+  building?: BuildingDTO;
+  errorMessage: string = '';
+  buildingData!: BuildingDTO;
+  details: { icon: string; text: string }[] = [];
+
+  //ngOnInit
+  ngOnInit(): void {
+    this.buildingForm = this.fb.group({
+      name: [''],
+      street1: [''],
+      stNumber1: [''],
+      street2: [''],
+      stNumber2: [''],
+      city: [''],
+      region: [''],
+      postalCode: [''],
+      country: [''],
+      state: [''],
+      floors: [''],
+      apartmentsNum: [''],
+      sqMetersTotal: [''],
+      sqMetersCommonSpaces: [''],
+      parkingExists: [false],
+      parkingSpacesNum: [0]
+    });
+
+    this.buildingService.getMyBuilding().subscribe({
+      next: (data) => {
+        this.buildingData = data;
+        this.buildingForm.patchValue(data); // Προγεμίζει τη φόρμα
+      }
+    });
+
+    this.buildingService.getMyBuilding().subscribe((data: BuildingDTO) => {
+      this.buildingData = data;
+      this.details = [
+        {
+          icon: 'mail',
+          text: data.managerEmail || 'Δεν έχει οριστεί'
+        },
+        {
+          icon: 'phone',
+          text: data.managerPhone || 'Μη διαθέσιμο'
+        },
+                {
+          icon: 'environment',
+          text: data.managerCity || 'Άγνωστη περιοχή'
+        },
+        {
+          icon: 'aim',
+          text: data.managerAddress1 || 'Άγνωστη περιοχή'
+        },
+      ];
+    });
+  }
 
   // constructor
-  constructor() {
+  constructor(
+    private fb: FormBuilder,
+    private buildingService: BuildingService
+  ) {
     this.iconService.addIcon(...[MailOutline, PhoneOutline, AimOutline, EnvironmentOutline]);
-  }
-  // public method
-  profile = [
-    {
-      amount: '86',
-      text: 'Post'
-    },
-    {
-      amount: '40',
-      text: 'Project'
-    },
-    {
-      amount: '4.5K',
-      text: 'Members'
-    }
-  ];
+    this.buildingForm = this.fb.group({
+      name: ['Κτίριο Α', Validators.required],
+      street1: ['Λεωφόρος Δημοκρατίας', Validators.required],
+      stNumber1: ['25', Validators.required],
+      street2: ['Παρ. Δημοκρατίας'],
+      stNumber2: ['2Α'],
+      city: ['Αθήνα', Validators.required],
+      region: ['Κέντρο', Validators.required],
+      postalCode: ['10563', Validators.required],
+      country: ['Ελλάδα', Validators.required],
+      state: ['Αττική', Validators.required],
+      floors: [5, Validators.required],
+      apartmentsNum: [15, Validators.required],
+      sqMetersTotal: [1200, Validators.required],
+      sqMetersCommonSpaces: [200, Validators.required],
+      parkingExists: [true],
+      parkingSpacesNum: [6],
+      active: [true],
+      enable: [true]
+    });
 
-  details = [
-    {
-      icon: 'mail',
-      text: 'anshan@gmail.com'
-    },
-    {
-      icon: 'phone',
-      text: '(+1-876) 8654 239 581'
-    },
-    {
-      icon: 'aim',
-      text: 'New York'
+    // Διαχείριση ενεργοποίησης/απενεργοποίησης του πεδίου parkingSpacesNum
+    this.buildingForm.get('parkingExists')?.valueChanges.subscribe((value) => {
+      const control = this.buildingForm.get('parkingSpacesNum');
+      if (value) {
+        control?.enable();
+      } else {
+        control?.disable();
+      }
+    });
+  }
+
+  submitChanges(): void {
+    if (this.buildingForm.valid) {
+      console.log('Updated Building:', this.buildingForm.value);
+      // εδώ μπορείς να στείλεις το update στο backend
     }
-  ];
+  }
 
   skills = [
     {
