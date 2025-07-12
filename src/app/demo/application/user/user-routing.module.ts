@@ -21,7 +21,7 @@ const routes: Routes = [
         loadComponent: () => import('./account-profile/account-profile.component').then((c) => c.AccountProfileComponent),
         data: {
           roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
-        }
+        } 
       },
       {
         path: 'user-list',

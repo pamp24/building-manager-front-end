@@ -20,7 +20,7 @@ export class AuthRegisterComponent {
 
   constructor(
     private router: Router,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
   ) {}
 
   login() {

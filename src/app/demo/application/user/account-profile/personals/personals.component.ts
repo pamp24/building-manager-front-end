@@ -25,22 +25,32 @@ export class PersonalsComponent {
   // public method
   personal = [
     {
-      label: 'First Name',
+      label: 'Όνομα Διαμερίσματος',
       value: 'Anshan',
       detail: 'First Name'
     },
     {
-      label: 'Last Name',
+      label: 'Όροφος',
       value: 'HAndgun',
       detail: 'Last Name'
     },
     {
-      label: 'Country',
+      label: 'Αριθμός Διαμερίσματος',
       value: 'New York',
       detail: 'Country Name'
     },
     {
-      label: 'Zip Code',
+      label: 'Τετραγωνικά',
+      value: '956754',
+      detail: 'Zip Code'
+    },
+    {
+      label: 'Όνομα Ιδιοκτήτη',
+      value: '956754',
+      detail: 'Zip Code'
+    },
+    {
+      label: 'Όνομα Ενοικιαστή',
       value: '956754',
       detail: 'Zip Code'
     }

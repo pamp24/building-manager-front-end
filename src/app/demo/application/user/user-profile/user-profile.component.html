@@ -57,10 +57,8 @@
                 </label>
                 <input type="file" id="uplfile" hidden (change)="onFileSelected($event)" />
               </div>
-              <h5 class="mt-3">
-                {{ this.authenticationService.currentUserValue?.lastName }} {{ this.authenticationService.currentUserValue?.firstName }}
-              </h5>
-              <p class="text-muted">{{ authenticationService.currentUserValue?.roles?.[0] }}    </p>
+              <h5 class="mt-3">{{ user.lastName }} {{ user.firstName }}</h5>
+              <p class="text-muted">{{ authenticationService.currentUserValue?.roles?.[0] }}</p>
               <ul class="list-inline ms-auto mb-0">
                 @for (task of socialMedia; track task; let last = $last) {
                   <li class="list-inline-item" [ngClass]="{ 'me-4': !last }">
@@ -125,16 +123,7 @@
                             <input type="date" class="form-control" formControlName="dateOfBirth" />
                           </div>
                         </div>
-                        <div class="col-sm-6">
-                          <div class="form-group">
-                            <label class="form-label">Χώρα*</label>
-                            <select class="form-select" formControlName="country">
-                              <option value="">-- Επιλέξτε Χώρα --</option>
-                              <option value="Ελλάδα">Ελλάδα</option>
-                              <option value="Κύπρος">Κύπρος</option>
-                            </select>
-                          </div>
-                        </div>
+
                         <div class="col-sm-6">
                           <div class="form-group">
                             <label class="form-label">Τηλέφωνο*</label>
@@ -169,11 +158,32 @@
                             <textarea class="form-control" formControlName="addressNumber2" placeholder="Αριθμός 2"></textarea>
                           </div>
                         </div>
-
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label class="form-label">Χώρα*</label>
+                            <select class="form-select" formControlName="country">
+                              <option value="">-- Επιλέξτε Χώρα --</option>
+                              <option value="Ελλάδα">Ελλάδα</option>
+                              <option value="Κύπρος">Κύπρος</option>
+                            </select>
+                          </div>
+                        </div>
                         <div class="col-sm-6">
                           <div class="form-group">
                             <label class="form-label">Νομός*</label>
-                            <input type="text" class="form-control" formControlName="region" placeholder="Νομός" />
+                            <input type="text" class="form-control" formControlName="state" placeholder="Νομός" />
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label class="form-label">Πόλη*</label>
+                            <input type="text" class="form-control" formControlName="city" placeholder="Πόλη" />
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label class="form-label">Περιοχή</label>
+                            <input type="text" class="form-control" formControlName="region" placeholder="Περιοχή" />
                           </div>
                         </div>
                         <div class="col-sm-6">
