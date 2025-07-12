@@ -13,35 +13,35 @@ const routes: Routes = [
         path: 'error-404',
         loadComponent: () => import('./error/error.component').then((c) => c.ErrorComponent),
         data: {
-          roles: [Role.Admin, Role.User]
+          roles: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'error-500',
         loadComponent: () => import('./error-two/error-two.component').then((c) => c.ErrorTwoComponent),
         data: {
-          roles: [Role.Admin, Role.User]
+          roles: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'error-401',
         loadComponent: () => import('./unauthorize-error/unauthorize-error.component').then((c) => c.UnauthorizeErrorComponent),
         data: {
-          roles: [Role.Admin, Role.User]
+          roles: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'coming-soon',
         loadComponent: () => import('./coming-soon/coming-soon.component').then((c) => c.ComingSoonComponent),
         data: {
-          roles: [Role.Admin, Role.User]
+          roles: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'under-construct',
         loadComponent: () => import('./under-construct/under-construct.component').then((c) => c.UnderConstructComponent),
         data: {
-          roles: [Role.Admin, Role.User]
+          roles: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       }
     ]

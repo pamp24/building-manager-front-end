@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-lg-6">
-    <app-card cardTitle="Personal Information" [padding]="24">
+    <app-card cardTitle="Πληροφορίες Διαμερίσματος" [padding]="24">
       <div class="row">
         <div class="col-sm-12 text-center mb-3">
           <div class="user-upload wid-75">
@@ -22,7 +22,7 @@
         }
         <div class="col-sm-12">
           <div class="form-group">
-            <label class="form-label">Bio</label>
+            <label class="form-label">Περιγραφή</label>
             <textarea class="form-control" placeholder="Leave a comment here">
 Hello, I’m Anshan Handgun Creative Graphic Designer & User Experience Designer based in Website, I create digital Products a more Beautiful and usable place. Morbid accusant ipsum. Nam nec tellus at.</textarea
             >
@@ -30,7 +30,7 @@ Hello, I’m Anshan Handgun Creative Graphic Designer & User Experience Designer
         </div>
         <div class="col-sm-12">
           <div class="form-group">
-            <label class="form-label">Experience</label>
+            <label class="form-label">Χρόνια Συμβολαίου</label>
             <select class="form-control" title="Enter Total Year Of Experience">
               <option>Startup</option>
               <option>2 year</option>
@@ -44,6 +44,39 @@ Hello, I’m Anshan Handgun Creative Graphic Designer & User Experience Designer
     </app-card>
   </div>
   <div class="col-lg-6">
+    <app-card cardTitle="Πληροφορίες Επικοινωνίας" [padding]="24">
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label class="form-label" for="Contact Number">Τηλέφωνο Επικοινωνίας</label>
+            <input type="text" id="Contact Number" class="form-control" value="(+99) 9999 999 999" />
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label class="form-label" for="Email Address">
+              Διεύθυνση Email
+              <span class="text-danger">*</span>
+            </label>
+            <input type="email" id="Email Address" class="form-control" value="demo@sample.com" />
+          </div>
+        </div>
+        <!-- <div class="col-sm-12">
+          <div class="form-group">
+            <label class="form-label">Portfolio Url</label>
+            <input type="text" class="form-control" value="https://demo.com" placeholder="Enter Your URl" />
+          </div>
+        </div>
+        <div class="col-sm-12">
+          <div class="form-group">
+            <label class="form-label" for="Address">Address</label>
+            <textarea class="form-control" id="Address" placeholder="Leave a comment here">
+3379  Monroe Avenue, Fort Myers, Florida(33912)</textarea
+            >
+          </div>
+        </div> -->
+      </div>
+    </app-card>
     <app-card cardTitle="Social Network" [padding]="24">
       @for (task of social_media; track task) {
         <div class="d-flex align-items-center {{ task.style }}">
@@ -66,39 +99,6 @@ Hello, I’m Anshan Handgun Creative Graphic Designer & User Experience Designer
           </div>
         </div>
       }
-    </app-card>
-    <app-card cardTitle="Contact Information" [padding]="24">
-      <div class="row">
-        <div class="col-sm-6">
-          <div class="form-group">
-            <label class="form-label" for="Contact Number">Contact Phone</label>
-            <input type="text" id="Contact Number" class="form-control" value="(+99) 9999 999 999" />
-          </div>
-        </div>
-        <div class="col-sm-6">
-          <div class="form-group">
-            <label class="form-label" for="Email Address">
-              Email
-              <span class="text-danger">*</span>
-            </label>
-            <input type="email" id="Email Address" class="form-control" value="demo@sample.com" />
-          </div>
-        </div>
-        <div class="col-sm-12">
-          <div class="form-group">
-            <label class="form-label">Portfolio Url</label>
-            <input type="text" class="form-control" value="https://demo.com" placeholder="Enter Your URl" />
-          </div>
-        </div>
-        <div class="col-sm-12">
-          <div class="form-group">
-            <label class="form-label" for="Address">Address</label>
-            <textarea class="form-control" id="Address" placeholder="Leave a comment here">
-3379  Monroe Avenue, Fort Myers, Florida(33912)</textarea
-            >
-          </div>
-        </div>
-      </div>
     </app-card>
   </div>
   <div class="col-12 text-end btn-page">

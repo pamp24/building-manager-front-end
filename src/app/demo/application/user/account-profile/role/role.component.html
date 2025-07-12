@@ -1,20 +1,20 @@
-<app-card cardTitle="Invite Team Members" [padding]="0" footerClass="text-end btn-page">
+<app-card cardTitle="Πρόσκληση Μελών Ομάδας" [padding]="0" footerClass="text-end btn-page">
   <div class="table-top p-4">
     <h4>
       5/10
-      <small>members available in your plan.</small>
+      <small>μέλη διαθέσιμα στο πρόγραμμά σας.</small>
     </h4>
     <hr class="my-3" />
     <div class="row">
       <div class="col-md-8">
         <div class="form-group mb-0">
-          <label class="form-label">Email Address</label>
+          <label class="form-label">Διεύθυνση Email</label>
           <div class="row">
             <div class="col">
-              <input type="email" class="form-control" placeholder="Enter Your Email" />
+              <input type="email" class="form-control" placeholder="Εισάγετε το email σας" />
             </div>
             <div class="col-auto">
-              <button class="btn btn-primary">Send</button>
+              <button class="btn btn-primary">Αποστολή</button>
             </div>
           </div>
         </div>
@@ -25,9 +25,9 @@
     <table class="table mb-0">
       <thead>
         <tr>
-          <th>MEMBER</th>
-          <th>ROLE</th>
-          <th class="text-end">STATUS</th>
+          <th>ΜΕΛΟΣ</th>
+          <th>ΡΟΛΟΣ</th>
+          <th class="text-end">ΚΑΤΑΣΤΑΣΗ</th>
           <th></th>
         </tr>
       </thead>
@@ -50,13 +50,12 @@
             </td>
             <td class="text-end">
               @if (table.status === true) {
-                <a href="javascript:" title="status" class="btn btn-link-danger">Resend</a>
+                <a href="javascript:" title="Κατάσταση" class="btn btn-link-danger">Επαναποστολή</a>
               }
-
-              <span class="badge {{ table.status_type }}" title="status">{{ table.status_1 }}</span>
+              <span class="badge {{ table.status_type }}" title="Κατάσταση">{{ table.status_1 }}</span>
             </td>
             <td class="text-end">
-              <a href="javascript:" class="avatar avatar-s btn-link-secondary" title="Edit"><i class="ti ti-dots f-18"></i></a>
+              <a href="javascript:" class="avatar avatar-s btn-link-secondary" title="Επεξεργασία"><i class="ti ti-dots f-18"></i></a>
             </td>
           </tr>
         }
@@ -64,7 +63,7 @@
     </table>
   </div>
   <ng-template #footerTemplate>
-    <div class="btn btn-link-danger">Cancel</div>
-    <div class="btn btn-primary">Update Profile</div>
+    <div class="btn btn-link-danger">Ακύρωση</div>
+    <div class="btn btn-primary">Αποθήκευση Αλλαγών</div>
   </ng-template>
 </app-card>

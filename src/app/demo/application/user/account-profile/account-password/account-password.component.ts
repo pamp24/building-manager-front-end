@@ -25,31 +25,31 @@ export class AccountPasswordComponent {
   // public method
   passwords = [
     {
-      label: 'Old Password'
+      label: 'Παλίος Κωδικός',
     },
     {
-      label: 'New Password'
+      label: 'Νέος Κωδικός'
     },
     {
-      label: 'Confirm Password'
+      label: 'Επιβεβαίωση Νέου Κωδικού'
     }
   ];
 
   condition = [
     {
-      text: 'At least 8 characters'
+      text: 'Πρέπει να περιέχει τουλάχιστον 8 χαρακτήρες'
     },
     {
-      text: 'At least 1 lower letter (a-z)'
+      text: 'Τουλάχιστον 1 πεζό γράμμα (a-z)'
     },
     {
-      text: 'At least 1 uppercase letter (A-Z)'
+      text: 'Τουλάχιστον 1 κεφαλαίο γράμμα (A-Z)'
     },
     {
-      text: 'At least 1 number (0-9)'
+      text: 'Τουλάχιστον 1 αριθμό (0-9)'
     },
     {
-      text: 'At least 1 special characters'
+      text: 'Τουλάχιστον 1 ειδικό χαρακτήρα (!@#$%^&*)'
     }
   ];
 }

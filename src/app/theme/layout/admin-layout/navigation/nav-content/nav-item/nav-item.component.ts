@@ -8,7 +8,7 @@ import { NavigationItem } from '../../navigation';
 import { MantisConfig } from 'src/app/app-config';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { AuthenticationService } from 'src/app/theme/shared/service';
-import { Role } from 'src/app/theme/shared/components/_helpers/role';
+
 
 @Component({
   selector: 'app-nav-item',
@@ -31,32 +31,25 @@ export class NavItemComponent implements OnInit {
     this.themeLayout = MantisConfig.layout;
   }
 
-  ngOnInit() {
-    /*
-    if any current user type not give to auto take admin role
-    */
-    const CurrentUserRole = this.authenticationService.currentUserValue?.role || Role.Admin;
+ngOnInit() {
+  const currentUserRoles = this.authenticationService.currentUserValue?.roles ?? [];
 
-    /**
-     * item parent role
-     */
-    const parentRoleValue = this.parentRole();
-    const item = this.item();
-    if (item.role && item.role.length > 0) {
-      if (CurrentUserRole) {
-        const parentRole = this.parentRole();
-        const allowedFromParent = item.isMainParent || (parentRole && parentRole.length > 0 && parentRole.includes(CurrentUserRole));
-        if (allowedFromParent) {
-          this.isEnabled = item.role.includes(CurrentUserRole);
-        }
-      }
-    } else if (parentRoleValue && parentRoleValue.length > 0) {
-      // If item.role is empty, check parentRole
-      if (CurrentUserRole) {
-        this.isEnabled = parentRoleValue.includes(CurrentUserRole);
-      }
-    }
+  const item = this.item();
+  const parentRoles = this.parentRole();
+
+  // Αν το item έχει δικούς του ρόλους, προτεραιότητα εκεί
+  if (item.roles && item.roles.length > 0) {
+    this.isEnabled = item.roles.some(r => currentUserRoles.includes(r));
   }
+  // Αν όχι, πάμε να δούμε μήπως υπάρχει περιορισμός στον parent
+  else if (parentRoles && parentRoles.length > 0) {
+    this.isEnabled = parentRoles.some(r => currentUserRoles.includes(r));
+  }
+  // Αν δεν υπάρχουν καθόλου ρόλοι, το δείχνουμε πάντα
+  else {
+    this.isEnabled = true;
+  }
+}
 
   // public method
   closeOtherMenu(event: MouseEvent) {

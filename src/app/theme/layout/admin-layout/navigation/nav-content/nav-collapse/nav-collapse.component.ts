@@ -42,21 +42,30 @@ export class NavCollapseComponent implements OnInit {
 
   ngOnInit() {
     this.themeLayout = MantisConfig.layout;
-    const currentUserRole = this.authenticationService.currentUserValue?.role || Role.Admin;
+    const currentUserRole = this.authenticationService.currentUserValue?.roles || Role.Admin;
     const parentRoleValue = this.parentRole();
     const item = this.item();
-    if (item.role && item.role.length > 0) {
+
+    // Helper to check if a role or any of roles exist in a list
+    const includesRole = (rolesList: string[], userRole: string | string[]) => {
+      if (Array.isArray(userRole)) {
+        return userRole.some(role => rolesList.includes(role));
+      }
+      return rolesList.includes(userRole);
+    };
+
+    if (item.roles && item.roles.length > 0) {
       if (currentUserRole) {
         const parentRole = this.parentRole();
-        const allowedFromParent = item.isMainParent || (parentRole && parentRole.length > 0 && parentRole.includes(currentUserRole));
+        const allowedFromParent = item.isMainParent || (parentRole && parentRole.length > 0 && includesRole(parentRole, currentUserRole));
         if (allowedFromParent) {
-          this.isEnabled = item.role.includes(currentUserRole);
+          this.isEnabled = includesRole(item.roles, currentUserRole);
         }
       }
     } else if (parentRoleValue && parentRoleValue.length > 0) {
       // If item.role is empty, check parentRole
       if (currentUserRole) {
-        this.isEnabled = parentRoleValue.includes(currentUserRole);
+        this.isEnabled = includesRole(parentRoleValue, currentUserRole);
       }
     }
   }

@@ -1,0 +1,181 @@
+<!-- banner -->
+<div class="welcome-card">
+  <div class="body">
+    <div class="d-flex flex-wrap">
+      <div class="row w-100">
+        <div class="col-sm-6 col-xs-12">
+          <div class="info-section">
+            <h2 class="">Καλώς Ήρθατε στο Building Manager</h2>
+            <h6 class="my-3 f-w-400">
+              Πάρτε τον έλεγχο των κοινωστήστων σας με το Building Manager. Παρακολουθήστε την πρόοδο, διαχειριστείτε τις εργασίες και
+              επικοινωνήστε με τους ενοίκους εύκολα και αποτελεσματικά.
+            </h6>
+            <button routerLink="/dashboard/analytics" class="btn btn-outline-light">Δείτε Περισσότερα</button>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+          <div class="pe-5 d-flex flex-column justify-content-center align-items-end position-relative">
+            <img src="assets/images/analytics/welcome-banner.png" alt="welcome" />
+            <div class="sub-img">
+              <img src="assets/images/analytics/welcome-arrow.png" alt="welcome-arrow" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- forma  1 -->
+<div class="row">
+  <div class="col-sm-12">
+    <app-card cardTitle="Έλεγχος Στοιχείων">
+      <form [formGroup]="userForm" *ngIf="currentStep === 1" class="editForm" novalidate>
+        <h5 class="mb-3">Βήμα 1: Εισαγωγή Στοιχείων Χρήστη</h5>
+        <div class="row">
+          <div class="col-md-6 form-group" *ngFor="let field of fields">
+            <label>{{ field.label }}</label>
+            <ng-container *ngIf="field.name === 'country'; else checkState">
+              <select
+                class="form-control"
+                [formControlName]="field.name"
+                [ngClass]="{ 'is-invalid': userForm.get(field.name)?.invalid && userForm.get(field.name)?.touched }"
+              >
+                <option value="">-- Επιλέξτε Χώρα --</option>
+                <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
+              </select>
+            </ng-container>
+            <ng-template #checkState>
+              <ng-container *ngIf="field.name === 'state'; else textInput">
+                <select
+                  class="form-control"
+                  [formControlName]="field.name"
+                  [ngClass]="{ 'is-invalid': userForm.get(field.name)?.invalid && userForm.get(field.name)?.touched }"
+                >
+                  <option value="">-- Επιλέξτε Νομό --</option>
+                  <option *ngFor="let state of states" [value]="state">{{ state }}</option>
+                </select>
+              </ng-container>
+            </ng-template>
+            <ng-template #textInput>
+              <input
+                [type]="field.type || 'text'"
+                class="form-control"
+                [formControlName]="field.name"
+                [ngClass]="{ 'is-invalid': userForm.get(field.name)?.invalid && userForm.get(field.name)?.touched }"
+              />
+            </ng-template>
+            <div class="invalid-feedback" *ngIf="userForm.get(field.name)?.invalid && userForm.get(field.name)?.touched">
+              Το πεδίο {{ field.label }} είναι υποχρεωτικό.
+            </div>
+          </div>
+        </div>
+        <div class="form-group text-center mt-3">
+          <button type="button" class="btn btn-primary" (click)="submitUserForm()">Επόμενο Βήμα</button>
+        </div>
+      </form>
+      <!-- forma2 -->
+      <div *ngIf="currentStep === 2" class="text-center mt-4">
+        <h5 class="mb-3">Επιλέξτε Δράση για Πολυκατοικία</h5>
+        <button class="btn btn-outline-primary me-2" (click)="setAction('many')">Εισαγωγή Πολλών Πολυκατοικιών</button>
+        <button class="btn btn-outline-primary me-2" (click)="setAction('new')">Εισαγωγή Νέας Πολυκατοικίας</button>
+        <button class="btn btn-outline-primary" (click)="setAction('existing')">Σύνδεση με Υπάρχουσα Πολυκατοικία</button>
+        <div class="form-group text-center mt-3">
+          <button type="button" class="btn btn-secondary me-2" (click)="previousStep()">Πίσω</button>
+        </div>
+      </div>
+      <!-- forma3 -->
+      <ng-container *ngIf="currentStep === 3">
+        <app-building-multiple-form *ngIf="selectedAction === 'many'">
+          <div class="form-group text-center mt-3">
+            <button type="button" class="btn btn-secondary me-2" (click)="previousStep()">Πίσω</button>
+          </div>
+        </app-building-multiple-form>
+        <form [formGroup]="buildingForm" *ngIf="selectedAction === 'new'" class="editForm" novalidate>
+            <h5 class="mb-3">Βήμα 3: Επιπλέον Στοιχεία Κτιρίου(Η Εισαγωγή πρέπει να γίνει από τον Διαχειριστή)</h5>
+            <div class="row">
+              <div
+                class="col-md-6 form-group"
+                *ngFor="
+                  let field of [
+                    { name: 'name', label: 'Όνομα Κτιρίου' },
+                    { name: 'street1', label: 'Οδός 1' },
+                    { name: 'stNumber1', label: 'Αριθμός Οδού 1' },
+                    { name: 'street2', label: 'Οδός 2' },
+                    { name: 'stNumber2', label: 'Αριθμός Οδού 2' },
+                    { name: 'city', label: 'Πόλη' },
+                    { name: 'region', label: 'Περιοχή' },
+                    { name: 'postalCode', label: 'Ταχυδρομικός Κώδικας' },
+                    { name: 'country', label: 'Χώρα' },
+                    { name: 'floors', label: 'Αριθμός Ορόφων' },
+                    { name: 'apartmentsNum', label: 'Σύνολο Διαμερισμάτων' },
+                    { name: 'sqMetersTotal', label: 'Συνολικά τ.μ.' },
+                    { name: 'sqMetersCommonSpaces', label: 'Κοινόχρηστα τ.μ.' }
+                  ]
+                "
+              >
+                <label>{{ field.label }}</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [formControlName]="field.name"
+                  [ngClass]="{
+                    'is-invalid': buildingForm.get(field.name)?.invalid && buildingForm.get(field.name)?.touched
+                  }"
+                />
+                <div class="invalid-feedback" *ngIf="buildingForm.get(field.name)?.invalid && buildingForm.get(field.name)?.touched">
+                  Το πεδίο {{ field.label }} είναι υποχρεωτικό.
+                </div>
+              </div>
+              <div class="col-md-6 form-group">
+                <label>
+                  <input type="checkbox" [formControlName]="'parkingExists'" />
+                  Διαθέτει Πάρκινγκ
+                </label>
+              </div>
+              <div class="col-md-6 form-group" *ngIf="buildingForm.get('parkingExists')?.value">
+                <label>Αριθμός Θέσεων Πάρκινγκ</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="parkingSpacesNum"
+                  [ngClass]="{
+                    'is-invalid': buildingForm.get('parkingSpacesNum')?.invalid && buildingForm.get('parkingSpacesNum')?.touched
+                  }"
+                />
+                <div
+                  class="invalid-feedback"
+                  *ngIf="buildingForm.get('parkingSpacesNum')?.invalid && buildingForm.get('parkingSpacesNum')?.touched"
+                >
+                  Το πεδίο είναι υποχρεωτικό.
+                </div>
+              </div>
+            </div>
+            <div class="form-group text-center mt-3">
+              <button type="button" class="btn btn-secondary me-2" (click)="previousStep()">Πίσω</button>
+              <button type="button" class="btn btn-success" (click)="submitBuildingForm()">Υποβολή</button>
+            </div>
+        </form>
+        <app-existing-building-select *ngIf="selectedAction === 'existing'">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label">Κωδικός Πολυκατοικίας</label>
+              <input
+                type="text"
+                class="form-control"
+                name="buildingCode"
+                [(ngModel)]="formInput.buildingCode"
+                placeholder="Εισάγετε αριθμό π.χ. 12345"
+              />
+              <small class="form-text text-muted">Αν γνωρίζετε τον κωδικό της πολυκατοικίας, εισάγετέ τον εδώ.</small>
+            </div>
+          </div>
+          <div class="form-group text-center mt-3">
+            <button type="button" class="btn btn-secondary me-2" (click)="previousStep()">Πίσω</button>
+            <button type="button" class="btn btn-success" (click)="submitForm(finalForm)">Υποβολή</button>
+          </div>
+        </app-existing-building-select>
+      </ng-container>
+      <!-- forma4 -->
+    </app-card>
+  </div>
+</div>

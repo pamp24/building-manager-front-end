@@ -209,17 +209,17 @@ export class NavRightComponent implements OnInit {
 
   profile = [
     {
-      icon: 'user',
-      title: 'Προβολή προφίλ',
+      icon: 'profile',
+      title: 'Προφιλ Πολυκατοικίας',
       url: '/user/account-profile'
     },
     {
-      icon: 'edit',
-      title: 'Επεξεργασία προφίλ',
+      icon: 'user',
+      title: 'Προσωπικό προφίλ',
       url: '/user/user-profile',
     },
     {
-      icon: 'profile',
+      icon: 'edit',
       title: 'Social Profile'
     },
     {

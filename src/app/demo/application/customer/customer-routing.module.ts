@@ -13,7 +13,7 @@ const routes: Routes = [
         path: 'customer-list',
         loadComponent: () => import('./customer-list/customer-list.component').then((c) => c.CustomerListComponent),
         data: {
-          roles: [Role.Admin, Role.User]
+          roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       }
     ]

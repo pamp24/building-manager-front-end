@@ -13,49 +13,51 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 })
 export class AccountSettingComponent {
   // public props
-  email_setting = [
+email_setting = [
     {
-      title: 'Email Notification',
+      title: 'Ειδοποιήσεις μέσω Email για την έκδοση κοινοχρήστων',
       check: true
     },
     {
-      title: 'Send Copy To Personal Email',
+      title: 'Ειδοποιήσεις μέσω SMS για την έκδοση κοινοχρήστων',
       check: false
     }
   ];
+
   notification = [
     {
-      title: 'News about PCT-themes products and feature updates',
+      title: 'Νέα για προϊόντα και ενημερώσεις του PCT-themes',
       check: true
     },
     {
-      title: 'Tips on getting more out of PCT-themes',
+      title: 'Συμβουλές για καλύτερη χρήση του PCT-themes',
       check: true
     },
     {
-      title: 'Things you missed since you last logged into PCT-themes',
+      title: 'Όσα χάσατε από την τελευταία σας είσοδο στο PCT-themes',
       check: false
     },
     {
-      title: 'News about products and other services',
+      title: 'Νέα για προϊόντα και άλλες υπηρεσίες',
       check: false
     },
     {
-      title: 'Tips and Document business products',
+      title: 'Συμβουλές και τεκμηρίωση για επιχειρηματικά προϊόντα',
       check: false
     }
   ];
+
   active_email = [
     {
-      title: 'Have new notifications',
+      title: 'Νέες ειδοποιήσεις',
       check: true
     },
     {
-      title: "You're sent a direct message",
+      title: 'Λάβατε άμεσο μήνυμα',
       check: false
     },
     {
-      title: 'Someone adds you as a connection',
+      title: 'Κάποιος σας προσέθεσε σε μια νέα πολυκατοικία',
       check: true
     }
   ];
