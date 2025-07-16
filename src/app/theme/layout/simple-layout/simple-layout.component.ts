@@ -14,6 +14,7 @@ import { AuthenticationService } from '../../shared/service';
   templateUrl: './simple-layout.component.html',
   styleUrl: './simple-layout.component.scss'
 })
+// eslint-disable-next-line @angular-eslint/component-class-suffix
 export class SimpleLayouts implements OnInit {
   private authenticationService = inject(AuthenticationService);
 

@@ -34,21 +34,13 @@ export class AuthenticationService {
     })
     .pipe(
       map((response: AuthenticationResponse) => {
-        const rawRoles = response.user.roles;
-        const normalizedRoles: string[] = Array.isArray(rawRoles)
-          ? rawRoles.filter((r): r is string => typeof r === 'string')
-          : typeof rawRoles === 'string'
-          ? [rawRoles]
-          : [];
-
         const user: User = {
           ...response.user,
-          roles: normalizedRoles
+          role: response.user.role 
         };
 
         localStorage.setItem('currentUser', JSON.stringify(user));
         localStorage.setItem('token', response.token);
-
         this.currentUser = user;
 
         return {
@@ -58,6 +50,7 @@ export class AuthenticationService {
       })
     );
 }
+
 
 
   isLoggedIn(): boolean {

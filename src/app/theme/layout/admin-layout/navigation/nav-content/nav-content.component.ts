@@ -137,19 +137,18 @@ export class NavContentComponent implements AfterViewInit, OnInit {
 
   ngOnInit() {
     this.layout = MantisConfig.layout;
-    const currentUser = this.authenticationService.currentUserValue;
-    const userRoles = currentUser?.roles ? currentUser.roles : [Role.Admin];
-    this.navigation = this.filterMenu(NavigationItems, userRoles);
+    const currentUserRole = this.authenticationService.currentUserValue?.role || Role.Admin;
+    this.navigation = this.filterMenu(NavigationItems, currentUserRole);
   }
 
-  filterMenu(NavigationItems: NavigationItem[], userRoles: string[], parentRoles: string[] = [Role.Admin]): NavigationItem[] {
+  filterMenu(NavigationItems: NavigationItem[], userRole: string, parentRole: string[] = [Role.Admin]): NavigationItem[] {
     return NavigationItems.map((item) => {
       // If item doesn't have a specific role, inherit roles from parent
-      const itemRoles = item.roles ? item.roles : parentRoles;
+      const itemRole = item.role ? item.role : parentRole;
 
       // If item has children, recursively filter them, passing current item's roles as parentRoles
       if (item.children) {
-        item.children = this.filterMenu(item.children, userRoles, itemRoles);
+        item.children = this.filterMenu(item.children, userRole, itemRole);
       }
 
       return item; // Return the item whether it is visible or disabled

@@ -1,0 +1,13 @@
+<form [formGroup]="form" *ngIf="selectedAction === 'existing'" class="editForm" novalidate>
+  <div class="col-md-12">
+    <div class="form-group">
+      <label class="form-label">Κωδικός Πολυκατοικίας</label>
+      <input type="text" class="form-control" name="buildingCode" formControlName="buildingCode" placeholder="Εισάγετε αριθμό π.χ. 12345" />
+      <small class="form-text text-muted">Αν γνωρίζετε τον κωδικό της πολυκατοικίας, εισάγετέ τον εδώ.</small>
+    </div>
+  </div>
+  <div class="form-group text-center mt-3">
+    <button type="button" class="btn btn-secondary me-2" (click)="onBack()">Πίσω</button>
+    <button type="button" class="btn btn-success" (click)="submitForm()">Υποβολή</button>
+  </div>
+</form>

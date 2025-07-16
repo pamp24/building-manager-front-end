@@ -117,9 +117,9 @@
         <app-scrollbar [customStyle]="'calc(100vh - 70px)'">
           @for (item of collapseItem.children; track item) {
             @if (item.type === 'item') {
-              <app-nav-item [item]="item" [parentRole]="item.roles && item.roles.length > 0 ? item.roles : null"></app-nav-item>
+              <app-nav-item [item]="item" [parentRole]="item.role && item.role.length > 0 ? item.role : null"></app-nav-item>
             } @else if (item.type === 'collapse') {
-              <app-nav-collapse [item]="item" [parentRole]="item.roles && item.roles.length > 0 ? item.roles : null"></app-nav-collapse>
+              <app-nav-collapse [item]="item" [parentRole]="item.role && item.role.length > 0 ? item.role : null"></app-nav-collapse>
             }
           }
         </app-scrollbar>

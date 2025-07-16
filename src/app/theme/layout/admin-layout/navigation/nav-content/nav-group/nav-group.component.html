@@ -4,9 +4,9 @@
   </li>
   @for (items of item().children; track items) {
     @if (items.type === 'collapse') {
-      <app-nav-collapse [item]="items" [parentRole]="item().roles" (showCollapseItem)="subMenuCollapse($event)" />
+      <app-nav-collapse [item]="items" [parentRole]="item().role" (showCollapseItem)="subMenuCollapse($event)" />
     } @else if (items.type === 'item') {
-      <app-nav-item [item]="items" [parentRole]="item().roles" />
+      <app-nav-item [item]="items" [parentRole]="item().role" />
     }
   }
 }

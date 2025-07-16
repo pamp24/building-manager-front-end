@@ -10,7 +10,6 @@ import { MantisConfig } from 'src/app/app-config';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NavItemComponent } from '../nav-item/nav-item.component';
 import { AuthenticationService } from 'src/app/theme/shared/service';
-import { Role } from 'src/app/theme/shared/components/_helpers/role';
 
 @Component({
   selector: 'app-nav-collapse',
@@ -27,6 +26,7 @@ import { Role } from 'src/app/theme/shared/components/_helpers/role';
     ])
   ]
 })
+
 export class NavCollapseComponent implements OnInit {
   private location = inject(Location);
   private authenticationService = inject(AuthenticationService);
@@ -41,34 +41,30 @@ export class NavCollapseComponent implements OnInit {
   isEnabled: boolean = false;
 
   ngOnInit() {
-    this.themeLayout = MantisConfig.layout;
-    const currentUserRole = this.authenticationService.currentUserValue?.roles || Role.Admin;
-    const parentRoleValue = this.parentRole();
-    const item = this.item();
+  this.themeLayout = MantisConfig.layout;
 
-    // Helper to check if a role or any of roles exist in a list
-    const includesRole = (rolesList: string[], userRole: string | string[]) => {
-      if (Array.isArray(userRole)) {
-        return userRole.some(role => rolesList.includes(role));
-      }
-      return rolesList.includes(userRole);
-    };
+  const currentUserRole = this.authenticationService.currentUserValue?.role || '';
+  const item = this.item();
+  const parentRole = this.parentRole();
 
-    if (item.roles && item.roles.length > 0) {
-      if (currentUserRole) {
-        const parentRole = this.parentRole();
-        const allowedFromParent = item.isMainParent || (parentRole && parentRole.length > 0 && includesRole(parentRole, currentUserRole));
-        if (allowedFromParent) {
-          this.isEnabled = includesRole(item.roles, currentUserRole);
-        }
-      }
-    } else if (parentRoleValue && parentRoleValue.length > 0) {
-      // If item.role is empty, check parentRole
-      if (currentUserRole) {
-        this.isEnabled = includesRole(parentRoleValue, currentUserRole);
-      }
-    }
+  const hasAccess = (roles: string[] | undefined, role: string): boolean => {
+    return roles?.includes(role) ?? false;
+  };
+
+  // Προτεραιότητα στα roles του item
+  if (item.role && item.role.length > 0) {
+    this.isEnabled = hasAccess(item.role, currentUserRole);
   }
+  // Αν δεν έχει το item role, τσεκάρουμε του parent
+  else if (parentRole && parentRole.length > 0) {
+    this.isEnabled = hasAccess(parentRole, currentUserRole);
+  }
+  // Αν δεν υπάρχουν καθόλου περιορισμοί, δείχνουμε πάντα
+  else {
+    this.isEnabled = true;
+  }
+}
+
 
   // Method to handle the collapse of the navigation menu
   navCollapse(e: MouseEvent) {
