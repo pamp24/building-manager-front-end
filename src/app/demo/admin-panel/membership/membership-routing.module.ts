@@ -13,28 +13,28 @@ const routes: Routes = [
         path: 'dashboard',
         loadComponent: () => import('./membership-dashboard/membership-dashboard.component').then((c) => c.MembershipDashboardComponent),
         data: {
-          roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'list',
         loadComponent: () => import('./membership-list/membership-list.component').then((c) => c.MembershipListComponent),
         data: {
-          roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'price',
         loadComponent: () => import('./membership-price/membership-price.component').then((c) => c.MembershipPriceComponent),
         data: {
-          roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'setting',
         loadComponent: () => import('./membership-setting/membership-setting.component').then((c) => c.MembershipSettingComponent),
         data: {
-          roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       }
     ]

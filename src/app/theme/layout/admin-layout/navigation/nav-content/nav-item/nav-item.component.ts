@@ -9,7 +9,6 @@ import { MantisConfig } from 'src/app/app-config';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { AuthenticationService } from 'src/app/theme/shared/service';
 
-
 @Component({
   selector: 'app-nav-item',
   imports: [CommonModule, SharedModule, RouterModule],
@@ -31,25 +30,28 @@ export class NavItemComponent implements OnInit {
     this.themeLayout = MantisConfig.layout;
   }
 
-ngOnInit() {
-  const currentUserRoles = this.authenticationService.currentUserValue?.roles ?? [];
+  ngOnInit() {
+    const currentUserRole = this.authenticationService.currentUserValue?.role ?? '';
 
-  const item = this.item();
-  const parentRoles = this.parentRole();
+    const item = this.item();
+    const parentRole = this.parentRole();
 
-  // Αν το item έχει δικούς του ρόλους, προτεραιότητα εκεί
-  if (item.roles && item.roles.length > 0) {
-    this.isEnabled = item.roles.some(r => currentUserRoles.includes(r));
+    if (item.role) {
+      if (Array.isArray(item.role)) {
+        this.isEnabled = item.role.includes(currentUserRole);
+      } else {
+        this.isEnabled = item.role === currentUserRole;
+      }
+    }
+    // Αν όχι, πάμε να δούμε μήπως υπάρχει περιορισμός στον parent
+    else if (parentRole && parentRole.length > 0) {
+      this.isEnabled = parentRole.includes(currentUserRole);
+    }
+    // Αν δεν υπάρχουν καθόλου ρόλοι, το δείχνουμε πάντα
+    else {
+      this.isEnabled = true;
+    }
   }
-  // Αν όχι, πάμε να δούμε μήπως υπάρχει περιορισμός στον parent
-  else if (parentRoles && parentRoles.length > 0) {
-    this.isEnabled = parentRoles.some(r => currentUserRoles.includes(r));
-  }
-  // Αν δεν υπάρχουν καθόλου ρόλοι, το δείχνουμε πάντα
-  else {
-    this.isEnabled = true;
-  }
-}
 
   // public method
   closeOtherMenu(event: MouseEvent) {

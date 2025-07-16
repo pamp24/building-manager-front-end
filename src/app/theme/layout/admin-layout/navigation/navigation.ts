@@ -18,35 +18,35 @@ export interface NavigationItem {
   link?: string;
   description?: string;
   path?: string;
-  roles?: string[];
-  disabled?: boolean;
-  isMainParent?: boolean; // specify if item is main parent
-}
+  role?: string[];
+    disabled?: boolean;
+    isMainParent?: boolean; 
+  }
 
-export const NavigationItems: NavigationItem[] = [
-  {
-    id: 'Dashboard',
-    title: 'Dashboard',
-    type: 'group',
-    classes: 'first-group',
-    icon: 'icon-navigation',
-    roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
-    children: [
-      {
-        id: 'Data-Input',
-        title: 'Data Input',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/dashboard/forms-validator',
-        icon: 'file-protect',
-        roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
-      },
+  export const NavigationItems: NavigationItem[] = [
+    {
+      id: 'Dashboard',
+      title: 'Dashboard',
+      type: 'group',
+      classes: 'first-group',
+      icon: 'icon-navigation',
+      role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+      children: [
+        {
+          id: 'Data-Input',
+          title: 'Data Input',
+          type: 'item',
+          classes: 'nav-item',
+          url: '/dashboard/forms-validator',
+          icon: 'file-protect',
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+        },
       {
         id: 'invoice',
         title: 'Invoice',
         type: 'collapse',
         icon: 'file-text',
-        roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
         children: [
           {
             id: 'dashboard',
@@ -77,7 +77,7 @@ export const NavigationItems: NavigationItem[] = [
             title: 'Edit',
             type: 'item',
             url: '/invoice/edit',
-            roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
           }
         ]
       },
@@ -88,7 +88,7 @@ export const NavigationItems: NavigationItem[] = [
         icon: 'dashboard',
         url: '/dashboard/default',
         breadcrumbs: false,
-        roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
       },
       // {
       //   id: 'dashboard',
@@ -105,7 +105,7 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         icon: 'dollar',
         url: '/dashboard/finance',
-        roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
       },
       {
         id: 'calendar',
@@ -114,7 +114,7 @@ export const NavigationItems: NavigationItem[] = [
         classes: 'nav-item',
         url: '/calendar',
         icon: 'calendar',
-        roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
       }
     ]
   },
@@ -134,7 +134,7 @@ export const NavigationItems: NavigationItem[] = [
     title: 'Widget',
     type: 'group',
     icon: 'icon-navigation',
-    roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+    role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
     children: [
       {
         id: 'statistics',
@@ -167,7 +167,7 @@ export const NavigationItems: NavigationItem[] = [
     title: 'Admin Panel',
     type: 'group',
     icon: 'icon-navigation',
-    roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+    role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
     children: [
       {
         id: 'Online-Courses',
@@ -175,20 +175,20 @@ export const NavigationItems: NavigationItem[] = [
         type: 'collapse',
         icon: 'read',
         isMainParent: true,
-        roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
         children: [
           {
             id: 'dashboard',
             title: 'Dashboard',
             type: 'item',
             url: '/online-course/dashboard',
-            roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
           },
           {
             id: 'teacher',
             title: 'Teacher',
             type: 'collapse',
-            roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
             children: [
               {
                 id: 'list',
@@ -208,7 +208,7 @@ export const NavigationItems: NavigationItem[] = [
                 type: 'item',
                 url: '/online-course/teacher/add',
                 classes: 'no-icon',
-                roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+                role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
               }
             ]
           },
@@ -216,7 +216,7 @@ export const NavigationItems: NavigationItem[] = [
             id: 'student',
             title: 'Student',
             type: 'collapse',
-            roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
             children: [
               {
                 id: 'list',
@@ -236,7 +236,7 @@ export const NavigationItems: NavigationItem[] = [
                 type: 'item',
                 url: '/online-course/student/add',
                 classes: 'no-icon',
-                roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+                role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
               }
             ]
           },
@@ -244,7 +244,7 @@ export const NavigationItems: NavigationItem[] = [
             id: 'courses',
             title: 'Courses',
             type: 'collapse',
-            roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
             children: [
               {
                 id: 'view',
@@ -257,7 +257,7 @@ export const NavigationItems: NavigationItem[] = [
                 title: 'Add',
                 type: 'item',
                 url: '/online-course/courses/add',
-                roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+                role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
               }
             ]
           },
@@ -266,41 +266,41 @@ export const NavigationItems: NavigationItem[] = [
             title: 'Pricing',
             type: 'item',
             url: '/online-course/pricing',
-            roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
           },
           {
             id: 'site',
             title: 'Site',
             type: 'item',
             url: '/online-course/site',
-            roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
           },
           {
             id: 'setting',
             title: 'Setting',
             type: 'collapse',
-            roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
             children: [
               {
                 id: 'payment',
                 title: 'Payment',
                 type: 'item',
                 url: '/online-course/setting/payment',
-                roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+                role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
               },
               {
                 id: 'pricing',
                 title: 'Pricing',
                 type: 'item',
                 url: '/online-course/setting/price',
-                roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+                role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
               },
               {
                 id: 'notification',
                 title: 'Notification',
                 type: 'item',
                 url: '/online-course/setting/notification',
-                roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+                role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
               }
             ]
           }
@@ -310,7 +310,7 @@ export const NavigationItems: NavigationItem[] = [
         id: 'membership',
         title: 'Membership',
         type: 'collapse',
-        roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
         icon: 'user',
         children: [
           {
@@ -318,7 +318,7 @@ export const NavigationItems: NavigationItem[] = [
             title: 'Dashboard',
             type: 'item',
             url: '/membership/dashboard',
-            roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
           },
           {
             id: 'list',
@@ -346,20 +346,20 @@ export const NavigationItems: NavigationItem[] = [
         type: 'collapse',
         icon: 'question-circle',
         isMainParent: true,
-        roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
         children: [
           {
             id: 'dashboard',
             title: 'Dashboard',
             type: 'item',
             url: '/helpdesk/dashboard',
-            roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
           },
           {
             id: 'ticket',
             title: 'Ticket',
             type: 'collapse',
-            roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
             children: [
               {
                 id: 'create',
@@ -394,7 +394,7 @@ export const NavigationItems: NavigationItem[] = [
         title: 'Invoice',
         type: 'collapse',
         icon: 'file-text',
-        roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
         children: [
           {
             id: 'dashboard',
@@ -425,7 +425,7 @@ export const NavigationItems: NavigationItem[] = [
             title: 'Edit',
             type: 'item',
             url: '/invoice/edit',
-            roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
           }
         ]
       }
@@ -436,7 +436,7 @@ export const NavigationItems: NavigationItem[] = [
     title: 'Application',
     type: 'group',
     icon: 'icon-navigation',
-    roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+    role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
     children: [
       {
         id: 'chat',
@@ -460,7 +460,7 @@ export const NavigationItems: NavigationItem[] = [
         title: 'Customer',
         type: 'collapse',
         icon: 'customer-service',
-        roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
         children: [
           {
             id: 'customer-list',
@@ -475,7 +475,7 @@ export const NavigationItems: NavigationItem[] = [
         title: 'Profile',
         type: 'collapse',
         icon: 'user',
-        roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
         children: [
           {
             id: 'user-profile',
@@ -910,7 +910,7 @@ export const NavigationItems: NavigationItem[] = [
     title: 'Pages',
     type: 'group',
     icon: 'icon-navigation',
-    roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+    role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
     children: [
       // {
       //   id: 'authentication',

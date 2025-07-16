@@ -13,35 +13,35 @@ const routes: Routes = [
         path: 'dashboard',
         loadComponent: () => import('./invoice-dashboard/invoice-dashboard.component').then((c) => c.InvoiceDashboardComponent),
         data: {
-          roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'create',
         loadComponent: () => import('./invoice-create/invoice-create.component').then((c) => c.InvoiceCreateComponent),
         data: {
-          roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'details',
         loadComponent: () => import('./invoice-details/invoice-details.component').then((c) => c.InvoiceDetailsComponent),
         data: {
-          roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'list',
         loadComponent: () => import('./invoice-list/invoice-list.component').then((c) => c.InvoiceListComponent),
         data: {
-          roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'edit',
         loadComponent: () => import('./invoice-edit/invoice-edit.component').then((c) => c.InvoiceEditComponent),
         data: {
-          roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       }
     ]

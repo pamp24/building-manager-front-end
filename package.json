@@ -43,7 +43,7 @@
     "angular-uploader": "8.41.1",
     "angularx-flatpickr": "8.1.0",
     "animate.css": "4.1.1",
-    "apexcharts": "4.7.0",
+    "apexcharts": "^5.2.0",
     "bootstrap": "5.3.6",
     "date-fns": "4.1.0",
     "dayjs": "1.11.13",

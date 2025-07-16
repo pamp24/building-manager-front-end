@@ -13,7 +13,7 @@ const routes: Routes = [
         path: 'default',
         loadComponent: () => import('./default/default.component').then((c) => c.DefaultComponent),
         data: {
-          roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       // {
@@ -27,14 +27,14 @@ const routes: Routes = [
         path: 'finance',
         loadComponent: () => import('./finance/finance.component').then((c) => c.FinanceComponent),
         data: {
-          roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'forms-validator',
         loadComponent: () => import('./forms-validator/forms-validator.component').then((c) => c.FormsValidatorComponent),
         data: {
-          roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       }
     ]

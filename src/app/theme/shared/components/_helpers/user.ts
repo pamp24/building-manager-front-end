@@ -12,7 +12,9 @@ export interface User {
   address2?: string;
   addressNumber2?: string;
   country?: string;
+  state?: string;
+  city?: string;
   region?: string;
   postalCode?: string;
-  roles?: string[];
+  role?: string;
 }

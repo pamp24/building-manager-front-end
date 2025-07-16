@@ -1,0 +1,20 @@
+<h5 class="mb-3">Βήμα 4: Προσθήκη Διαμερισμάτων</h5>
+        <form [formGroup]="apartmentForm" (ngSubmit)="submitApartment()">
+          <div class="row">
+            <div class="col-md-6 form-group">
+              <label>Αριθμός Διαμερίσματος</label>
+              <input class="form-control" formControlName="apartmentNumber" />
+            </div>
+            <div class="col-md-6 form-group">
+              <label>Όροφος</label>
+              <input class="form-control" formControlName="floor" />
+            </div>
+            <div class="col-md-6 form-group">
+              <label>Τετραγωνικά Μέτρα</label>
+              <input class="form-control" formControlName="squareMeters" />
+            </div>
+          </div>
+          <div class="form-group text-center mt-3">
+            <button class="btn btn-primary" type="submit">Προσθήκη Διαμερίσματος</button>
+          </div>
+        </form>

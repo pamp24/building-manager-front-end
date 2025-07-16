@@ -4,5 +4,5 @@ export enum Role {
   BuildingManager = 'BuildingManager',
   Owner = 'Owner',
   Resident = 'Resident',
-  User = 'User',
+  User = 'USER',
 }
