@@ -16,6 +16,7 @@ import { AuthenticationService } from 'src/app/theme/shared/service';
   styleUrls: ['./nav-item.component.scss']
 })
 export class NavItemComponent implements OnInit {
+  
   private location = inject(Location);
   private authenticationService = inject(AuthenticationService);
 

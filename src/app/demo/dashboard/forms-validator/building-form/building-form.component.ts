@@ -16,10 +16,61 @@ import { Input } from '@angular/core';
 export class BuildingFormComponent {
   @Input() selectedAction!: 'many' | 'new' | 'existing';
   @Output() backClicked = new EventEmitter<void>();
-  @Output() formSubmitted = new EventEmitter<void>();
+  @Output() formSubmitted = new EventEmitter<number>();
 
   buildingForm: FormGroup;
   isSubmitted = false;
+  countries = ['Ελλάδα'];
+  states = [
+    'Αττική',
+    'Θεσσαλονίκη',
+    'Αχαΐα',
+    'Λάρισα',
+    'Ηράκλειο',
+    'Μαγνησία',
+    'Έβρος',
+    'Ιωάννινα',
+    'Καβάλα',
+    'Χανιά',
+    'Κοζάνη',
+    'Δράμα',
+    'Ροδόπη',
+    'Πιερία',
+    'Κέρκυρα',
+    'Αιτωλοακαρνανία',
+    'Βοιωτία',
+    'Λέσβος',
+    'Ηλεία',
+    'Σέρρες',
+    'Τρίκαλα',
+    'Καρδίτσα',
+    'Καστοριά',
+    'Φθιώτιδα',
+    'Φλώρινα',
+    'Αργολίδα',
+    'Αρκαδία',
+    'Λακωνία',
+    'Μεσσηνία',
+    'Κορινθία',
+    'Χίος',
+    'Σάμος',
+    'Κυκλάδες',
+    'Δωδεκάνησα',
+    'Λευκάδα',
+    'Ζάκυνθος',
+    'Κεφαλονιά',
+    'Γρεβενά',
+    'Πρέβεζα',
+    'Άρτα',
+    'Ρέθυμνο',
+    'Λασίθι',
+    'Βοιωτία',
+    'Εύβοια',
+    'Φωκίδα',
+    'Ευρυτανία',
+    'Θεσπρωτία',
+    'Ξάνθη'
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -43,7 +94,14 @@ export class BuildingFormComponent {
       sqMetersTotal: ['', Validators.required],
       sqMetersCommonSpaces: ['', Validators.required],
       parkingExists: [false],
-      parkingSpacesNum: ['']
+      parkingSpacesNum: [''],
+      description: [''],
+      undergroundFloorExists: [false],
+      halfFloorExists: [false],
+      overTopFloorExists: [false],
+      managerHouseExists: [false],
+      storageExists: [false],
+      storageNum: [''],   
     });
     this.buildingForm.get('parkingExists')?.valueChanges.subscribe((checked: boolean) => {
       const parkingSpacesNumCtrl = this.buildingForm.get('parkingSpacesNum');
@@ -56,6 +114,19 @@ export class BuildingFormComponent {
         parkingSpacesNumCtrl?.disable();
       }
       parkingSpacesNumCtrl?.updateValueAndValidity();
+    });
+    
+    this.buildingForm.get('storageExists')?.valueChanges.subscribe((checked: boolean) => {
+      const storageNumCtrl = this.buildingForm.get('storageNum');
+      if (checked) {
+        storageNumCtrl?.setValidators([Validators.required, Validators.min(1)]);
+        storageNumCtrl?.enable();
+      } else {
+        storageNumCtrl?.clearValidators();
+        storageNumCtrl?.setValue('');
+        storageNumCtrl?.disable();
+      }
+      storageNumCtrl?.updateValueAndValidity();
     });
   }
 
@@ -70,7 +141,15 @@ export class BuildingFormComponent {
       this.buildingForm.markAllAsTouched();
       return;
     }
+
     const formValue = this.buildingForm.value;
+    const currentUserId = this.authenticationService.currentUserValue?.id;
+    
+    if (!currentUserId) {
+      console.error('Δεν βρέθηκε ID χρήστη.');
+    return;
+    }
+
     const building: BuildingRequest = {
       name: formValue.name,
       street1: formValue.street1,
@@ -88,17 +167,25 @@ export class BuildingFormComponent {
       sqMetersCommonSpaces: formValue.sqMetersCommonSpaces,
       parkingExists: formValue.parkingExists,
       parkingSpacesNum: formValue.parkingExists ? Number(formValue.parkingSpacesNum) : 0,
+      buildingDescription: formValue.description,
+      managerId: currentUserId,
       active: true,
       enable: true
     };
     this.buildingService.createBuilding(building).subscribe({
-      next: () => {
-        console.log('Η πολυκατοικία δημιουργήθηκε με επιτυχία');
+      next: (buildingId: number) => {
+        console.log('Η πολυκατοικία δημιουργήθηκε με επιτυχία', buildingId);
+        localStorage.setItem('buildingId', buildingId.toString());
         const currentUserId = this.authenticationService.currentUserValue?.id;
         if (currentUserId) {
           this.userService.assignRole(currentUserId, 'BuildingManager').subscribe({
             next: () => {
-              this.formSubmitted.emit();
+              console.log('Ο ρόλος BuildingManager δόθηκε');
+              this.formSubmitted.emit(buildingId);
+            },
+            error: (err) => {
+              console.warn('Ο χρήστης έχει ήδη τον ρόλο BuildingManager ή υπήρξε άλλο σφάλμα:', err);
+              this.formSubmitted.emit(buildingId);
             }
           });
         }

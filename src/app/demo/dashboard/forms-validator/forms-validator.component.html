@@ -1,13 +1,13 @@
-<!-- banner -->
+<!-- Κεντρικό Welcome Banner -->
 <div class="welcome-card">
   <div class="body">
     <div class="d-flex flex-wrap">
       <div class="row w-100">
         <div class="col-sm-6 col-xs-12">
           <div class="info-section">
-            <h2 class="">Καλώς Ήρθατε στο Building Manager</h2>
+            <h2>Καλώς Ήρθατε στο Building Manager</h2>
             <h6 class="my-3 f-w-400">
-              Πάρτε τον έλεγχο των κοινωστήστων σας με το Building Manager. Παρακολουθήστε την πρόοδο, διαχειριστείτε τις εργασίες και
+              Πάρτε τον έλεγχο των κοινοχρήστων σας με το Building Manager. Παρακολουθήστε την πρόοδο, διαχειριστείτε τις εργασίες και
               επικοινωνήστε με τους ενοίκους εύκολα και αποτελεσματικά.
             </h6>
             <button routerLink="/dashboard/analytics" class="btn btn-outline-light">Δείτε Περισσότερα</button>
@@ -25,31 +25,32 @@
     </div>
   </div>
 </div>
-<!-- forma  1 -->
-<div class="row">
+
+<!-- Βήματα Εγγραφής -->
+<div class="row mt-4">
   <div class="col-sm-12">
     <app-card cardTitle="Έλεγχος Στοιχείων">
-      <ng-container *ngIf="currentStep === 1">
-        <app-user-form></app-user-form>
+      <!-- Βήμα 1: Επιλογή Ρόλου -->
+      <ng-container *ngIf="currentStep === 1" class="text-center mt-4">
+        <app-role-form (actionSelected)="onActionSelected($event)" (formCompleted)="goToNextStep()"></app-role-form>
       </ng-container>
-      <!-- forma2 -->
-      <ng-container *ngIf="currentStep === 2" class="text-center mt-4">
-        <app-role-form (actionSelected)="onActionSelected($event)"></app-role-form>
-      </ng-container>
-      <!-- forma3 -->
-      <ng-container *ngIf="currentStep === 3">
+      <!-- Βήμα 2: Εισαγωγή Πολυκατοικίας -->
+      <ng-container *ngIf="currentStep === 2">
         <div class="d-flex justify-content-center flex-wrap gap-2">
+          <!-- Εισαγωγή πολλών πολυκατοικιών -->
           <app-multiple-building-form
             *ngIf="selectedAction === 'many'"
             [selectedAction]="selectedAction"
             (backClicked)="previousStep()"
           ></app-multiple-building-form>
+          <!-- Νέα πολυκατοικία -->
           <app-building-form
             *ngIf="selectedAction === 'new'"
             [selectedAction]="selectedAction"
             (backClicked)="previousStep()"
-            (formSubmitted)="onBuildingFormCompleted()"
+            (formSubmitted)="goToNextStep()"
           ></app-building-form>
+          <!-- Υπάρχουσα πολυκατοικία -->
           <app-existing-building-form
             *ngIf="selectedAction === 'existing'"
             [selectedAction]="selectedAction"
@@ -57,9 +58,12 @@
           ></app-existing-building-form>
         </div>
       </ng-container>
-      <!-- forma4 -->
-      <ng-container *ngIf="currentStep === 4">
-        <app-apartment-form></app-apartment-form>
+
+      <!-- Βήμα 3: Προσθήκη Διαμερισμάτων -->
+      <ng-container *ngIf="currentStep === 3">
+        <app-apartment-form 
+        (backClicked)="previousStep()"
+        ></app-apartment-form>
       </ng-container>
     </app-card>
   </div>

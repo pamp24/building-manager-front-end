@@ -1,20 +1,114 @@
-<h5 class="mb-3">Βήμα 4: Προσθήκη Διαμερισμάτων</h5>
-        <form [formGroup]="apartmentForm" (ngSubmit)="submitApartment()">
-          <div class="row">
-            <div class="col-md-6 form-group">
-              <label>Αριθμός Διαμερίσματος</label>
-              <input class="form-control" formControlName="apartmentNumber" />
-            </div>
-            <div class="col-md-6 form-group">
-              <label>Όροφος</label>
-              <input class="form-control" formControlName="floor" />
-            </div>
-            <div class="col-md-6 form-group">
-              <label>Τετραγωνικά Μέτρα</label>
-              <input class="form-control" formControlName="squareMeters" />
-            </div>
+<form [formGroup]="form" (ngSubmit)="onFinish()">
+  <div formArrayName="apartments">
+    <div *ngFor="let group of apartments.controls; let i = index" [formGroupName]="i" class="border rounded p-3 mb-4">
+      <h5>Διαμέρισμα {{ i + 1 }}</h5>
+
+      <div class="row g-3">
+        <!-- Ονοματεπώνυμο Ιδιοκτήτη -->
+        <div class="col-md-4">
+          <label>Ονοματεπώνυμο Ιδιοκτήτη</label>
+          <input class="form-control" formControlName="fullName" />
+          <div class="invalid-feedback d-block" *ngIf="isSubmitted && group.get('fullName')?.invalid">
+            Απαιτείται τουλάχιστον 3 χαρακτήρες.
           </div>
-          <div class="form-group text-center mt-3">
-            <button class="btn btn-primary" type="submit">Προσθήκη Διαμερίσματος</button>
+        </div>
+        <!-- Ενοικιάζεται -->
+        <div class="row mt-3">
+          <div class="col-md-4">
+            <label>Ενοικιάζεται?</label>
+            <select class="form-select" formControlName="isRented">
+              <option value="">Επιλέξτε</option>
+              <option value="Ναι">Ναι</option>
+              <option value="Όχι">Όχι</option>
+            </select>
+            <div class="invalid-feedback d-block" *ngIf="isSubmitted && group.get('isRented')?.invalid">Υποχρεωτική επιλογή.</div>
           </div>
-        </form>
+          <!-- Ονοματεπώνυμο Ενοικιαστή -->
+          <ng-container *ngIf="group.get('isRented')?.value === 'Ναι'">
+            <div class="col-md-4">
+              <label>Ονοματεπώνυμο Ενοικιαστή</label>
+              <input class="form-control" formControlName="tenantFullName" />
+              <div class="invalid-feedback d-block" *ngIf="isSubmitted && group.get('tenantFullName')?.invalid">
+                Απαιτείται τουλάχιστον 3 χαρακτήρες.
+              </div>
+            </div>
+          </ng-container>
+        </div>
+
+        <!-- Αριθμός Διαμερίσματος -->
+        <div class="col-md-4">
+          <label>Αριθμός Διαμερίσματος</label>
+          <input class="form-control" formControlName="apartmentNumber" />
+          <div class="invalid-feedback d-block" *ngIf="isSubmitted && group.get('apartmentNumber')?.invalid">Υποχρεωτικό πεδίο.</div>
+        </div>
+
+        <!-- Όροφος -->
+        <div class="col-md-4">
+          <label>Όροφος</label>
+          <input class="form-control" formControlName="floor" />
+          <div class="invalid-feedback d-block" *ngIf="isSubmitted && group.get('floor')?.invalid">Πρέπει να είναι αριθμός.</div>
+        </div>
+
+        <!-- Τετραγωνικά -->
+        <div class="col-md-4">
+          <label>Τετραγωνικά Μέτρα</label>
+          <input class="form-control" type="text" formControlName="sqMetersApart" />
+          <div class="invalid-feedback d-block" *ngIf="isSubmitted && group.get('sqMetersApart')?.invalid">Ελάχιστο 1 τ.μ.</div>
+        </div>
+
+        <!-- Διαθέτει Parking -->
+        <div class="col-md-4">
+          <label>Διαθέτει Parking</label>
+          <select class="form-select" formControlName="hasParking">
+            <option value="">Επιλέξτε</option>
+            <option value="Ναι">Ναι</option>
+            <option value="Όχι">Όχι</option>
+          </select>
+          <div class="invalid-feedback d-block" *ngIf="isSubmitted && group.get('hasParking')?.invalid">Υποχρεωτική επιλογή.</div>
+        </div>
+
+        <!-- Θέση Parking -->
+        <ng-container *ngIf="group.get('hasParking')?.value === 'Ναι'">
+          <div class="col-md-4">
+            <label>Αριθμός Θέσης Parking</label>
+            <input class="form-control" formControlName="parkingSlot" />
+            <div class="invalid-feedback d-block" *ngIf="isSubmitted && group.get('parkingSlot')?.invalid">Υποχρεωτικό πεδίο.</div>
+          </div>
+        </ng-container>
+
+        <!-- Χιλιοστά -->
+        <div class="row mt-3">
+          <div class="col-md-4">
+            <label>Χιλιοστά Κοινοχρήστων</label>
+            <input type="number" class="form-control" formControlName="commonPercent" />
+            <div class="invalid-feedback d-block" *ngIf="isSubmitted && group.get('commonPercent')?.invalid">0 έως 100.</div>
+          </div>
+
+          <div class="col-md-4">
+            <label>Χιλιοστά Ασανσέρ</label>
+            <input type="number" class="form-control" formControlName="elevatorPercent" />
+            <div class="invalid-feedback d-block" *ngIf="isSubmitted && group.get('elevatorPercent')?.invalid">0 έως 100.</div>
+          </div>
+
+          <div class="col-md-4">
+            <label>Χιλιοστά Θέρμανσης</label>
+            <input type="number" class="form-control" formControlName="heatingPercent" />
+            <div class="invalid-feedback d-block" *ngIf="isSubmitted && group.get('heatingPercent')?.invalid">0 έως 100.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Κουμπί Αφαίρεσης -->
+      <div class="text-end mt-3">
+        <button *ngIf="apartments.length > 1" type="button" class="btn btn-danger btn-sm" (click)="removeApartment(i)">Αφαίρεση</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Κουμπιά Πλοήγησης -->
+  <div class="d-flex justify-content-between mt-4">
+    <button type="button" class="btn btn-secondary" (click)="onBack()">Πίσω</button>
+    <button type="button" class="btn btn-outline-primary" (click)="addApartment()">Προσθήκη Διαμερίσματος</button>
+    <button type="submit" class="btn btn-success">Ολοκλήρωση</button>
+  </div>
+</form>

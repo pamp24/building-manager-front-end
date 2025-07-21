@@ -14,6 +14,8 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 // icons
 import { IconService } from '@ant-design/icons-angular';
 import { ContainerOutline, FileTextOutline, LockOutline, SettingOutline, TeamOutline, UserOutline } from '@ant-design/icons-angular/icons';
+import { AuthenticationService } from '../../../../theme/shared/service/authentication.service';
+import { UserService } from '../../../../theme/shared/service/user.service';
 
 @Component({
   selector: 'app-account-profile',
@@ -34,7 +36,14 @@ export class AccountProfileComponent {
   private iconService = inject(IconService);
 
   // constructor
-  constructor() {
+  constructor(
+    private userService: UserService,
+    private authService: AuthenticationService
+  ) {
     this.iconService.addIcon(...[UserOutline, FileTextOutline, ContainerOutline, LockOutline, TeamOutline, SettingOutline]);
+  }
+
+  hasRole(role: string): boolean {
+    return this.authService.currentUserValue?.role === role;
   }
 }

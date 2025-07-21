@@ -9,7 +9,7 @@ import { UserUpdateDTO } from 'src/app/theme/shared/models/UserUpdateDTO';
 export class UserService {
   private apiUrl = 'http://localhost:8080/api/v1/auth/authenticate';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {}  
 
   getCurrentUser(): Observable<User> {
     return this.http.get<User>('http://localhost:8080/api/v1/auth/me');

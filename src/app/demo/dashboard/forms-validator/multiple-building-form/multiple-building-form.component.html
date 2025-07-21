@@ -1,3 +1,75 @@
-<form [formGroup]="form" *ngIf="selectedAction === 'many'" class="editForm" novalidate>
-  <button type="button" class="btn btn-secondary me-2" (click)="onBack()">Πίσω</button>
+<form [formGroup]="companyForm" *ngIf="selectedAction === 'many'" class="editForm" novalidate>
+  <h5 class="mb-3">Βήμα 2: Στοιχεία Εταιρίας/Γραφείου Διαχείρισης</h5>
+
+  <div class="row">
+    <div class="col-md-6 form-group">
+      <label>Επωνυμία Εταιρίας*</label>
+      <input type="text" class="form-control" formControlName="name" [ngClass]="{ 'is-invalid': isSubmitted && companyForm.get('name')?.invalid }" />
+      <div class="invalid-feedback">Το πεδίο είναι υποχρεωτικό.</div>
+    </div>
+
+    <div class="col-md-6 form-group">
+      <label>ΑΦΜ*</label>
+      <input type="text" class="form-control" formControlName="vatNumber" [ngClass]="{ 'is-invalid': isSubmitted && companyForm.get('vatNumber')?.invalid }" />
+      <div class="invalid-feedback">Παρακαλώ εισάγετε έγκυρο ΑΦΜ (9 ψηφία).</div>
+    </div>
+
+    <div class="col-md-6 form-group">
+      <label>Υπεύθυνος Επικοινωνίας*</label>
+      <input type="text" class="form-control" formControlName="contactPerson" [ngClass]="{ 'is-invalid': isSubmitted && companyForm.get('contactPerson')?.invalid }" />
+      <div class="invalid-feedback">Το πεδίο είναι υποχρεωτικό.</div>
+    </div>
+
+    <div class="col-md-6 form-group">
+      <label>Τηλέφωνο*</label>
+      <input type="text" class="form-control" formControlName="phone" [ngClass]="{ 'is-invalid': isSubmitted && companyForm.get('phone')?.invalid }" />
+      <div class="invalid-feedback">Το πεδίο είναι υποχρεωτικό.</div>
+    </div>
+
+    <div class="col-md-6 form-group">
+      <label>Email*</label>
+      <input type="email" class="form-control" formControlName="email" [ngClass]="{ 'is-invalid': isSubmitted && companyForm.get('email')?.invalid }" />
+      <div class="invalid-feedback">Παρακαλώ εισάγετε έγκυρο email.</div>
+    </div>
+
+    <div class="col-md-3 form-group">
+      <label>Οδός*</label>
+      <input type="text" class="form-control" formControlName="address" [ngClass]="{ 'is-invalid': isSubmitted && companyForm.get('address')?.invalid }" />
+      <div class="invalid-feedback">Το πεδίο είναι υποχρεωτικό.</div>
+    </div>
+
+    <div class="col-md-3 form-group">
+      <label>Αριθμός*</label>
+      <input type="text" class="form-control" formControlName="addressNumber" [ngClass]="{ 'is-invalid': isSubmitted && companyForm.get('addressNumber')?.invalid }" />
+      <div class="invalid-feedback">Το πεδίο είναι υποχρεωτικό.</div>
+    </div>
+
+    <div class="col-md-3 form-group">
+      <label>Πόλη*</label>
+      <input type="text" class="form-control" formControlName="city" [ngClass]="{ 'is-invalid': isSubmitted && companyForm.get('city')?.invalid }" />
+      <div class="invalid-feedback">Το πεδίο είναι υποχρεωτικό.</div>
+    </div>
+
+    <div class="col-md-3 form-group">
+      <label>Περιοχή</label>
+      <input type="text" class="form-control" formControlName="region" />
+    </div>
+
+    <div class="col-md-3 form-group">
+      <label>Τ.Κ.*</label>
+      <input type="text" class="form-control" formControlName="postalCode" [ngClass]="{ 'is-invalid': isSubmitted && companyForm.get('postalCode')?.invalid }" />
+      <div class="invalid-feedback">Παρακαλώ εισάγετε έγκυρο Τ.Κ. (5 ψηφία).</div>
+    </div>
+
+    <div class="col-md-3 form-group">
+      <label>Χώρα*</label>
+      <input type="text" class="form-control" formControlName="country" [ngClass]="{ 'is-invalid': isSubmitted && companyForm.get('country')?.invalid }" />
+      <div class="invalid-feedback">Το πεδίο είναι υποχρεωτικό.</div>
+    </div>
+  </div>
+
+  <div class="form-group text-center mt-4">
+    <button type="button" class="btn btn-secondary me-2" (click)="onBack()">Πίσω</button>
+    <button type="button" class="btn btn-success" (click)="submitForm()">Υποβολή</button>
+  </div>
 </form>

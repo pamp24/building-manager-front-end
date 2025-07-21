@@ -46,16 +46,16 @@ export class CalenderComponent {
   // Private props
   colors: Record<string, EventColor> = {
     red: {
-      primary: '#1677ff',
-      secondary: '#2196f3'
+      primary: '#000000ff',
+      secondary: '#008cffff'
     },
     blue: {
-      primary: '#1e90ff',
-      secondary: '#D1E8FF'
+      primary: '#ff0000ff',
+      secondary: '#01ff4dff'
     },
     yellow: {
-      primary: '#e3bc08',
-      secondary: '#FDF1BA'
+      primary: '#f704ffff',
+      secondary: '#ffd105ff'
     }
   };
 

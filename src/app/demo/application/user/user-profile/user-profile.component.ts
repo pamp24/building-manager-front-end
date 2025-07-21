@@ -50,6 +50,25 @@ export class UserProfileComponent implements OnInit {
   userForm!: FormGroup;
   user!: User;
 
+  private calculateProfileCompletion(): number {
+    const totalFields = [
+      'firstName',
+      'lastName',
+      'dateOfBirth',
+      'phoneNumber',
+      'profileImageUrl',
+      'address1',
+      'addressNumber1',
+      'country',
+      'state',
+      'city',
+      'postalCode'
+    ];
+    const filledCount = totalFields.filter((field) => !!this.userForm.get(field)?.value).length;
+    const percentage = Math.round((filledCount / totalFields.length) * 100);
+    return percentage;
+  }
+
   // eslint-disable-next-line
   people$: Observable<any[]> | undefined;
   selectedPeople = [{ name: 'Karyn Wright' }];
@@ -149,14 +168,26 @@ export class UserProfileComponent implements OnInit {
       region: [''],
       postalCode: ['']
     });
-
+    this.userForm.valueChanges.subscribe(() => {
+      const completion = this.calculateProfileCompletion();
+      this.updateChart(completion);
+    });
     this.userService.getCurrentUser().subscribe({
       next: (user) => {
         this.user = user;
         this.userForm.patchValue(user);
+        const completion = this.calculateProfileCompletion();
+        this.updateChart(completion);
       },
       error: (err) => console.error('Δεν κατάφερε να φορτωθεί ο χρήστης', err)
     });
+  }
+
+  private updateChart(percentage: number): void {
+    this.chartOptions = {
+      ...this.chartOptions,
+      series: [percentage]
+    };
   }
   //apothikeusi allagon
   savePersonalChanges(): void {
