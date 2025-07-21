@@ -44,7 +44,7 @@ export class ProfilesComponent implements OnInit {
       sqMetersTotal: [''],
       sqMetersCommonSpaces: [''],
       parkingExists: [false],
-      parkingSpacesNum: [0]
+      parkingSpacesNum: ['']
     });
 
     this.buildingService.getMyBuilding().subscribe({
@@ -59,19 +59,19 @@ export class ProfilesComponent implements OnInit {
       this.details = [
         {
           icon: 'mail',
-          text: data.managerEmail || 'Δεν έχει οριστεί'
+          text: data?.managerEmail || 'Δεν έχει οριστεί'
         },
         {
           icon: 'phone',
-          text: data.managerPhone || 'Μη διαθέσιμο'
+          text: data?.managerPhone || 'Μη διαθέσιμο'
         },
                 {
           icon: 'environment',
-          text: data.managerCity || 'Άγνωστη περιοχή'
+          text: data?.managerCity || 'Άγνωστη περιοχή'
         },
         {
           icon: 'aim',
-          text: data.managerAddress1 || 'Άγνωστη περιοχή'
+          text: data?.managerAddress1 || 'Άγνωστη περιοχή'
         },
       ];
     });
@@ -84,24 +84,24 @@ export class ProfilesComponent implements OnInit {
   ) {
     this.iconService.addIcon(...[MailOutline, PhoneOutline, AimOutline, EnvironmentOutline]);
     this.buildingForm = this.fb.group({
-      name: ['Κτίριο Α', Validators.required],
-      street1: ['Λεωφόρος Δημοκρατίας', Validators.required],
-      stNumber1: ['25', Validators.required],
-      street2: ['Παρ. Δημοκρατίας'],
-      stNumber2: ['2Α'],
-      city: ['Αθήνα', Validators.required],
-      region: ['Κέντρο', Validators.required],
-      postalCode: ['10563', Validators.required],
-      country: ['Ελλάδα', Validators.required],
-      state: ['Αττική', Validators.required],
-      floors: [5, Validators.required],
-      apartmentsNum: [15, Validators.required],
-      sqMetersTotal: [1200, Validators.required],
-      sqMetersCommonSpaces: [200, Validators.required],
-      parkingExists: [true],
-      parkingSpacesNum: [6],
-      active: [true],
-      enable: [true]
+      name: ['', Validators.required],
+      street1: ['', Validators.required],
+      stNumber1: ['', Validators.required],
+      street2: [''],
+      stNumber2: [''],
+      city: ['', Validators.required],
+      region: ['', Validators.required],
+      postalCode: ['', Validators.required],
+      country: ['', Validators.required],
+      state: ['', Validators.required],
+      floors: ['', Validators.required],
+      apartmentsNum: ['', Validators.required],
+      sqMetersTotal: ['', Validators.required],
+      sqMetersCommonSpaces: ['', Validators.required],
+      parkingExists: [],
+      parkingSpacesNum: [],
+      active: [],
+      enable: []
     });
 
     // Διαχείριση ενεργοποίησης/απενεργοποίησης του πεδίου parkingSpacesNum

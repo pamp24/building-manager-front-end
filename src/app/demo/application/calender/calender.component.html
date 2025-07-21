@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-sm-12">
-    <app-card cardTitle="Calender">
+    <app-card cardTitle="Ημερολόγιο">
       <div class="row text-center">
         <div class="col-md-4">
           <div class="btn-group">
@@ -11,11 +11,11 @@
               [(viewDate)]="viewDate"
               (viewDateChange)="closeOpenMonthViewDay()"
             >
-              Previous
+              Προηγούμενο
             </div>
-            <div class="btn btn-outline-primary" mwlCalendarToday [(viewDate)]="viewDate">Today</div>
+            <div class="btn btn-outline-primary" mwlCalendarToday [(viewDate)]="viewDate">Σήμερα</div>
             <div class="btn btn-muted" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
-              Next
+              Επόμενο
             </div>
           </div>
         </div>
@@ -24,9 +24,9 @@
         </div>
         <div class="col-md-4">
           <div class="btn-group">
-            <div class="btn btn-primary" (click)="setView(calendarView.Month)" [class.active]="view === calendarView.Month">Month</div>
-            <div class="btn btn-primary" (click)="setView(calendarView.Week)" [class.active]="view === calendarView.Week">Week</div>
-            <div class="btn btn-primary" (click)="setView(calendarView.Day)" [class.active]="view === calendarView.Day">Day</div>
+            <div class="btn btn-primary" (click)="setView(calendarView.Month)" [class.active]="view === calendarView.Month">Μήνας</div>
+            <div class="btn btn-primary" (click)="setView(calendarView.Week)" [class.active]="view === calendarView.Week">Εβδομάδα</div>
+            <div class="btn btn-primary" (click)="setView(calendarView.Day)" [class.active]="view === calendarView.Day">Μέρα</div>
           </div>
         </div>
       </div>
@@ -69,7 +69,7 @@
       <br />
       <h3>
         Edit events
-        <button class="btn btn-primary float-end" (click)="addEvent()">Add new</button>
+        <button class="btn btn-primary float-end" (click)="addEvent()">Προσθήκη</button>
         <div class="clearfix"></div>
       </h3>
 
@@ -77,12 +77,12 @@
         <table class="table table-bordered">
           <thead>
             <tr>
-              <th>Title</th>
-              <th>Primary color</th>
-              <th>Secondary + text color</th>
-              <th>Starts at</th>
-              <th>Ends at</th>
-              <th>Remove</th>
+              <th>Τίτλος</th>
+              <th>Κύριο Χρώμα</th>
+              <th>Δευτερεύον Χρώμα</th>
+              <th>Αρχή</th>
+              <th>Τέλος</th>
+              <th>Αφαίρεση</th>
             </tr>
           </thead>
 
@@ -150,7 +150,7 @@
                   />
                 </td>
                 <td>
-                  <button class="btn btn-danger" (click)="deleteEvent(event)">Delete</button>
+                  <button class="btn btn-danger" (click)="deleteEvent(event)">Διαγραφή</button>
                 </td>
               </tr>
             }
@@ -160,19 +160,19 @@
 
       <ng-template #modalContent let-close="close">
         <div class="modal-header justify-content-between">
-          <h5 class="modal-title">Event action occurred</h5>
+          <h5 class="modal-title">Γεγονός</h5>
           <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
         </div>
         <div class="modal-body">
           <div>
-            Event:
-            <div>Start: {{ modalData?.event?.start | date: 'medium' }}</div>
-            <div>End: {{ modalData?.event?.end | date: 'medium' }}</div>
-            <div>Title: {{ modalData?.event?.title }}</div>
+            <!-- Γεγονός: -->
+            <div>Αρχή: {{ modalData?.event?.start | date: 'medium' }}</div>
+            <div>Τέλος: {{ modalData?.event?.end | date: 'medium' }}</div>
+            <div>Τίτλος: {{ modalData?.event?.title }}</div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary" (click)="close()">OK</button>
+          <button type="button" class="btn btn-outline-secondary" (click)="close()">ΟΚ</button>
         </div>
       </ng-template>
     </app-card>

@@ -17,6 +17,7 @@ export interface BuildingDTO {
   parkingExists: boolean;
   parkingSpacesNum: number;
   buildingCode: string;
+  buildingDescription?: string;
   managerFullName: string;
   managerEmail: string;
   managerPhone: string;

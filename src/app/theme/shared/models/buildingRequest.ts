@@ -18,4 +18,5 @@ export interface BuildingRequest {
   active: boolean;
   enable: boolean;
   buildingDescription?: string;
+  managerId: number; 
 }
