@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: building-manager-frontend
+    ports:
+      - "8081:80"
+    restart: unless-stopped
+    networks:
+      - app-network
+    # Healthcheck to ensure the application is running properly
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    # Mount volumes for development (uncomment for development)
+    # volumes:
+    #   - ./src:/app/src
+    #   - ./nginx.conf:/etc/nginx/conf.d/default.conf
+
+networks:
+  app-network:
+    driver: bridge 
