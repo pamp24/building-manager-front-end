@@ -45,8 +45,11 @@
         <!-- Όροφος -->
         <div class="col-md-4">
           <label>Όροφος</label>
-          <input class="form-control" formControlName="floor" />
-          <div class="invalid-feedback d-block" *ngIf="isSubmitted && group.get('floor')?.invalid">Πρέπει να είναι αριθμός.</div>
+          <select class="form-select" formControlName="floor">
+            <option value="">Επιλέξτε</option>
+            <option *ngFor="let floor of floorOptions" [value]="floor">{{ floor }}</option>
+          </select>
+          <div class="invalid-feedback d-block" *ngIf="isSubmitted && group.get('floor')?.invalid">Πρέπει να επιλέξετε όροφο.</div>
         </div>
 
         <!-- Τετραγωνικά -->
@@ -97,6 +100,47 @@
           </div>
         </div>
       </div>
+      <!-- Διαθέτει Αποθήκη -->
+      <div class="row mt-3">
+        <div class="col-md-4 mt-3" *ngIf="storageLimit > 0">
+          <label>
+            <input
+              type="checkbox"
+              formControlName="hasStorage"
+              [disabled]="!group.get('hasStorage')?.value && currentUsedStorages >= storageLimit"
+            />
+            Διαθέτει Αποθήκη
+          </label>
+          <div class="text-danger small" *ngIf="!group.get('hasStorage')?.value && currentUsedStorages >= storageLimit">
+            Το όριο αποθηκών έχει καλυφθεί.
+          </div>
+        </div>
+        <!-- Αριθμός Αποθήκης -->
+        <ng-container *ngIf="group.get('hasStorage')?.value">
+          <div class="col-md-4">
+            <label>Αριθμός Αποθήκης</label>
+            <input class="form-control" formControlName="storageSlot" />
+            <div class="invalid-feedback d-block" *ngIf="isSubmitted && group.get('storageSlot')?.invalid">Υποχρεωτικό πεδίο.</div>
+          </div>
+        </ng-container>
+      </div>
+
+      <!-- Διαμέρισμα Διαχειριστή -->
+      <ng-container *ngIf="managerHouseExists">
+        <div class="col-md-4 mt-2">
+          <label>
+            <input
+              type="checkbox"
+              formControlName="isManagerHouse"
+              [disabled]="!group.get('isManagerHouse')?.value && currentManagerHouseUsed"
+            />
+            Διαμέρισμα Διαχειριστή
+          </label>
+          <div class="text-danger small" *ngIf="!group.get('isManagerHouse')?.value && currentManagerHouseUsed">
+            Το διαμέρισμα διαχειριστή έχει ήδη οριστεί.
+          </div>
+        </div>
+      </ng-container>
 
       <!-- Κουμπί Αφαίρεσης -->
       <div class="text-end mt-3">

@@ -1,65 +1,82 @@
-// angular import
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-// project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { UserService } from 'src/app/theme/shared/service';
+import { UserTableDto } from 'src/app/theme/shared/models/userTableDTO';
 
 @Component({
   selector: 'app-role',
+  standalone: true,
   imports: [CommonModule, SharedModule],
   templateUrl: './role.component.html',
   styleUrl: './role.component.scss'
 })
-export class RoleComponent {
-  // public method
-  tables = [
-    {
-      src: 'assets/images/user/avatar-1.jpg',
-      name: 'Addie Bass',
-      email: 'mareva@gmail.com',
-      role: 'Owner',
-      role_type: 'bg-primary',
-      status_1: 'Joined',
-      status_type: 'bg-success'
-    },
-    {
-      src: 'assets/images/user/avatar-4.jpg',
-      name: 'Agnes McGee',
-      email: 'heba@gmail.com',
-      role: 'Manager',
-      role_type: ' bg-light-info',
-      status_1: 'Joined',
-      status_type: 'bg-success'
-    },
-    {
-      src: 'assets/images/user/avatar-5.jpg',
-      name: 'Agnes McGee',
-      email: 'heba@gmail.com',
-      role: 'Staff',
-      role_type: 'bg-light-warning',
-      status: true,
-      status_1: 'Invited',
-      status_type: 'bg-outline-info'
-    },
-    {
-      src: 'assets/images/user/avatar-1.jpg',
-      name: 'Addie Bass',
-      email: 'mareva@gmail.com',
-      role: 'Staff',
-      role_type: 'bg-light-warning',
-      status_1: 'Joined',
-      status_type: 'bg-success'
-    },
-    {
-      src: 'assets/images/user/avatar-4.jpg',
-      name: 'Agnes McGee',
-      email: 'heba@gmail.com',
-      role: 'Customer',
-      role_type: ' bg-light-success',
-      status: true,
-      status_1: 'Invited',
-      status_type: 'bg-outline-info'
+export class RoleComponent implements OnInit {
+  tables: UserTableDto[] = [];
+  emailToInvite = '';
+  isSending = false;
+
+  constructor(private userService: UserService) {}
+
+  ngOnInit(): void {
+    this.fetchUsers();
+  }
+
+  fetchUsers(): void {
+    this.userService.getUsersInSameBuilding().subscribe({
+      next: (data) => {
+        this.tables = data;
+      },
+      error: (err: unknown) => {
+        console.error('Σφάλμα φόρτωσης χρηστών:', err);
+      }
+    });
+  }
+
+  sendInvite(): void {
+    if (!this.emailToInvite) {
+      alert('Παρακαλώ εισάγετε email.');
+      return;
     }
-  ];
+
+    this.isSending = true;
+    this.userService.inviteUserToBuilding(this.emailToInvite).subscribe({
+      next: () => {
+        alert('Η πρόσκληση στάλθηκε με επιτυχία!');
+        this.emailToInvite = '';
+        this.isSending = false;
+      },
+      error: (err: unknown) => {
+        console.error('Σφάλμα αποστολής πρόσκλησης:', err);
+        alert('Απέτυχε η αποστολή πρόσκλησης.');
+        this.isSending = false;
+      }
+    });
+  }
+
+  getTranslatedRole(role: string): string {
+    switch (role) {
+      case 'Owner':
+        return 'Ιδιοκτήτης';
+      case 'Resident':
+        return 'Ένοικος';
+      case 'BuildingManager':
+        return 'Διαχειριστής';
+      case 'PropertyManager':
+        return 'Εταιρία Διαχείρισης';
+      default:
+        return role;
+    }
+  }
+
+  getTranslatedStatus(status: string): string {
+    switch (status) {
+      case 'Joined':
+        return 'Μέλος';
+      case 'Invited':
+        return 'Προσκεκλημένος';
+      default:
+        return status;
+    }
+  }
 }

@@ -15,9 +15,8 @@ export class BuildingService {
     return this.http.post<number>(this.apiUrl, building);
   }
   getMyBuilding(): Observable<BuildingDTO> {
-    return this.http.get<BuildingDTO>(`${this.apiUrl}/my`);
+    return this.http.get<BuildingDTO>(`${this.apiUrl}/myBuilding`);
   }
-  // building.service.ts
   deleteBuilding(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }

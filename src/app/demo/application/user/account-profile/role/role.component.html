@@ -1,26 +1,23 @@
 <app-card cardTitle="Πρόσκληση Μελών Ομάδας" [padding]="0" footerClass="text-end btn-page">
   <div class="table-top p-4">
     <h4>
-      5/10
+      {{ tables.length }}/10
       <small>μέλη διαθέσιμα στο πρόγραμμά σας.</small>
     </h4>
     <hr class="my-3" />
     <div class="row">
-      <div class="col-md-8">
-        <div class="form-group mb-0">
-          <label class="form-label">Διεύθυνση Email</label>
-          <div class="row">
-            <div class="col">
-              <input type="email" class="form-control" placeholder="Εισάγετε το email σας" />
-            </div>
-            <div class="col-auto">
-              <button class="btn btn-primary">Αποστολή</button>
-            </div>
-          </div>
-        </div>
+      <div class="col">
+        <input type="email" class="form-control" placeholder="Εισάγετε το email σας" [(ngModel)]="emailToInvite" [disabled]="isSending" />
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-primary" (click)="sendInvite()" [disabled]="isSending">
+          <span *ngIf="isSending" class="spinner-border spinner-border-sm me-2"></span>
+          Αποστολή
+        </button>
       </div>
     </div>
   </div>
+
   <div class="table-responsive">
     <table class="table mb-0">
       <thead>
@@ -32,36 +29,50 @@
         </tr>
       </thead>
       <tbody>
-        @for (table of tables; track table) {
-          <tr>
-            <td>
-              <div class="row">
-                <div class="col-auto pe-0">
-                  <img src="{{ table.src }}" alt="user-image" class="wid-40 rounded-circle" />
-                </div>
-                <div class="col">
-                  <h6 class="mb-0">{{ table.name }}</h6>
-                  <p class="text-muted f-12 mb-0">{{ table.email }}</p>
-                </div>
+        <tr *ngFor="let table of tables">
+          <td>
+            <div class="row">
+              <div class="col-auto pe-0">
+                <img src="assets/images/user/avatar-1.jpg" alt="user-image" class="wid-40 rounded-circle" />
               </div>
-            </td>
-            <td>
-              <span class="badge {{ table.role_type }}">{{ table.role }}</span>
-            </td>
-            <td class="text-end">
-              @if (table.status === true) {
-                <a href="javascript:" title="Κατάσταση" class="btn btn-link-danger">Επαναποστολή</a>
-              }
-              <span class="badge {{ table.status_type }}" title="Κατάσταση">{{ table.status_1 }}</span>
-            </td>
-            <td class="text-end">
-              <a href="javascript:" class="avatar avatar-s btn-link-secondary" title="Επεξεργασία"><i class="ti ti-dots f-18"></i></a>
-            </td>
-          </tr>
-        }
+              <div class="col">
+                <h6 class="mb-0">{{ table.name }}</h6>
+                <p class="text-muted f-12 mb-0">{{ table.email }}</p>
+              </div>
+            </div>
+          </td>
+          <td>
+            <span
+              [ngClass]="{
+                'badge bg-primary': table.role === 'Owner',
+                'badge bg-info': table.role === 'Resident',
+                'badge bg-warning': table.role === 'BuildingManager',
+                'badge bg-dark': table.role === 'PropertyManager'
+              }"
+            >
+              {{ getTranslatedRole(table.role) }}
+            </span>
+          </td>
+          <td class="text-end">
+            <span
+              [ngClass]="{
+                'badge bg-success': table.status === 'Joined',
+                'badge bg-outline-info': table.status === 'Invited'
+              }"
+            >
+              {{ getTranslatedStatus(table.status) }}
+            </span>
+          </td>
+          <td class="text-end">
+            <a href="javascript:" class="avatar avatar-s btn-link-secondary" title="Επεξεργασία">
+              <i class="ti ti-dots f-18"></i>
+            </a>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
+
   <ng-template #footerTemplate>
     <div class="btn btn-link-danger">Ακύρωση</div>
     <div class="btn btn-primary">Αποθήκευση Αλλαγών</div>

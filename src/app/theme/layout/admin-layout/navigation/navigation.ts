@@ -448,39 +448,39 @@ export const NavigationItems: NavigationItem[] = [
     breadcrumbs: false,
     role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
   },
-  {
-    id: 'widget',
-    title: 'Widget',
-    type: 'group',
-    icon: 'icon-navigation',
-    role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
-    children: [
-      {
-        id: 'statistics',
-        title: 'Statistics',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/widget/statistics',
-        icon: 'idcard'
-      },
-      {
-        id: 'data',
-        title: 'Data',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/widget/data',
-        icon: 'database'
-      },
-      {
-        id: 'chart',
-        title: 'Chart',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/widget/chart',
-        icon: 'line-chart'
-      }
-    ]
-  },
+  // {
+  //   id: 'widget',
+  //   title: 'Widget',
+  //   type: 'group',
+  //   icon: 'icon-navigation',
+  //   role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+  //   children: [
+  //     {
+  //       id: 'statistics',
+  //       title: 'Statistics',
+  //       type: 'item',
+  //       classes: 'nav-item',
+  //       url: '/widget/statistics',
+  //       icon: 'idcard'
+  //     },
+  //     {
+  //       id: 'data',
+  //       title: 'Data',
+  //       type: 'item',
+  //       classes: 'nav-item',
+  //       url: '/widget/data',
+  //       icon: 'database'
+  //     },
+  //     {
+  //       id: 'chart',
+  //       title: 'Chart',
+  //       type: 'item',
+  //       classes: 'nav-item',
+  //       url: '/widget/chart',
+  //       icon: 'line-chart'
+  //     }
+  //   ]
+  // },
   {
     id: 'admin',
     title: 'Admin Panel',
@@ -488,143 +488,143 @@ export const NavigationItems: NavigationItem[] = [
     icon: 'icon-navigation',
     role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
     children: [
-      {
-        id: 'Online-Courses',
-        title: 'Online Courses',
-        type: 'collapse',
-        icon: 'read',
-        isMainParent: true,
-        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
-        children: [
-          {
-            id: 'dashboard',
-            title: 'Dashboard',
-            type: 'item',
-            url: '/online-course/dashboard',
-            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
-          },
-          {
-            id: 'teacher',
-            title: 'Teacher',
-            type: 'collapse',
-            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
-            children: [
-              {
-                id: 'list',
-                title: 'List',
-                type: 'item',
-                url: '/online-course/teacher/list'
-              },
-              {
-                id: 'apply',
-                title: 'Apply',
-                type: 'item',
-                url: '/online-course/teacher/apply'
-              },
-              {
-                id: 'add',
-                title: 'Add',
-                type: 'item',
-                url: '/online-course/teacher/add',
-                classes: 'no-icon',
-                role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
-              }
-            ]
-          },
-          {
-            id: 'student',
-            title: 'Student',
-            type: 'collapse',
-            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
-            children: [
-              {
-                id: 'list',
-                title: 'List',
-                type: 'item',
-                url: '/online-course/student/list'
-              },
-              {
-                id: 'apply',
-                title: 'Apply',
-                type: 'item',
-                url: '/online-course/student/apply'
-              },
-              {
-                id: 'add',
-                title: 'Add',
-                type: 'item',
-                url: '/online-course/student/add',
-                classes: 'no-icon',
-                role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
-              }
-            ]
-          },
-          {
-            id: 'courses',
-            title: 'Courses',
-            type: 'collapse',
-            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
-            children: [
-              {
-                id: 'view',
-                title: 'View',
-                type: 'item',
-                url: '/online-course/courses/view'
-              },
-              {
-                id: 'add',
-                title: 'Add',
-                type: 'item',
-                url: '/online-course/courses/add',
-                role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
-              }
-            ]
-          },
-          {
-            id: 'pricing',
-            title: 'Pricing',
-            type: 'item',
-            url: '/online-course/pricing',
-            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
-          },
-          {
-            id: 'site',
-            title: 'Site',
-            type: 'item',
-            url: '/online-course/site',
-            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
-          },
-          {
-            id: 'setting',
-            title: 'Setting',
-            type: 'collapse',
-            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
-            children: [
-              {
-                id: 'payment',
-                title: 'Payment',
-                type: 'item',
-                url: '/online-course/setting/payment',
-                role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
-              },
-              {
-                id: 'pricing',
-                title: 'Pricing',
-                type: 'item',
-                url: '/online-course/setting/price',
-                role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
-              },
-              {
-                id: 'notification',
-                title: 'Notification',
-                type: 'item',
-                url: '/online-course/setting/notification',
-                role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
-              }
-            ]
-          }
-        ]
-      },
+      // {
+      //   id: 'Online-Courses',
+      //   title: 'Online Courses',
+      //   type: 'collapse',
+      //   icon: 'read',
+      //   isMainParent: true,
+      //   role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+      //   children: [
+      //     {
+      //       id: 'dashboard',
+      //       title: 'Dashboard',
+      //       type: 'item',
+      //       url: '/online-course/dashboard',
+      //       role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+      //     },
+      //     {
+      //       id: 'teacher',
+      //       title: 'Teacher',
+      //       type: 'collapse',
+      //       role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+      //       children: [
+      //         {
+      //           id: 'list',
+      //           title: 'List',
+      //           type: 'item',
+      //           url: '/online-course/teacher/list'
+      //         },
+      //         {
+      //           id: 'apply',
+      //           title: 'Apply',
+      //           type: 'item',
+      //           url: '/online-course/teacher/apply'
+      //         },
+      //         {
+      //           id: 'add',
+      //           title: 'Add',
+      //           type: 'item',
+      //           url: '/online-course/teacher/add',
+      //           classes: 'no-icon',
+      //           role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+      //         }
+      //       ]
+      //     },
+      //     {
+      //       id: 'student',
+      //       title: 'Student',
+      //       type: 'collapse',
+      //       role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+      //       children: [
+      //         {
+      //           id: 'list',
+      //           title: 'List',
+      //           type: 'item',
+      //           url: '/online-course/student/list'
+      //         },
+      //         {
+      //           id: 'apply',
+      //           title: 'Apply',
+      //           type: 'item',
+      //           url: '/online-course/student/apply'
+      //         },
+      //         {
+      //           id: 'add',
+      //           title: 'Add',
+      //           type: 'item',
+      //           url: '/online-course/student/add',
+      //           classes: 'no-icon',
+      //           role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+      //         }
+      //       ]
+      //     },
+      //     {
+      //       id: 'courses',
+      //       title: 'Courses',
+      //       type: 'collapse',
+      //       role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+      //       children: [
+      //         {
+      //           id: 'view',
+      //           title: 'View',
+      //           type: 'item',
+      //           url: '/online-course/courses/view'
+      //         },
+      //         {
+      //           id: 'add',
+      //           title: 'Add',
+      //           type: 'item',
+      //           url: '/online-course/courses/add',
+      //           role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+      //         }
+      //       ]
+      //     },
+      //     {
+      //       id: 'pricing',
+      //       title: 'Pricing',
+      //       type: 'item',
+      //       url: '/online-course/pricing',
+      //       role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+      //     },
+      //     {
+      //       id: 'site',
+      //       title: 'Site',
+      //       type: 'item',
+      //       url: '/online-course/site',
+      //       role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+      //     },
+      //     {
+      //       id: 'setting',
+      //       title: 'Setting',
+      //       type: 'collapse',
+      //       role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+      //       children: [
+      //         {
+      //           id: 'payment',
+      //           title: 'Payment',
+      //           type: 'item',
+      //           url: '/online-course/setting/payment',
+      //           role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+      //         },
+      //         {
+      //           id: 'pricing',
+      //           title: 'Pricing',
+      //           type: 'item',
+      //           url: '/online-course/setting/price',
+      //           role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+      //         },
+      //         {
+      //           id: 'notification',
+      //           title: 'Notification',
+      //           type: 'item',
+      //           url: '/online-course/setting/notification',
+      //           role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+      //         }
+      //       ]
+      //     }
+      //   ]
+      // },
       {
         id: 'membership',
         title: 'Membership',

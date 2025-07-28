@@ -16,6 +16,7 @@ import { IconService } from '@ant-design/icons-angular';
 import { ContainerOutline, FileTextOutline, LockOutline, SettingOutline, TeamOutline, UserOutline } from '@ant-design/icons-angular/icons';
 import { AuthenticationService } from '../../../../theme/shared/service/authentication.service';
 import { UserService } from '../../../../theme/shared/service/user.service';
+import { UserCardComponent } from '../user-card/user-card.component';
 
 @Component({
   selector: 'app-account-profile',
@@ -27,7 +28,8 @@ import { UserService } from '../../../../theme/shared/service/user.service';
     AccountPasswordComponent,
     RoleComponent,
     AccountSettingComponent,
-    SharedModule
+    SharedModule,
+    UserCardComponent
   ],
   templateUrl: './account-profile.component.html',
   styleUrl: './account-profile.component.scss'

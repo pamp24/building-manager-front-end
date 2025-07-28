@@ -12,34 +12,83 @@
             <input type="file" id="uplfile" class="d-none" />
           </div>
         </div>
-        @for (task of personal; track task) {
-          <div class="col-sm-6">
-            <div class="form-group">
-              <label class="form-label">{{ task.label }}</label>
-              <input type="text" class="form-control" value="{{ task.value }}" placeholder="{{ task.detail }}" />
+        <form [formGroup]="form" (ngSubmit)="onUpdate()">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label>Ονοματεπώνυμο Ιδιοκτήτη</label>
+              <input type="text" class="form-control" formControlName="fullName" />
+            </div>
+
+            <div class="col-md-6">
+              <label>Ενοικιαζόμενο</label>
+              <select class="form-control" formControlName="isRented">
+                <option value="">Επιλογή</option>
+                <option value="true">Ναι</option>
+                <option value="false">Όχι</option>
+              </select>
+            </div>
+
+            <div class="col-md-6" *ngIf="form.get('isRented')?.value === 'true'">
+              <label>Ονοματεπώνυμο Ενοικιαστή</label>
+              <input type="text" class="form-control" formControlName="tenantFullName" />
+            </div>
+
+            <div class="col-md-6">
+              <label>Αριθμός Διαμερίσματος</label>
+              <input type="text" class="form-control" formControlName="apartmentNumber" />
+            </div>
+            <div class="col-md-6">
+              <label>Όροφος</label>
+              <input type="text" class="form-control" formControlName="floor" />
+            </div>
+            <div class="col-md-6">
+              <label>Τετραγωνικά Διαμερίσματος</label>
+              <input type="number" class="form-control" formControlName="sqMetersApart" />
+            </div>
+            
+            <div class="row">
+              <div class="col-md-6">
+                <label>Διαθέτει Πάρκινγκ</label>
+                <select class="form-control" formControlName="hasParking">
+                  <option value="true">Ναι</option>
+                  <option value="false">Όχι</option>
+                </select>
+              </div>
+              <div class="col-md-6" *ngIf="form.get('hasParking')?.value === 'true'">
+                <label>Αριθμός Θέσης Πάρκινγκ</label>
+                <input type="text" class="form-control" formControlName="parkingSlot" />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <label>Διαθέτει Αποθήκη</label>
+                <select class="form-control" formControlName="hasStorage">
+                  <option value="true">Ναι</option>
+                  <option value="false">Όχι</option>
+                </select>
+              </div>
+              <div class="col-md-6" *ngIf="form.get('hasStorage')?.value === 'true'">
+                <label>Αριθμός Αποθήκης</label>
+                <input type="text" class="form-control" formControlName="storageSlot" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <label>Ποσοστό Κοινόχρηστων</label>
+                <input type="number" class="form-control" formControlName="commonPercent" />
+              </div>
+              <div class="col-md-4">
+                <label>Ποσοστό Ασανσέρ</label>
+                <input type="number" class="form-control" formControlName="elevatorPercent" />
+              </div>
+              <div class="col-md-4">
+                <label>Ποσοστό Θέρμανσης</label>
+                <input type="number" class="form-control" formControlName="heatingPercent" />
+              </div>
             </div>
           </div>
-        }
-        <div class="col-sm-12">
-          <div class="form-group">
-            <label class="form-label">Περιγραφή</label>
-            <textarea class="form-control" placeholder="Leave a comment here">
-Hello, I’m Anshan Handgun Creative Graphic Designer & User Experience Designer based in Website, I create digital Products a more Beautiful and usable place. Morbid accusant ipsum. Nam nec tellus at.</textarea
-            >
-          </div>
-        </div>
-        <div class="col-sm-12">
-          <div class="form-group">
-            <label class="form-label">Χρόνια Συμβολαίου</label>
-            <select class="form-control" title="Enter Total Year Of Experience">
-              <option>Startup</option>
-              <option>2 year</option>
-              <option>3 year</option>
-              <option selected>4 year</option>
-              <option>5 year</option>
-            </select>
-          </div>
-        </div>
+        </form>
       </div>
     </app-card>
   </div>
@@ -101,8 +150,10 @@ Hello, I’m Anshan Handgun Creative Graphic Designer & User Experience Designer
       }
     </app-card>
   </div>
-  <div class="col-12 text-end btn-page">
-    <div class="btn btn-outline-secondary">Cancel</div>
-    <div class="btn btn-primary">Update Profile</div>
+  <div class="mt-4 text-end">
+    <button type="button" class="btn btn-secondary me-2" (click)="toggleEdit()">
+      {{ isEditing ? 'Ακύρωση' : 'Επεξεργασία' }}
+    </button>
+    <button type="submit" class="btn btn-success" [disabled]="!isEditing">Αποθήκευση</button>
   </div>
 </div>
