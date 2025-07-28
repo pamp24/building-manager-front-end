@@ -27,7 +27,18 @@
               <app-personals></app-personals>
             </ng-template>
           </li>
-          <li *ngIf="hasRole('PropertyManager')" [ngbNavItem]="3">
+          <li [ngbNavItem]="3">
+            <a ngbNavLink>
+              <div class="d-flex align-items-center">
+                <i antIcon type="file-text" theme="outline" class="me-2 f-14"></i>
+                <span class="f-w-500">Διαμερίσματα</span>
+              </div>
+            </a>
+            <ng-template ngbNavContent>
+              <app-user-card></app-user-card>
+            </ng-template>
+          </li>
+          <li *ngIf="hasRole('PropertyManager')" [ngbNavItem]="4">
             <a ngbNavLink>
               <div class="d-flex align-items-center">
                 <i antIcon type="container" theme="outline" class="me-2 f-14"></i>

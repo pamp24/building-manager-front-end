@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NarikCustomValidatorsModule } from '@narik/custom-validators';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, FormGroup } from '@angular/forms';
 
 import { UserService } from '../../../theme/shared/service/user.service';
 import { BuildingFormComponent } from './building-form/building-form.component';
@@ -35,6 +35,8 @@ export class FormsValidatorComponent implements OnInit {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   selectedAction: 'many' | 'new' | 'existing' | null = localStorage.getItem('selectedAction') as any;
   currentStep = Number(localStorage.getItem('currentStep')) || 1;
+  buildingForm!: FormGroup;
+  buildingId!: number;
 
   constructor(
     private userService: UserService,
@@ -43,11 +45,11 @@ export class FormsValidatorComponent implements OnInit {
     const user = this.authService.currentUserValue;
 
     if (user?.role === 'BuildingManager') {
-      this.currentStep = 3; 
+      this.currentStep = 3;
     } else if (user?.role === 'PropertyManager') {
-      this.currentStep = 2; 
+      this.currentStep = 2;
     } else {
-      this.currentStep = 1; 
+      this.currentStep = 1;
     }
   }
 
@@ -56,7 +58,6 @@ export class FormsValidatorComponent implements OnInit {
     if (storedStep) {
       this.currentStep = +storedStep;
     }
-
     const storedAction = localStorage.getItem('selectedAction');
     if (storedAction === 'many' || storedAction === 'new' || storedAction === 'existing') {
       this.selectedAction = storedAction;
@@ -86,5 +87,12 @@ export class FormsValidatorComponent implements OnInit {
       this.currentStep--;
       localStorage.setItem('currentStep', this.currentStep.toString());
     }
+  }
+
+  onBuildingFormSubmitted(event: { id: number; form: FormGroup }): void {
+    this.buildingId = event.id;
+    this.buildingForm = event.form;
+    this.currentStep = 3;
+    localStorage.setItem('currentStep', '3');
   }
 }

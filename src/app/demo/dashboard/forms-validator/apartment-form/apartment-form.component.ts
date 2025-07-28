@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, OnChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApartmentService } from 'src/app/theme/shared/service/apartment.service';
 import { Router } from '@angular/router';
@@ -12,11 +12,15 @@ import { BuildingService } from '../../../../theme/shared/service/building.servi
   templateUrl: './apartment-form.component.html',
   styleUrls: ['./apartment-form.component.scss']
 })
-export class ApartmentFormComponent implements OnInit {
+export class ApartmentFormComponent implements OnInit, OnChanges {
   form: FormGroup;
   isSubmitted = false;
+  storageLimit = 0;
+  managerHouseExists = false;
+  floorOptions: string[] = [];
 
   @Input() buildingId!: number;
+  @Input() buildingForm!: FormGroup;
   @Output() backClicked = new EventEmitter<void>();
 
   constructor(
@@ -29,18 +33,55 @@ export class ApartmentFormComponent implements OnInit {
       apartments: this.fb.array([this.createApartmentForm()])
     });
   }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['buildingForm'] && this.buildingForm) {
+      this.generateFloorOptions();
 
-  ngOnInit(): void {
-    const storedId = localStorage.getItem('buildingId');
-    if (storedId) {
-      this.buildingId = +storedId;
-      console.log('Building ID loaded:', this.buildingId);
-    } else {
-      console.warn('No building ID found in localStorage');
+      this.buildingForm.get('undergroundFloorExists')?.valueChanges.subscribe(() => this.generateFloorOptions());
+      this.buildingForm.get('halfFloorExists')?.valueChanges.subscribe(() => this.generateFloorOptions());
+      this.buildingForm.get('overTopFloorExists')?.valueChanges.subscribe(() => this.generateFloorOptions());
+      this.buildingForm.get('floors')?.valueChanges.subscribe(() => this.generateFloorOptions());
     }
-
-    this.setupDynamicValidation();
   }
+ngOnInit(): void {
+  const storageStr = localStorage.getItem('storageNum');
+  this.storageLimit = storageStr ? +storageStr : 0;
+
+  const managerHouseExistsStr = localStorage.getItem('managerHouseExists');
+  this.managerHouseExists = managerHouseExistsStr === 'true';
+
+  const storedId = localStorage.getItem('buildingId');
+  if (storedId) {
+    this.buildingId = +storedId;
+    console.log('Building ID loaded:', this.buildingId);
+  } else {
+    console.warn('No building ID found in localStorage');
+  }
+
+  this.setupDynamicValidation();
+}
+
+generateFloorOptions(): void {
+  this.floorOptions = [];
+
+  const underground = this.buildingForm.get('undergroundFloorExists')?.value;
+  const half = this.buildingForm.get('halfFloorExists')?.value;
+  const overTop = this.buildingForm.get('overTopFloorExists')?.value;
+  const floors = Number(this.buildingForm.get('floors')?.value) || 0;
+
+  if (underground) this.floorOptions.push('Υπόγειο');
+  this.floorOptions.push('Ισόγειο');
+  if (half) this.floorOptions.push('Ημιόροφος');
+
+  const greekLetters = ['Α', 'Β', 'Γ', 'Δ', 'Ε', 'ΣΤ', 'Ζ', 'Η', 'Θ', 'Ι', 'ΙΑ', 'ΙΒ', 'ΙΓ', 'ΙΔ', 'ΙΕ'];
+  for (let i = 0; i < floors && i < greekLetters.length; i++) {
+    this.floorOptions.push(greekLetters[i]);
+  }
+
+  if (overTop) this.floorOptions.push('Δώμα');
+
+  console.log('📌 Όροφοι:', this.floorOptions);
+}
 
   get apartments(): FormArray {
     return this.form.get('apartments') as FormArray;
@@ -52,10 +93,13 @@ export class ApartmentFormComponent implements OnInit {
       isRented: ['', Validators.required],
       tenantFullName: [''],
       apartmentNumber: ['', Validators.required],
-      floor: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      floor: ['', [Validators.required]],
       sqMetersApart: ['', [Validators.required, Validators.min(1)]],
       hasParking: ['', Validators.required],
       parkingSlot: [''],
+      hasStorage: [false],
+      storageSlot: [''],
+      isManagerHouse: [false],
       commonPercent: ['', [Validators.required, Validators.min(0), Validators.max(100)]],
       elevatorPercent: ['', [Validators.required, Validators.min(0), Validators.max(100)]],
       heatingPercent: ['', [Validators.required, Validators.min(0), Validators.max(100)]]
@@ -76,7 +120,7 @@ export class ApartmentFormComponent implements OnInit {
 
   onBack(): void {
     if (confirm('Θέλετε να ακυρώσετε την καταχώρηση διαμερισμάτων; Η πολυκατοικία θα διαγραφεί από τη μνήμη.')) {
-      localStorage.removeItem('buildingId'); 
+      localStorage.removeItem('buildingId');
       this.backClicked.emit();
     }
   }
@@ -94,13 +138,16 @@ export class ApartmentFormComponent implements OnInit {
       isRented: apt.isRented === 'Ναι',
       tenantFullName: apt.isRented === 'Ναι' ? apt.tenantFullName : null,
       number: apt.apartmentNumber,
-      floor: +apt.floor,
+      floor: apt.floor,
       sqMetersApart: +apt.sqMetersApart,
       parkingSpace: apt.hasParking === 'Ναι',
       parkingSlot: apt.hasParking === 'Ναι' ? apt.parkingSlot : null,
       commonPercent: +apt.commonPercent,
       elevatorPercent: +apt.elevatorPercent,
       heatingPercent: +apt.heatingPercent,
+      apStorageExists: apt.hasStorage,
+      storageSlot: apt.hasStorage ? apt.storageSlot : null,
+      isManagerHouse: apt.isManagerHouse,
       active: true,
       enable: true,
       buildingId: this.buildingId
@@ -143,5 +190,23 @@ export class ApartmentFormComponent implements OnInit {
       }
       parkingCtrl?.updateValueAndValidity();
     });
+
+    group.get('hasStorage')?.valueChanges.subscribe((value) => {
+      const storageCtrl = group.get('storageSlot');
+      if (value === true) {
+        storageCtrl?.setValidators([Validators.required]);
+      } else {
+        storageCtrl?.clearValidators();
+        storageCtrl?.setValue('');
+      }
+      storageCtrl?.updateValueAndValidity();
+    });
+  }
+
+  get currentUsedStorages(): number {
+    return this.apartments.controls.filter((ctrl) => (ctrl as FormGroup).get('hasStorage')?.value).length;
+  }
+  get currentManagerHouseUsed(): boolean {
+    return this.apartments.controls.some((ctrl) => (ctrl as FormGroup).get('isManagerHouse')?.value);
   }
 }

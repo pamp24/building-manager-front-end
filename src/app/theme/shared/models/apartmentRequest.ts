@@ -2,7 +2,7 @@ export interface ApartmentRequest {
   fullName: string;
   number: string;
   sqMetersApart: string;
-  floor: number;
+  floor: string;
   parkingSpace: boolean;
   parkingSlot?: string;
   isRented: boolean;
@@ -10,8 +10,10 @@ export interface ApartmentRequest {
   commonPercent: number;
   elevatorPercent: number;
   heatingPercent: number;
+  apStorageExists: boolean;
+  storageSlot?: string;
+  isManagerHouse: boolean;
   active: boolean;
   enable: boolean;
   buildingId: number;
 }
-

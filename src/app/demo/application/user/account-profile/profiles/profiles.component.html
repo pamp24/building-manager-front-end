@@ -37,7 +37,7 @@
         }
       </div>
     </app-card>
-    <app-card cardTitle="Skills">
+    <app-card cardTitle="Διαθεσιμότητα θέσεων">
       @for (skill of skills; track skill) {
         <div class="row align-items-center mb-3">
           <div class="col-sm-6 mb-2 mb-sm-0">
@@ -93,6 +93,33 @@
           <div class="col-md-6 form-group" *ngIf="buildingForm.get('parkingExists')?.value">
             <label>Αριθμός Θέσεων Πάρκινγκ</label>
             <input type="number" class="form-control" formControlName="parkingSpacesNum" />
+          </div>
+          <div class="col-md-6 form-group" *ngIf="buildingForm.get('storageExists')?.value">
+            <label>Αριθμός Αποθηκών</label>
+            <input type="number" class="form-control" formControlName="storageNum" />
+          </div>
+          <div class="col-md-6 form-group">
+            <label>Διαθέτει Υπόγειο</label>
+            <select class="form-select" formControlName="undergroundFloorExists">
+              <option [value]="true">Ναι</option>
+              <option [value]="false">Όχι</option>
+            </select>
+          </div>
+
+          <div class="col-md-6 form-group">
+            <label>Διαθέτει Ημιόροφο</label>
+            <select class="form-select" formControlName="halfFloorExists">
+              <option [value]="true">Ναι</option>
+              <option [value]="false">Όχι</option>
+            </select>
+          </div>
+
+          <div class="col-md-6 form-group">
+            <label>Διαθέτει Δώμα</label>
+            <select class="form-select" formControlName="overTopFloorExists">
+              <option [value]="true">Ναι</option>
+              <option [value]="false">Όχι</option>
+            </select>
           </div>
         </div>
       </form>

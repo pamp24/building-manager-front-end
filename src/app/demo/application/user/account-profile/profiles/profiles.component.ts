@@ -43,8 +43,14 @@ export class ProfilesComponent implements OnInit {
       apartmentsNum: [''],
       sqMetersTotal: [''],
       sqMetersCommonSpaces: [''],
-      parkingExists: [false],
-      parkingSpacesNum: ['']
+      parkingExists: [''],
+      parkingSpacesNum: [''],
+      buildingDescription: [''],
+      undergroundFloorExists: [''],
+      halfFloorExists: [''],
+      overTopFloorExists: [''],
+      storageExists: [''],
+      storageNum: [''],
     });
 
     this.buildingService.getMyBuilding().subscribe({
@@ -83,6 +89,7 @@ export class ProfilesComponent implements OnInit {
     private buildingService: BuildingService
   ) {
     this.iconService.addIcon(...[MailOutline, PhoneOutline, AimOutline, EnvironmentOutline]);
+
     this.buildingForm = this.fb.group({
       name: ['', Validators.required],
       street1: ['', Validators.required],
@@ -98,15 +105,28 @@ export class ProfilesComponent implements OnInit {
       apartmentsNum: ['', Validators.required],
       sqMetersTotal: ['', Validators.required],
       sqMetersCommonSpaces: ['', Validators.required],
-      parkingExists: [],
-      parkingSpacesNum: [],
-      active: [],
-      enable: []
+      parkingExists: [''],
+      parkingSpacesNum: [''],
+      buildingDescription: [''],
+      undergroundFloorExists: [''],
+      halfFloorExists: [''],
+      overTopFloorExists: [''],
+      storageExists: [''],
+      storageNum: [''],
     });
 
     // Διαχείριση ενεργοποίησης/απενεργοποίησης του πεδίου parkingSpacesNum
     this.buildingForm.get('parkingExists')?.valueChanges.subscribe((value) => {
       const control = this.buildingForm.get('parkingSpacesNum');
+      if (value) {
+        control?.enable();
+      } else {
+        control?.disable();
+      }
+    });
+    // Διαχείριση ενεργοποίησης/απενεργοποίησης του πεδίου storageNum
+    this.buildingForm.get('storageExists')?.valueChanges.subscribe((value) => {
+      const control = this.buildingForm.get('storageNum');
       if (value) {
         control?.enable();
       } else {
@@ -124,29 +144,13 @@ export class ProfilesComponent implements OnInit {
 
   skills = [
     {
-      title: 'Junior',
+      title: 'Πάρκινγκ',
       value: 30
     },
     {
-      title: 'UX Researcher',
+      title: 'Αποθήκη',
       value: 80
     },
-    {
-      title: 'Wordpress',
-      value: 90
-    },
-    {
-      title: 'HTML',
-      value: 30
-    },
-    {
-      title: 'Graphic Design',
-      value: 95
-    },
-    {
-      title: 'Code Style',
-      value: 75
-    }
   ];
 
   personal_details = [

@@ -18,6 +18,11 @@ export interface BuildingDTO {
   parkingSpacesNum: number;
   buildingCode: string;
   buildingDescription?: string;
+  undergroundFloorExists: boolean;
+  halfFloorExists: boolean;
+  overTopFloorExists: boolean;
+  storageExists: boolean;
+  storageNum: number;
   managerFullName: string;
   managerEmail: string;
   managerPhone: string;

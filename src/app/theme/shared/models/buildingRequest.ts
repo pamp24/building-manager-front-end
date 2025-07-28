@@ -18,5 +18,11 @@ export interface BuildingRequest {
   active: boolean;
   enable: boolean;
   buildingDescription?: string;
+  undergroundFloorExists: boolean,
+  halfFloorExists: boolean,
+  overTopFloorExists:  boolean,
+  managerHouseExists: boolean,
+  storageExists: boolean,
+  storageNum: number,
   managerId: number; 
 }

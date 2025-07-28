@@ -16,61 +16,65 @@ import { Input } from '@angular/core';
 export class BuildingFormComponent {
   @Input() selectedAction!: 'many' | 'new' | 'existing';
   @Output() backClicked = new EventEmitter<void>();
-  @Output() formSubmitted = new EventEmitter<number>();
+  @Output() formSubmitted = new EventEmitter<{ id: number, form: FormGroup }>();
+
+
+
 
   buildingForm: FormGroup;
   isSubmitted = false;
   countries = ['Ελλάδα'];
   states = [
-    'Αττική',
-    'Θεσσαλονίκη',
-    'Αχαΐα',
-    'Λάρισα',
-    'Ηράκλειο',
-    'Μαγνησία',
-    'Έβρος',
-    'Ιωάννινα',
-    'Καβάλα',
-    'Χανιά',
-    'Κοζάνη',
-    'Δράμα',
-    'Ροδόπη',
-    'Πιερία',
-    'Κέρκυρα',
-    'Αιτωλοακαρνανία',
-    'Βοιωτία',
-    'Λέσβος',
-    'Ηλεία',
-    'Σέρρες',
-    'Τρίκαλα',
-    'Καρδίτσα',
-    'Καστοριά',
-    'Φθιώτιδα',
-    'Φλώρινα',
-    'Αργολίδα',
-    'Αρκαδία',
-    'Λακωνία',
-    'Μεσσηνία',
-    'Κορινθία',
-    'Χίος',
-    'Σάμος',
-    'Κυκλάδες',
-    'Δωδεκάνησα',
-    'Λευκάδα',
-    'Ζάκυνθος',
-    'Κεφαλονιά',
-    'Γρεβενά',
-    'Πρέβεζα',
-    'Άρτα',
-    'Ρέθυμνο',
-    'Λασίθι',
-    'Βοιωτία',
-    'Εύβοια',
-    'Φωκίδα',
-    'Ευρυτανία',
-    'Θεσπρωτία',
-    'Ξάνθη'
-  ];
+  'Νομός Αττικής',
+  'Νομός Θεσσαλονίκης',
+  'Νομός Αχαΐας',
+  'Νομός Λάρισας',
+  'Νομός Ηρακλείου',
+  'Νομός Μαγνησίας',
+  'Νομός Έβρου',
+  'Νομός Ιωαννίνων',
+  'Νομός Καβάλας',
+  'Νομός Χανίων',
+  'Νομός Κοζάνης',
+  'Νομός Δράμας',
+  'Νομός Ροδόπης',
+  'Νομός Πιερίας',
+  'Νομός Κέρκυρας',
+  'Νομός Αιτωλοακαρνανίας',
+  'Νομός Βοιωτίας',
+  'Νομός Λέσβου',
+  'Νομός Ηλείας',
+  'Νομός Σερρών',
+  'Νομός Τρικάλων',
+  'Νομός Καρδίτσας',
+  'Νομός Καστοριάς',
+  'Νομός Φθιώτιδας',
+  'Νομός Φλώρινας',
+  'Νομός Αργολίδας',
+  'Νομός Αρκαδίας',
+  'Νομός Λακωνίας',
+  'Νομός Μεσσηνίας',
+  'Νομός Κορινθίας',
+  'Νομός Χίου',
+  'Νομός Σάμου',
+  'Νομός Κυκλάδων',
+  'Νομός Δωδεκανήσου',
+  'Νομός Λευκάδας',
+  'Νομός Ζακύνθου',
+  'Νομός Κεφαλονιάς',
+  'Νομός Γρεβενών',
+  'Νομός Πρέβεζας',
+  'Νομός Άρτας',
+  'Νομός Ρεθύμνης',
+  'Νομός Λασιθίου',
+  'Νομός Βοιωτίας',
+  'Νομός Εύβοιας',
+  'Νομός Φωκίδας',
+  'Νομός Ευρυτανίας',
+  'Νομός Θεσπρωτίας',
+  'Νομός Ξάνθης'
+];
+
 
   constructor(
     private fb: FormBuilder,
@@ -101,7 +105,7 @@ export class BuildingFormComponent {
       overTopFloorExists: [false],
       managerHouseExists: [false],
       storageExists: [false],
-      storageNum: [''],   
+      storageNum: ['']
     });
     this.buildingForm.get('parkingExists')?.valueChanges.subscribe((checked: boolean) => {
       const parkingSpacesNumCtrl = this.buildingForm.get('parkingSpacesNum');
@@ -115,7 +119,7 @@ export class BuildingFormComponent {
       }
       parkingSpacesNumCtrl?.updateValueAndValidity();
     });
-    
+
     this.buildingForm.get('storageExists')?.valueChanges.subscribe((checked: boolean) => {
       const storageNumCtrl = this.buildingForm.get('storageNum');
       if (checked) {
@@ -136,20 +140,17 @@ export class BuildingFormComponent {
 
   submitBuildingForm(): void {
     this.isSubmitted = true;
-
     if (this.buildingForm.invalid) {
       this.buildingForm.markAllAsTouched();
       return;
     }
-
     const formValue = this.buildingForm.value;
     const currentUserId = this.authenticationService.currentUserValue?.id;
-    
+
     if (!currentUserId) {
       console.error('Δεν βρέθηκε ID χρήστη.');
-    return;
+      return;
     }
-
     const building: BuildingRequest = {
       name: formValue.name,
       street1: formValue.street1,
@@ -169,6 +170,12 @@ export class BuildingFormComponent {
       parkingSpacesNum: formValue.parkingExists ? Number(formValue.parkingSpacesNum) : 0,
       buildingDescription: formValue.description,
       managerId: currentUserId,
+      undergroundFloorExists: formValue.undergroundFloorExists,
+      halfFloorExists: formValue.halfFloorExists,
+      overTopFloorExists: formValue.overTopFloorExists,
+      managerHouseExists: formValue.managerHouseExists,
+      storageExists: formValue.storageExists,
+      storageNum: formValue.storageExists ? Number(formValue.storageNum) : 0,
       active: true,
       enable: true
     };
@@ -176,16 +183,20 @@ export class BuildingFormComponent {
       next: (buildingId: number) => {
         console.log('Η πολυκατοικία δημιουργήθηκε με επιτυχία', buildingId);
         localStorage.setItem('buildingId', buildingId.toString());
+        localStorage.setItem('storageNum', building.storageNum.toString());
+        localStorage.setItem('managerHouseExists', building.managerHouseExists ? 'true' : 'false');
         const currentUserId = this.authenticationService.currentUserValue?.id;
         if (currentUserId) {
           this.userService.assignRole(currentUserId, 'BuildingManager').subscribe({
             next: () => {
               console.log('Ο ρόλος BuildingManager δόθηκε');
-              this.formSubmitted.emit(buildingId);
+              this.formSubmitted.emit({ id: buildingId, form: this.buildingForm });
+
             },
             error: (err) => {
               console.warn('Ο χρήστης έχει ήδη τον ρόλο BuildingManager ή υπήρξε άλλο σφάλμα:', err);
-              this.formSubmitted.emit(buildingId);
+              this.formSubmitted.emit({ id: buildingId, form: this.buildingForm });
+
             }
           });
         }
@@ -194,5 +205,8 @@ export class BuildingFormComponent {
         console.error('Σφάλμα δημιουργίας κτιρίου', err);
       }
     });
+  }
+  get managerHouseExistsSelected(): boolean {
+    return this.buildingForm?.get('managerHouseExists')?.value;
   }
 }
