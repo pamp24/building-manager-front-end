@@ -1,0 +1,135 @@
+<form form *ngIf="form" [formGroup]="form" (ngSubmit)="onUpdate()">
+  <div class="row">
+    <!-- Αριστερά: Φόρμα Διαμερίσματος -->
+    <div class="col-lg-6">
+      <app-card cardTitle="Πληροφορίες Διαμερίσματος" [padding]="24">
+        <div class="row g-3">
+          <!-- Όνομα / Επίθετο -->
+          <div class="col-md-6">
+            <label>Όνομα Ιδιοκτήτη</label>
+            <input type="text" class="form-control" formControlName="ownerFirstName" />
+          </div>
+          <div class="col-md-6">
+            <label>Επίθετο Ιδιοκτήτη</label>
+            <input type="text" class="form-control" formControlName="ownerLastName" />
+          </div>
+
+          <!-- Ενοικιαζόμενο -->
+          <div class="col-md-6">
+            <label>Ενοικιαζόμενο</label>
+            <select class="form-control" formControlName="isRented">
+              <option value="">Επιλογή</option>
+              <option value="true">Ναι</option>
+              <option value="false">Όχι</option>
+            </select>
+          </div>
+
+          <!-- Ενοικιαστής -->
+          <div class="col-md-6" *ngIf="form.get('isRented')?.value === 'true'">
+            <label>Όνομα Ενοικιαστή</label>
+            <input type="text" class="form-control" formControlName="residentFirstName" />
+          </div>
+          <div class="col-md-6" *ngIf="form.get('isRented')?.value === 'true'">
+            <label>Επώνυμο Ενοικιαστή</label>
+            <input type="text" class="form-control" formControlName="residentLastName" />
+          </div>
+
+          <!-- Στοιχεία Διαμερίσματος -->
+          <div class="col-md-6">
+            <label>Αρ. Διαμερίσματος</label>
+            <input type="text" class="form-control" formControlName="apartmentNumber" />
+          </div>
+          <div class="col-md-6">
+            <label>Όροφος</label>
+            <input type="text" class="form-control" formControlName="floor" />
+          </div>
+          <div class="col-md-6">
+            <label>Τετραγωνικά</label>
+            <input type="number" class="form-control" formControlName="sqMetersApart" />
+          </div>
+
+          <!-- Parking -->
+          <div class="col-md-6">
+            <label>Διαθέτει Parking</label>
+            <select class="form-control" formControlName="hasParking">
+              <option value="true">Ναι</option>
+              <option value="false">Όχι</option>
+            </select>
+          </div>
+          <div class="col-md-6" *ngIf="form.get('hasParking')?.value === 'true'">
+            <label>Αρ. Parking</label>
+            <input type="text" class="form-control" formControlName="parkingSlot" />
+          </div>
+
+          <!-- Αποθήκη -->
+          <div class="col-md-6">
+            <label>Διαθέτει Αποθήκη</label>
+            <select class="form-control" formControlName="hasStorage">
+              <option value="true">Ναι</option>
+              <option value="false">Όχι</option>
+            </select>
+          </div>
+          <div class="col-md-6" *ngIf="form.get('hasStorage')?.value === 'true'">
+            <label>Αρ. Αποθήκης</label>
+            <input type="text" class="form-control" formControlName="storageSlot" />
+          </div>
+
+          <!-- Χιλιοστά -->
+          <div class="row g-3 mt-2">
+            <div class="col-md-4">
+              <label>Χιλιοστά Κοινοχρήστων</label>
+              <input type="number" class="form-control" formControlName="commonPercent" />
+            </div>
+            <div class="col-md-4">
+              <label>Χιλιοστά Ασανσέρ</label>
+              <input type="number" class="form-control" formControlName="elevatorPercent" />
+            </div>
+            <div class="col-md-4">
+              <label>Χιλιοστά Θέρμανσης</label>
+              <input type="number" class="form-control" formControlName="heatingPercent" />
+            </div>
+          </div>
+        </div>
+      </app-card>
+    </div>
+
+    <!-- Δεξιά: Περιγραφή & επικοινωνία -->
+    <div class="col-lg-6">
+      <app-card cardTitle="Περιγραφή" [padding]="24">
+        <textarea rows="3" class="form-control" formControlName="apDescription" placeholder="Περιγραφή Διαμερίσματος"></textarea>
+      </app-card>
+
+      <app-card cardTitle="Πληροφορίες Ιδιοκτήτη" [padding]="24">
+        <div class="row">
+          <div class="col-md-6">
+            <label>Τηλέφωνο</label>
+            <input type="text" class="form-control" [value]="userPhone" readonly />
+          </div>
+          <div class="col-md-6">
+            <label>Email</label>
+            <input type="email" class="form-control" [value]="userEmail" readonly />
+          </div>
+        </div>
+      </app-card>
+    </div>
+
+    <!-- Κουμπιά -->
+    <div class="mt-4 text-end">
+      <button type="button" class="btn btn-secondary me-2" (click)="toggleEdit()">
+        {{ isEditing ? 'Ακύρωση' : 'Επεξεργασία' }}
+      </button>
+      <button type="submit" class="btn btn-success" [disabled]="!isEditing">Αποθήκευση</button>
+    </div>
+  </div>
+
+  <!-- Pagination κάτω από όλα -->
+  <div class="datatable-bottom mt-3" *ngIf="apartments.length > 1">
+    <ngb-pagination
+      [collectionSize]="total"
+      [(page)]="currentPage"
+      [pageSize]="pageSize"
+      (pageChange)="onPageChange($event)"
+      class="table-pagination"
+    ></ngb-pagination>
+  </div>
+</form>

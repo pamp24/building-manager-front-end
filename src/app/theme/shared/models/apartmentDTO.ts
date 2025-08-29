@@ -1,8 +1,10 @@
 export interface ApartmentDTO {
   fullApartmentName: string;
-  fullName: string;
+  ownerFirstName: string;
+  ownerLastName: string;
   isRented: boolean;
-  tenantFullName: string | null;
+  residentFirstName: string | null;
+  residentLastName: string | null;
   number: string;
   sqMetersApart: string;
   floor: string;
@@ -14,6 +16,7 @@ export interface ApartmentDTO {
   apStorageExist: boolean;
   storageSlot: string | null;
   isManagerHouse: boolean;
+  lastModifiedDate: string;
 
   apDescription: string;
 
@@ -21,7 +24,9 @@ export interface ApartmentDTO {
   enable: boolean;
   managerFullName: string;
   managerId: string;
-
+  
+  residentEmail: string | null;
+  residentPhone: string | null;
 
   ownerFullName: string;
   ownerEmail: string;

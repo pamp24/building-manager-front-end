@@ -1,12 +1,14 @@
 export interface ApartmentRequest {
-  fullName: string;
+  ownerFirstName: string;
+  ownerLastName: string;
   number: string;
   sqMetersApart: string;
   floor: string;
   parkingSpace: boolean;
   parkingSlot?: string;
   isRented: boolean;
-  tenantFullName?: string;
+  residentFirstName: string | null;
+  residentLastName: string | null;
   commonPercent: number;
   elevatorPercent: number;
   heatingPercent: number;

@@ -3,11 +3,10 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // project import
-import { AccountPasswordComponent } from './account-password/account-password.component';
 import { AccountSettingComponent } from './account-setting/account-setting.component';
-import { MyAccountComponent } from './my-account/my-account.component';
-import { PersonalsComponent } from './personals/personals.component';
-import { ProfilesComponent } from './profiles/profiles.component';
+import { CompanyComponent } from './company/company.component';
+import { ApartmentComponent } from './apartment/apartment.component';
+import { BuildingComponent } from './building/building.component';
 import { RoleComponent } from './role/role.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 
@@ -22,10 +21,9 @@ import { UserCardComponent } from '../user-card/user-card.component';
   selector: 'app-account-profile',
   imports: [
     CommonModule,
-    ProfilesComponent,
-    PersonalsComponent,
-    MyAccountComponent,
-    AccountPasswordComponent,
+    BuildingComponent,
+    ApartmentComponent,
+    CompanyComponent,
     RoleComponent,
     AccountSettingComponent,
     SharedModule,

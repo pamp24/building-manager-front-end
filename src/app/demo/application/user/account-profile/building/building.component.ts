@@ -13,17 +13,22 @@ import { BuildingService } from '../../../../../theme/shared/service/building.se
 import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
 
 @Component({
-  selector: 'app-profiles',
+  selector: 'app-building',
   imports: [CommonModule, SharedModule],
-  templateUrl: './profiles.component.html',
-  styleUrl: './profiles.component.scss'
+  templateUrl: './building.component.html',
+  styleUrl: './building.component.scss'
 })
-export class ProfilesComponent implements OnInit {
+export class BuildingComponent implements OnInit {
   private iconService = inject(IconService);
   buildingForm: FormGroup;
   building?: BuildingDTO;
   errorMessage: string = '';
   buildingData!: BuildingDTO;
+
+  buildings: BuildingDTO[] = [];
+  total = 0;
+  currentPage = 1;
+  pageSize = 1;
   details: { icon: string; text: string }[] = [];
 
   //ngOnInit
@@ -43,44 +48,29 @@ export class ProfilesComponent implements OnInit {
       apartmentsNum: [''],
       sqMetersTotal: [''],
       sqMetersCommonSpaces: [''],
-      parkingExists: [''],
+      parkingExist: [''],
       parkingSpacesNum: [''],
       buildingDescription: [''],
-      undergroundFloorExists: [''],
-      halfFloorExists: [''],
-      overTopFloorExists: [''],
-      storageExists: [''],
-      storageNum: [''],
+      undergroundFloorExist: [''],
+      halfFloorExist: [''],
+      overTopFloorExist: [''],
+      storageExist: [''],
+      storageNum: ['']
     });
 
-    this.buildingService.getMyBuilding().subscribe({
-      next: (data) => {
-        this.buildingData = data;
-        this.buildingForm.patchValue(data); // Προγεμίζει τη φόρμα
+    this.buildingService.getMyBuildings().subscribe({
+      next: (data: BuildingDTO[]) => {
+        this.buildings = data;
+        this.total = data.length;
+        if (data.length > 0) {
+          this.loadBuilding(data[0]); // πρώτο building
+        }
+      },
+      error: (err) => {
+        console.error('Σφάλμα φόρτωσης πολυκατοικιών:', err);
       }
     });
 
-    this.buildingService.getMyBuilding().subscribe((data: BuildingDTO) => {
-      this.buildingData = data;
-      this.details = [
-        {
-          icon: 'mail',
-          text: data?.managerEmail || 'Δεν έχει οριστεί'
-        },
-        {
-          icon: 'phone',
-          text: data?.managerPhone || 'Μη διαθέσιμο'
-        },
-                {
-          icon: 'environment',
-          text: data?.managerCity || 'Άγνωστη περιοχή'
-        },
-        {
-          icon: 'aim',
-          text: data?.managerAddress1 || 'Άγνωστη περιοχή'
-        },
-      ];
-    });
   }
 
   // constructor
@@ -105,18 +95,18 @@ export class ProfilesComponent implements OnInit {
       apartmentsNum: ['', Validators.required],
       sqMetersTotal: ['', Validators.required],
       sqMetersCommonSpaces: ['', Validators.required],
-      parkingExists: [''],
+      parkingExist: [''],
       parkingSpacesNum: [''],
       buildingDescription: [''],
-      undergroundFloorExists: [''],
-      halfFloorExists: [''],
-      overTopFloorExists: [''],
-      storageExists: [''],
-      storageNum: [''],
+      undergroundFloorExist: [''],
+      halfFloorExist: [''],
+      overTopFloorExist: [''],
+      storageExist: [''],
+      storageNum: ['']
     });
 
     // Διαχείριση ενεργοποίησης/απενεργοποίησης του πεδίου parkingSpacesNum
-    this.buildingForm.get('parkingExists')?.valueChanges.subscribe((value) => {
+    this.buildingForm.get('parkingExist')?.valueChanges.subscribe((value) => {
       const control = this.buildingForm.get('parkingSpacesNum');
       if (value) {
         control?.enable();
@@ -125,7 +115,7 @@ export class ProfilesComponent implements OnInit {
       }
     });
     // Διαχείριση ενεργοποίησης/απενεργοποίησης του πεδίου storageNum
-    this.buildingForm.get('storageExists')?.valueChanges.subscribe((value) => {
+    this.buildingForm.get('storageExist')?.valueChanges.subscribe((value) => {
       const control = this.buildingForm.get('storageNum');
       if (value) {
         control?.enable();
@@ -142,6 +132,38 @@ export class ProfilesComponent implements OnInit {
     }
   }
 
+  loadBuilding(building: BuildingDTO) {
+    this.buildingData = building;
+    this.buildingForm.patchValue(building);
+
+    this.details = [
+      {
+        icon: 'mail',
+        text: building?.managerEmail || 'Δεν έχει οριστεί'
+      },
+      {
+        icon: 'phone',
+        text: building?.managerPhone || 'Μη διαθέσιμο'
+      },
+      {
+        icon: 'environment',
+        text: building?.managerCity || 'Άγνωστη περιοχή'
+      },
+      {
+        icon: 'aim',
+        text: building?.managerAddress1 || 'Άγνωστη περιοχή'
+      }
+    ];
+  }
+
+  onPageChange(page: number) {
+    this.currentPage = page;
+    const building = this.buildings[page - 1];
+    if (building) {
+      this.loadBuilding(building);
+    }
+  }
+
   skills = [
     {
       title: 'Πάρκινγκ',
@@ -150,7 +172,7 @@ export class ProfilesComponent implements OnInit {
     {
       title: 'Αποθήκη',
       value: 80
-    },
+    }
   ];
 
   personal_details = [

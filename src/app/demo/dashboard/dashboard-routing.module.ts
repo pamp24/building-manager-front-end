@@ -33,6 +33,7 @@ const routes: Routes = [
       {
         path: 'forms-validator',
         loadComponent: () => import('./forms-validator/forms-validator.component').then((c) => c.FormsValidatorComponent),
+
         data: {
           role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }

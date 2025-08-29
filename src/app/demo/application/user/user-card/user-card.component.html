@@ -1,20 +1,18 @@
 <div class="row">
   <div class="p-3 d-sm-flex align-items-center justify-content-between user-card">
-    <div class="form-search user-card">
-      <i antIcon type="search" theme="outline"></i>
-      <input type="search" class="form-control" placeholder="Αναζήτηση" />
-    </div>
     <div class="d-flex align-items-center m-sm-0 mt-3">
-      <select class="form-select" aria-label="Επιλογή ταξινόμησης">
-        <option selected>Ταξινόμηση (Προεπιλογή)</option>
-        <option value="1">Όνομα Πελάτη</option>
-        <option value="2">Email</option>
-        <option value="3">Τηλέφωνο</option>
-        <option value="4">Ηλικία</option>
-        <option value="5">Χώρα</option>
-        <option value="6">Κατάσταση</option>
+      <select class="form-select" aria-label="Επιλογή ταξινόμησης" [(ngModel)]="sortOption" (change)="sortCards()">
+        <option value="default">Ταξινόμηση (Προεπιλογή)</option>
+        <option value="name">Όνομα</option>
+        <option value="floorAsc">Όροφος Αύξουσα</option>
+        <option value="floorDesc">Όροφος Φθίνουσα</option>
       </select>
-      <a href="javascript:" class="btn btn-primary d-inline-flex align-items-center ms-2 text-white">
+      <a
+        *ngIf="userRole === 'BuildingManager' || userRole === 'PropertyManager'"
+        href="javascript:"
+        class="btn btn-primary d-inline-flex align-items-center ms-2 text-white"
+        (click)="openAddApartment()"
+      >
         <i class="me-2 d-flex" antIcon type="plus" theme="outline"></i>
         <span>Προσθήκη Διαμερίσματος</span>
       </a>
@@ -30,16 +28,11 @@
               <img src="{{ card.src }}" alt="εικόνα-χρήστη" class="wid-40 rounded-circle" />
             </div>
             <div class="flex-grow-1 mx-3">
-              <h6 class="mb-0">{{ card.name }} </h6>
+              <h6 class="mb-0">{{ card.name }}</h6>
               <p class="text-muted text-sm mb-0">{{ card.position }}</p>
             </div>
             <div class="dropdown" ngbDropdown>
-              <a
-                class="avatar avatar-s btn-link-secondary dropdown-toggle arrow-none"
-                title="μενού"
-                href="javascript:"
-                ngbDropdownToggle
-              >
+              <a class="avatar avatar-s btn-link-secondary dropdown-toggle arrow-none" title="μενού" href="javascript:" ngbDropdownToggle>
                 <i antIcon type="more" theme="outline" class="f-16"></i>
               </a>
               <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
@@ -53,7 +46,7 @@
         </div>
 
         <div class="card-body">
-          <p class="mb-4">{{card.description}}</p>
+          <p class="mb-4">{{ card.description }}</p>
 
           <div class="row g-2">
             <div class="col-sm-6">
@@ -65,19 +58,19 @@
             <div class="col-sm-6">
               <div class="d-inline-flex align-items-center w-100">
                 <i antIcon type="phone" theme="outline"></i>
-                <p class="mb-0 ms-2 text-truncate text-muted">{{card.phone}}</p>
+                <p class="mb-0 ms-2 text-truncate text-muted">{{ card.phone }}</p>
               </div>
             </div>
             <div class="col-sm-6">
               <div class="d-inline-flex align-items-center w-100">
                 <i antIcon type="environment" theme="outline"></i>
-                <p class="mb-0 ms-2 text-truncate text-muted">{{card.street}} {{card.streetNumber}}</p>
+                <p class="mb-0 ms-2 text-truncate text-muted">{{ card.street }} {{ card.streetNumber }}</p>
               </div>
             </div>
             <div class="col-sm-6">
               <div class="d-inline-flex align-items-center w-100">
                 <i antIcon type="environment" theme="outline"></i>
-                  <p class="mb-0 ms-2 text-truncate">{{card.city}}</p>
+                <p class="mb-0 ms-2 text-truncate">{{ card.city }}</p>
               </div>
             </div>
           </div>
@@ -91,8 +84,8 @@
 
         <div class="card-footer">
           <div class="d-flex align-items-center justify-content-between">
-            <p class="mb-0 text-muted text-sm">Ενημερώθηκε πριν 2 λεπτά</p>
-            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" (click)="open(preview)">Προεπισκόπηση</button>
+            <p class="mb-0 text-muted text-sm">Ενημερώθηκε: {{ card.lastModifiedDate || 'Δεν υπάρχει ημερομηνία' }}</p>
+            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" (click)="open(preview, card)">Προεπισκόπηση</button>
           </div>
         </div>
       </div>
@@ -100,7 +93,7 @@
   }
 </div>
 <ng-template #preview let-modal>
-  <app-card-preview></app-card-preview>
+  <app-card-preview [apartment]="selectedApartment"></app-card-preview>
   <div class="modal-footer">
     <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="modal.close('Close click')">Κλείσιμο</button>
   </div>

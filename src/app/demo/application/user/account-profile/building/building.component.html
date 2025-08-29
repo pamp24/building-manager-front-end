@@ -90,17 +90,17 @@
             <label>{{ field.label }}</label>
             <input type="text" class="form-control" [formControlName]="field.name" />
           </div>
-          <div class="col-md-6 form-group" *ngIf="buildingForm.get('parkingExists')?.value">
+          <div class="col-md-6 form-group" *ngIf="buildingForm.get('parkingExist')?.value">
             <label>Αριθμός Θέσεων Πάρκινγκ</label>
             <input type="number" class="form-control" formControlName="parkingSpacesNum" />
           </div>
-          <div class="col-md-6 form-group" *ngIf="buildingForm.get('storageExists')?.value">
+          <div class="col-md-6 form-group" *ngIf="buildingForm.get('storageExist')?.value">
             <label>Αριθμός Αποθηκών</label>
             <input type="number" class="form-control" formControlName="storageNum" />
           </div>
           <div class="col-md-6 form-group">
             <label>Διαθέτει Υπόγειο</label>
-            <select class="form-select" formControlName="undergroundFloorExists">
+            <select class="form-select" formControlName="undergroundFloorExist">
               <option [value]="true">Ναι</option>
               <option [value]="false">Όχι</option>
             </select>
@@ -108,7 +108,7 @@
 
           <div class="col-md-6 form-group">
             <label>Διαθέτει Ημιόροφο</label>
-            <select class="form-select" formControlName="halfFloorExists">
+            <select class="form-select" formControlName="halfFloorExist">
               <option [value]="true">Ναι</option>
               <option [value]="false">Όχι</option>
             </select>
@@ -116,7 +116,7 @@
 
           <div class="col-md-6 form-group">
             <label>Διαθέτει Δώμα</label>
-            <select class="form-select" formControlName="overTopFloorExists">
+            <select class="form-select" formControlName="overTopFloorExist">
               <option [value]="true">Ναι</option>
               <option [value]="false">Όχι</option>
             </select>

@@ -1,13 +1,14 @@
-<app-card cardTitle="Πρόσκληση Μελών Ομάδας" [padding]="0" footerClass="text-end btn-page">
-  <div class="table-top p-4">
+<app-card cardTitle="Μέλη Πολυκατοικίας" [padding]="0" footerClass="text-end btn-page">
+  <div *ngIf="hasRole('BuildingManager')" class="table-top p-4">
+    <h3>Πρόσκληση Νέων Μελών</h3>
     <h4>
-      {{ tables.length }}/10
-      <small>μέλη διαθέσιμα στο πρόγραμμά σας.</small>
+      {{ tables.length }}
+      <small>μέλη που έχουν συνδεθεί στην Πολυκατοικία.</small>
     </h4>
     <hr class="my-3" />
     <div class="row">
       <div class="col">
-        <input type="email" class="form-control" placeholder="Εισάγετε το email σας" [(ngModel)]="emailToInvite" [disabled]="isSending" />
+        <input type="email" class="form-control" placeholder="Εισάγετε το email για να σταλθεί η Πρόσκληση" [(ngModel)]="emailToInvite" [disabled]="isSending" />
       </div>
       <div class="col-auto">
         <button class="btn btn-primary" (click)="sendInvite()" [disabled]="isSending">
@@ -73,8 +74,8 @@
     </table>
   </div>
 
-  <ng-template #footerTemplate>
+  <!-- <ng-template #footerTemplate>
     <div class="btn btn-link-danger">Ακύρωση</div>
     <div class="btn btn-primary">Αποθήκευση Αλλαγών</div>
-  </ng-template>
+  </ng-template> -->
 </app-card>

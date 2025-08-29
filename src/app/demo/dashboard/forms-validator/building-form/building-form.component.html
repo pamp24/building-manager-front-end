@@ -182,6 +182,7 @@
         [ngClass]="{ 'is-invalid': buildingForm.get('sqMetersCommonSpaces')?.invalid && buildingForm.get('sqMetersCommonSpaces')?.touched }"
       />
     </div>
+    <!-- Περιγραφή -->
     <div class="col-md-12 form-group">
       <label>Περιγραφή</label>
       <textarea class="form-control" rows="3" formControlName="description" placeholder="Προαιρετική περιγραφή για το κτίριο"></textarea>
@@ -189,12 +190,12 @@
     <!-- Διαθέτει Πάρκινγκ -->
     <div class="col-md-6 form-group">
       <label>
-        <input type="checkbox" [formControlName]="'parkingExists'" />
+        <input type="checkbox" [formControlName]="'parkingExist'" />
         Διαθέτει Πάρκινγκ
       </label>
     </div>
     <!-- Θέσεις Πάρκινγκ -->
-    <div class="col-md-6 form-group" *ngIf="buildingForm.get('parkingExists')?.value">
+    <div class="col-md-6 form-group" *ngIf="buildingForm.get('parkingExist')?.value">
       <label>Αριθμός Θέσεων Πάρκινγκ</label>
       <input
         type="number"
@@ -211,12 +212,12 @@
     <!-- Διαθέτει Αποθήκες -->
     <div class="col-md-6 form-group">
       <label>
-        <input type="checkbox" [formControlName]="'storageExists'" />
+        <input type="checkbox" [formControlName]="'storageExist'" />
         Διαθέτει Αποθήκες
       </label>
     </div>
     <!-- Αριθμός Αποθηκών -->
-    <div class="col-md-6 form-group" *ngIf="buildingForm.get('storageExists')?.value">
+    <div class="col-md-6 form-group" *ngIf="buildingForm.get('storageExist')?.value">
       <label>Αριθμός Αποθηκών</label>
       <input
         type="number"
@@ -232,21 +233,21 @@
   <!-- Διαθέτει Υπογειο -->
   <div class="col-md-6 form-group">
     <label>
-      <input type="checkbox" [formControlName]="'undergroundFloorExists'" />
+      <input type="checkbox" [formControlName]="'undergroundFloorExist'" />
       Διαθέτει Υπόγειο
     </label>
   </div>
   <!-- Διαθέτει Ημιόροφο -->
   <div class="col-md-6 form-group">
     <label>
-      <input type="checkbox" [formControlName]="'halfFloorExists'" />
+      <input type="checkbox" [formControlName]="'halfFloorExist'" />
       Διαθέτει Ημιόροφο
     </label>
   </div>
   <!-- Διαθέτει Δώμα -->
   <div class="col-md-6 form-group">
     <label>
-      <input type="checkbox" [formControlName]="'overTopFloorExists'" />
+      <input type="checkbox" [formControlName]="'overTopFloorExist'" />
       Διαθέτει Δώμα
     </label>
   </div>
@@ -254,19 +255,29 @@
   <!-- Ο Διαχειριστής κατοικεί στο κτίριο -->
   <div class="col-md-6 form-group">
     <label>
-      <input type="checkbox" [formControlName]="'managerHouseExists'" />
+      <input type="checkbox" [formControlName]="'managerHouseExist'" />
       Ο Διαχειριστής κατοικεί στο κτίριο
     </label>
   </div>
 
   <!-- Έγγραφα -->
   <div class="col-md-12 form-group">
-    <label>Αρχείο Κανονισμού (PDF)</label>
+    <label>Αρχείο Κανονισμού Πολυκατοικίας(PDF)</label>
     <input type="file" (change)="onFileSelected($event)" accept="application/pdf" class="form-control" />
   </div>
-  
+
   <div class="form-group text-center mt-3">
     <button type="button" class="btn btn-secondary me-2" (click)="onBack()">Πίσω</button>
     <button type="button" class="btn btn-success" (click)="submitBuildingForm()">Υποβολή</button>
+  </div>
+
+  <div class="datatable-bottom mt-3" *ngIf="buildings.length > 1">
+    <ngb-pagination
+      [collectionSize]="total"
+      [(page)]="currentPage"
+      [pageSize]="pageSize"
+      (pageChange)="onPageChange($event)"
+      class="table-pagination"
+    ></ngb-pagination>
   </div>
 </form>

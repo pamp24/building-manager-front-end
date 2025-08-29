@@ -1,0 +1,17 @@
+.actions-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  min-width: 180px;
+  background: #fff;
+  z-index: 1000;
+
+  .dropdown-item {
+    background: transparent;
+    border: 0;
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    &:hover { background: #f6f6f6; }
+  }
+}

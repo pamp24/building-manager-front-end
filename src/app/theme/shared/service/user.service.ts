@@ -1,4 +1,4 @@
-﻿import { Injectable } from '@angular/core';
+﻿﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { User } from '../components/_helpers/user';
@@ -19,18 +19,33 @@ export class UserService {
   updateUser(user: UserUpdateDTO): Observable<void> {
     return this.http.put<void>('http://localhost:8080/api/v1/users/update', user);
   }
+
+  removeUserFromBuilding(userId: number): Observable<void> {
+    return this.http.delete<void>(`http://localhost:8080/api/v1/users/${userId}/building`);
+  }
+
   assignRole(userId: number, role: string): Observable<void> {
     return this.http.post<void>(`http://localhost:8080/api/v1/users/${userId}/roles/assign`, null, {
       params: { roleName: role }
     });
   }
+
   getUsersInSameBuilding(): Observable<UserTableDto[]> {
     return this.http.get<UserTableDto[]>('http://localhost:8080/api/v1/users/same-building');
   }
-  inviteUserToBuilding(email: string): Observable<void> {
-  return this.http.post<void>('http://localhost:8080/api/v1/users/invite', null, {
-    params: { email }
-  });
-}
 
+  inviteUserToBuilding(email: string): Observable<void> {
+    return this.http.post<void>('http://localhost:8080/api/v1/users/invite', null, {
+      params: { email }
+    });
+  }
+  
+  acceptInvite(email: string, apartmentId: number, role: string): Observable<void> {
+    // Adjust the URL and payload as needed for your backend API
+    return this.http.post<void>('/api/invite/accept', {
+      email,
+      apartmentId,
+      role
+    });
+  }
 }
