@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-6">
-    <app-card cardTitle="Email Settings" [padding]="24">
-      <h6 class="mb-4">Setup Email Notification</h6>
+    <app-card cardTitle="Ειδοποιήσεις για την έκδοση Κοινοχρήστων" [padding]="24">
+      <h6 class="mb-4">Ειδοποιήσεις μέσω Email και SMS</h6>
       @for (item of email_setting; track item) {
         <div class="d-flex align-items-center justify-content-between mb-3">
           <div>
@@ -13,8 +13,8 @@
         </div>
       }
     </app-card>
-    <app-card cardTitle="Updates from System Notification" [padding]="24">
-      <h6 class="mb-4">Email you with?</h6>
+    <app-card cardTitle="Ειδοποιήσεις από την εφαρμογή" [padding]="24">
+      <h6 class="mb-4">Ειδοποιήσεις</h6>
       @for (email of notification; track email) {
         <div class="d-flex align-items-center justify-content-between mb-3">
           <div>

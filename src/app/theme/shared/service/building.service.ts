@@ -14,10 +14,16 @@ export class BuildingService {
   createBuilding(building: BuildingRequest): Observable<number> {
     return this.http.post<number>(this.apiUrl, building);
   }
-  getMyBuilding(): Observable<BuildingDTO> {
-    return this.http.get<BuildingDTO>(`${this.apiUrl}/myBuilding`);
+  getBuilding(id: number): Observable<BuildingRequest> {
+    return this.http.get<BuildingRequest>(`${this.apiUrl}/${id}`);
+  }
+  getMyBuildings(): Observable<BuildingDTO[]> {
+    return this.http.get<BuildingDTO[]>('http://localhost:8080/api/v1/buildings/my-buildings');
   }
   deleteBuilding(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+  getBuildingManager(buildingId: number) {
+    return this.http.get<{ id: number; fullName?: string }>(`${this.apiUrl}/${buildingId}/manager`);
   }
 }

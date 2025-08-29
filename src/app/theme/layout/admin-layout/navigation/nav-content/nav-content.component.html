@@ -9,7 +9,7 @@
           } @else if (item.type === 'collapse') {
             <app-nav-collapse [item]="item"></app-nav-collapse>
           } @else if (item.type === 'item') {
-            <app-nav-item [item]="item"></app-nav-item>   
+            <app-nav-item [item]="item" [parentRole]="[]"></app-nav-item>   
           }
         }
       </ul>

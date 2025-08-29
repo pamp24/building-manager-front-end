@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { UserService } from 'src/app/theme/shared/service';
 import { UserTableDto } from 'src/app/theme/shared/models/userTableDTO';
+import { Inject } from '@angular/core';
+import { AuthenticationService } from 'src/app/theme/shared/service/authentication.service';
 
 @Component({
   selector: 'app-role',
@@ -16,7 +18,10 @@ export class RoleComponent implements OnInit {
   emailToInvite = '';
   isSending = false;
 
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    @Inject(AuthenticationService) private authService: AuthenticationService
+  ) {}
 
   ngOnInit(): void {
     this.fetchUsers();
@@ -78,5 +83,10 @@ export class RoleComponent implements OnInit {
       default:
         return status;
     }
+  }
+  
+  hasRole(role: string): boolean {
+    const user = this.authService.currentUserValue;
+    return user?.role === role;
   }
 }

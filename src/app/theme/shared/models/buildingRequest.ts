@@ -9,20 +9,20 @@ export interface BuildingRequest {
   postalCode: string;
   country: string;
   state: string;
-  floors: string; 
+  floors: number; 
   apartmentsNum: number;
   sqMetersTotal: string;
   sqMetersCommonSpaces: string;
-  parkingExists: boolean;
+  parkingExist: boolean;
   parkingSpacesNum: number;
   active: boolean;
   enable: boolean;
   buildingDescription?: string;
-  undergroundFloorExists: boolean,
-  halfFloorExists: boolean,
-  overTopFloorExists:  boolean,
-  managerHouseExists: boolean,
-  storageExists: boolean,
+  undergroundFloorExist: boolean,
+  halfFloorExist: boolean,
+  overTopFloorExist:  boolean,
+  managerHouseExist: boolean,
+  storageExist: boolean,
   storageNum: number,
   managerId: number; 
 }

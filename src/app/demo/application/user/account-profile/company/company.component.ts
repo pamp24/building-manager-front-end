@@ -6,12 +6,12 @@ import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 
 @Component({
-  selector: 'app-my-account',
+  selector: 'app-company',
   imports: [CommonModule, SharedModule],
-  templateUrl: './my-account.component.html',
-  styleUrl: './my-account.component.scss'
+  templateUrl: './company.component.html',
+  styleUrl: './company.component.scss'
 })
-export class MyAccountComponent {
+export class CompanyComponent {
   // public method
   advance_setting = [
     {

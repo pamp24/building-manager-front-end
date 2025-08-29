@@ -4,6 +4,7 @@ import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Va
 import { ApartmentService } from 'src/app/theme/shared/service/apartment.service';
 import { Router } from '@angular/router';
 import { BuildingService } from '../../../../theme/shared/service/building.service';
+import { AuthenticationService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-apartment-form',
@@ -16,8 +17,10 @@ export class ApartmentFormComponent implements OnInit, OnChanges {
   form: FormGroup;
   isSubmitted = false;
   storageLimit = 0;
-  managerHouseExists = false;
+  managerHouseExist = false;
   floorOptions: string[] = [];
+
+  managerUserId: number | null = null;
 
   @Input() buildingId!: number;
   @Input() buildingForm!: FormGroup;
@@ -27,7 +30,8 @@ export class ApartmentFormComponent implements OnInit, OnChanges {
     private fb: FormBuilder,
     private apartmentService: ApartmentService,
     private router: Router,
-    private buildingService: BuildingService
+    private buildingService: BuildingService,
+    private auth: AuthenticationService
   ) {
     this.form = this.fb.group({
       apartments: this.fb.array([this.createApartmentForm()])
@@ -37,51 +41,71 @@ export class ApartmentFormComponent implements OnInit, OnChanges {
     if (changes['buildingForm'] && this.buildingForm) {
       this.generateFloorOptions();
 
-      this.buildingForm.get('undergroundFloorExists')?.valueChanges.subscribe(() => this.generateFloorOptions());
-      this.buildingForm.get('halfFloorExists')?.valueChanges.subscribe(() => this.generateFloorOptions());
-      this.buildingForm.get('overTopFloorExists')?.valueChanges.subscribe(() => this.generateFloorOptions());
+      this.buildingForm.get('undergroundFloorExist')?.valueChanges.subscribe(() => this.generateFloorOptions());
+      this.buildingForm.get('halfFloorExist')?.valueChanges.subscribe(() => this.generateFloorOptions());
+      this.buildingForm.get('overTopFloorExist')?.valueChanges.subscribe(() => this.generateFloorOptions());
       this.buildingForm.get('floors')?.valueChanges.subscribe(() => this.generateFloorOptions());
     }
   }
-ngOnInit(): void {
-  const storageStr = localStorage.getItem('storageNum');
-  this.storageLimit = storageStr ? +storageStr : 0;
+  ngOnInit(): void {
+    const storageStr = localStorage.getItem('storageNum');
+    this.storageLimit = storageStr ? +storageStr : 0;
 
-  const managerHouseExistsStr = localStorage.getItem('managerHouseExists');
-  this.managerHouseExists = managerHouseExistsStr === 'true';
+    const managerHouseExistStr = localStorage.getItem('managerHouseExist');
+    this.managerHouseExist = managerHouseExistStr === 'true';
 
-  const storedId = localStorage.getItem('buildingId');
-  if (storedId) {
-    this.buildingId = +storedId;
-    console.log('Building ID loaded:', this.buildingId);
-  } else {
-    console.warn('No building ID found in localStorage');
+    const storedId = localStorage.getItem('buildingId');
+
+    if (storedId) {
+      this.buildingId = +storedId;
+      console.log('Building ID loaded:', this.buildingId);
+    } else {
+      console.warn('No building ID found in localStorage');
+    }
+
+    this.setupDynamicValidation();
+
+    // αρχική τιμή από parent, αλλιώς fallback σε localStorage
+    if (this.buildingId) {
+      this.buildingService.getBuildingManager(this.buildingId).subscribe({
+        next: (m) => {
+          this.managerUserId = m?.id ?? null;
+
+          // Αν κάποιο διαμέρισμα είναι ήδη τσεκαρισμένο ως διαχειριστή,
+          // γράψε ownerId τώρα που έχουμε managerUserId
+          this.apartments.controls.forEach((ctrl) => {
+            const g = ctrl as FormGroup;
+            if (g.get('isManagerHouse')?.value && this.managerUserId) {
+              g.get('ownerId')?.setValue(this.managerUserId);
+            }
+          });
+        },
+        error: () => (this.managerUserId = null)
+      });
+    }
   }
 
-  this.setupDynamicValidation();
-}
+  generateFloorOptions(): void {
+    this.floorOptions = [];
 
-generateFloorOptions(): void {
-  this.floorOptions = [];
+    const underground = this.buildingForm.get('undergroundFloorExist')?.value;
+    const half = this.buildingForm.get('halfFloorExist')?.value;
+    const overTop = this.buildingForm.get('overTopFloorExist')?.value;
+    const floors = Number(this.buildingForm.get('floors')?.value) || 0;
 
-  const underground = this.buildingForm.get('undergroundFloorExists')?.value;
-  const half = this.buildingForm.get('halfFloorExists')?.value;
-  const overTop = this.buildingForm.get('overTopFloorExists')?.value;
-  const floors = Number(this.buildingForm.get('floors')?.value) || 0;
+    if (underground) this.floorOptions.push('Υπόγειο');
+    this.floorOptions.push('Ισόγειο');
+    if (half) this.floorOptions.push('Ημιόροφος');
 
-  if (underground) this.floorOptions.push('Υπόγειο');
-  this.floorOptions.push('Ισόγειο');
-  if (half) this.floorOptions.push('Ημιόροφος');
+    const greekLetters = ['Α', 'Β', 'Γ', 'Δ', 'Ε', 'ΣΤ', 'Ζ', 'Η', 'Θ', 'Ι', 'ΙΑ', 'ΙΒ', 'ΙΓ', 'ΙΔ', 'ΙΕ'];
+    for (let i = 0; i < floors && i < greekLetters.length; i++) {
+      this.floorOptions.push(greekLetters[i]);
+    }
 
-  const greekLetters = ['Α', 'Β', 'Γ', 'Δ', 'Ε', 'ΣΤ', 'Ζ', 'Η', 'Θ', 'Ι', 'ΙΑ', 'ΙΒ', 'ΙΓ', 'ΙΔ', 'ΙΕ'];
-  for (let i = 0; i < floors && i < greekLetters.length; i++) {
-    this.floorOptions.push(greekLetters[i]);
+    if (overTop) this.floorOptions.push('Δώμα');
+
+    console.log('Όροφοι:', this.floorOptions);
   }
-
-  if (overTop) this.floorOptions.push('Δώμα');
-
-  console.log('📌 Όροφοι:', this.floorOptions);
-}
 
   get apartments(): FormArray {
     return this.form.get('apartments') as FormArray;
@@ -89,9 +113,11 @@ generateFloorOptions(): void {
 
   createApartmentForm(): FormGroup {
     return this.fb.group({
-      fullName: ['', [Validators.required, Validators.minLength(3)]],
+      ownerFirstName: ['', [Validators.required, Validators.minLength(3)]],
+      ownerLastName: ['', [Validators.required, Validators.minLength(3)]],
       isRented: ['', Validators.required],
-      tenantFullName: [''],
+      residentFirstName: [''],
+      residentLastName: [''],
       apartmentNumber: ['', Validators.required],
       floor: ['', [Validators.required]],
       sqMetersApart: ['', [Validators.required, Validators.min(1)]],
@@ -100,6 +126,7 @@ generateFloorOptions(): void {
       hasStorage: [false],
       storageSlot: [''],
       isManagerHouse: [false],
+      ownerId: [null],
       commonPercent: ['', [Validators.required, Validators.min(0), Validators.max(100)]],
       elevatorPercent: ['', [Validators.required, Validators.min(0), Validators.max(100)]],
       heatingPercent: ['', [Validators.required, Validators.min(0), Validators.max(100)]]
@@ -119,65 +146,88 @@ generateFloorOptions(): void {
   }
 
   onBack(): void {
-    if (confirm('Θέλετε να ακυρώσετε την καταχώρηση διαμερισμάτων; Η πολυκατοικία θα διαγραφεί από τη μνήμη.')) {
-      localStorage.removeItem('buildingId');
-      this.backClicked.emit();
-    }
+    this.backClicked.emit(); // ο γονιός θα κάνει delete + cleanup
   }
 
   onFinish(): void {
-    this.isSubmitted = true;
+  this.isSubmitted = true;
 
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const formData = this.form.value.apartments.map((apt: any) => ({
-      fullName: apt.fullName,
+  if (this.form.invalid) {
+    this.form.markAllAsTouched();
+    return;
+  }
+
+  const currentUser = this.auth.getUser(); // 👈 τρέχων χρήστης
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const formData = this.form.value.apartments.map((apt: any) => {
+    // Αν είναι το διαμέρισμα διαχειριστή -> γεμίζουμε με τα στοιχεία του currentUser
+    const isManager = apt.isManagerHouse;
+
+    return {
+      ownerFirstName: isManager ? currentUser.firstName : apt.ownerFirstName,
+      ownerLastName:  isManager ? currentUser.lastName  : apt.ownerLastName,
+      ownerId:        isManager ? currentUser.id        : apt.ownerId,
+
       isRented: apt.isRented === 'Ναι',
-      tenantFullName: apt.isRented === 'Ναι' ? apt.tenantFullName : null,
+      residentFirstName: apt.isRented === 'Ναι' ? apt.residentFirstName : null,
+      residentLastName:  apt.isRented === 'Ναι' ? apt.residentLastName  : null,
+
       number: apt.apartmentNumber,
       floor: apt.floor,
-      sqMetersApart: +apt.sqMetersApart,
+      sqMetersApart: String(apt.sqMetersApart),
       parkingSpace: apt.hasParking === 'Ναι',
       parkingSlot: apt.hasParking === 'Ναι' ? apt.parkingSlot : null,
+
       commonPercent: +apt.commonPercent,
       elevatorPercent: +apt.elevatorPercent,
       heatingPercent: +apt.heatingPercent,
-      apStorageExists: apt.hasStorage,
+
+      apStorageExist: apt.hasStorage,
       storageSlot: apt.hasStorage ? apt.storageSlot : null,
-      isManagerHouse: apt.isManagerHouse,
+
+      isManagerHouse: isManager,
+      apDescription: apt.apDescription ?? null,
+
       active: true,
       enable: true,
       buildingId: this.buildingId
-    }));
-    this.apartmentService.saveMultiple(formData).subscribe({
-      next: () => {
-        alert('Τα διαμερίσματα αποθηκεύτηκαν με επιτυχία!');
-        localStorage.removeItem('buildingId');
-        this.router.navigate(['/user/account-profile']);
-      },
-      error: (err) => {
-        console.error('Σφάλμα:', err);
-      }
-    });
-  }
+    };
+  });
+
+  this.apartmentService.saveMultiple(formData).subscribe({
+    next: () => {
+      alert('Τα διαμερίσματα αποθηκεύτηκαν με επιτυχία!');
+      localStorage.removeItem('buildingId');
+      this.router.navigate(['/user/account-profile']);
+    },
+    error: (err) => {
+      console.error('Σφάλμα:', err);
+    }
+  });
+}
+
 
   private setupDynamicValidation(): void {
     this.apartments.controls.forEach((group) => this.setupGroupValidation(group as FormGroup));
   }
 
   private setupGroupValidation(group: FormGroup): void {
+    // σωστό validation για ένοικο
     group.get('isRented')?.valueChanges.subscribe((value) => {
-      const tenantCtrl = group.get('tenantFullName');
+      const first = group.get('residentFirstName');
+      const last = group.get('residentLastName');
       if (value === 'Ναι') {
-        tenantCtrl?.setValidators([Validators.required, Validators.minLength(3)]);
+        first?.setValidators([Validators.required, Validators.minLength(3)]);
+        last?.setValidators([Validators.required, Validators.minLength(3)]);
       } else {
-        tenantCtrl?.clearValidators();
-        tenantCtrl?.setValue('');
+        first?.clearValidators();
+        first?.setValue('');
+        last?.clearValidators();
+        last?.setValue('');
       }
-      tenantCtrl?.updateValueAndValidity();
+      first?.updateValueAndValidity();
+      last?.updateValueAndValidity();
     });
 
     group.get('hasParking')?.valueChanges.subscribe((value) => {
@@ -200,6 +250,33 @@ generateFloorOptions(): void {
         storageCtrl?.setValue('');
       }
       storageCtrl?.updateValueAndValidity();
+    });
+
+    group.get('isManagerHouse')?.valueChanges.subscribe((checked: boolean) => {
+      const ownerIdCtrl = group.get('ownerId');
+      const first = group.get('ownerFirstName');
+      const last = group.get('ownerLastName');
+
+      if (checked) {
+        const user = this.auth.getUser();
+        if (user) {
+          ownerIdCtrl?.setValue(user.id);
+          first?.setValue(user.firstName);
+          last?.setValue(user.lastName);
+
+          // disable editing
+          first?.disable({ emitEvent: false });
+          last?.disable({ emitEvent: false });
+        }
+      } else {
+        ownerIdCtrl?.setValue(null);
+        first?.reset();
+        last?.reset();
+
+        // enable editing again
+        first?.enable({ emitEvent: false });
+        last?.enable({ emitEvent: false });
+      }
     });
   }
 

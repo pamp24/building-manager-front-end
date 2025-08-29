@@ -1,0 +1,124 @@
+<h4 class="mb-4 text-center">Προσθήκη Διαμερισμάτων</h4>
+
+<form *ngIf="form" [formGroup]="form" (ngSubmit)="onFinish()">
+  <div formArrayName="apartments">
+    <div *ngFor="let group of apartments.controls; let i = index" [formGroupName]="i" class="border rounded p-3 mb-4 shadow-sm">
+      <h5 class="mb-3">Διαμέρισμα {{ i + 1 }}</h5>
+
+      <div class="row g-3">
+        <!-- Όνομα / Επώνυμο -->
+        <div class="col-md-6">
+          <label>Όνομα Ιδιοκτήτη</label>
+          <input class="form-control" formControlName="ownerFirstName" />
+        </div>
+        <div class="col-md-6">
+          <label>Επώνυμο Ιδιοκτήτη</label>
+          <input class="form-control" formControlName="ownerLastName" />
+        </div>
+
+        <!-- Ενοικιάζεται -->
+        <div class="col-md-4 mt-3">
+          <label>Ενοικιάζεται;</label>
+          <select class="form-select" formControlName="isRented">
+            <option value="">Επιλέξτε</option>
+            <option value="Ναι">Ναι</option>
+            <option value="Όχι">Όχι</option>
+          </select>
+        </div>
+
+        <!-- Ονοματεπώνυμο Ενοικιαστή -->
+        <div class="col-md-4 mt-3" *ngIf="group.get('isRented')?.value === 'Ναι'">
+          <label>Όνομα Ενοικιαστή</label>
+          <input class="form-control" formControlName="residentFirstName" />
+        </div>
+        <div class="col-md-4 mt-3" *ngIf="group.get('isRented')?.value === 'Ναι'">
+          <label>Επώνυμο Ενοικιαστή</label>
+          <input class="form-control" formControlName="residentLastName" />
+        </div>
+
+        <!-- Αριθμός / Όροφος / Τ.Μ. -->
+        <div class="col-md-4 mt-3">
+          <label>Αριθμός Διαμερίσματος</label>
+          <input class="form-control" formControlName="apartmentNumber" />
+        </div>
+        <div class="col-md-4 mt-3">
+          <label>Όροφος</label>
+          <select class="form-select" formControlName="floor">
+            <option value="">Επιλέξτε</option>
+            <option *ngFor="let floor of floorOptions" [value]="floor">{{ floor }}</option>
+          </select>
+        </div>
+        <div class="col-md-4 mt-3">
+          <label>Τετραγωνικά Μέτρα</label>
+          <input type="number" class="form-control" formControlName="sqMetersApart" />
+        </div>
+
+        <!-- Parking -->
+        <div class="col-md-4 mt-3">
+          <label>Διαθέτει Parking</label>
+          <select class="form-select" formControlName="hasParking" [disabled]="currentUsedParking >= parkingLimit">
+            <option value="">Επιλέξτε</option>
+            <option value="Ναι">Ναι</option>
+            <option value="Όχι">Όχι</option>
+          </select>
+          <div class="text-danger small" *ngIf="currentUsedParking >= parkingLimit">
+            Δεν υπάρχουν διαθέσιμες θέσεις parking. Πρέπει να γίνει τροποποίηση πολυκατοικίας.
+          </div>
+        </div>
+        <div class="col-md-4 mt-3" *ngIf="group.get('hasParking')?.value === 'Ναι'">
+          <label>Αριθμός Θέσης Parking</label>
+          <input class="form-control" formControlName="parkingSlot" />
+        </div>
+
+        <!-- Χιλιοστά -->
+        <div class="col-md-4 mt-3">
+          <label>Χιλιοστά Κοινοχρήστων</label>
+          <input type="number" class="form-control" formControlName="commonPercent" />
+        </div>
+        <div class="col-md-4 mt-3">
+          <label>Χιλιοστά Ασανσέρ</label>
+          <input type="number" class="form-control" formControlName="elevatorPercent" />
+        </div>
+        <div class="col-md-4 mt-3">
+          <label>Χιλιοστά Θέρμανσης</label>
+          <input type="number" class="form-control" formControlName="heatingPercent" />
+        </div>
+
+        <!-- Storage -->
+        <div class="col-md-4 mt-3">
+          <label>
+            <input type="checkbox" formControlName="hasStorage" [disabled]="!group.get('hasStorage')?.value && currentUsedStorages >= storageLimit" />
+            Διαθέτει Αποθήκη
+          </label>
+          <div class="text-danger small" *ngIf="currentUsedStorages >= storageLimit">
+            Δεν υπάρχουν διαθέσιμες αποθήκες. Πρέπει να γίνει τροποποίηση πολυκατοικίας.
+          </div>
+        </div>
+        <div class="col-md-4 mt-3" *ngIf="group.get('hasStorage')?.value">
+          <label>Αριθμός Αποθήκης</label>
+          <input class="form-control" formControlName="storageSlot" />
+        </div>
+
+        <!-- Διαμέρισμα Διαχειριστή -->
+        <div class="col-md-4 mt-3" *ngIf="managerHouseExist">
+          <label>
+            <input type="checkbox" formControlName="isManagerHouse" [disabled]="!group.get('isManagerHouse')?.value && currentManagerHouseUsed" />
+            Διαμέρισμα Διαχειριστή
+          </label>
+        </div>
+      </div>
+
+      <!-- Remove -->
+      <div class="text-end mt-3">
+        <button *ngIf="apartments.length > 1" type="button" class="btn btn-danger btn-sm" (click)="removeApartment(i)">Αφαίρεση</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="d-flex justify-content-center gap-3 mt-4">
+    <button type="button" class="btn btn-secondary" (click)="onCancel()">Άκυρο</button>
+    <button type="button" class="btn btn-outline-primary" (click)="addApartment()">Προσθήκη Διαμερίσματος</button>
+    <button type="submit" class="btn btn-success">Ολοκλήρωση</button>
+  </div>
+</form>
