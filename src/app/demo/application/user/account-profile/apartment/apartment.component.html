@@ -1,4 +1,27 @@
 <form form *ngIf="form" [formGroup]="form" (ngSubmit)="onUpdate()">
+  <app-card *ngIf="buildingName" cardTitle="Πολυκατοικία" [padding]="24">
+    <div class="row">
+      <div class="col-md-6">
+        <label>Όνομα Πολυκατοικίας</label>
+        <input type="text" class="form-control readonly-input" [value]="buildingName" readonly />
+      </div>
+      <div class="col-md-6">
+        <label>Διεύθυνση Πολυκατοικίας</label>
+        <input
+          type="text"
+          class="form-control readonly-input"
+          [value]="
+            apartments[currentPage - 1]?.buildingStreet +
+            ' ' +
+            apartments[currentPage - 1]?.buildingStreetNumber +
+            ', ' +
+            apartments[currentPage - 1]?.buildingCity
+          "
+          readonly
+        />
+      </div>
+    </div>
+  </app-card>
   <div class="row">
     <!-- Αριστερά: Φόρμα Διαμερίσματος -->
     <div class="col-lg-6">
@@ -77,15 +100,15 @@
           <!-- Χιλιοστά -->
           <div class="row g-3 mt-2">
             <div class="col-md-4">
-              <label>Χιλιοστά Κοινοχρήστων</label>
+              <label>Χιλ. Κοινοχρήστων</label>
               <input type="number" class="form-control" formControlName="commonPercent" />
             </div>
             <div class="col-md-4">
-              <label>Χιλιοστά Ασανσέρ</label>
+              <label>Χιλ. Ασανσέρ</label>
               <input type="number" class="form-control" formControlName="elevatorPercent" />
             </div>
             <div class="col-md-4">
-              <label>Χιλιοστά Θέρμανσης</label>
+              <label>Χιλ. Θέρμανσης</label>
               <input type="number" class="form-control" formControlName="heatingPercent" />
             </div>
           </div>

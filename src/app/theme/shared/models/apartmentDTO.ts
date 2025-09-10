@@ -35,4 +35,9 @@ export interface ApartmentDTO {
   ownerStreetNumber?: string;
   ownerCity: string;
 
+  buildingName: string;
+  buildingStreet: string;
+  buildingStreetNumber?: string;
+  buildingCity?: string;
+
 }

@@ -109,7 +109,10 @@ export class BuildingFormComponent implements OnInit {
       overTopFloorExist: [false],
       managerHouseExist: [false],
       storageExist: [false],
-      storageNum: ['']
+      storageNum: [''],
+      hasCentralHeating: [false],
+      heatingType: [''],
+      heatingCapacityLitres: ['']
     });
     this.buildingForm.get('parkingExist')?.valueChanges.subscribe((checked: boolean) => {
       const parkingSpacesNumCtrl = this.buildingForm.get('parkingSpacesNum');
@@ -136,44 +139,68 @@ export class BuildingFormComponent implements OnInit {
       }
       storageNumCtrl?.updateValueAndValidity();
     });
+
+    this.buildingForm.get('hasCentralHeating')?.valueChanges.subscribe((checked: boolean) => {
+      const heatingTypeCtrl = this.buildingForm.get('heatingType');
+      const heatingLitresCtrl = this.buildingForm.get('heatingCapacityLitres');
+      if (checked) {
+        heatingTypeCtrl?.setValidators([Validators.required]);
+        heatingLitresCtrl?.setValidators([Validators.required, Validators.min(1)]);
+        heatingTypeCtrl?.enable();
+        heatingLitresCtrl?.enable();
+      } else {
+        heatingTypeCtrl?.clearValidators();
+        heatingLitresCtrl?.clearValidators();
+        heatingTypeCtrl?.setValue('');
+        heatingLitresCtrl?.setValue('');
+        heatingTypeCtrl?.disable();
+        heatingLitresCtrl?.disable();
+      }
+      heatingTypeCtrl?.updateValueAndValidity();
+      heatingLitresCtrl?.updateValueAndValidity();
+    });
   }
 
   ngOnInit(): void {
-  this.buildingForm = this.fb.group({
-    name: [''],
-    street1: [''],
-    stNumber1: [''],
-    street2: [''],
-    stNumber2: [''],
-    city: [''],
-    region: [''],
-    postalCode: [''],
-    country: [''],
-    state: [''],
-    floors: [''],
-    apartmentsNum: [''],
-    sqMetersTotal: [''],
-    sqMetersCommonSpaces: [''],
-    parkingExist: [''],
-    parkingSpacesNum: [''],
-    buildingDescription: [''],
-    undergroundFloorExist: [''],
-    halfFloorExist: [''],
-    overTopFloorExist: [''],
-    storageExist: [''],
-    storageNum: ['']
-  });
+    this.buildingForm = this.fb.group({
+      name: [''],
+      street1: [''],
+      stNumber1: [''],
+      street2: [''],
+      stNumber2: [''],
+      city: [''],
+      region: [''],
+      postalCode: [''],
+      country: [''],
+      state: [''],
+      floors: [''],
+      apartmentsNum: [''],
+      sqMetersTotal: [''],
+      sqMetersCommonSpaces: [''],
+      parkingExist: [''],
+      parkingSpacesNum: [''],
+      buildingDescription: [''],
+      managerHouseExist: [''],
+      undergroundFloorExist: [''],
+      halfFloorExist: [''],
+      overTopFloorExist: [''],
+      storageExist: [''],
+      storageNum: [''],
+      hasCentralHeating: [''],
+      heatingType: [''],
+      heatingCapacityLitres: ['']
+    });
 
-  this.buildingService.getMyBuildings().subscribe({
-    next: (buildings) => {
-      this.buildings = buildings;
-      this.total = buildings.length;
-      if (buildings.length > 0) {
-        this.loadBuilding(buildings[0]);
+    this.buildingService.getMyBuildings().subscribe({
+      next: (buildings) => {
+        this.buildings = buildings;
+        this.total = buildings.length;
+        if (buildings.length > 0) {
+          this.loadBuilding(buildings[0]);
+        }
       }
-    }
-  });
-}
+    });
+  }
 
   onBack(): void {
     this.backClicked.emit();
@@ -217,6 +244,9 @@ export class BuildingFormComponent implements OnInit {
       managerHouseExist: formValue.managerHouseExist,
       storageExist: formValue.storageExist,
       storageNum: formValue.storageExist ? Number(formValue.storageNum) : 0,
+      hasCentralHeating: formValue.hasCentralHeating,
+      heatingType: formValue.hasCentralHeating ? formValue.heatingType : 'NONE',
+      heatingCapacityLitres: formValue.hasCentralHeating ? Number(formValue.heatingCapacityLitres) : 0,
       active: true,
       enable: true
     };

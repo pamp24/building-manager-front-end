@@ -24,7 +24,7 @@ export class BuildingComponent implements OnInit {
   building?: BuildingDTO;
   errorMessage: string = '';
   buildingData!: BuildingDTO;
-
+  heating: { title: string; name: string; sub_title: string; f_name: string }[] = [];
   buildings: BuildingDTO[] = [];
   total = 0;
   currentPage = 1;
@@ -55,7 +55,10 @@ export class BuildingComponent implements OnInit {
       halfFloorExist: [''],
       overTopFloorExist: [''],
       storageExist: [''],
-      storageNum: ['']
+      storageNum: [''],
+      hasCentralHeating: [''],
+      heatingType: [''],
+      heatingCapacityLitres: ['']
     });
 
     this.buildingService.getMyBuildings().subscribe({
@@ -70,7 +73,6 @@ export class BuildingComponent implements OnInit {
         console.error('Σφάλμα φόρτωσης πολυκατοικιών:', err);
       }
     });
-
   }
 
   // constructor
@@ -102,7 +104,10 @@ export class BuildingComponent implements OnInit {
       halfFloorExist: [''],
       overTopFloorExist: [''],
       storageExist: [''],
-      storageNum: ['']
+      storageNum: [''],
+      hasCentralHeating: [''],
+      heatingType: [''],
+      heatingCapacityLitres: ['']
     });
 
     // Διαχείριση ενεργοποίησης/απενεργοποίησης του πεδίου parkingSpacesNum
@@ -154,6 +159,15 @@ export class BuildingComponent implements OnInit {
         text: building?.managerAddress1 || 'Άγνωστη περιοχή'
       }
     ];
+
+    this.heating = [
+      {
+        title: 'Τύπος Θέρμανσης',
+        name: this.getTranslatedHeatingType(building?.heatingType),
+        sub_title: 'Χωρητικότητα (Λίτρα)',
+        f_name: building?.heatingCapacityLitres ? building.heatingCapacityLitres.toString() : '—'
+      }
+    ];
   }
 
   onPageChange(page: number) {
@@ -175,74 +189,20 @@ export class BuildingComponent implements OnInit {
     }
   ];
 
-  personal_details = [
-    {
-      title: 'Full Name',
-      name: 'Anshan Handgun',
-      sub_title: 'Father Name',
-      f_name: 'Mr. Deepen Handgun',
-      style: 'pt-0'
-    },
-    {
-      title: 'Phone',
-      name: '(+1-876) 8654 239 581',
-      sub_title: 'Country',
-      f_name: 'New York'
-    },
-    {
-      title: 'Email',
-      name: 'anshan.dh81@gmail.com',
-      sub_title: 'Zip Code',
-      f_name: '956 754'
-    },
-    {
-      title: 'Address',
-      name: 'Street 110-B Kalians Bag, Dewan, M.P. New York',
-      style: 'pb-0'
+  getTranslatedHeatingType(type?: string): string {
+    switch (type) {
+      case 'OIL':
+        return 'Πετρέλαιο';
+      case 'NATURAL_GAS':
+        return 'Φυσικό Αέριο';
+      case 'ELECTRIC':
+        return 'Ηλεκτρικό';
+      case 'HEAT_PUMP':
+        return 'Αντλία Θερμότητας';
+      case 'NONE':
+        return 'Καθόλου θέρμανση';
+      default:
+        return 'Δεν έχει οριστεί';
     }
-  ];
-
-  education = [
-    {
-      title: 'Master Degree (Year)',
-      detail: '2014-2017',
-      sub_detail: '-',
-      style: 'pt-0'
-    },
-    {
-      title: 'Bachelor (Year)',
-      detail: '2011-2013',
-      sub_detail: 'Imperial College London'
-    },
-    {
-      title: 'School (Year)',
-      detail: '2009-2011',
-      sub_detail: 'School of London, England',
-      style: 'pb-0'
-    }
-  ];
-
-  employment = [
-    {
-      title: 'Senior',
-      name: 'Senior UI/UX designer (Year)',
-      sub_title: 'Job Responsibility',
-      f_name:
-        'Perform task related to project manager with the 100+ team under my observation. Team management is key role in this company',
-      style: 'pt-0'
-    },
-    {
-      title: 'Trainee cum Project Manager (Year)',
-      name: '2017-2019',
-      sub_title: 'Job Responsibility',
-      f_name: 'Team management is key role in this company.'
-    },
-    {
-      title: 'School (Year)',
-      name: '2009-2011',
-      sub_title: 'Institute',
-      f_name: 'School of London, England',
-      style: 'pb-0'
-    }
-  ];
+  }
 }

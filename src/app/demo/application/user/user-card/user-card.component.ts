@@ -34,6 +34,8 @@ export class UserCardComponent implements OnInit {
   private iconService = inject(IconService);
   selectedApartment: ApartmentDTO | null = null;
   private apartmentService!: ApartmentService;
+  buildingName: string = '';
+  buildingAddress: string = '';
 
   sortOption: string = 'default'; // προεπιλογή
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -41,6 +43,10 @@ export class UserCardComponent implements OnInit {
   currentUsedParking = 0;
   currentUsedStorages = 0;
   userRole: string | null = null;
+
+  currentPage = 1;
+  pageSize = 1;
+  total = 0;
 
   // Constructor
   constructor(
@@ -52,38 +58,57 @@ export class UserCardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Λήψη ρόλου χρήστη από localStorage
+    // Λήψη ρόλου χρήστη
     const currentUser = localStorage.getItem('currentUser');
     if (currentUser) {
       const parsed = JSON.parse(currentUser);
-      this.userRole = parsed.role; // εδώ παίρνουμε BuildingManager
+      this.userRole = parsed.role;
     }
-    console.log('>>> User Role:', this.userRole);
-    // Φόρτωση διαμερισμάτων
-    this.apartmentService.getApartmentsInSameBuilding().subscribe({
-      next: (data) => {
+
+    // 🔹 Βήμα 1: φέρνουμε τις πολυκατοικίες του χρήστη
+    this.buildingService.getMyBuildings().subscribe({
+      next: (buildings) => {
+        this.total = buildings.length;
+
+        if (buildings.length > 0) {
+          const firstBuilding = buildings[0];
+          this.loadBuildingData(firstBuilding.id);
+        }
+      },
+      error: (err) => console.error('Σφάλμα φόρτωσης πολυκατοικιών:', err)
+    });
+  }
+  // 🔹 Βήμα 2: φόρτωση στοιχείων μίας πολυκατοικίας
+  private loadBuildingData(buildingId: number) {
+    this.buildingService.getBuilding(buildingId).subscribe((building) => {
+      this.buildingName = building.name;
+      this.buildingAddress = `${building.street1} ${building.stNumber1}, ${building.city}`;
+
+      // φέρε τα διαμερίσματα του συγκεκριμένου building
+      this.apartmentService.getApartmentsByBuilding(buildingId).subscribe((data) => {
         this.card_detail = data.map((ap) => ({
           apartment: ap,
           name: ap.ownerFullName || `Άγνωστο Όνομα`,
           position: `Διαμ. ${ap.number}, Όροφος ${ap.floor}`,
           src: 'assets/images/user/avatar-1.jpg',
           description: ap.apDescription || 'Δεν υπάρχει περιγραφή',
-          email: ap.ownerEmail,
-          phone: ap.ownerPhone,
-          street: ap.ownerStreet,
-          streetNumber: ap.ownerStreetNumber || 'Άγνωστος Αριθμός',
-          city: ap.ownerCity,
+          email: ap.ownerEmail || 'Δεν είναι διαθέσιμο',
+          phone: ap.ownerPhone || 'Δεν είναι διαθέσιμο',
+          street: ap.ownerStreet || 'Δεν είναι διαθέσιμο',
+          streetNumber: ap.ownerStreetNumber || 'Δεν είναι διαθέσιμο',
+          buildingName: ap.buildingName || 'Δεν είναι διαθέσιμο',
+          buildingStreet: ap.buildingStreet || 'Δεν είναι διαθέσιμο',
+          buildingStreetNumber: ap.buildingStreetNumber || '',
+          buildingCity: ap.buildingCity || 'Άγνωστη Πόλη',
+          city: ap.ownerCity || 'Άγνωστη Πόλη',
           lastModifiedDate: ap.lastModifiedDate || 'Άγνωστη ημερομηνία',
           user_skill: [
             { skill: 'Χιλιοστά κοινοχρήστων: ' + ap.commonPercent },
-            { skill: 'Χιλιοστά Κοινοχρήστων: ' + ap.elevatorPercent },
-            { skill: 'Χιλιοστά Διαμερίσματος: ' + ap.heatingPercent }
+            { skill: 'Χιλιοστά Ασανσέρ: ' + ap.elevatorPercent },
+            { skill: 'Χιλιοστά Θέρμανσης: ' + ap.heatingPercent }
           ]
         }));
-      },
-      error: (err) => {
-        console.error('Σφάλμα φόρτωσης διαμερισμάτων:', err);
-      }
+      });
     });
   }
 
@@ -122,6 +147,17 @@ export class UserCardComponent implements OnInit {
 
       // ανοίγει modal μόνο αν υπάρχει χώρος
       this.modalService.open(NewApartmentComponent, { size: 'lg' });
+    });
+  }
+
+  onPageChange(page: number) {
+    this.currentPage = page;
+    this.buildingService.getMyBuildings().subscribe((buildings) => {
+      const selected = buildings[page - 1];
+      if (selected) {
+        this.loadBuildingData(selected.id);
+        localStorage.setItem('buildingId', selected.id.toString());
+      }
     });
   }
 }

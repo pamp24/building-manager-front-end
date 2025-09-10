@@ -1,3 +1,15 @@
+<app-card *ngIf="apartments.length > 1">
+  <div class="row">
+    <div class="col-md-6">
+      <label>Όνομα Πολυκατοικίας</label>
+      <input type="text" class="form-control" [value]="buildingName" readonly />
+    </div>
+    <div class="col-md-6">
+      <label>Διεύθυνση Πολυκατοικίας</label>
+      <input type="text" class="form-control" [value]="buildingAddress" readonly />
+    </div>
+  </div>
+</app-card>
 <div class="row">
   <div class="col-md-6">
     <app-card cardTitle="Ειδοποιήσεις για την έκδοση Κοινοχρήστων" [padding]="24">
@@ -5,55 +17,84 @@
       @for (item of email_setting; track item) {
         <div class="d-flex align-items-center justify-content-between mb-3">
           <div>
-            <p class="text-muted mb-0">{{ item.title }}</p>
+            <p class="mb-0" [ngClass]="{ 'text-muted': !item.check }">{{ item.title }}</p>
           </div>
           <div class="form-check form-switch p-0">
-            <input class="m-0 form-check-input h5 position-relative" type="checkbox" role="switch" [checked]="item.check" />
+            <input
+              type="checkbox"
+              class="m-0 form-check-input h5 position-relative"
+              role="switch"
+              [checked]="item.check"
+              (change)="item.check = $event.target.checked"
+            />
           </div>
         </div>
       }
     </app-card>
+
     <app-card cardTitle="Ειδοποιήσεις από την εφαρμογή" [padding]="24">
       <h6 class="mb-4">Ειδοποιήσεις</h6>
-      @for (email of notification; track email) {
+      @for (item of notification; track item) {
         <div class="d-flex align-items-center justify-content-between mb-3">
           <div>
-            <p class="text-muted mb-0">{{ email.title }}</p>
+            <p class="mb-0" [ngClass]="{ 'text-muted': !item.check }">{{ item.title }}</p>
           </div>
-          <div class="form-check p-0">
-            <input class="m-0 form-check-input h5 position-relative" type="checkbox" role="switch" [checked]="email.check" />
+          <div class="form-check form-switch p-0">
+            <input
+              type="checkbox"
+              class="m-0 form-check-input h5 position-relative"
+              role="switch"
+              [checked]="item.check"
+              (change)="item.check = $event.target.checked"
+            />
           </div>
         </div>
       }
     </app-card>
   </div>
+
   <div class="col-md-6">
     <app-card cardTitle="Activity Related Emails">
       <h6 class="mb-4">When to email?</h6>
       @for (item of active_email; track item) {
         <div class="d-flex align-items-center justify-content-between mb-3">
           <div>
-            <p class="text-muted mb-0">{{ item.title }}</p>
+            <p class="mb-0" [ngClass]="{ 'text-muted': !item.check }">{{ item.title }}</p>
           </div>
           <div class="form-check form-switch p-0">
-            <input class="m-0 form-check-input h5 position-relative" type="checkbox" role="switch" [checked]="item.check" />
+            <input
+              type="checkbox"
+              class="m-0 form-check-input h5 position-relative"
+              role="switch"
+              [checked]="item.check"
+              (change)="item.check = $event.target.checked"
+            />
           </div>
         </div>
       }
+
       <hr class="my-4" />
+
       <h6 class="mb-4">When to escalate emails?</h6>
       @for (item of active_email; track item) {
         <div class="d-flex align-items-center justify-content-between mb-3">
           <div>
-            <p class="text-muted mb-0">{{ item.title }}</p>
+            <p class="mb-0" [ngClass]="{ 'text-muted': !item.check }">{{ item.title }}</p>
           </div>
           <div class="form-check form-switch p-0">
-            <input class="m-0 form-check-input h5 position-relative" type="checkbox" role="switch" [checked]="item.check" />
+            <input
+              type="checkbox"
+              class="m-0 form-check-input h5 position-relative"
+              role="switch"
+              [checked]="item.check"
+              (change)="item.check = $event.target.checked"
+            />
           </div>
         </div>
       }
     </app-card>
   </div>
+
   <div class="col-12 text-end btn-page">
     <div class="btn btn-outline-secondary">Άκυρο</div>
     <div class="btn btn-primary">Αποθήκευση</div>

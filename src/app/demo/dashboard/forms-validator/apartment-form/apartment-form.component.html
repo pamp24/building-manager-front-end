@@ -1,18 +1,9 @@
 <form [formGroup]="form" (ngSubmit)="onFinish()">
   <div formArrayName="apartments">
-    <div
-      *ngFor="let group of apartments.controls; let i = index"
-      [formGroupName]="i"
-      class="card shadow-sm mb-4"
-    >
+    <div *ngFor="let group of apartments.controls; let i = index" [formGroupName]="i" class="card shadow-sm mb-4">
       <div class="card-header bg-light d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Διαμέρισμα {{ i + 1 }}</h5>
-        <button
-          *ngIf="apartments.length > 1"
-          type="button"
-          class="btn btn-sm btn-outline-danger"
-          (click)="removeApartment(i)"
-        >
+        <button *ngIf="apartments.length > 1" type="button" class="btn btn-sm btn-outline-danger" (click)="removeApartment(i)">
           <i class="bi bi-trash"></i> Αφαίρεση
         </button>
       </div>
@@ -23,18 +14,10 @@
           <div class="col-md-4">
             <label class="form-label">Όνομα Ιδιοκτήτη</label>
             <input class="form-control" formControlName="ownerFirstName" />
-            <div class="invalid-feedback d-block" *ngIf="isSubmitted && group.get('ownerFirstName')?.invalid">
-              Απαιτείται τουλάχιστον 3 χαρακτήρες.
-            </div>
           </div>
-
-          <!-- Επώνυμο Ιδιοκτήτη -->
           <div class="col-md-4">
             <label class="form-label">Επώνυμο Ιδιοκτήτη</label>
             <input class="form-control" formControlName="ownerLastName" />
-            <div class="invalid-feedback d-block" *ngIf="isSubmitted && group.get('ownerLastName')?.invalid">
-              Απαιτείται τουλάχιστον 3 χαρακτήρες.
-            </div>
           </div>
 
           <!-- Ενοικιάζεται -->
@@ -47,7 +30,7 @@
             </select>
           </div>
 
-          <!-- Στοιχεία Ενοικιαστή -->
+          <!-- Ενοικιαστής -->
           <ng-container *ngIf="group.get('isRented')?.value === 'Ναι'">
             <div class="col-md-4">
               <label class="form-label">Όνομα Ενοικιαστή</label>
@@ -59,13 +42,11 @@
             </div>
           </ng-container>
 
-          <!-- Αριθμός Διαμερίσματος -->
+          <!-- Αριθμός / Όροφος / Τμ -->
           <div class="col-md-4">
             <label class="form-label">Αριθμός Διαμερίσματος</label>
             <input class="form-control" formControlName="apartmentNumber" />
           </div>
-
-          <!-- Όροφος -->
           <div class="col-md-4">
             <label class="form-label">Όροφος</label>
             <select class="form-select" formControlName="floor">
@@ -73,8 +54,6 @@
               <option *ngFor="let floor of floorOptions" [value]="floor">{{ floor }}</option>
             </select>
           </div>
-
-          <!-- Τετραγωνικά -->
           <div class="col-md-4">
             <label class="form-label">Τετραγωνικά Μέτρα</label>
             <input class="form-control" type="number" formControlName="sqMetersApart" />
@@ -89,7 +68,6 @@
               <option value="Όχι">Όχι</option>
             </select>
           </div>
-
           <ng-container *ngIf="group.get('hasParking')?.value === 'Ναι'">
             <div class="col-md-4">
               <label class="form-label">Αριθμός Θέσης Parking</label>
@@ -128,7 +106,6 @@
               Το όριο αποθηκών έχει καλυφθεί.
             </small>
           </div>
-
           <ng-container *ngIf="group.get('hasStorage')?.value">
             <div class="col-md-4">
               <label class="form-label">Αριθμός Αποθήκης</label>
@@ -145,20 +122,16 @@
                 type="checkbox"
                 class="form-check-input"
                 formControlName="isManagerHouse"
-                [disabled]="!group.get('isManagerHouse')?.value && currentManagerHouseUsed"
               />
               <label class="form-check-label">Διαμέρισμα Διαχειριστή</label>
             </div>
-            <small class="text-danger" *ngIf="!group.get('isManagerHouse')?.value && currentManagerHouseUsed">
-              Το διαμέρισμα διαχειριστή έχει ήδη οριστεί.
-            </small>
           </div>
         </ng-container>
       </div>
     </div>
   </div>
 
-  <!-- Κουμπιά Πλοήγησης -->
+  <!-- Κουμπιά -->
   <div class="d-flex justify-content-end gap-2 mt-4">
     <button type="button" class="btn btn-secondary" (click)="onBack()">Άκυρο</button>
     <button type="button" class="btn btn-outline-primary" (click)="addApartment()">

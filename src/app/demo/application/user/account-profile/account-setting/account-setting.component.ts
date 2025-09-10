@@ -4,14 +4,17 @@ import { CommonModule } from '@angular/common';
 
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-account-setting',
-  imports: [CommonModule, SharedModule],
+  imports: [CommonModule, SharedModule,FormsModule],
   templateUrl: './account-setting.component.html',
   styleUrl: './account-setting.component.scss'
 })
 export class AccountSettingComponent {
+  apartments = [1];
+
   // public props
   email_setting = [
     {

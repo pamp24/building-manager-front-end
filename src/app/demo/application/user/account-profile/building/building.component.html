@@ -121,30 +121,47 @@
               <option [value]="false">Όχι</option>
             </select>
           </div>
+          <div class="col-md-6 form-group">
+            <label>Διαθέτει Κεντρική Θέρμανση</label>
+            <select class="form-select" formControlName="hasCentralHeating">
+              <option [value]="true">Ναι</option>
+              <option [value]="false">Όχι</option>
+            </select>
+          </div>
         </div>
       </form>
     </app-card>
-    <app-card cardTitle="Θέρμανση" [padding]="24">
-      <ul class="list-group list-group-flush">
-        @for (task of employment; track task) {
-          <li class="list-group-item px-0 {{ task.style }}">
-            <div class="row">
-              <div class="col-md-6">
-                <p class="mb-1 text-muted">{{ task.title }}</p>
-                <p class="mb-0">{{ task.name }}</p>
-              </div>
-              <div class="col-md-6">
-                <p class="mb-1 text-muted">{{ task.sub_title }}</p>
-                <p class="mb-0">{{ task.f_name }}</p>
-              </div>
-            </div>
-          </li>
-        }
-      </ul>
-    </app-card>
+<app-card cardTitle="Θέρμανση" [padding]="24" *ngIf="buildingData?.hasCentralHeating">
+  <ul class="list-group list-group-flush">
+    @for (task of heating; track task) {
+      <li class="list-group-item px-0 {{ task.style }}">
+        <div class="row">
+          <div class="col-md-6">
+            <p class="mb-1 text-muted">{{ task.title }}</p>
+            <p class="mb-0">{{ task.name }}</p>
+          </div>
+          <div class="col-md-6">
+            <p class="mb-1 text-muted">{{ task.sub_title }}</p>
+            <p class="mb-0">{{ task.f_name }}</p>
+          </div>
+        </div>
+      </li>
+    }
+  </ul>
+</app-card> 
     <div class="text-center mt-2">
       <button type="submit" class="btn btn-secondary me-2">Ακύρωση</button>
       <button type="submit" class="btn btn-primary">Αποθήκευση</button>
     </div>
   </div>
+</div>
+<!-- Pagination -->
+<div class="datatable-bottom mt-3" *ngIf="total > 1">
+  <ngb-pagination
+    [collectionSize]="total"
+    [(page)]="currentPage"
+    [pageSize]="1"
+    (pageChange)="onPageChange($event)"
+    class="table-pagination"
+  ></ngb-pagination>
 </div>
