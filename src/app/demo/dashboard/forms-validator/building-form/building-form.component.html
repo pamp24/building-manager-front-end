@@ -196,7 +196,7 @@
     </div>
     <!-- Θέσεις Πάρκινγκ -->
     <div class="col-md-6 form-group" *ngIf="buildingForm.get('parkingExist')?.value">
-      <label>Αριθμός Θέσεων Πάρκινγκ</label>
+      <label>Αριθμός Θέσεων Πάρκινγκ*</label>
       <input
         type="number"
         class="form-control"
@@ -218,7 +218,7 @@
     </div>
     <!-- Αριθμός Αποθηκών -->
     <div class="col-md-6 form-group" *ngIf="buildingForm.get('storageExist')?.value">
-      <label>Αριθμός Αποθηκών</label>
+      <label>Αριθμός Αποθηκών*</label>
       <input
         type="number"
         class="form-control"
@@ -258,6 +258,31 @@
       <input type="checkbox" [formControlName]="'managerHouseExist'" />
       Ο Διαχειριστής κατοικεί στο κτίριο
     </label>
+  </div>
+  <!-- Κεντρική Θέρμανση -->
+  <div class="col-md-6 form-group">
+    <label>Διαθέτει Κεντρική Θέρμανση</label>
+    <select class="form-select" formControlName="hasCentralHeating">
+      <option [ngValue]="true">Ναι</option>
+      <option [ngValue]="false">Όχι</option>
+    </select>
+  </div>
+
+  <div class="col-md-6 form-group" *ngIf="buildingForm.get('hasCentralHeating')?.value">
+    <label>Τύπος Θέρμανσης</label>
+    <select class="form-select" formControlName="heatingType">
+      <option value="">-- Επιλέξτε --</option>
+      <option value="OIL">Πετρέλαιο</option>
+      <option value="NATURAL_GAS">Φυσικό Αέριο</option>
+      <option value="ELECTRIC">Ηλεκτρικό</option>
+      <option value="HEAT_PUMP">Αντλία Θερμότητας</option>
+      <option value="NONE">Καθόλου θέρμανση</option>
+    </select>
+  </div>
+
+  <div class="col-md-6 form-group" *ngIf="buildingForm.get('hasCentralHeating')?.value">
+    <label>Χωρητικότητα (Λίτρα)</label>
+    <input type="number" class="form-control" formControlName="heatingCapacityLitres" />
   </div>
 
   <!-- Έγγραφα -->

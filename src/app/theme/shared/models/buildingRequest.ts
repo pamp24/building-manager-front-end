@@ -25,4 +25,7 @@ export interface BuildingRequest {
   storageExist: boolean,
   storageNum: number,
   managerId: number; 
+  hasCentralHeating: boolean;
+  heatingType?: string;
+  heatingCapacityLitres?: number;
 }

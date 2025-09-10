@@ -14,8 +14,8 @@ export class BuildingService {
   createBuilding(building: BuildingRequest): Observable<number> {
     return this.http.post<number>(this.apiUrl, building);
   }
-  getBuilding(id: number): Observable<BuildingRequest> {
-    return this.http.get<BuildingRequest>(`${this.apiUrl}/${id}`);
+  getBuilding(id: number): Observable<BuildingDTO> {
+    return this.http.get<BuildingDTO>(`${this.apiUrl}/${id}`);
   }
   getMyBuildings(): Observable<BuildingDTO[]> {
     return this.http.get<BuildingDTO[]>('http://localhost:8080/api/v1/buildings/my-buildings');
@@ -26,4 +26,5 @@ export class BuildingService {
   getBuildingManager(buildingId: number) {
     return this.http.get<{ id: number; fullName?: string }>(`${this.apiUrl}/${buildingId}/manager`);
   }
+
 }

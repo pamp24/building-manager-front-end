@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApartmentService, ApartmentRequest } from 'src/app/theme/shared/service/apartment.service';
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
+import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
 
 @Component({
   selector: 'app-new-apartment',
@@ -42,13 +43,12 @@ export class NewApartmentComponent implements OnInit {
       alert('Δεν βρέθηκε κωδικός πολυκατοικίας');
       return;
     }
-
     // Φόρτωμα στοιχείων πολυκατοικίας
-    this.buildingService.getBuilding(buildingId).subscribe(building => {
-      this.floorOptions = this.generateFloors(Number(building.floors));
+    this.buildingService.getBuilding(buildingId).subscribe((building: BuildingDTO) => {
+      this.floorOptions = this.generateFloors(building);
       this.parkingLimit = building.parkingSpacesNum || 0;
       this.storageLimit = building.storageNum || 0;
-      this.managerHouseExist = building.managerHouseExist || false;
+      this.currentManagerHouseUsed = building.managerHouseExist || false;
     });
   }
 
@@ -128,15 +128,31 @@ export class NewApartmentComponent implements OnInit {
 
     this.apartmentService.saveMultiple(apartmentsToSave).subscribe({
       next: () => alert('Τα διαμερίσματα αποθηκεύτηκαν!'),
-      error: err => console.error('Σφάλμα κατά την αποθήκευση', err)
+      error: (err) => console.error('Σφάλμα κατά την αποθήκευση', err)
     });
   }
 
   // === Utils ===
-  private generateFloors(totalFloors: number): string[] {
-    const result: string[] = ['Υπόγειο', 'Ισόγειο'];
-    for (let i = 1; i <= totalFloors; i++) {
+  // === Utils ===
+  private generateFloors(building: BuildingDTO): string[] {
+    const result: string[] = [];
+    // Υπόγειο
+    if (building.undergroundFloorExist) {
+      result.push('Υπόγειο');
+    }
+    // Ισόγειο (πάντα)
+    result.push('Ισόγειο');
+    // Ημιώροφος
+    if (building.halfFloorExist) {
+      result.push('Ημιώροφος');
+    }
+    // Κανονικοί όροφοι
+    for (let i = 1; i <= building.floors; i++) {
       result.push(`${i}ος`);
+    }
+    // Δώμα (πάνω από τελευταίο)
+    if (building.overTopFloorExist) {
+      result.push('Δώμα');
     }
     return result;
   }

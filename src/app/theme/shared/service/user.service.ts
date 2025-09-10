@@ -34,14 +34,11 @@ export class UserService {
     return this.http.get<UserTableDto[]>('http://localhost:8080/api/v1/users/same-building');
   }
 
-  inviteUserToBuilding(email: string): Observable<void> {
-    return this.http.post<void>('http://localhost:8080/api/v1/users/invite', null, {
-      params: { email }
-    });
+  inviteUserToBuilding(payload: { email: string; role: string; apartmentId: number; floor: string }): Observable<void> {
+    return this.http.post<void>('http://localhost:8080/api/v1/users/invite', payload);
   }
-  
+
   acceptInvite(email: string, apartmentId: number, role: string): Observable<void> {
-    // Adjust the URL and payload as needed for your backend API
     return this.http.post<void>('/api/invite/accept', {
       email,
       apartmentId,

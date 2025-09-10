@@ -31,6 +31,8 @@ export class ApartmentComponent implements OnInit {
   userPhone = '';
   tenantEmail = '';
   tenantPhone = '';
+  buildingName = '';
+  buildingAddress1 = '';
 
   constructor(
     private fb: FormBuilder,
@@ -87,8 +89,10 @@ export class ApartmentComponent implements OnInit {
       commonPercent: [apartment.commonPercent, [Validators.required, Validators.min(0), Validators.max(100)]],
       elevatorPercent: [apartment.elevatorPercent, [Validators.required, Validators.min(0), Validators.max(100)]],
       heatingPercent: [apartment.heatingPercent, [Validators.required, Validators.min(0), Validators.max(100)]],
-      apDescription: [apartment.apDescription]
+      apDescription: [apartment.apDescription],
     });
+    this.buildingName = apartment.buildingName ?? '';
+    this.buildingAddress1 = apartment.buildingAddress1 ?? '';
 
     this.tenantEmail = apartment.residentEmail ?? '';
     this.tenantPhone = apartment.residentPhone ?? '';

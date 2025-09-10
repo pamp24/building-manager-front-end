@@ -37,6 +37,7 @@ export class ApartmentFormComponent implements OnInit, OnChanges {
       apartments: this.fb.array([this.createApartmentForm()])
     });
   }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['buildingForm'] && this.buildingForm) {
       this.generateFloorOptions();
@@ -47,6 +48,7 @@ export class ApartmentFormComponent implements OnInit, OnChanges {
       this.buildingForm.get('floors')?.valueChanges.subscribe(() => this.generateFloorOptions());
     }
   }
+
   ngOnInit(): void {
     const storageStr = localStorage.getItem('storageNum');
     this.storageLimit = storageStr ? +storageStr : 0;
@@ -55,30 +57,16 @@ export class ApartmentFormComponent implements OnInit, OnChanges {
     this.managerHouseExist = managerHouseExistStr === 'true';
 
     const storedId = localStorage.getItem('buildingId');
-
     if (storedId) {
       this.buildingId = +storedId;
-      console.log('Building ID loaded:', this.buildingId);
-    } else {
-      console.warn('No building ID found in localStorage');
     }
 
     this.setupDynamicValidation();
 
-    // αρχική τιμή από parent, αλλιώς fallback σε localStorage
     if (this.buildingId) {
       this.buildingService.getBuildingManager(this.buildingId).subscribe({
         next: (m) => {
           this.managerUserId = m?.id ?? null;
-
-          // Αν κάποιο διαμέρισμα είναι ήδη τσεκαρισμένο ως διαχειριστή,
-          // γράψε ownerId τώρα που έχουμε managerUserId
-          this.apartments.controls.forEach((ctrl) => {
-            const g = ctrl as FormGroup;
-            if (g.get('isManagerHouse')?.value && this.managerUserId) {
-              g.get('ownerId')?.setValue(this.managerUserId);
-            }
-          });
         },
         error: () => (this.managerUserId = null)
       });
@@ -103,8 +91,6 @@ export class ApartmentFormComponent implements OnInit, OnChanges {
     }
 
     if (overTop) this.floorOptions.push('Δώμα');
-
-    console.log('Όροφοι:', this.floorOptions);
   }
 
   get apartments(): FormArray {
@@ -134,6 +120,11 @@ export class ApartmentFormComponent implements OnInit, OnChanges {
   }
 
   addApartment(): void {
+    const apartmentsLimit = Number(this.buildingForm?.get('apartmentsNum')?.value || 0);
+    if (this.apartments.length >= apartmentsLimit) {
+      alert(`Δεν μπορείτε να προσθέσετε περισσότερα από ${apartmentsLimit} διαμερίσματα.\nΘα πρέπει να γίνει επεξεργασία της πολυκατοικίας`);
+      return;
+    }
     const group = this.createApartmentForm();
     this.apartments.push(group);
     this.setupGroupValidation(group);
@@ -146,74 +137,88 @@ export class ApartmentFormComponent implements OnInit, OnChanges {
   }
 
   onBack(): void {
-    this.backClicked.emit(); // ο γονιός θα κάνει delete + cleanup
+    this.backClicked.emit();
   }
 
   onFinish(): void {
-  this.isSubmitted = true;
-
-  if (this.form.invalid) {
-    this.form.markAllAsTouched();
-    return;
-  }
-
-  const currentUser = this.auth.getUser(); // 👈 τρέχων χρήστης
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const formData = this.form.value.apartments.map((apt: any) => {
-    // Αν είναι το διαμέρισμα διαχειριστή -> γεμίζουμε με τα στοιχεία του currentUser
-    const isManager = apt.isManagerHouse;
-
-    return {
-      ownerFirstName: isManager ? currentUser.firstName : apt.ownerFirstName,
-      ownerLastName:  isManager ? currentUser.lastName  : apt.ownerLastName,
-      ownerId:        isManager ? currentUser.id        : apt.ownerId,
-
-      isRented: apt.isRented === 'Ναι',
-      residentFirstName: apt.isRented === 'Ναι' ? apt.residentFirstName : null,
-      residentLastName:  apt.isRented === 'Ναι' ? apt.residentLastName  : null,
-
-      number: apt.apartmentNumber,
-      floor: apt.floor,
-      sqMetersApart: String(apt.sqMetersApart),
-      parkingSpace: apt.hasParking === 'Ναι',
-      parkingSlot: apt.hasParking === 'Ναι' ? apt.parkingSlot : null,
-
-      commonPercent: +apt.commonPercent,
-      elevatorPercent: +apt.elevatorPercent,
-      heatingPercent: +apt.heatingPercent,
-
-      apStorageExist: apt.hasStorage,
-      storageSlot: apt.hasStorage ? apt.storageSlot : null,
-
-      isManagerHouse: isManager,
-      apDescription: apt.apDescription ?? null,
-
-      active: true,
-      enable: true,
-      buildingId: this.buildingId
-    };
-  });
-
-  this.apartmentService.saveMultiple(formData).subscribe({
-    next: () => {
-      alert('Τα διαμερίσματα αποθηκεύτηκαν με επιτυχία!');
-      localStorage.removeItem('buildingId');
-      this.router.navigate(['/user/account-profile']);
-    },
-    error: (err) => {
-      console.error('Σφάλμα:', err);
+    this.isSubmitted = true;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
     }
-  });
-}
 
+    // --- Extra validations ---
+    const apartmentsLimit = Number(this.buildingForm?.get('apartmentsNum')?.value || 0);
+    if (this.apartments.length > apartmentsLimit) {
+      alert(`Δεν μπορείτε να δηλώσετε περισσότερα από ${apartmentsLimit} διαμερίσματα.\nΘα πρέπει να γίνει επεξεργασία της πολυκατοικίας`);
+      return;
+    }
+
+    const parkingLimit = Number(this.buildingForm?.get('parkingSpacesNum')?.value || 0);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const usedParking = this.apartments.value.filter((ap: any) => ap.hasParking === 'Ναι').length;
+    if (usedParking > parkingLimit) {
+      alert(`Δεν μπορείτε να δηλώσετε περισσότερες από ${parkingLimit} θέσεις parking.\nΘα πρέπει να γίνει επεξεργασία της πολυκατοικίας`);
+      return;
+    }
+
+    const storageLimit = Number(this.buildingForm?.get('storageNum')?.value || 0);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const usedStorages = this.apartments.value.filter((ap: any) => ap.hasStorage).length;
+    if (usedStorages > storageLimit) {
+      alert(`Δεν μπορείτε να δηλώσετε περισσότερες από ${storageLimit} αποθήκες.\nΘα πρέπει να γίνει επεξεργασία της πολυκατοικίας`);
+      return;
+    }
+
+    const currentUser = this.auth.getUser();
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const formData = this.form.value.apartments.map((apt: any) => {
+      const isManager = apt.isManagerHouse;
+      return {
+        ownerFirstName: isManager ? currentUser.firstName : apt.ownerFirstName,
+        ownerLastName: isManager ? currentUser.lastName : apt.ownerLastName,
+        ownerId: isManager ? currentUser.id : apt.ownerId,
+
+        isRented: apt.isRented === 'Ναι',
+        residentFirstName: apt.isRented === 'Ναι' ? apt.residentFirstName : null,
+        residentLastName: apt.isRented === 'Ναι' ? apt.residentLastName : null,
+
+        number: apt.apartmentNumber,
+        floor: apt.floor,
+        sqMetersApart: String(apt.sqMetersApart),
+        parkingSpace: apt.hasParking === 'Ναι',
+        parkingSlot: apt.hasParking === 'Ναι' ? apt.parkingSlot : null,
+
+        commonPercent: +apt.commonPercent,
+        elevatorPercent: +apt.elevatorPercent,
+        heatingPercent: +apt.heatingPercent,
+
+        apStorageExist: apt.hasStorage,
+        storageSlot: apt.hasStorage ? apt.storageSlot : null,
+
+        isManagerHouse: isManager,
+        active: true,
+        enable: true,
+        buildingId: this.buildingId
+      };
+    });
+
+    this.apartmentService.saveMultiple(formData).subscribe({
+      next: () => {
+        alert('Τα διαμερίσματα αποθηκεύτηκαν με επιτυχία!');
+        localStorage.removeItem('buildingId');
+        this.router.navigate(['/user/account-profile']);
+      },
+      error: (err) => console.error('Σφάλμα:', err)
+    });
+  }
 
   private setupDynamicValidation(): void {
     this.apartments.controls.forEach((group) => this.setupGroupValidation(group as FormGroup));
   }
 
   private setupGroupValidation(group: FormGroup): void {
-    // σωστό validation για ένοικο
     group.get('isRented')?.valueChanges.subscribe((value) => {
       const first = group.get('residentFirstName');
       const last = group.get('residentLastName');
@@ -221,10 +226,8 @@ export class ApartmentFormComponent implements OnInit, OnChanges {
         first?.setValidators([Validators.required, Validators.minLength(3)]);
         last?.setValidators([Validators.required, Validators.minLength(3)]);
       } else {
-        first?.clearValidators();
-        first?.setValue('');
-        last?.clearValidators();
-        last?.setValue('');
+        first?.clearValidators(); first?.setValue('');
+        last?.clearValidators(); last?.setValue('');
       }
       first?.updateValueAndValidity();
       last?.updateValueAndValidity();
@@ -235,8 +238,7 @@ export class ApartmentFormComponent implements OnInit, OnChanges {
       if (value === 'Ναι') {
         parkingCtrl?.setValidators([Validators.required]);
       } else {
-        parkingCtrl?.clearValidators();
-        parkingCtrl?.setValue('');
+        parkingCtrl?.clearValidators(); parkingCtrl?.setValue('');
       }
       parkingCtrl?.updateValueAndValidity();
     });
@@ -246,8 +248,7 @@ export class ApartmentFormComponent implements OnInit, OnChanges {
       if (value === true) {
         storageCtrl?.setValidators([Validators.required]);
       } else {
-        storageCtrl?.clearValidators();
-        storageCtrl?.setValue('');
+        storageCtrl?.clearValidators(); storageCtrl?.setValue('');
       }
       storageCtrl?.updateValueAndValidity();
     });
@@ -263,17 +264,12 @@ export class ApartmentFormComponent implements OnInit, OnChanges {
           ownerIdCtrl?.setValue(user.id);
           first?.setValue(user.firstName);
           last?.setValue(user.lastName);
-
-          // disable editing
           first?.disable({ emitEvent: false });
           last?.disable({ emitEvent: false });
         }
       } else {
         ownerIdCtrl?.setValue(null);
-        first?.reset();
-        last?.reset();
-
-        // enable editing again
+        first?.reset(); last?.reset();
         first?.enable({ emitEvent: false });
         last?.enable({ emitEvent: false });
       }

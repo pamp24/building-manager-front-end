@@ -14,18 +14,24 @@ export interface BuildingDTO {
   apartmentsNum: number;
   sqMetersTotal: string;
   sqMetersCommonSpaces: string;
-  parkingExists: boolean;
+  parkingExist: boolean;
   parkingSpacesNum: number;
   buildingCode: string;
   buildingDescription?: string;
-  undergroundFloorExists: boolean;
-  halfFloorExists: boolean;
-  overTopFloorExists: boolean;
-  storageExists: boolean;
+  undergroundFloorExist: boolean;
+  halfFloorExist: boolean;
+  overTopFloorExist: boolean;
+  storageExist: boolean;
   storageNum: number;
+  managerHouseExist: boolean;
+
   managerFullName: string;
   managerEmail: string;
   managerPhone: string;
   managerAddress1: string;
   managerCity: string;
+
+  hasCentralHeating: boolean;
+  heatingType?: string;
+  heatingCapacityLitres?: number;
 }
