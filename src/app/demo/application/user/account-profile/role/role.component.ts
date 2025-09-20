@@ -8,6 +8,7 @@ import { BuildingMemberService } from 'src/app/theme/shared/service/buildingMemb
 import { AuthenticationService } from 'src/app/theme/shared/service/authentication.service';
 import { UserService } from 'src/app/theme/shared/service';
 import { ApartmentService } from 'src/app/theme/shared/service/apartment.service';
+import { ApartmentDTO } from 'src/app/theme/shared/models/apartmentDTO';
 
 @Component({
   selector: 'app-role',
@@ -35,8 +36,9 @@ export class RoleComponent implements OnInit {
   currentPage = 1;
   total = 0;
   currentBuildingId: number | null = null;
+  buildingApartments: ApartmentDTO[] = [];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  buildingApartments: any[] = [];
+  filteredApartments: any[] = [];
 
   constructor(
     private userService: UserService,
@@ -70,7 +72,7 @@ export class RoleComponent implements OnInit {
       const first = this.apartments[0];
       this.currentPage = 1;
       this.loadBuilding(first.id);
-      this.loadApartments(first.id); // ✅ να φορτώσει διαμερίσματα από την αρχή
+      this.loadApartments(first.id); // να φορτώσει διαμερίσματα από την αρχή
       this.loadMembers(first.id);
     }
   }
@@ -81,6 +83,8 @@ export class RoleComponent implements OnInit {
       next: (data) => {
         this.members = data;
         this.currentBuildingId = buildingId;
+
+        this.loadApartments(buildingId);
       },
       error: (err) => console.error('Σφάλμα φόρτωσης μελών', err)
     });
@@ -101,8 +105,10 @@ export class RoleComponent implements OnInit {
   private loadApartments(buildingId: number): void {
     this.apartmentService.getApartmentsByBuilding(buildingId).subscribe({
       next: (data) => {
+        console.log('Apartments API response:', data);
         this.buildingApartments = data;
-        this.apartmentToInvite = null; // reset για το default option
+        this.filteredApartments = [...data];
+        this.apartmentToInvite = null; // ✅ default πρώτο
       },
       error: (err) => console.error('Σφάλμα φόρτωσης διαμερισμάτων:', err)
     });
@@ -121,31 +127,35 @@ export class RoleComponent implements OnInit {
 
   // 🔹 Αποστολή πρόσκλησης
   sendInvite(): void {
-    if (!this.emailToInvite || !this.roleToInvite || !this.apartmentToInvite || !this.apartmentFloor) {
-      alert('Παρακαλώ συμπληρώστε όλα τα πεδία.');
-      return;
-    }
+  console.log('email:', this.emailToInvite);
+  console.log('role:', this.roleToInvite);
+  console.log('apartment:', this.apartmentToInvite);
 
-    this.isSending = true;
-    this.userService
-      .inviteUserToBuilding({
-        email: this.emailToInvite,
-        role: this.roleToInvite,
-        apartmentId: this.apartmentToInvite,
-        floor: this.apartmentFloor
-      })
-      .subscribe({
-        next: () => {
-          alert('Η πρόσκληση στάλθηκε με επιτυχία!');
-          this.resetInviteForm();
-        },
-        error: (err) => {
-          console.error('Σφάλμα αποστολής πρόσκλησης:', err);
-          alert('Απέτυχε η αποστολή πρόσκλησης.');
-          this.isSending = false;
-        }
-      });
+  if (!this.emailToInvite || !this.roleToInvite || !this.apartmentToInvite) {
+    alert('Παρακαλώ συμπληρώστε όλα τα πεδία.');
+    return;
   }
+
+  this.isSending = true;
+  const payload = {
+    email: this.emailToInvite,
+    role: this.roleToInvite as 'Resident' | 'Owner',
+    apartmentId: this.apartmentToInvite
+  };
+  console.log('payload:', payload);
+
+  this.userService.inviteUserToBuilding(payload).subscribe({
+    next: () => {
+      alert('Η πρόσκληση στάλθηκε με επιτυχία!');
+      this.resetInviteForm();
+      console.log('selected apartmentId:', this.apartmentToInvite);
+    },
+    error: (err) => {
+      alert(err.error?.message || 'Απέτυχε η αποστολή πρόσκλησης.');
+      this.isSending = false;
+    }
+  });
+}
 
   private resetInviteForm(): void {
     this.emailToInvite = '';
@@ -189,6 +199,18 @@ export class RoleComponent implements OnInit {
     // ψάχνουμε στο members αν ο τρέχων χρήστης έχει admin ρόλο
     const me = this.members.find((m) => m.email === user?.email);
     return me?.role === 'BuildingManager' || me?.role === 'PropertyManager';
+  }
+
+  onRoleChange() {
+    if (this.roleToInvite === 'Owner') {
+      this.filteredApartments = this.buildingApartments.filter((ap) => !ap.ownerId);
+    } else if (this.roleToInvite === 'Resident') {
+      this.filteredApartments = this.buildingApartments.filter((ap) => !ap.residentId && ap.isRented);
+    } else {
+      this.filteredApartments = [];
+    }
+
+    this.apartmentToInvite = null; // πάντα reset
   }
 
   // 🔹 Pagination αλλαγή σελίδας (άλλη πολυκατοικία)

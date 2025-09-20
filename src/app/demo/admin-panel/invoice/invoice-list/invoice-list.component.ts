@@ -27,7 +27,7 @@ export class InvoiceListComponent {
   // public method
   widgetCards = [
     {
-      title: 'Paid',
+      title: 'Πληρώθηκαν',
       isLoss: false,
       value: '$7,825',
       percentage: 70.5,
@@ -37,7 +37,7 @@ export class InvoiceListComponent {
       colors: ['#52c41a']
     },
     {
-      title: 'Unpaid',
+      title: 'Εκκρεμεί',
       isLoss: true,
       value: '$1,880',
       percentage: 27.4,
@@ -47,7 +47,7 @@ export class InvoiceListComponent {
       colors: ['#faad14']
     },
     {
-      title: 'Overdue',
+      title: 'Έληξαν',
       isLoss: true,
       value: '$3,507',
       percentage: 27.4,

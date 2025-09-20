@@ -1,10 +1,12 @@
-﻿﻿import { Injectable } from '@angular/core';
+﻿﻿/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { User } from '../components/_helpers/user';
 import { Observable } from 'rxjs';
 import { UserUpdateDTO } from 'src/app/theme/shared/models/UserUpdateDTO';
 import { UserTableDto } from 'src/app/theme/shared/models/userTableDTO';
+import { inviteRequest } from '../models/inviteRequest';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -34,15 +36,11 @@ export class UserService {
     return this.http.get<UserTableDto[]>('http://localhost:8080/api/v1/users/same-building');
   }
 
-  inviteUserToBuilding(payload: { email: string; role: string; apartmentId: number; floor: string }): Observable<void> {
-    return this.http.post<void>('http://localhost:8080/api/v1/users/invite', payload);
+  inviteUserToBuilding(payload: inviteRequest): Observable<any> {
+    return this.http.post<any>('http://localhost:8080/api/v1/invites', payload);
   }
 
-  acceptInvite(email: string, apartmentId: number, role: string): Observable<void> {
-    return this.http.post<void>('/api/invite/accept', {
-      email,
-      apartmentId,
-      role
-    });
+  acceptInvite(code: string): Observable<void> {
+    return this.http.post<void>(`http://localhost:8080/api/v1/invites/accept?code=${code}`, {});
   }
 }

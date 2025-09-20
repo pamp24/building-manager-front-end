@@ -63,22 +63,22 @@ export class InvoiceDashboardComponent {
       background: 'bg-info'
     },
     {
-      title: 'Paid',
+      title: 'Πληρωμένα',
       icon: 'dollar-circle',
       background: 'bg-success'
     },
     {
-      title: 'Pending',
+      title: 'Εκκρεμούντα',
       icon: 'hourglass',
       background: 'bg-warning'
     },
     {
-      title: 'Cancelled',
+      title: 'Ακυρώθηκαν',
       icon: 'close-circle',
       background: 'bg-danger'
     },
     {
-      title: 'Draft',
+      title: 'Πρόχειρα',
       icon: 'shopping',
       background: 'bg-primary'
     }

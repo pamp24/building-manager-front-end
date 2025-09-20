@@ -220,7 +220,7 @@ export class InvoiceChartComponent implements OnInit {
 
   widgetData = [
     {
-      title: 'Total',
+      title: 'Συνολικά',
       count: '£5678.09',
       percentage: 20.3,
       isLoss: true,
@@ -228,7 +228,7 @@ export class InvoiceChartComponent implements OnInit {
       color: 'text-warning'
     },
     {
-      title: 'Paid',
+      title: 'Πληρώθηκαν',
       count: '£5678.09',
       percentage: -8.73,
       isLoss: true,
@@ -236,7 +236,7 @@ export class InvoiceChartComponent implements OnInit {
       color: 'text-danger'
     },
     {
-      title: 'Pending',
+      title: 'Εκκρεμούν',
       count: '£5678.09',
       percentage: 1.73,
       isLoss: false,
@@ -244,7 +244,7 @@ export class InvoiceChartComponent implements OnInit {
       color: 'text-success'
     },
     {
-      title: 'Overdue',
+      title: 'Ληξιπρόθεσμα',
       count: '£5678.09',
       percentage: -4.7,
       isLoss: true,

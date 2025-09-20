@@ -51,8 +51,13 @@ const routes: Routes = [
         canActivateChild: [AuthGuardChild],
         loadChildren: () => import('./demo/pages/maintenance/maintenance.module').then((m) => m.MaintenanceModule),
         data: {
-          role  : ['Admin', 'User']
+          role: ['Admin', 'User']
         }
+      },
+      {
+        path: 'invite/accept',
+        canActivateChild: [AuthGuardChild],
+        loadComponent: () => import('./demo/pages/invite-accept/invite-accept.component').then((c) => c.InviteAcceptComponent)
       }
     ]
   },
@@ -65,35 +70,35 @@ const routes: Routes = [
         path: 'dashboard',
         loadChildren: () => import('./demo/dashboard/dashboard.module').then((m) => m.DashboardModule),
         data: {
-          role: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'widget/statistics',
         loadComponent: () => import('./demo/widget/statistics/statistics.component').then((c) => c.StatisticsComponent),
         data: {
-          role: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'widget/data',
         loadComponent: () => import('./demo/widget/widget-data/widget-data.component').then((c) => c.WidgetDataComponent),
         data: {
-          role: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'widget/chart',
         loadComponent: () => import('./demo/widget/widget-chart/widget-chart.component').then((c) => c.WidgetChartComponent),
         data: {
-          role: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'online-course',
         loadChildren: () => import('./demo/admin-panel/online-courses/online-courses.module').then((m) => m.OnlineCoursesModule),
         data: {
-          role: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
@@ -107,112 +112,112 @@ const routes: Routes = [
         path: 'helpdesk',
         loadChildren: () => import('./demo/admin-panel/helpdesk/helpdesk.module').then((m) => m.HelpdeskModule),
         data: {
-          role: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident] 
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'invoice',
         loadChildren: () => import('./demo/admin-panel/invoice/invoice.module').then((m) => m.InvoiceModule),
         data: {
-          role: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'layout',
         loadChildren: () => import('./demo/layouts/layouts.module').then((m) => m.LayoutsModule),
         data: {
-          role: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'chat',
         loadComponent: () => import('./demo/application/chat/chat.component').then((c) => c.ChatComponent),
         data: {
-          role: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'calendar',
         loadChildren: () => import('./demo/application/calender/calender.module').then((m) => m.CalenderModule),
         data: {
-          role: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'user',
         loadChildren: () => import('./demo/application/user/user.module').then((m) => m.UserModule),
         data: {
-          role: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'customer',
         loadChildren: () => import('./demo/application/customer/customer.module').then((m) => m.CustomerModule),
         data: {
-          role: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'e-commerce',
         loadChildren: () => import('./demo/application/e-commerce/e-commerce.module').then((m) => m.ECommerceModule),
         data: {
-          role: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'form',
         loadChildren: () => import('./demo/forms/forms-elements/forms-elements.module').then((m) => m.FormsElementsModule),
         data: {
-          role: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'form-plugin',
         loadChildren: () => import('./demo/forms/forms-plugins/forms-plugins.module').then((m) => m.FormsPluginsModule),
         data: {
-          role: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'editor',
         loadChildren: () => import('./demo/forms/text-editors/text-editors.module').then((m) => m.TextEditorsModule),
         data: {
-          role: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'form-layouts',
         loadChildren: () => import('./demo/forms/forms-layouts/forms-layouts.module').then((m) => m.FormsLayoutsModule),
         data: {
-          role: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'file-upload',
         loadChildren: () => import('./demo/forms/file-upload/file-upload.module').then((m) => m.FileUploadModule),
         data: {
-          role: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'form/form-validator',
         loadComponent: () => import('./demo/forms/forms-validator/forms-validator.component'),
         data: {
-          role: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'images-cropper',
         loadComponent: () => import('./demo/forms/image-cropper/image-cropper.component').then((c) => c.ImageCropperComponent),
         data: {
-          role: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'bootstrap-table',
         loadChildren: () => import('./demo/table/bootstrap-table/bootstrap-table.module').then((m) => m.BootstrapTableModule),
         data: {
-          role: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       // {
@@ -226,21 +231,21 @@ const routes: Routes = [
         path: 'apex-chart',
         loadComponent: () => import('./demo/chart/apex-chart/apex-chart.component').then((c) => c.ApexChartComponent),
         data: {
-          role: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'price',
         loadComponent: () => import('./demo/pages/price/price.component').then((c) => c.PriceComponent),
         data: {
-          role: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'sample-page',
         loadComponent: () => import('./demo/others/sample-page/sample-page.component').then((c) => c.SamplePageComponent),
         data: {
-          role: [ Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       }
     ]

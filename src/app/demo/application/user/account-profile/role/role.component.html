@@ -25,32 +25,30 @@
         <input
           type="email"
           class="form-control"
-          placeholder="Εισάγετε το email για να σταλθεί η Πρόσκληση"
+          placeholder="Email"
           [(ngModel)]="emailToInvite"
-          [disabled]="isSending"
+          name="emailToInvite"
+          required
+          #emailCtrl="ngModel"
         />
+        <!-- Εμφάνιση σφάλματος -->
+        <div *ngIf="emailCtrl.invalid && (emailCtrl.dirty || emailCtrl.touched)" class="text-danger">Παρακαλώ εισάγετε έγκυρο email.</div>
       </div>
       <div class="col">
-        <select class="form-select" [(ngModel)]="roleToInvite" [disabled]="isSending">
+        <select class="form-select" [(ngModel)]="roleToInvite" (change)="onRoleChange()" [disabled]="isSending">
           <option value="" disabled selected>Επιλέξτε Ρόλο</option>
           <option value="Owner">Ιδιοκτήτης</option>
           <option value="Resident">Ένοικος</option>
         </select>
       </div>
       <div class="col">
-        <select class="form-select" [(ngModel)]="apartmentToInvite" [disabled]="isSending || buildingApartments.length === 0">
-          <option [ngValue]="null" disabled selected>Επιλέξτε Διαμέρισμα</option>
-          <option *ngFor="let ap of buildingApartments" [ngValue]="ap.id">Διαμέρισμα {{ ap.number }}</option>
-        </select>
-      </div>
-      <div class="col">
-        <select class="form-select" [(ngModel)]="apartmentFloor" [disabled]="isSending">
-          <option value="" disabled selected>Επιλέξτε Όροφο</option>
-          <option *ngFor="let floor of floorOptions" [value]="floor">{{ floor }}</option>
+        <select class="form-select" [(ngModel)]="apartmentToInvite" [disabled]="isSending || filteredApartments.length === 0">
+          <option [ngValue]="null" disabled>Επιλέξτε Διαμέρισμα</option>
+          <option *ngFor="let ap of filteredApartments" [ngValue]="ap.id">Διαμέρισμα {{ ap.floor }}{{ ap.number }}</option>
         </select>
       </div>
       <div class="col-auto">
-        <button class="btn btn-primary" (click)="sendInvite()" [disabled]="isSending">
+        <button class="btn btn-primary" (click)="sendInvite()">
           <span *ngIf="isSending" class="spinner-border spinner-border-sm me-2"></span>
           Αποστολή
         </button>
@@ -66,7 +64,6 @@
           <th>ΜΕΛΟΣ</th>
           <th>ΡΟΛΟΣ</th>
           <th>ΑΡ. ΔΙΑΜΕΡΙΣΜΑΤΟΣ</th>
-          <th>ΟΡΟΦΟΣ</th>
           <th class="text-end">ΚΑΤΑΣΤΑΣΗ</th>
           <th></th>
         </tr>
@@ -96,8 +93,7 @@
               {{ getTranslatedRole(member.role) }}
             </span>
           </td>
-          <td>{{ member.apartmentNumber || '—' }}</td>
-          <td>{{ member.floor !== null ? member.floor : '—' }}</td>
+          <td>{{ member.floor !== null ? member.floor : '—' }}{{ member.apartmentNumber || '—' }}</td>
           <td class="text-end">
             <span
               [ngClass]="{
@@ -118,13 +114,13 @@
     </table>
   </div>
 </app-card>
-  <!-- Pagination για εναλλαγή πολυκατοικιών -->
-  <div class="datatable-bottom mt-3" *ngIf="apartments.length > 1">
-    <ngb-pagination
-      [collectionSize]="apartments.length"
-      [(page)]="currentPage"
-      [pageSize]="1"
-      (pageChange)="onPageChange($event)"
-      class="table-pagination"
-    ></ngb-pagination>
-  </div>
+<!-- Pagination για εναλλαγή πολυκατοικιών -->
+<div class="datatable-bottom mt-3" *ngIf="apartments.length > 1">
+  <ngb-pagination
+    [collectionSize]="apartments.length"
+    [(page)]="currentPage"
+    [pageSize]="1"
+    (pageChange)="onPageChange($event)"
+    class="table-pagination"
+  ></ngb-pagination>
+</div>
