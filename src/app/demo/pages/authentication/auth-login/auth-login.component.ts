@@ -14,8 +14,7 @@ import { IconService } from '@ant-design/icons-angular';
 import { EyeInvisibleOutline, EyeOutline } from '@ant-design/icons-angular/icons';
 import { AuthenticationResponse } from '../../../../theme/shared/models/authentication-response.model';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-
-
+import { UserService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-auth-login',
@@ -33,8 +32,6 @@ export class AuthLoginComponent implements OnInit {
   // public method
   showPassword: boolean = false;
 
-
-
   loginForm!: FormGroup;
   loading = false;
   submitted = false;
@@ -43,8 +40,8 @@ export class AuthLoginComponent implements OnInit {
   classList!: { toggle: (arg0: string) => void };
 
   // constructor
-  constructor() {
-    // redirect to home if already logged in
+  constructor(private userService: UserService) {
+    
     this.iconService.addIcon(...[EyeOutline, EyeInvisibleOutline]);
   }
 
@@ -78,33 +75,42 @@ export class AuthLoginComponent implements OnInit {
     return this.loginForm.controls;
   }
 
-onSubmit() {
-  this.submitted = true;
+  onSubmit() {
+    this.submitted = true;
+    if (this.loginForm.invalid) return;
+    const { email, password } = this.loginForm.value;
+    this.authenticationService.login(email, password).subscribe({
+      next: (response: AuthenticationResponse) => {
+        console.log('User role from backend:', response.user.role);
+        localStorage.setItem('currentUser', JSON.stringify(response.user));
 
-  if (this.loginForm.invalid) return;
-
-  const { email, password } = this.loginForm.value;
-
-  this.authenticationService.login(email, password).subscribe({
-    next: (response: AuthenticationResponse) => {
-      console.log('User role from backend:', response.user.role);
-      localStorage.setItem('currentUser', JSON.stringify(response.user));
-      if (response.user.role && response.user.role.includes('Admin')) {
-        this.router.navigate(['/dashboard/default']);
-      } else {
-        this.router.navigate(['/dashboard/default']);
-      }
-    },
-    error: (err) => {
-      console.log(err);
+        const inviteCode = localStorage.getItem('inviteCode');
+        if (inviteCode) {
+          this.userService.acceptInvite(inviteCode).subscribe({
+            next: () => {
+              console.log('✅ Η πρόσκληση αποδέχτηκε επιτυχώς');
+              localStorage.removeItem('inviteCode'); // καθάρισμα
+              this.router.navigate(['/dashboard/default']);
+            },
+            error: (err) => {
+              console.error('❌ Σφάλμα αποδοχής πρόσκλησης:', err);
+              this.router.navigate(['/dashboard/default']);
+            }
+          });
+        } else {
+          this.router.navigate(['/dashboard/default']);
+        }
+      },
+      error: (err) => {
+        console.log(err);
         if (err.error.validationErrors) {
           this.errorMsg = err.error.validationErrors;
         } else {
           this.errorMsg.push(err.error.errorMsg);
         }
-    }
-  });
-}
+      }
+    });
+  }
 
   socialMedia = [
     { name: 'Google', logo: 'google.svg' },

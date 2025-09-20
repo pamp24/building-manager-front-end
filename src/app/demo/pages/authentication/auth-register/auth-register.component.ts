@@ -1,9 +1,7 @@
-// angular import
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 
-// project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { AuthenticationService } from 'src/app/theme/shared/service';
 import { RegistrationRequest } from '../../../../theme/shared/models/registration-request';
@@ -20,7 +18,7 @@ export class AuthRegisterComponent {
 
   constructor(
     private router: Router,
-    private authService: AuthenticationService,
+    private authService: AuthenticationService
   ) {}
 
   login() {
@@ -31,6 +29,8 @@ export class AuthRegisterComponent {
     this.errorMsg = [];
     this.authService.register(this.registerRequest).subscribe({
       next: () => {
+        // ✅ Μετά την εγγραφή πάντα redirect στο code-verify
+        // Εκεί θα ελέγξουμε αν υπάρχει inviteCode
         this.router.navigate(['code-verify']);
       },
       error: (err) => {

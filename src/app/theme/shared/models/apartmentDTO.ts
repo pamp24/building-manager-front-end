@@ -1,4 +1,5 @@
 export interface ApartmentDTO {
+  id: number;
   fullApartmentName: string;
   ownerFirstName: string;
   ownerLastName: string;
@@ -24,10 +25,11 @@ export interface ApartmentDTO {
   enable: boolean;
   managerFullName: string;
   managerId: string;
-  
+  residentId: number | null;
   residentEmail: string | null;
   residentPhone: string | null;
 
+  ownerId: number | null;
   ownerFullName: string;
   ownerEmail: string;
   ownerPhone: string;

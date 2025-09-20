@@ -43,7 +43,10 @@ export class ApartmentService {
   addApartment(apartment: ApartmentRequest): Observable<number> {
     return this.http.post<number>('http://localhost:8080/api/v1/apartments/batch', apartment);
   }
-    getApartmentsByBuilding(buildingId: number): Observable<ApartmentDTO[]> {
+  getApartmentsByBuilding(buildingId: number): Observable<ApartmentDTO[]> {
     return this.http.get<ApartmentDTO[]>(`http://localhost:8080/api/v1/apartments/building/${buildingId}/list`);
+  }
+  getAvailableApartments(buildingId: number, role: string): Observable<ApartmentDTO[]> {
+    return this.http.get<ApartmentDTO[]>(`http://localhost:8080/api/v1/apartments/${buildingId}/available?role=${role}`);
   }
 }

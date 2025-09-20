@@ -88,7 +88,7 @@ export class UserCardComponent implements OnInit {
       this.apartmentService.getApartmentsByBuilding(buildingId).subscribe((data) => {
         this.card_detail = data.map((ap) => ({
           apartment: ap,
-          name: ap.ownerFullName || `Άγνωστο Όνομα`,
+          name: ap.ownerLastName && ap.ownerFirstName ? `${ap.ownerLastName} ${ap.ownerFirstName}` : 'Άγνωστο Όνομα',
           position: `Διαμ. ${ap.number}, Όροφος ${ap.floor}`,
           src: 'assets/images/user/avatar-1.jpg',
           description: ap.apDescription || 'Δεν υπάρχει περιγραφή',
