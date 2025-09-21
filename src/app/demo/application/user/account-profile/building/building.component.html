@@ -94,10 +94,12 @@
             <label>Αριθμός Θέσεων Πάρκινγκ</label>
             <input type="number" class="form-control" formControlName="parkingSpacesNum" />
           </div>
+
           <div class="col-md-6 form-group" *ngIf="buildingForm.get('storageExist')?.value">
             <label>Αριθμός Αποθηκών</label>
             <input type="number" class="form-control" formControlName="storageNum" />
           </div>
+
           <div class="col-md-6 form-group">
             <label>Διαθέτει Υπόγειο</label>
             <select class="form-select" formControlName="undergroundFloorExist">
@@ -131,27 +133,35 @@
         </div>
       </form>
     </app-card>
-<app-card cardTitle="Θέρμανση" [padding]="24" *ngIf="buildingData?.hasCentralHeating">
-  <ul class="list-group list-group-flush">
-    @for (task of heating; track task) {
-      <li class="list-group-item px-0 {{ task.style }}">
+    <app-card cardTitle="Θέρμανση" [padding]="24">
+      <div [formGroup]="buildingForm">
         <div class="row">
-          <div class="col-md-6">
-            <p class="mb-1 text-muted">{{ task.title }}</p>
-            <p class="mb-0">{{ task.name }}</p>
+          <div class="col-md-6 form-group">
+            <label>Τύπος Θέρμανσης</label>
+            <select class="form-select" formControlName="heatingType">
+              <option value="OIL">Πετρέλαιο</option>
+              <option value="NATURAL_GAS">Φυσικό Αέριο</option>
+              <option value="ELECTRIC">Ηλεκτρικό</option>
+              <option value="HEAT_PUMP">Αντλία Θερμότητας</option>
+              <option value="NONE">Καθόλου θέρμανση</option>
+            </select>
           </div>
-          <div class="col-md-6">
-            <p class="mb-1 text-muted">{{ task.sub_title }}</p>
-            <p class="mb-0">{{ task.f_name }}</p>
+          <div class="col-md-6 form-group">
+            <label>Χωρητικότητα (Λίτρα)</label>
+            <input type="number" class="form-control" formControlName="heatingCapacityLitres" />
           </div>
         </div>
-      </li>
-    }
-  </ul>
-</app-card> 
-    <div class="text-center mt-2">
-      <button type="submit" class="btn btn-secondary me-2">Ακύρωση</button>
-      <button type="submit" class="btn btn-primary">Αποθήκευση</button>
+      </div>
+    </app-card>
+    <div class="mt-4 text-end">
+      <!-- Εναλλαγή edit mode -->
+      <button type="button" class="btn btn-secondary me-2" (click)="toggleEdit()">
+        {{ isEditing ? 'Ακύρωση' : 'Επεξεργασία' }}
+      </button>
+      <!-- Αποθήκευση εμφανίζεται μόνο σε edit mode -->
+      <button type="button" class="btn btn-success" [disabled]="!isEditing || buildingForm.invalid" (click)="submitChanges()">
+        Αποθήκευση
+      </button>
     </div>
   </div>
 </div>

@@ -1,9 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from 'src/app/theme/shared/service';
-import { inject } from '@angular/core';
 import { AuthenticationService } from 'src/app/theme/shared/service/authentication.service';
-
 
 @Component({
   selector: 'app-invite-accept',
@@ -29,12 +27,12 @@ export class InviteAcceptComponent implements OnInit {
       return;
     }
 
-    // Έλεγχος: αν ο χρήστης είναι ήδη συνδεδεμένος
     const currentUser = this.authService.currentUserValue;
 
     if (!currentUser) {
-      // Αν δεν είναι logged in -> σώσε τον κωδικό και στείλε login
+      // Αν δεν είναι logged in -> σώσε τον κωδικό και πήγαινε login
       localStorage.setItem('inviteCode', this.inviteCode);
+      localStorage.setItem('redirectAfterLogin', `/invite/accept?code=${this.inviteCode}`);
       this.router.navigate(['/login']);
       return;
     }
@@ -44,16 +42,13 @@ export class InviteAcceptComponent implements OnInit {
       next: () => {
         this.message = 'Η πρόσκληση έγινε αποδεκτή με επιτυχία!';
         this.loading = false;
-        // Προώθηση στο dashboard
         this.router.navigate(['/dashboard/default']);
       },
       error: (err) => {
-        this.message = 'Σφάλμα κατά την αποδοχή της πρόσκλησης.';
+        this.message = err.error?.message || 'Σφάλμα κατά την αποδοχή της πρόσκλησης.';
         console.error(err);
         this.loading = false;
-        this.router.navigate(['/dashboard/default']);
       }
     });
   }
 }
-

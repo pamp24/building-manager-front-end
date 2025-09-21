@@ -29,7 +29,7 @@ export const NavigationItems: NavigationItem[] = [
     title: 'Admin Panel',
     type: 'group',
     icon: 'icon-navigation',
-    role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+    role: [Role.Admin,   Role.PropertyManager, Role.BuildingManager],
     children: [
       // {
       //   id: 'Online-Courses',
@@ -256,35 +256,30 @@ export const NavigationItems: NavigationItem[] = [
         title: "Manager's Dashboard",
         type: 'item',
         url: '/invoice/dashboard',
-        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
       },
       {
         id: 'create',
         title: 'Create Expenses Invoice',
         type: 'item',
         url: '/invoice/create',
-        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
       },
       {
         id: 'details',
         title: 'Details',
         type: 'item',
         url: '/invoice/details',
-        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
       },
       {
         id: 'list',
         title: 'List',
         type: 'item',
         url: '/invoice/list',
-        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
       },
       {
         id: 'edit',
         title: 'Edit',
         type: 'item',
         url: '/invoice/edit',
-        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
       }
       // {
       //   id: 'invoice',
@@ -713,7 +708,6 @@ export const NavigationItems: NavigationItem[] = [
         title: 'Invoice',
         type: 'collapse',
         icon: 'file-text',
-        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
         children: [
           {
             id: 'dashboard',
@@ -744,7 +738,6 @@ export const NavigationItems: NavigationItem[] = [
             title: 'Edit',
             type: 'item',
             url: '/invoice/edit',
-            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
           }
         ]
       }

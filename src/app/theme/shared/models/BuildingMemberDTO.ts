@@ -6,4 +6,6 @@ export interface BuildingMemberDTO {
   status: string;
   buildingId: number;
   buildingName: string;
+  apartmentNumber?: string;
+  floor?: string;
 }

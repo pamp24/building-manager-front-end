@@ -70,17 +70,22 @@
       </thead>
       <tbody>
         <tr *ngFor="let member of members">
+          <!-- Στοιχεία μέλους -->
           <td>
             <div class="row">
               <div class="col-auto pe-0">
                 <img src="assets/images/user/avatar-1.jpg" alt="user-image" class="wid-40 rounded-circle" />
               </div>
               <div class="col">
-                <h6 class="mb-0">{{ member.fullName }}</h6>
-                <p class="text-muted f-12 mb-0">{{ member.email }}</p>
+                <h6 class="mb-0">{{ member.fullName || '—' }}</h6>
+                <p class="text-muted f-12 mb-0" [ngClass]="{ 'fst-italic': member.status === 'Invited' }">
+                  {{ member.email }}
+                </p>
               </div>
             </div>
           </td>
+
+          <!-- Ρόλος -->
           <td>
             <span
               [ngClass]="{
@@ -93,17 +98,25 @@
               {{ getTranslatedRole(member.role) }}
             </span>
           </td>
+
+          <!-- Διαμέρισμα -->
           <td>{{ member.floor !== null ? member.floor : '—' }}{{ member.apartmentNumber || '—' }}</td>
+
+          <!-- Κατάσταση -->
           <td class="text-end">
             <span
               [ngClass]="{
-                'badge bg-success': member.status === 'Joined',
-                'badge bg-outline-info': member.status === 'Invited'
+                'badge bg-success': member.status === 'Joined' || member.status === 'ACCEPTED',
+                'badge bg-outline-info': member.status === 'PENDING' || member.status === 'Invited',
+                'badge bg-secondary': member.status === 'EXPIRED',
+                'badge bg-danger': member.status === 'DECLINED'
               }"
             >
               {{ getTranslatedStatus(member.status) }}
             </span>
           </td>
+
+          <!-- Ενέργειες -->
           <td class="text-end">
             <a href="javascript:" class="avatar avatar-s btn-link-secondary" title="Επεξεργασία">
               <i class="ti ti-dots f-18"></i>

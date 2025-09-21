@@ -61,34 +61,24 @@ export class AddressModalComponent {
 
   inputList = [
     {
-      label: 'First Name :',
-      subTitle: 'Enter your first name',
+      label: 'Όνομα :',
+      subTitle: 'Εισάγετε το όνομά σας',
       type: 'text'
     },
     {
-      label: 'Last Name :',
-      subTitle: 'Enter your last name',
+      label: 'Επίθετο :',
+      subTitle: 'Εισάγετε το επίθετό σας',
       type: 'text'
     },
     {
-      label: 'Email Id :',
-      subTitle: 'Enter Email id',
+      label: 'Email :',
+      subTitle: 'Εισάγετε το email σας',
       type: 'email'
     },
     {
-      label: 'Date of Birth :',
-      subTitle: 'Enter the date of birth',
-      type: 'date'
-    },
-    {
-      label: 'Phone number :',
-      subTitle: 'Enter Phone number',
+      label: 'Τηλέφωνο :',
+      subTitle: 'Εισάγετε τον αριθμό τηλεφώνου σας',
       type: 'number'
     },
-    {
-      label: 'City :',
-      subTitle: 'Enter City name',
-      type: 'text'
-    }
   ];
 }
