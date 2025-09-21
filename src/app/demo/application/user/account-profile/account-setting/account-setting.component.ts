@@ -56,7 +56,7 @@ export class AccountSettingComponent {
 
   active_email = [
     {
-      title: 'Νέες ειδοποιήσεις',
+      title: 'Όταν κάποιος κάνει αλλαγές στο διαμέρισμά του',
       check: true
     },
     {

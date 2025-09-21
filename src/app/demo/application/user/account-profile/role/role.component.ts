@@ -83,6 +83,11 @@ export class RoleComponent implements OnInit {
       next: (data) => {
         this.members = data;
         this.currentBuildingId = buildingId;
+        // Κράτα χωριστές λίστες αν χρειάζεται
+        const joined = this.members.filter((m) => m.status === 'Joined');
+        const invited = this.members.filter((m) => m.status === 'Invited');
+        console.log('Joined members:', joined);
+        console.log('Invited members:', invited);
 
         this.loadApartments(buildingId);
       },
@@ -105,7 +110,6 @@ export class RoleComponent implements OnInit {
   private loadApartments(buildingId: number): void {
     this.apartmentService.getApartmentsByBuilding(buildingId).subscribe({
       next: (data) => {
-        console.log('Apartments API response:', data);
         this.buildingApartments = data;
         this.filteredApartments = [...data];
         this.apartmentToInvite = null; // ✅ default πρώτο
@@ -127,35 +131,35 @@ export class RoleComponent implements OnInit {
 
   // 🔹 Αποστολή πρόσκλησης
   sendInvite(): void {
-  console.log('email:', this.emailToInvite);
-  console.log('role:', this.roleToInvite);
-  console.log('apartment:', this.apartmentToInvite);
+    console.log('email:', this.emailToInvite);
+    console.log('role:', this.roleToInvite);
+    console.log('apartment:', this.apartmentToInvite);
 
-  if (!this.emailToInvite || !this.roleToInvite || !this.apartmentToInvite) {
-    alert('Παρακαλώ συμπληρώστε όλα τα πεδία.');
-    return;
-  }
-
-  this.isSending = true;
-  const payload = {
-    email: this.emailToInvite,
-    role: this.roleToInvite as 'Resident' | 'Owner',
-    apartmentId: this.apartmentToInvite
-  };
-  console.log('payload:', payload);
-
-  this.userService.inviteUserToBuilding(payload).subscribe({
-    next: () => {
-      alert('Η πρόσκληση στάλθηκε με επιτυχία!');
-      this.resetInviteForm();
-      console.log('selected apartmentId:', this.apartmentToInvite);
-    },
-    error: (err) => {
-      alert(err.error?.message || 'Απέτυχε η αποστολή πρόσκλησης.');
-      this.isSending = false;
+    if (!this.emailToInvite || !this.roleToInvite || !this.apartmentToInvite) {
+      alert('Παρακαλώ συμπληρώστε όλα τα πεδία.');
+      return;
     }
-  });
-}
+
+    this.isSending = true;
+    const payload = {
+      email: this.emailToInvite,
+      role: this.roleToInvite as 'Resident' | 'Owner',
+      apartmentId: this.apartmentToInvite
+    };
+    console.log('payload:', payload);
+
+    this.userService.inviteUserToBuilding(payload).subscribe({
+      next: () => {
+        alert('Η πρόσκληση στάλθηκε με επιτυχία!');
+        this.resetInviteForm();
+        console.log('selected apartmentId:', this.apartmentToInvite);
+      },
+      error: (err) => {
+        alert(err.error?.message || 'Απέτυχε η αποστολή πρόσκλησης.');
+        this.isSending = false;
+      }
+    });
+  }
 
   private resetInviteForm(): void {
     this.emailToInvite = '';
@@ -184,9 +188,14 @@ export class RoleComponent implements OnInit {
   getTranslatedStatus(status: string): string {
     switch (status) {
       case 'Joined':
+      case 'ACCEPTED':
         return 'Μέλος';
-      case 'Invited':
+      case 'PENDING':
         return 'Προσκεκλημένος';
+      case 'EXPIRED':
+        return 'Έληξε';
+      case 'DECLINED':
+        return 'Απορρίφθηκε';
       default:
         return status;
     }

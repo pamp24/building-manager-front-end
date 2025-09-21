@@ -37,7 +37,7 @@ export class ApartmentService {
   }
 
   updateMyApartment(apartment: ApartmentDTO): Observable<ApartmentDTO> {
-    return this.http.put<ApartmentDTO>('http://localhost:8080/api/v1/apartments/myApartment', apartment);
+    return this.http.put<ApartmentDTO>('http://localhost:8080/api/v1/apartments/update/myApartment', apartment);
   }
 
   addApartment(apartment: ApartmentRequest): Observable<number> {

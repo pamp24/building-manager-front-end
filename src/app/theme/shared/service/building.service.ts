@@ -26,5 +26,7 @@ export class BuildingService {
   getBuildingManager(buildingId: number) {
     return this.http.get<{ id: number; fullName?: string }>(`${this.apiUrl}/${buildingId}/manager`);
   }
-
+  updateBuilding(id: number, building: BuildingDTO): Observable<BuildingDTO> {
+    return this.http.put<BuildingDTO>(`${this.apiUrl}/update/${id}`, building);
+  }
 }

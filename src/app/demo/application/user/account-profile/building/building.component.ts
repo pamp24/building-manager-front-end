@@ -5,11 +5,11 @@ import { CommonModule } from '@angular/common';
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 
-//icons
+// icons
 import { IconService } from '@ant-design/icons-angular';
 import { AimOutline, EnvironmentOutline, MailOutline, PhoneOutline } from '@ant-design/icons-angular/icons';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { BuildingService } from '../../../../../theme/shared/service/building.service';
+import { BuildingService } from 'src/app/theme/shared/service/building.service';
 import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
 
 @Component({
@@ -20,9 +20,7 @@ import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
 })
 export class BuildingComponent implements OnInit {
   private iconService = inject(IconService);
-  buildingForm: FormGroup;
-  building?: BuildingDTO;
-  errorMessage: string = '';
+  buildingForm!: FormGroup;
   buildingData!: BuildingDTO;
   heating: { title: string; name: string; sub_title: string; f_name: string }[] = [];
   buildings: BuildingDTO[] = [];
@@ -30,58 +28,16 @@ export class BuildingComponent implements OnInit {
   currentPage = 1;
   pageSize = 1;
   details: { icon: string; text: string }[] = [];
+  isEditing = false;
 
-  //ngOnInit
-  ngOnInit(): void {
-    this.buildingForm = this.fb.group({
-      name: [''],
-      street1: [''],
-      stNumber1: [''],
-      street2: [''],
-      stNumber2: [''],
-      city: [''],
-      region: [''],
-      postalCode: [''],
-      country: [''],
-      state: [''],
-      floors: [''],
-      apartmentsNum: [''],
-      sqMetersTotal: [''],
-      sqMetersCommonSpaces: [''],
-      parkingExist: [''],
-      parkingSpacesNum: [''],
-      buildingDescription: [''],
-      undergroundFloorExist: [''],
-      halfFloorExist: [''],
-      overTopFloorExist: [''],
-      storageExist: [''],
-      storageNum: [''],
-      hasCentralHeating: [''],
-      heatingType: [''],
-      heatingCapacityLitres: ['']
-    });
-
-    this.buildingService.getMyBuildings().subscribe({
-      next: (data: BuildingDTO[]) => {
-        this.buildings = data;
-        this.total = data.length;
-        if (data.length > 0) {
-          this.loadBuilding(data[0]); // πρώτο building
-        }
-      },
-      error: (err) => {
-        console.error('Σφάλμα φόρτωσης πολυκατοικιών:', err);
-      }
-    });
-  }
-
-  // constructor
   constructor(
     private fb: FormBuilder,
     private buildingService: BuildingService
   ) {
     this.iconService.addIcon(...[MailOutline, PhoneOutline, AimOutline, EnvironmentOutline]);
+  }
 
+  ngOnInit(): void {
     this.buildingForm = this.fb.group({
       name: ['', Validators.required],
       street1: ['', Validators.required],
@@ -97,43 +53,51 @@ export class BuildingComponent implements OnInit {
       apartmentsNum: ['', Validators.required],
       sqMetersTotal: ['', Validators.required],
       sqMetersCommonSpaces: ['', Validators.required],
-      parkingExist: [''],
+      parkingExist: [false],
       parkingSpacesNum: [''],
       buildingDescription: [''],
-      undergroundFloorExist: [''],
-      halfFloorExist: [''],
-      overTopFloorExist: [''],
-      storageExist: [''],
+      undergroundFloorExist: [false],
+      halfFloorExist: [false],
+      overTopFloorExist: [false],
+      storageExist: [false],
       storageNum: [''],
-      hasCentralHeating: [''],
+      hasCentralHeating: [false],
       heatingType: [''],
       heatingCapacityLitres: ['']
     });
 
-    // Διαχείριση ενεργοποίησης/απενεργοποίησης του πεδίου parkingSpacesNum
-    this.buildingForm.get('parkingExist')?.valueChanges.subscribe((value) => {
-      const control = this.buildingForm.get('parkingSpacesNum');
-      if (value) {
-        control?.enable();
-      } else {
-        control?.disable();
+
+    this.buildingService.getMyBuildings().subscribe({
+      next: (data: BuildingDTO[]) => {
+        this.buildings = data;
+        this.total = data.length;
+        if (data.length > 0) {
+          this.loadBuilding(data[0]); // πρώτο building
+        }
+      },
+      error: (err) => {
+        console.error('Σφάλμα φόρτωσης πολυκατοικιών:', err);
       }
     });
-    // Διαχείριση ενεργοποίησης/απενεργοποίησης του πεδίου storageNum
-    this.buildingForm.get('storageExist')?.valueChanges.subscribe((value) => {
-      const control = this.buildingForm.get('storageNum');
-      if (value) {
-        control?.enable();
-      } else {
-        control?.disable();
-      }
-    });
+
+    // ξεκινάει σε read-only mode
+    this.buildingForm.disable();
   }
 
   submitChanges(): void {
-    if (this.buildingForm.valid) {
-      console.log('Updated Building:', this.buildingForm.value);
-      // εδώ μπορείς να στείλεις το update στο backend
+    if (this.buildingForm.valid && this.buildingData) {
+      const updated = { ...this.buildingData, ...this.buildingForm.value };
+      this.buildingService.updateBuilding(this.buildingData.id, updated).subscribe({
+        next: (data) => {
+          this.buildingData = data;
+          this.toggleEdit();
+          alert('Οι αλλαγές αποθηκεύτηκαν με επιτυχία!');
+        },
+        error: (err) => {
+          console.error('Σφάλμα αποθήκευσης:', err);
+          alert('Αποτυχία αποθήκευσης αλλαγών.');
+        }
+      });
     }
   }
 
@@ -142,22 +106,10 @@ export class BuildingComponent implements OnInit {
     this.buildingForm.patchValue(building);
 
     this.details = [
-      {
-        icon: 'mail',
-        text: building?.managerEmail || 'Δεν έχει οριστεί'
-      },
-      {
-        icon: 'phone',
-        text: building?.managerPhone || 'Μη διαθέσιμο'
-      },
-      {
-        icon: 'environment',
-        text: building?.managerCity || 'Άγνωστη περιοχή'
-      },
-      {
-        icon: 'aim',
-        text: building?.managerAddress1 || 'Άγνωστη περιοχή'
-      }
+      { icon: 'mail', text: building?.managerEmail || 'Δεν έχει οριστεί' },
+      { icon: 'phone', text: building?.managerPhone || 'Μη διαθέσιμο' },
+      { icon: 'environment', text: building?.managerCity || 'Άγνωστη περιοχή' },
+      { icon: 'aim', text: building?.managerAddress1 || 'Άγνωστη περιοχή' }
     ];
 
     this.heating = [
@@ -179,14 +131,8 @@ export class BuildingComponent implements OnInit {
   }
 
   skills = [
-    {
-      title: 'Πάρκινγκ',
-      value: 30
-    },
-    {
-      title: 'Αποθήκη',
-      value: 80
-    }
+    { title: 'Πάρκινγκ', value: 30 },
+    { title: 'Αποθήκη', value: 80 }
   ];
 
   getTranslatedHeatingType(type?: string): string {
@@ -205,4 +151,14 @@ export class BuildingComponent implements OnInit {
         return 'Δεν έχει οριστεί';
     }
   }
+
+toggleEdit() {
+  this.isEditing = !this.isEditing;
+  if (this.isEditing) {
+    this.buildingForm.enable();
+  } else {
+    this.buildingForm.disable();
+    this.buildingForm.patchValue(this.buildingData); // reset
+  }
+}
 }
