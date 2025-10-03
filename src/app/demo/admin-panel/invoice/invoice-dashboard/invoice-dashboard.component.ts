@@ -53,7 +53,7 @@ export class InvoiceDashboardComponent {
   // public method
   invoiceCard = [
     {
-      title: 'All Invoices',
+      title: 'Παραστατικά',
       icon: 'file-text',
       background: 'bg-primary'
     },
@@ -68,7 +68,7 @@ export class InvoiceDashboardComponent {
       background: 'bg-success'
     },
     {
-      title: 'Εκκρεμούντα',
+      title: 'Εκκρεμούν',
       icon: 'hourglass',
       background: 'bg-warning'
     },

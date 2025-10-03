@@ -7,8 +7,8 @@ import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { debounceTime, delay, switchMap, tap } from 'rxjs/operators';
 
 // project import
-import { InvoiceList } from './invoice-list-type';
-import { INVOICE } from './invoice-list-data';
+import { InvoiceList } from './participants-list-type';
+import { INVOICE } from './participants-list-data';
 import { SortDirection } from '../../../../../theme/shared/directive/sortable.directive';
 
 interface SearchResult {

@@ -1,0 +1,139 @@
+<div class="row" *ngIf="statement">
+  <div class="col-sm-12">
+    <app-card [showHeader]="false">
+      <!-- Header με εικονίδιο και status -->
+      <div class="row g-3" id="print-section">
+        <div class="col-12">
+          <div class="row align-items-center g-3">
+            <div class="col-sm-6">
+              <div class="d-flex align-items-center mb-2 navbar-brand">
+                <img src="assets/images/logo-dark.svg" class="img-fluid logo-lg" alt="images" />
+                <span class="badge rounded ms-2 {{ statusBadgeClass }}">
+                  {{ statement?.status }}
+                </span>
+              </div>
+              <p class="mb-0">Κωδικός: {{ statement?.code }}</p>
+            </div>
+            <div class="col-sm-6 text-sm-end">
+              <h6>
+                Ημ/νία
+                <span class="text-muted f-w-400">{{ statement?.startDate | date: 'dd/MM/yyyy' }}</span>
+              </h6>
+              <h6>
+                Ημ. Λήξης
+                <span class="text-muted f-w-400">{{ statement?.endDate | date: 'dd/MM/yyyy' }}</span>
+              </h6>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <!-- Από -->
+          <div class="col-xl-6">
+            <div class="border rounded p-3 h-100">
+              <h6 class="mb-2">Από:</h6>
+              <ng-container *ngIf="selectedBuilding">
+                <h5>Όνομα Κτιρίου: {{ selectedBuilding.name }}</h5>
+                <p>Διεύθυνση: {{ selectedBuilding.street1 }} {{ selectedBuilding.stNumber1 }}</p>
+                <p>Διεύθυνση2: {{ selectedBuilding.street2 }} {{ selectedBuilding.stNumber2 }}</p>
+                <p>Πόλη: {{ selectedBuilding.city }}, ΤΚ: {{ selectedBuilding.postalCode }}</p>
+                <p>Διαχειριστής: {{ selectedBuilding.managerFullName }}</p>
+                <p>Τηλέφωνο: {{ selectedBuilding.managerPhone }}</p>
+                <p>E-mail: {{ selectedBuilding.managerEmail }}</p>
+              </ng-container>
+            </div>
+          </div>
+
+          <!-- Προς -->
+          <div class="col-xl-6">
+            <div class="border rounded p-3 h-100">
+              <h6 class="mb-3">Προς (Διαμερίσματα):</h6>
+
+              <div *ngIf="apartments.length > 0; else noApts">
+                <ul class="list-group list-group-flush">
+                  <li *ngFor="let apt of apartments" class="list-group-item px-0">
+                    <div class="d-flex flex-column">
+                      <span class="fw-bold">Διαμέρισμα {{ apt.number }} (Όροφος: {{ apt.floor }})</span>
+                      <small class="text-muted">Ιδιοκτήτης: {{ apt.ownerFullName || '— Χωρίς Ιδιοκτήτη —' }}</small>
+                      <small class="text-muted">Ενοικιαστής: {{ apt.tenantFullName || '— Χωρίς Ενοικιαστή —' }}</small>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <ng-template #noApts>
+              <p class="text-muted mb-0">Δεν υπάρχουν διαμερίσματα σε αυτό το παραστατικό</p>
+            </ng-template>
+          </div>
+        </div>
+
+        <!-- Items Table -->
+        <div class="col-12">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Κατηγορία</th>
+                  <th>Περιγραφή</th>
+                  <th class="text-end">Τιμή</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of statement?.items; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ item.category }}</td>
+                  <td>{{ item.descriptionItem }}</td>
+                  <td class="text-end">{{ item.price | number: '1.2-2' }} €</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Totals -->
+        <div class="col-12">
+          <div class="invoice-total ms-auto">
+            <div class="row">
+              <div class="col-6"><p class="text-muted mb-1 text-start">Υποσύνολο :</p></div>
+              <div class="col-6">
+                <p class="mb-1 text-end">{{ statement?.subTotal | number: '1.2-2' }} €</p>
+              </div>
+
+              <div class="col-6"><p class="text-muted mb-1 text-start">Έκπτωση :</p></div>
+              <div class="col-6">
+                <p class="mb-1 text-end text-success">{{ statement?.discountPercent }} %</p>
+              </div>
+
+              <div class="col-6"><p class="text-muted mb-1 text-start">ΦΠΑ :</p></div>
+              <div class="col-6">
+                <p class="mb-1 text-end">{{ statement?.taxPercent }} %</p>
+              </div>
+
+              <div class="col-6"><p class="f-w-600 mb-1 text-start">Σύνολο :</p></div>
+              <div class="col-6">
+                <p class="f-w-600 mb-1 text-end">{{ statement?.total | number: '1.2-2' }} €</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="col-12" *ngIf="statement?.description">
+          <label class="form-label">Σημειώσεις</label>
+          <p class="mb-0">{{ statement?.description }}</p>
+        </div>
+
+        <!-- Actions -->
+        <div class="col-12">
+          <div class="d-flex justify-content-end gap-2 d-print-none">
+            <button printSectionId="print-section" ngxPrint class="btn btn-primary">Εκτύπωση</button>
+            <button printSectionId="print-section" ngxPrint class="btn btn-primary" (click)="downloadPDF()">Λήψη PDF</button>
+            <button class="btn btn-danger" (click)="close()">Κλείσιμο</button>
+          </div>
+        </div>
+      </div>
+    </app-card>
+  </div>
+</div>

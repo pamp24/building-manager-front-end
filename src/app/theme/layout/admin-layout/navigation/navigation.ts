@@ -263,68 +263,18 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         url: '/invoice/create',
       },
-      {
-        id: 'details',
-        title: 'Details',
-        type: 'item',
-        url: '/invoice/details',
-      },
+      // {
+      //   id: 'details',
+      //   title: 'Details',
+      //   type: 'item',
+      //   url: '/invoice/details',
+      // },
       {
         id: 'list',
-        title: 'List',
+        title: 'List Expenses Invoices',
         type: 'item',
         url: '/invoice/list',
       },
-      {
-        id: 'edit',
-        title: 'Edit',
-        type: 'item',
-        url: '/invoice/edit',
-      }
-      // {
-      //   id: 'invoice',
-      //   title: 'Invoice',
-      //   type: 'collapse',
-      //   icon: 'file-text',
-      //   role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
-      //   children: [
-      //     {
-      //       id: 'dashboard',
-      //       title: 'Dashboard',
-      //       type: 'item',
-      //       url: '/invoice/dashboard',
-      //       role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
-      //     },
-      //     {
-      //       id: 'create',
-      //       title: 'Create',
-      //       type: 'item',
-      //       url: '/invoice/create',
-      //       role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
-      //     },
-      //     {
-      //       id: 'details',
-      //       title: 'Details',
-      //       type: 'item',
-      //       url: '/invoice/details',
-      //       role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
-      //     },
-      //     {
-      //       id: 'list',
-      //       title: 'List',
-      //       type: 'item',
-      //       url: '/invoice/list',
-      //       role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
-      //     },
-      //     {
-      //       id: 'edit',
-      //       title: 'Edit',
-      //       type: 'item',
-      //       url: '/invoice/edit',
-      //       role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
-      //     }
-      //   ]
-      // }
     ]
   },
   {

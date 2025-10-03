@@ -38,7 +38,7 @@ const routes: Routes = [
         }
       },
       {
-        path: 'edit',
+        path: 'edit/:id',
         loadComponent: () => import('./invoice-edit/invoice-edit.component').then((c) => c.InvoiceEditComponent),
         data: {
           role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]

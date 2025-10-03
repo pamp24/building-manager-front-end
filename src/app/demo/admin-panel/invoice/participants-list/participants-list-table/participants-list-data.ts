@@ -1,4 +1,4 @@
-import { InvoiceList } from './invoice-list-type';
+import { InvoiceList } from './participants-list-type';
 
 export const INVOICE: InvoiceList[] = [
   {

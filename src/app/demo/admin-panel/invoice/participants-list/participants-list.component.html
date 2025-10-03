@@ -21,7 +21,7 @@
                 <div class="col-6">
                   <h5 class="mb-2 mt-3">{{ cards.value }}</h5>
                   <div class="d-flex align-items-center gap-1">
-                    <p class="mb-0 text-muted d-flex align-items-center gap-2">Παραστατικά:</p>
+                    <p class="mb-0 text-muted d-flex align-items-center gap-2">Μήνας</p>
                     <h5 class="mb-0">{{ cards.invoice }}</h5>
                   </div>
                 </div>
@@ -72,64 +72,49 @@
   <div class="col-12">
     <div class="card">
       <div class="card-body pb-0">
-        <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs profile-tabs mb-3" >
+        <ul ngbNav #nav="ngbNav" class="nav-tabs profile-tabs mb-3">
           <li [ngbNavItem]="1">
             <button ngbNavLink>
-              Όλα
-              <span class="avatar bg-light-primary lh-1">{{ totalCount }}</span>
+              <span class="d-flex align-items-center gap-2">
+                All
+                <span class="avatar bg-light-primary lh-1">5</span>
+              </span>
             </button>
             <ng-template ngbNavContent>
-              <app-invoice-list-table [statements]="statements" />
+              <app-invoice-list-table />
             </ng-template>
           </li>
-
           <li [ngbNavItem]="2">
             <button ngbNavLink>
-              Πληρώθηκαν
-              <span class="avatar bg-light-success lh-1">{{ paidCount }}</span>
+              <span class="d-flex align-items-center gap-2">
+                Paid
+                <span class="avatar bg-light-success lh-1">2</span>
+              </span>
             </button>
             <ng-template ngbNavContent>
-              <app-invoice-list-table [statements]="paidStatements" />
+              <app-invoice-list-table />
             </ng-template>
           </li>
-
           <li [ngbNavItem]="3">
             <button ngbNavLink>
-              Εκκρεμούν
-              <span class="avatar bg-light-warning lh-1">{{ pendingCount }}</span>
+              <span class="d-flex align-items-center gap-2">
+                Unpaid
+                <span class="avatar bg-light-warning lh-1">2</span>
+              </span>
             </button>
             <ng-template ngbNavContent>
-              <app-invoice-list-table [statements]="pendingStatements" />
+              <app-invoice-list-table />
             </ng-template>
           </li>
-
           <li [ngbNavItem]="4">
             <button ngbNavLink>
-              Έληξαν
-              <span class="avatar bg-light-danger lh-1">{{ overdueCount }}</span>
+              <span class="d-flex align-items-center gap-2">
+                Cancelled
+                <span class="avatar bg-light-danger lh-1">1</span>
+              </span>
             </button>
             <ng-template ngbNavContent>
-              <app-invoice-list-table [statements]="overdueStatements" />
-            </ng-template>
-          </li>
-
-          <li [ngbNavItem]="5">
-            <button ngbNavLink>
-              Ακυρωμένα
-              <span class="avatar bg-light-danger lh-1">{{ closedCount }}</span>
-            </button>
-            <ng-template ngbNavContent>
-              <app-invoice-list-table [statements]="closedStatements" />
-            </ng-template>
-          </li>
-
-          <li [ngbNavItem]="6">
-            <button ngbNavLink>
-              Πρόχειρα
-              <span class="avatar bg-light-primary lh-1">{{ draftCount }}</span>
-            </button>
-            <ng-template ngbNavContent>
-              <app-invoice-list-table [statements]="draftStatements" />
+              <app-invoice-list-table />
             </ng-template>
           </li>
         </ul>
