@@ -4,6 +4,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BuildingDTO } from '../models/buildingDTO';
 import { BuildingRequest } from '../models/buildingRequest';
+import { ManagerDTO } from '../models/managerDTO';
+import { ManagedBuildingDTO } from '../models/managedBuildingDTO';
 
 @Injectable({ providedIn: 'root' })
 export class BuildingService {
@@ -23,10 +25,13 @@ export class BuildingService {
   deleteBuilding(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
-  getBuildingManager(buildingId: number) {
-    return this.http.get<{ id: number; fullName?: string }>(`${this.apiUrl}/${buildingId}/manager`);
+  getBuildingManager(buildingId: number): Observable<ManagerDTO> {
+    return this.http.get<ManagerDTO>(`${this.apiUrl}/${buildingId}/manager`);
   }
   updateBuilding(id: number, building: BuildingDTO): Observable<BuildingDTO> {
     return this.http.put<BuildingDTO>(`${this.apiUrl}/update/${id}`, building);
+  }
+  getMyManagedBuildings(): Observable<ManagedBuildingDTO[]> {
+    return this.http.get<ManagedBuildingDTO[]>(`${this.apiUrl}/my-managed-buildings`);
   }
 }

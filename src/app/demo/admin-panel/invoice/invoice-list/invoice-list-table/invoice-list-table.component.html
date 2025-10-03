@@ -1,112 +1,58 @@
-<!-- <div class="card table-card"> -->
-<form class="dt-responsive">
-  <div class="d-flex align-items-center justify-content-between p-3">
-    <div class="dataTable-dropdown">
-      <select class="form-select" title="select item per page" style="width: auto" name="pageSize" [(ngModel)]="service.pageSize">
-        <option [ngValue]="5">5 items per page</option>
-        <option [ngValue]="10">10 items per page</option>
-        <option [ngValue]="15">15 items per page</option>
-      </select>
-    </div>
-    <div class="dataTable-search d-flex align-items-center">
-      <input
-        id="table-complete-search"
-        type="text"
-        class="form-control"
-        name="searchTerm"
-        [(ngModel)]="service.searchTerm"
-        placeholder="Search..."
-      />
-    </div>
-  </div>
-  <div class="table-responsive">
-    <table class="table table-hover mb-0">
-      <thead>
+<div class="table-responsive">
+  <table class="table table-hover mb-0">
+    <thead>
+      <tr>
+        <th (click)="onSort('code')" style="cursor: pointer">ID Παραστατικού {{ getSortIcon('code') }}</th>
+        <th (click)="onSort('month')" style="cursor: pointer">Μήνας/Έτος {{ getSortIcon('month') }}</th>
+        <th (click)="onSort('startDate')" style="cursor: pointer">Ημ. Δημιουργίας {{ getSortIcon('startDate') }}</th>
+        <th (click)="onSort('endDate')" style="cursor: pointer">Ημ. Λήξης {{ getSortIcon('endDate') }}</th>
+        <th (click)="onSort('total')" style="cursor: pointer">Ποσό {{ getSortIcon('total') }}</th>
+        <th (click)="onSort('status')" style="cursor: pointer">Κατάσταση {{ getSortIcon('status') }}</th>
+        <th class="text-center">Ενέργειες</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (s of statements; track s; let i = $index) {
         <tr>
-          <th scope="col" sortable="id">INVOICE ID</th>
-          <th scope="col" sortable="name">USER NAME</th>
-          <th scope="col" sortable="create_date">CREATE DATE</th>
-          <th scope="col" sortable="due_date">DUE DATE</th>
-          <th scope="col" sortable="quantity">QUANTITY</th>
-          <th scope="col" sortable="status">STATUS</th>
-          <th scope="col" sortable="action" class="text-center">ACTIONS</th>
+          <td>{{ s.code }}</td>
+          <td>{{ s.month }}</td>
+          <td>{{ s.startDate | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ s.endDate | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ s.total | number: '1.2-2' }} €</td>
+          <td>
+            <span
+              class="badge"
+              [ngClass]="{
+                'bg-success': s.isPaid || s.status === 'PAID',
+                'bg-warning': s.status === 'ISSUED' && !s.isPaid,
+                'bg-danger': s.status === 'CLOSED',
+                'bg-info': s.status === 'DRAFT'
+              }"
+            >
+              {{ translateStatus(s.status, s.isPaid) }}
+            </span>
+          </td>
+          <td class="text-center">
+            <ul class="list-inline me-auto mb-0">
+              <li class="list-inline-item align-bottom">
+                <a href="javascript:" class="avatar avatar-xs btn-link-secondary" ngbTooltip="Προβολή" (click)="onView(s)">
+                  <i class="f-16 text-secondary d-flex" antIcon type="eye" theme="outline"></i>
+                </a>
+              </li>
+              <li class="list-inline-item align-bottom">
+                <a href="javascript:" class="avatar avatar-xs btn-link-primary" ngbTooltip="Επεξεργασία" (click)="onEdit(s)">
+                  <i class="f-16 text-primary d-flex" antIcon type="edit" theme="outline"></i>
+                </a>
+              </li>
+              <li class="list-inline-item align-bottom">
+                <a href="javascript:" ngbTooltip="Διαγραφή" class="avatar avatar-xs btn-link-danger" (click)="onDelete(s)">
+                  <i class="f-16 text-danger d-flex" antIcon type="delete" theme="outline"></i>
+                </a>
+              </li>
+            </ul>
+          </td>
         </tr>
-      </thead>
-      <tbody>
-        @for (list of invoices$ | async; track list; let i = $index) {
-          <tr>
-            <td>{{ i + 1 }}</td>
-            <td>
-              <div class="row align-items-center">
-                <div class="col-auto pe-0">
-                  <img src="{{ list.src }}" alt="user-image" class="wid-40 hei-40 rounded-circle" />
-                </div>
-                <div class="col">
-                  <h6 class="mb-1">
-                    <span class="text-truncate w-100">
-                      <ngb-highlight [result]="list.name" [term]="service.searchTerm"></ngb-highlight>
-                    </span>
-                  </h6>
-                  <p class="f-12 mb-0">
-                    <a href="javascript:" class="text-muted">
-                      <span class="text-truncate w-100">
-                        <ngb-highlight [result]="list.email" [term]="service.searchTerm"></ngb-highlight>
-                      </span>
-                    </a>
-                  </p>
-                </div>
-              </div>
-            </td>
-            <td><ngb-highlight [result]="list.create_date" [term]="service.searchTerm"></ngb-highlight></td>
-            <td><ngb-highlight [result]="list.due_date" [term]="service.searchTerm"></ngb-highlight></td>
-            <td><ngb-highlight [result]="list.quantity" [term]="service.searchTerm"></ngb-highlight></td>
-            <td>
-              @if (list.status === 'Paid') {
-                <span class="badge bg-success">
-                  <ngb-highlight [result]="list.status" [term]="service.searchTerm"></ngb-highlight>
-                </span>
-              } @else if (list.status === 'Unpaid') {
-                <span class="badge bg-info">
-                  <ngb-highlight [result]="list.status" [term]="service.searchTerm"></ngb-highlight>
-                </span>
-              } @else if (list.status === 'Cancelled') {
-                <span class="badge bg-danger">
-                  <ngb-highlight [result]="list.status" [term]="service.searchTerm"></ngb-highlight>
-                </span>
-              }
-            </td>
-            <td class="text-center">
-              <ul class="list-inline me-auto mb-0">
-                <li class="list-inline-item align-bottom">
-                  <a href="javascript:" class="avatar avatar-xs btn-link-secondary" ngbTooltip="View">
-                    <i class="f-16 text-secondary d-flex" antIcon type="eye" theme="outline"></i>
-                  </a>
-                </li>
-                <li class="list-inline-item align-bottom">
-                  <a href="javascript:" class="avatar avatar-xs btn-link-primary" ngbTooltip="Edit">
-                    <i class="f-16 text-primary d-flex" antIcon type="edit" theme="outline"></i>
-                  </a>
-                </li>
-                <li class="list-inline-item align-bottom">
-                  <a href="javascript:" ngbTooltip="Delete" class="avatar avatar-xs btn-link-danger">
-                    <i class="f-16 text-danger d-flex" antIcon type="delete" theme="outline"></i>
-                  </a>
-                </li>
-              </ul>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  </div>
-  <div class="p-3 d-sm-flex align-items-center justify-content-between">
-    <div class="datatable-info">Showing 1 to {{ service.pageSize }} of 15 entries</div>
-    <ngb-pagination
-      [collectionSize]="(total$ | async)!"
-      [(page)]="service.page"
-      [pageSize]="service.pageSize"
-      class="table-pagination"
-    ></ngb-pagination>
-  </div>
-</form>
-<!-- </div> -->
+      }
+    </tbody>
+  </table>
+</div>

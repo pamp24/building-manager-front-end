@@ -9,6 +9,9 @@ import { CaretDownOutline, CaretUpOutline, FileDoneOutline, InfoCircleOutline } 
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { InvoiceListChartComponent } from './invoice-list-chart/invoice-list-chart.component';
 import { InvoiceListTableComponent } from './invoice-list-table/invoice-list-table.component';
+import { CommonExpenseStatement } from '../../../../theme/shared/models/commonExpenseStatement';
+import { CommonExpenseStatementService } from '../../../../theme/shared/service/commonExpensesStatement.service';
+import { OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-invoice-list',
@@ -16,45 +19,123 @@ import { InvoiceListTableComponent } from './invoice-list-table/invoice-list-tab
   templateUrl: './invoice-list.component.html',
   styleUrl: './invoice-list.component.scss'
 })
-export class InvoiceListComponent {
+export class InvoiceListComponent implements OnInit {
   private iconService = inject(IconService);
 
-  // constructor
-  constructor() {
+  // Λίστες
+  statements: CommonExpenseStatement[] = [];
+  paidStatements: CommonExpenseStatement[] = [];
+  pendingStatements: CommonExpenseStatement[] = [];
+  closedStatements: CommonExpenseStatement[] = [];
+  draftStatements: CommonExpenseStatement[] = [];
+  overdueStatements: CommonExpenseStatement[] = [];
+
+  // Counters
+  totalCount = 0;
+  paidCount = 0;
+  pendingCount = 0;
+  overdueCount = 0;
+  closedCount = 0;
+  draftCount = 0;
+
+  activeTab = 1; // default tab
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  widgetCards: any[] = [];
+
+  constructor(private commonExpenseStatementService: CommonExpenseStatementService) {
     this.iconService.addIcon(...[CaretUpOutline, CaretDownOutline, FileDoneOutline, InfoCircleOutline]);
   }
 
-  // public method
-  widgetCards = [
-    {
-      title: 'Πληρώθηκαν',
-      isLoss: false,
-      value: '$7,825',
-      percentage: 70.5,
-      color: 'text-success',
-      invoice: '9',
-      data: [0, 20, 10, 45, 30, 55, 20, 30],
-      colors: ['#52c41a']
-    },
-    {
-      title: 'Εκκρεμεί',
-      isLoss: true,
-      value: '$1,880',
-      percentage: 27.4,
-      color: 'text-warning',
-      invoice: '6',
-      data: [30, 20, 55, 30, 45, 10, 20, 0],
-      colors: ['#faad14']
-    },
-    {
-      title: 'Έληξαν',
-      isLoss: true,
-      value: '$3,507',
-      percentage: 27.4,
-      color: 'text-danger',
-      invoice: '4',
-      data: [0, 20, 10, 45, 30, 55, 20, 30],
-      colors: ['#ff4d4f']
+  ngOnInit(): void {
+    const buildingId = Number(localStorage.getItem('buildingId'));
+    if (!buildingId) {
+      console.error('⚠️ Δεν υπάρχει buildingId στο localStorage');
+      return;
     }
-  ];
+
+    this.commonExpenseStatementService.getStatementsByBuilding(buildingId).subscribe({
+      next: (data) => {
+        // Φόρτωση μόνο για το συγκεκριμένο building
+        this.statements = data;
+        this.splitStatements();
+        this.updateWidgetCards();
+      },
+      error: (err) => console.error('❌ Σφάλμα φόρτωσης statements:', err)
+    });
+  }
+
+  /** Σπάμε τα statements ανά κατηγορία */
+  private splitStatements(): void {
+    const now = new Date();
+
+    this.paidStatements = this.statements.filter(s => s.isPaid || s.status === 'PAID');
+    this.pendingStatements = this.statements.filter(s => s.status === 'ISSUED' && s.endDate && new Date(s.endDate) >= now && !s.isPaid);
+    this.overdueStatements = this.statements.filter(s => s.status === 'ISSUED' && s.endDate && new Date(s.endDate) < now && !s.isPaid);
+    this.closedStatements = this.statements.filter(s => s.status === 'CLOSED');
+    this.draftStatements = this.statements.filter(s => s.status === 'DRAFT');
+
+    this.totalCount = this.statements.length;
+    this.paidCount = this.paidStatements.length;
+    this.pendingCount = this.pendingStatements.length;
+    this.overdueCount = this.overdueStatements.length;
+    this.closedCount = this.closedStatements.length;
+    this.draftCount = this.draftStatements.length;
+  }
+
+  private updateWidgetCards() {
+    const totalPaid = this.paidStatements.reduce((sum, s) => sum + (s.total ?? 0), 0);
+    const totalPending = this.pendingStatements.reduce((sum, s) => sum + (s.total ?? 0), 0);
+    const totalOverdue = this.overdueStatements.reduce((sum, s) => sum + (s.total ?? 0), 0);
+
+    const grandTotal = totalPaid + totalPending + totalOverdue;
+
+    this.widgetCards = [
+      {
+        title: 'Πληρώθηκαν',
+        isLoss: false,
+        value: `${totalPaid.toLocaleString('el-GR')} €`,
+        percentage: grandTotal ? ((totalPaid / grandTotal) * 100).toFixed(1) : 0,
+        color: 'text-success',
+        invoice: this.paidStatements.length,
+        data: [0, 20, 10, 45, 30, 55, 20, 30],
+        colors: ['#52c41a']
+      },
+      {
+        title: 'Εκκρεμούν',
+        isLoss: true,
+        value: `${totalPending.toLocaleString('el-GR')} €`,
+        percentage: grandTotal ? ((totalPending / grandTotal) * 100).toFixed(1) : 0,
+        color: 'text-warning',
+        invoice: this.pendingStatements.length,
+        data: [30, 20, 55, 30, 45, 10, 20, 0],
+        colors: ['#faad14']
+      },
+      {
+        title: 'Έληξαν',
+        isLoss: true,
+        value: `${totalOverdue.toLocaleString('el-GR')} €`,
+        percentage: grandTotal ? ((totalOverdue / grandTotal) * 100).toFixed(1) : 0,
+        color: 'text-danger',
+        invoice: this.overdueStatements.length,
+        data: [0, 20, 10, 45, 30, 55, 20, 30],
+        colors: ['#ff4d4f']
+      }
+    ];
+  }
+
+  translateStatus(status: string | undefined): string {
+    switch (status) {
+      case 'PAID':
+        return 'Πληρώθηκε';
+      case 'ISSUED':
+        return 'Εκδόθηκε';
+      case 'CLOSED':
+        return 'Ακυρώθηκε';
+      case 'DRAFT':
+        return 'Πρόχειρο';
+      default:
+        return status ?? '';
+    }
+  }
 }

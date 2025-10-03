@@ -1,169 +1,183 @@
 <div class="row">
   <div class="col-sm-12">
     <app-card [showHeader]="false">
-      <div class="row g-3">
-        <div class="col-sm-6 col-xl-3">
-          <div class="mb-0">
-            <label class="form-label">Invoice id</label>
-            <input type="text" class="form-control" placeholder="#xxxx" />
+      <form [formGroup]="form">
+        <div class="row g-3">
+          <div class="col-sm-6 col-xl-4">
+            <div class="mb-0">
+              <label class="form-label">Κωδικός Κατάστασης Κοινοχρήστων</label>
+              <input type="text" class="form-control" formControlName="code" readonly />
+            </div>
           </div>
-        </div>
-        <div class="col-sm-6 col-xl-3">
-          <div class="mb-0">
-            <label class="form-label">Status</label>
-            <select class="form-select" id="exampleFormControlSelect1">
-              <option>Please Select</option>
-              <option>Paid</option>
-              <option>Unpaid</option>
-              <option>Partial Paid</option>
+          <!-- Τύπος -->
+          <div class="col-sm-6 col-xl-2">
+            <label class="form-label">Κατάσταση</label>
+            <select class="form-select" formControlName="type">
+              <option>Νέο</option>
+              <option>Συμπληρωματικό</option>
+              <option>Παλαιότερο</option>
             </select>
           </div>
-        </div>
-        <div class="col-sm-6 col-xl-3">
-          <div class="mb-0">
-            <label class="form-label">Start Date</label>
-            <input type="datetime-local" class="form-control" />
+          <!-- Μήνας -->
+          <div class="col-sm-6 col-xl-2">
+            <label class="form-label">Μήνας</label>
+            <input type="month" class="form-control" formControlName="month" />
           </div>
-        </div>
-        <div class="col-sm-6 col-xl-3">
-          <div class="mb-0">
-            <label class="form-label">Due Date</label>
-            <input type="datetime-local" class="form-control" />
+          <!-- Ημερομηνίες -->
+          <div class="col-sm-6 col-xl-2">
+            <label class="form-label">Ημερομηνία Έναρξης</label>
+            <input type="datetime-local" class="form-control" formControlName="startDate" />
           </div>
-        </div>
-        <div class="col-xl-6">
-          <div class="border rounded p-3 h-100">
-            <div class="d-flex align-items-center justify-content-between mb-2">
-              <h6 class="mb-0">From:</h6>
-              <button class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2" (click)="openAddressBook()">
-                <i antIcon theme="outline" type="edit"></i>
-                Change
-              </button>
+          <div class="col-sm-6 col-xl-2">
+            <label class="form-label">Ημερομηνία Λήξης</label>
+            <input type="datetime-local" class="form-control" formControlName="endDate" />
+          </div>
+          <div class="col-xl-6">
+            <div class="border rounded p-3 h-100">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <h6 class="mb-0">Από:</h6>
+              </div>
+              <ng-container *ngIf="selectedBuilding && manager">
+                <h5 class="mb-0">Όνομα Κτιρίου: {{ selectedBuilding.name }}</h5>
+                <p class="mb-0">
+                  Διεύθυνση: {{ selectedBuilding.street1 }} {{ selectedBuilding.stNumber1 }} - {{ selectedBuilding.street2 }}
+                  {{ selectedBuilding.stNumber2 }}
+                </p>
+                <p class="mb-0">Πόλη: {{ selectedBuilding.city }}, ΤΚ: {{ selectedBuilding.postalCode }}</p>
+                <p class="mb-0">Διαχειριστής: {{ manager.fullName }}</p>
+                <p class="mb-0">Τηλέφωνο: {{ manager.phoneNumber }}</p>
+                <p class="mb-0">E-mail: {{ manager.email }}</p>
+              </ng-container>
             </div>
-            <h5>Garcia-Cameron and Sons</h5>
-            <p class="mb-0">8534 Saunders Hill Apt. 583</p>
-            <p class="mb-0">(970) 982-3353</p>
-            <p class="mb-0">brandon07&#64;pierce.com</p>
           </div>
-        </div>
-        <div class="col-xl-6">
-          <div class="border rounded p-3 h-100">
-            <div class="d-flex align-items-center justify-content-between">
-              <h6 class="mb-0">To:</h6>
-              <button class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2" (click)="openAddressBook()">
-                <i antIcon theme="outline" type="plus"></i>
-                Add
-              </button>
+          <div class="col-xl-6">
+            <div class="border rounded p-3 h-100">
+              <div class="d-flex align-items-center justify-content-between">
+                <h6 class="mb-0">Προς (Διαμερίσματα):</h6>
+              </div>
+              <!-- Εμφάνιση επιλεγμένων διαμερισμάτων -->
+              <div
+                *ngIf="selectedApartments.length > 0"
+                class="mt-3 p-2 border border-primary rounded"
+                style="max-height: 200px; overflow-y: auto"
+              >
+                <div *ngFor="let a of selectedApartments" class="mb-2 pb-2 border-bottom">
+                  <p class="mb-0 fw-bold">Διαμέρισμα {{ a.floor }}{{ a.apartmentNumber }}</p>
+                  <p class="mb-0">Ιδιοκτήτης: {{ a.ownerFullName || '—' }}</p>
+                  <p class="mb-0">Ένοικος: {{ a.residentFullName || '—' }}</p>
+                </div>
+              </div>
             </div>
-            <h5>Belle J. Richter</h5>
-            <p class="mb-0">1300 Mine RoadQuemado, NM 87829</p>
-            <p class="mb-0">305-829-7809</p>
-            <p class="mb-0">Belle&#64;pierce.com</p>
           </div>
-        </div>
-        <div class="col-12">
-          <h5>Detail</h5>
-          <div class="table-responsive">
-            <table class="table table-hover mb-0">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>
-                    <span class="text-danger">*</span>
-                    NAME
-                  </th>
-                  <th>
-                    <span class="text-danger">*</span>
-                    DESCRIPTION
-                  </th>
-                  <th>
-                    <span class="text-danger">*</span>
-                    QTY
-                  </th>
-                  <th>
-                    <span class="text-danger">*</span>
-                    PRICE
-                  </th>
-                  <th class="text-end">AMOUNT</th>
-                  <th class="text-center">ACTION</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (item of productList; track $index) {
+          <div class="col-12">
+            <h5>Λίστα Εξόδων</h5>
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead>
                   <tr>
-                    <td>{{ item.id }}</td>
-                    <td><input type="text" class="form-control" placeholder="Name" value="{{ item.name }}" /></td>
-                    <td><input type="text" class="form-control" placeholder="Description" value="Apple Watch SE Smartwatch" /></td>
-                    <td><input type="number" class="form-control" placeholder="Qty" value="{{ item.qty }}" /></td>
-                    <td><input type="number" class="form-control" placeholder="Price" value="{{ item.price }}.00" /></td>
-                    <td class="text-end">₹{{ item.price * item.qty }}.00</td>
+                    <th>#</th>
+                    <th>
+                      <span class="text-danger">*</span>
+                      Κατηγορία
+                    </th>
+                    <th>
+                      <span class="text-danger">*</span>
+                      Προιόν/Υπηρεσία
+                    </th>
+                    <th>
+                      <span class="text-danger">*</span>
+                      Ποσό
+                    </th>
+                    <th class="text-end">Σύνολο</th>
+                    <th class="text-center">Ενέργεια</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of items.controls; let i = index" [formGroup]="item">
+                    <td>{{ i + 1 }}</td>
+                    <td>
+                      <select class="form-select" formControlName="category">
+                        <option value="">-- Επιλογή --</option>
+                        <option *ngFor="let c of expenseCategories" [value]="c.value">{{ c.label }}</option>
+                      </select>
+                    </td>
+                    <td><input type="text" class="form-control" formControlName="descriptionItem" /></td>
+                    <td><input type="number" class="form-control" formControlName="price" /></td>
+                    <td class="text-end">{{ item.value.price || 0 | number: '1.2-2' }} €</td>
                     <td class="text-center">
-                      <a href="javascript:" class="avatar avatar-s btn-link-danger btn-pc-default">
-                        <i class="f-20 text-danger" antIcon type="delete" theme="outline"></i>
+                      <a href="javascript:" class="avatar avatar-s btn-link-danger btn-pc-default" (click)="removeItem(i)" title="Διαγραφή">
+                        <i class="f-20" antIcon type="delete" theme="outline"></i>
                       </a>
                     </td>
                   </tr>
-                }
-              </tbody>
-            </table>
+                </tbody>
+              </table>
+            </div>
+            <div class="text-start">
+              <hr class="mb-4 mt-0 border-secondary border-opacity-50" />
+              <button type="button" class="btn btn-light-primary d-flex align-items-center gap-2" (click)="addItem()">
+                <i antIcon type="plus" theme="outline" class="d-flex"></i>
+                Προσθήκη
+              </button>
+            </div>
           </div>
-          <div class="text-start">
-            <hr class="mb-4 mt-0 border-secondary border-opacity-50" />
-            <button class="btn btn-light-primary d-flex align-items-center gap-2">
-              <i antIcon type="plus" theme="outline" class="d-flex"></i>
-              Add new item
-            </button>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="invoice-total ms-auto">
-            <div class="row">
-              <div class="col-6">
-                <div class="mb-3">
-                  <label class="form-label">Discount(%)</label>
-                  <input type="text" class="form-control" value="0" />
+          <div class="col-12">
+            <div class="invoice-total ms-auto">
+              <div class="row">
+                <div class="col-6">
+                  <div class="mb-3">
+                    <label class="form-label">Έκπτωση(%)</label>
+                    <input type="number" class="form-control" formControlName="discountPercent" />
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="mb-3">
+                    <label class="form-label">Φόρος(%)</label>
+                    <input type="number" class="form-control" formControlName="taxPercent" />
+                  </div>
+                </div>
+                <div class="col-6"><p>Συνολικό Ποσό :</p></div>
+                <div class="col-6 text-end">
+                  <p>{{ subTotal | number: '1.2-2' }} €</p>
+                </div>
+
+                <div class="col-6"><p>Έκπτωση :</p></div>
+                <div class="col-6 text-end text-success">
+                  <p>-{{ discount | number: '1.2-2' }} €</p>
+                </div>
+
+                <div class="col-6"><p>Φόρος :</p></div>
+                <div class="col-6 text-end">
+                  <p>{{ tax | number: '1.2-2' }} €</p>
+                </div>
+
+                <div class="col-6">
+                  <p><b>Τελικό Ποσό :</b></p>
+                </div>
+                <div class="col-6 text-end">
+                  <p>
+                    <b>{{ total | number: '1.2-2' }} €</b>
+                  </p>
                 </div>
               </div>
-              <div class="col-6">
-                <div class="mb-3">
-                  <label class="form-label">Taxes(%)</label>
-                  <input type="text" class="form-control" value="0" />
-                </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="mb-0">
+              <label class="form-label">Περιγραφή</label>
+              <textarea class="form-control" rows="3" placeholder="Περιγραφή" formControlName="description"></textarea>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="row align-items-end justify-content-between g-3">
+              <div class="col-sm-auto btn-page">
+                <button type="button" class="btn btn-outline-secondary" (click)="goBack()">Πίσω</button>
+                <button type="button" class="btn btn-primary" (click)="onUpdate()">Ενημέρωση</button>
               </div>
-              <div class="col-6"><p class="text-muted mb-1 text-start">Sub Total :</p></div>
-              <div class="col-6"><p class="f-w-600 mb-1 text-end">$20.00</p></div>
-              <div class="col-6"><p class="text-muted mb-1 text-start">Discount :</p></div>
-              <div class="col-6"><p class="f-w-600 mb-1 text-end text-success">$10.00</p></div>
-              <div class="col-6"><p class="text-muted mb-1 text-start">Taxes :</p></div>
-              <div class="col-6"><p class="f-w-600 mb-1 text-end">$5.000</p></div>
-              <div class="col-6"><p class="f-w-600 mb-1 text-start f-w-700">Grand Total :</p></div>
-              <div class="col-6"><p class="f-w-600 mb-1 text-end f-w-700">$25.00</p></div>
             </div>
           </div>
         </div>
-        <div class="col-12">
-          <div class="mb-0">
-            <label class="form-label">Note</label>
-            <textarea class="form-control" rows="3" placeholder="Note"></textarea>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="row align-items-end justify-content-between g-3">
-            <div class="col-sm-auto">
-              <label class="form-label">Set Currency*</label>
-              <select class="form-select w-auto">
-                <option>USD (US Dollar)</option>
-                <option>INR (Rupes)</option>
-              </select>
-            </div>
-            <div class="col-sm-auto btn-page">
-              <a href="javascript:" class="btn btn-outline-secondary">Preview</a>
-              <button class="btn btn-outline-secondary">Save</button>
-              <button class="btn btn-primary">Create & Send</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      </form>
     </app-card>
   </div>
 </div>

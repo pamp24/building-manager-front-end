@@ -228,7 +228,7 @@ export class InvoiceChartComponent implements OnInit {
       color: 'text-warning'
     },
     {
-      title: 'Πληρώθηκαν',
+      title: 'Εισπραχθέντα',
       count: '£5678.09',
       percentage: -8.73,
       isLoss: true,

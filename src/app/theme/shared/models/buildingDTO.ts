@@ -1,3 +1,4 @@
+import { ManagerDTO } from './managerDTO';
 export interface BuildingDTO {
   id: number;
   name: string;
@@ -25,6 +26,8 @@ export interface BuildingDTO {
   storageNum: number;
   managerHouseExist: boolean;
 
+  manager?: ManagerDTO;
+  managerId?: number;
   managerFullName: string;
   managerEmail: string;
   managerPhone: string;
