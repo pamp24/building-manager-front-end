@@ -3,7 +3,7 @@ import { Component, inject } from '@angular/core';
 
 // icons
 import { IconService } from '@ant-design/icons-angular';
-import { CaretDownOutline, CaretUpOutline, FileDoneOutline, InfoCircleOutline } from '@ant-design/icons-angular/icons';
+import { BankOutline, CaretDownOutline, CaretUpOutline, FileDoneOutline, InfoCircleOutline } from '@ant-design/icons-angular/icons';
 
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -12,6 +12,13 @@ import { InvoiceListTableComponent } from './invoice-list-table/invoice-list-tab
 import { CommonExpenseStatement } from '../../../../theme/shared/models/commonExpenseStatement';
 import { CommonExpenseStatementService } from '../../../../theme/shared/service/commonExpensesStatement.service';
 import { OnInit } from '@angular/core';
+import { TabNavigationService } from 'src/app/theme/shared/service/TabNavigation.service';
+import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
+import { ViewChild } from '@angular/core';
+import { NgbNav } from '@ng-bootstrap/ng-bootstrap';
+import { CommonStatementSummaryDTO } from '../../../../theme/shared/models/commonExpenseSummaryDTO';
+import { PaymentService } from '../../../../theme/shared/service/payment.service';
 
 @Component({
   selector: 'app-invoice-list',
@@ -21,6 +28,7 @@ import { OnInit } from '@angular/core';
 })
 export class InvoiceListComponent implements OnInit {
   private iconService = inject(IconService);
+  @ViewChild('nav', { static: false }) nav?: NgbNav;
 
   // Λίστες
   statements: CommonExpenseStatement[] = [];
@@ -39,41 +47,77 @@ export class InvoiceListComponent implements OnInit {
   draftCount = 0;
 
   activeTab = 1; // default tab
-
+  summary!: CommonStatementSummaryDTO;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   widgetCards: any[] = [];
 
-  constructor(private commonExpenseStatementService: CommonExpenseStatementService) {
-    this.iconService.addIcon(...[CaretUpOutline, CaretDownOutline, FileDoneOutline, InfoCircleOutline]);
+  // constructor
+  constructor(
+    private commonExpenseStatementService: CommonExpenseStatementService,
+    private tabNav: TabNavigationService,
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef,
+    private paymentService: PaymentService
+  ) {
+    this.iconService.addIcon(...[CaretUpOutline, CaretDownOutline, FileDoneOutline, InfoCircleOutline, BankOutline]);
   }
 
   ngOnInit(): void {
     const buildingId = Number(localStorage.getItem('buildingId'));
+
     if (!buildingId) {
-      console.error('⚠️ Δεν υπάρχει buildingId στο localStorage');
+      console.error('Δεν υπάρχει buildingId στο localStorage');
       return;
     }
 
+    //Καλούμε το summary ΜΟΝΟ αν υπάρχει buildingId
+    this.paymentService.getBuildingSummary(buildingId).subscribe({
+      next: (data) => {
+        this.summary = data;
+      },
+      error: (err) => console.error('Σφάλμα φόρτωσης summary:', err)
+    });
+
+    // Διαβάζουμε το query param
+    this.route.queryParams.subscribe((params) => {
+      const tabParam = Number(params['tab']);
+      if (tabParam) {
+        this.activeTab = tabParam;
+        console.log('Query tab:', this.activeTab);
+        setTimeout(() => {
+          if (this.nav) this.nav.select(this.activeTab);
+          this.cdr.detectChanges();
+          this.scrollToInvoices();
+        });
+      }
+    });
+
+    //Φόρτωση όλων των statements για το κτίριο
     this.commonExpenseStatementService.getStatementsByBuilding(buildingId).subscribe({
       next: (data) => {
-        // Φόρτωση μόνο για το συγκεκριμένο building
         this.statements = data;
         this.splitStatements();
         this.updateWidgetCards();
       },
-      error: (err) => console.error('❌ Σφάλμα φόρτωσης statements:', err)
+      error: (err) => console.error('Σφάλμα φόρτωσης statements:', err)
     });
   }
 
+  private scrollToInvoices() {
+    const section = document.getElementById('invoice-section');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
   /** Σπάμε τα statements ανά κατηγορία */
   private splitStatements(): void {
     const now = new Date();
 
-    this.paidStatements = this.statements.filter(s => s.isPaid || s.status === 'PAID');
-    this.pendingStatements = this.statements.filter(s => s.status === 'ISSUED' && s.endDate && new Date(s.endDate) >= now && !s.isPaid);
-    this.overdueStatements = this.statements.filter(s => s.status === 'ISSUED' && s.endDate && new Date(s.endDate) < now && !s.isPaid);
-    this.closedStatements = this.statements.filter(s => s.status === 'CLOSED');
-    this.draftStatements = this.statements.filter(s => s.status === 'DRAFT');
+    this.paidStatements = this.statements.filter((s) => s.isPaid || s.status === 'PAID');
+    this.pendingStatements = this.statements.filter((s) => s.status === 'ISSUED' && s.endDate && new Date(s.endDate) >= now && !s.isPaid);
+    this.overdueStatements = this.statements.filter((s) => s.status === 'ISSUED' && s.endDate && new Date(s.endDate) < now && !s.isPaid);
+    this.closedStatements = this.statements.filter((s) => s.status === 'CLOSED');
+    this.draftStatements = this.statements.filter((s) => s.status === 'DRAFT');
 
     this.totalCount = this.statements.length;
     this.paidCount = this.paidStatements.length;
@@ -130,6 +174,8 @@ export class InvoiceListComponent implements OnInit {
         return 'Πληρώθηκε';
       case 'ISSUED':
         return 'Εκδόθηκε';
+      case 'EXPIRED':
+        return 'Έληξε';
       case 'CLOSED':
         return 'Ακυρώθηκε';
       case 'DRAFT':

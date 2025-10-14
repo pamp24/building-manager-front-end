@@ -1,0 +1,43 @@
+<div class="modal-header">
+  <h5 class="modal-title">Προσθήκη Πληρωμής</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss()"></button>
+</div>
+
+<div class="modal-body">
+  <p class="mb-2">
+    <strong>{{ payment?.userFullName }}</strong>
+    — Διαμέρισμα {{ payment?.apartmentNumber }}
+  </p>
+  <p class="text-muted mb-3">
+    Οφειλή: {{ payment?.amountToPay | number: '1.2-2' }} €, ήδη πληρωμένα: {{ payment?.paidAmount | number: '1.2-2' }} €
+  </p>
+
+  <div class="form-check mb-3">
+    <input type="checkbox" id="fullAmount" class="form-check-input" [(ngModel)]="fullAmountChecked" (change)="onFullAmountToggle()" />
+    <label class="form-check-label" for="fullAmount">Όλο το ποσό</label>
+  </div>
+
+  <form [formGroup]="form">
+    <div class="mb-3">
+      <label class="form-label">Ποσό Πληρωμής</label>
+      <input type="number" formControlName="paymentAmount" class="form-control" [readonly]="fullAmountChecked" min="0.01" step="0.01" />
+      <div *ngIf="form.get('paymentAmount')?.invalid && form.get('paymentAmount')?.touched" class="text-danger small">
+        Εισάγετε έγκυρο ποσό.
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Τρόπος Πληρωμής</label>
+      <select formControlName="paymentMethod" class="form-select">
+        <option value="CASH">Μετρητά</option>
+        <option value="BANK_TRANSFER">Τραπεζική Κατάθεση</option>
+        <option value="CARD">Κάρτα</option>
+      </select>
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-light" (click)="activeModal.dismiss()">Ακύρωση</button>
+  <button type="button" class="btn btn-primary" (click)="save()" [disabled]="form.invalid">Αποθήκευση</button>
+</div>
