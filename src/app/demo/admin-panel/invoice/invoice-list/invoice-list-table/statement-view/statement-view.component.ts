@@ -65,6 +65,8 @@ export class StatementViewComponent implements OnChanges, OnInit {
         return 'badge bg-success';
       case 'ISSUED':
         return 'badge bg-warning';
+        case 'EXPIRED':
+        return 'badge bg-danger';
       case 'CLOSED':
         return 'badge bg-dark';
       case 'DRAFT':

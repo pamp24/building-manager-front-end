@@ -1,19 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Company } from '../models/companyDTO';
 
-export interface Company {
-  companyName: string;
-  afm: string;
-  responsiblePerson: string;
-  phoneNumber: string;
-  email: string;
-  address: string;
-  addressNumber: string;
-  postalCode: string;
-  city: string;
-  region: string;
-}
+
 
 @Injectable({ providedIn: 'root' })
 export class CompanyService {

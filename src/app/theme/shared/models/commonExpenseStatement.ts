@@ -15,7 +15,7 @@ export interface CommonExpenseStatement {
   items: CommonExpenseItem[];
   buildingId?: number;
   isPaid?: boolean;
-  status?: 'PAID' | 'DRAFT' | 'ISSUED' | 'CLOSED' | 'CANCELLED';
+  status?: 'PAID' | 'EXPIRED' | 'DRAFT' | 'ISSUED' | 'CLOSED' | 'CANCELLED';
   createdAt?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   allocations?: { apartmentId: number; [key: string]: any }[];
