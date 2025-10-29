@@ -38,6 +38,9 @@ export class InvoiceCreateComponent implements OnInit {
   selectedBuilding: ManagedBuildingDTO | null = null;
   previewCode: string = '';
   selectedApartments: ApartmentDTO[] = [];
+  currentBuildingIndex: number = 0;
+  buildingId: number = 0;
+  currentBuilding: ManagedBuildingDTO | null = null;
 
   expenseCategories = [
     { label: 'ΚΟΙΝΟΧΡΗΣΤΑ', value: 'COMMON' },
@@ -71,6 +74,7 @@ export class InvoiceCreateComponent implements OnInit {
       },
       error: (err) => console.error('Σφάλμα φόρτωσης πολυκατοικιών', err)
     });
+    this.loadBuildingsAndManagerDashboard();
   }
 
   // public methods
@@ -83,30 +87,30 @@ export class InvoiceCreateComponent implements OnInit {
     });
   }
 
-selectBuilding(building: ManagedBuildingDTO) {
-  this.selectedBuilding = building;
-  localStorage.setItem('buildingId', String(building.id));
+  selectBuilding(building: ManagedBuildingDTO) {
+    this.selectedBuilding = building;
+    localStorage.setItem('buildingId', String(building.id));
 
-  // Φέρνουμε τον manager
-  this.buildingService.getBuildingManager(building.id).subscribe({
-    next: (data) => (this.manager = data)
-  });
+    // Φέρνουμε τον manager
+    this.buildingService.getBuildingManager(building.id).subscribe({
+      next: (data) => (this.manager = data)
+    });
 
-  // Φέρνουμε τον επόμενο κωδικό
-  this.commonExpenseStatementService.getNextCode(building.id).subscribe({
-    next: (code) => this.form.patchValue({ code }),
-    error: (err) => console.error('Σφάλμα φόρτωσης κωδικού', err)
-  });
+    // Φέρνουμε τον επόμενο κωδικό
+    this.commonExpenseStatementService.getNextCode(building.id).subscribe({
+      next: (code) => this.form.patchValue({ code }),
+      error: (err) => console.error('Σφάλμα φόρτωσης κωδικού', err)
+    });
 
-  // 🔹 Φόρτωσε αυτόματα όλα τα διαμερίσματα της πολυκατοικίας
-  this.ApartmentService.getApartmentsByBuilding(building.id).subscribe({
-    next: (apartments) => {
-      this.selectedApartments = apartments;
-      console.log('Αυτόματα διαμερίσματα:', this.selectedApartments);
-    },
-    error: (err) => console.error('Σφάλμα φόρτωσης διαμερισμάτων', err)
-  });
-}
+    // 🔹 Φόρτωσε αυτόματα όλα τα διαμερίσματα της πολυκατοικίας
+    this.ApartmentService.getApartmentsByBuilding(building.id).subscribe({
+      next: (apartments) => {
+        this.selectedApartments = apartments;
+        console.log('Αυτόματα διαμερίσματα:', this.selectedApartments);
+      },
+      error: (err) => console.error('Σφάλμα φόρτωσης διαμερισμάτων', err)
+    });
+  }
 
   form: FormGroup = this.fb.group({
     code: ['', Validators.required],
@@ -277,5 +281,27 @@ selectBuilding(building: ManagedBuildingDTO) {
 
   removeApartment(apartmentId: number) {
     this.selectedApartments = this.selectedApartments.filter((a) => a.id !== apartmentId);
+  }
+
+  loadBuildingsAndManagerDashboard() {
+    this.buildingService.getMyManagedBuildings().subscribe({
+      next: (buildings) => {
+        if (buildings && buildings.length > 0) {
+          this.managedBuildings = buildings;
+          this.setCurrentBuilding(0); // default πρώτη πολυκατοικία
+        } else {
+          console.warn('Δεν βρέθηκαν πολυκατοικίες για τον διαχειριστή');
+        }
+      },
+      error: (err) => {
+        console.error('Σφάλμα κατά τη λήψη των πολυκατοικιών διαχειριστή', err);
+      }
+    });
+  }
+
+  setCurrentBuilding(index: number) {
+    this.currentBuildingIndex = index;
+    this.currentBuilding = this.managedBuildings[index];
+    this.buildingId = this.currentBuilding.id;
   }
 }

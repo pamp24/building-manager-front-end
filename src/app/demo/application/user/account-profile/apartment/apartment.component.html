@@ -1,3 +1,6 @@
+<div *ngIf="message" class="alert alert-primary text-center my-3">
+  {{ message }}
+</div>
 <form form *ngIf="form" [formGroup]="form" (ngSubmit)="onUpdate()">
   <app-card *ngIf="buildingName" cardTitle="Πολυκατοικία" [padding]="24">
     <div class="row">

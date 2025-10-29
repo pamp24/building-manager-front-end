@@ -1,139 +1,164 @@
-<app-card *ngIf="buildingName" cardTitle="Πολυκατοικία" [padding]="24">
-  <div class="row">
-    <div class="col-md-6">
-      <label>Όνομα Πολυκατοικίας</label>
-      <input type="text" class="form-control readonly-input" [value]="buildingName" readonly />
-    </div>
-    <div class="col-md-6">
-      <label>Διεύθυνση Πολυκατοικίας</label>
-      <input type="text" class="form-control readonly-input" [value]="buildingAddress" readonly />
-    </div>
-  </div>
-</app-card>
-
-<app-card cardTitle="Μέλη Πολυκατοικίας" [padding]="0" footerClass="text-end btn-page">
-  <!-- Invite section ΜΟΝΟ αν είναι admin στη συγκεκριμένη πολυκατοικία -->
-  <div *ngIf="canInvite()" class="table-top p-4">
-    <h3>Πρόσκληση Νέων Μελών</h3>
-    <h4>
-      {{ members.length }}
-      <small>μέλη που έχουν συνδεθεί στην Πολυκατοικία.</small>
-    </h4>
-    <hr class="my-3" />
-    <div class="row">
-      <div class="col">
-        <input
-          type="email"
-          class="form-control"
-          placeholder="Email"
-          [(ngModel)]="emailToInvite"
-          name="emailToInvite"
-          required
-          #emailCtrl="ngModel"
-        />
-        <!-- Εμφάνιση σφάλματος -->
-        <div *ngIf="emailCtrl.invalid && (emailCtrl.dirty || emailCtrl.touched)" class="text-danger">Παρακαλώ εισάγετε έγκυρο email.</div>
-      </div>
-      <div class="col">
-        <select class="form-select" [(ngModel)]="roleToInvite" (change)="onRoleChange()" [disabled]="isSending">
-          <option value="" disabled selected>Επιλέξτε Ρόλο</option>
-          <option value="Owner">Ιδιοκτήτης</option>
-          <option value="Resident">Ένοικος</option>
-        </select>
-      </div>
-      <div class="col">
-        <select class="form-select" [(ngModel)]="apartmentToInvite" [disabled]="isSending || filteredApartments.length === 0">
-          <option [ngValue]="null" disabled>Επιλέξτε Διαμέρισμα</option>
-          <option *ngFor="let ap of filteredApartments" [ngValue]="ap.id">Διαμέρισμα {{ ap.floor }}{{ ap.number }}</option>
-        </select>
-      </div>
-      <div class="col-auto">
-        <button class="btn btn-primary" (click)="sendInvite()">
-          <span *ngIf="isSending" class="spinner-border spinner-border-sm me-2"></span>
-          Αποστολή
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Πίνακας μελών -->
-  <div class="table-responsive">
-    <table class="table mb-0">
-      <thead>
-        <tr>
-          <th>ΜΕΛΟΣ</th>
-          <th>ΡΟΛΟΣ</th>
-          <th>ΑΡ. ΔΙΑΜΕΡΙΣΜΑΤΟΣ</th>
-          <th class="text-end">ΚΑΤΑΣΤΑΣΗ</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let member of members">
-          <!-- Στοιχεία μέλους -->
-          <td>
-            <div class="row">
-              <div class="col-auto pe-0">
-                <img src="assets/images/user/avatar-1.jpg" alt="user-image" class="wid-40 rounded-circle" />
-              </div>
-              <div class="col">
-                <h6 class="mb-0">{{ member.fullName || '—' }}</h6>
-                <p class="text-muted f-12 mb-0" [ngClass]="{ 'fst-italic': member.status === 'Invited' }">
-                  {{ member.email }}
-                </p>
-              </div>
-            </div>
-          </td>
-
-          <!-- Ρόλος -->
-          <td>
-            <span
-              [ngClass]="{
-                'badge bg-primary': member.role === 'Owner',
-                'badge bg-info': member.role === 'Resident',
-                'badge bg-warning': member.role === 'BuildingManager',
-                'badge bg-dark': member.role === 'PropertyManager'
-              }"
-            >
-              {{ getTranslatedRole(member.role) }}
-            </span>
-          </td>
-
-          <!-- Διαμέρισμα -->
-          <td>{{ member.floor !== null ? member.floor : '—' }}{{ member.apartmentNumber || '—' }}</td>
-
-          <!-- Κατάσταση -->
-          <td class="text-end">
-            <span
-              [ngClass]="{
-                'badge bg-success': member.status === 'Joined' || member.status === 'ACCEPTED',
-                'badge bg-outline-info': member.status === 'PENDING' || member.status === 'Invited',
-                'badge bg-secondary': member.status === 'EXPIRED',
-                'badge bg-danger': member.status === 'DECLINED'
-              }"
-            >
-              {{ getTranslatedStatus(member.status) }}
-            </span>
-          </td>
-
-          <!-- Ενέργειες -->
-          <td class="text-end">
-            <a href="javascript:" class="avatar avatar-s btn-link-secondary" title="Επεξεργασία">
-              <i class="ti ti-dots f-18"></i>
-            </a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</app-card>
-<!-- Pagination για εναλλαγή πολυκατοικιών -->
-<div class="datatable-bottom mt-3" *ngIf="apartments.length > 1">
-  <ngb-pagination
-    [collectionSize]="apartments.length"
-    [(page)]="currentPage"
-    [pageSize]="1"
-    (pageChange)="onPageChange($event)"
-    class="table-pagination"
-  ></ngb-pagination>
+<!-- Μήνυμα για πολυκατοικίες -->
+<div *ngIf="messageBuildings" class="alert alert-primary text-center my-3">
+  {{ messageBuildings }}
 </div>
+
+<!-- Εμφάνιση περιεχομένου μόνο αν υπάρχουν πολυκατοικίες -->
+<ng-container >
+  <!-- Κάρτα με πληροφορίες πολυκατοικίας -->
+  <app-card *ngIf="buildingName" cardTitle="Πολυκατοικία" [padding]="24">
+    <div class="row">
+      <div class="col-md-6">
+        <label>Όνομα Πολυκατοικίας</label>
+        <input type="text" class="form-control readonly-input" [value]="buildingName" readonly />
+      </div>
+      <div class="col-md-6">
+        <label>Διεύθυνση Πολυκατοικίας</label>
+        <input type="text" class="form-control readonly-input" [value]="buildingAddress" readonly />
+      </div>
+    </div>
+  </app-card>
+
+  <!-- Κάρτα μελών πολυκατοικίας -->
+  <app-card cardTitle="Μέλη Πολυκατοικίας" [padding]="0" footerClass="text-end btn-page">
+    <!-- Ενότητα αποστολής προσκλήσεων (μόνο για διαχειριστές) -->
+    <div *ngIf="canInvite()" class="table-top p-4">
+      <h3>Πρόσκληση Νέων Μελών</h3>
+      <h4>
+        {{ members.length }}
+        <small>μέλη που έχουν συνδεθεί στην Πολυκατοικία.</small>
+      </h4>
+      <hr class="my-3" />
+
+      <div class="row">
+        <div class="col">
+          <input
+            type="email"
+            class="form-control"
+            placeholder="Email"
+            [(ngModel)]="emailToInvite"
+            name="emailToInvite"
+            required
+            #emailCtrl="ngModel"
+          />
+          <div *ngIf="emailCtrl.invalid && (emailCtrl.dirty || emailCtrl.touched)" class="text-danger">
+            Παρακαλώ εισάγετε έγκυρο email.
+          </div>
+        </div>
+
+        <div class="col">
+          <select class="form-select" [(ngModel)]="roleToInvite" (change)="onRoleChange()" [disabled]="isSending">
+            <option value="" disabled selected>Επιλέξτε Ρόλο</option>
+            <option value="Owner">Ιδιοκτήτης</option>
+            <option value="Resident">Ένοικος</option>
+          </select>
+        </div>
+
+        <div class="col">
+          <select class="form-select" [(ngModel)]="apartmentToInvite" [disabled]="isSending">
+            <option [ngValue]="null" disabled selected>Επιλέξτε Διαμέρισμα</option>
+            <option *ngIf="filteredApartments.length === 0" disabled>
+              Δεν υπάρχουν διαθέσιμα διαμερίσματα
+            </option>
+            <option *ngFor="let ap of filteredApartments" [ngValue]="ap.id">
+              Διαμέρισμα {{ ap.floor }}{{ ap.number }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-auto">
+          <button class="btn btn-primary" (click)="sendInvite()">
+            <span *ngIf="isSending" class="spinner-border spinner-border-sm me-2"></span>
+            Αποστολή
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Πίνακας μελών πολυκατοικίας -->
+    <div class="table-responsive">
+      <table class="table mb-0">
+        <thead>
+          <tr>
+            <th>ΜΕΛΟΣ</th>
+            <th>ΡΟΛΟΣ</th>
+            <th>ΑΡ. ΔΙΑΜΕΡΙΣΜΑΤΟΣ</th>
+            <th class="text-end">ΚΑΤΑΣΤΑΣΗ</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Αν δεν υπάρχουν μέλη -->
+          <tr *ngIf="!members || members.length === 0">
+            <td colspan="5" class="text-center text-muted py-4">
+              Δεν υπάρχουν μέλη για αυτήν την πολυκατοικία.
+              Θα πρέπει να προσθέσετε διαμερίσματα και να προσκαλέσετε μέλη για να δείτε πληροφορίες εδώ.
+            </td>
+          </tr>
+
+          <!-- Εμφάνιση μελών -->
+          <tr *ngFor="let member of members">
+            <td>
+              <div class="row">
+                <div class="col-auto pe-0">
+                  <img src="assets/images/user/avatar-1.jpg" alt="user-image" class="wid-40 rounded-circle" />
+                </div>
+                <div class="col">
+                  <h6 class="mb-0">{{ member.fullName || '—' }}</h6>
+                  <p class="text-muted f-12 mb-0" [ngClass]="{ 'fst-italic': member.status === 'Invited' }">
+                    {{ member.email }}
+                  </p>
+                </div>
+              </div>
+            </td>
+
+            <td>
+              <span
+                [ngClass]="{
+                  'badge bg-primary': member.role === 'Owner',
+                  'badge bg-info': member.role === 'Resident',
+                  'badge bg-warning': member.role === 'BuildingManager',
+                  'badge bg-dark': member.role === 'PropertyManager'
+                }"
+              >
+                {{ getTranslatedRole(member.role) }}
+              </span>
+            </td>
+
+            <td>{{ member.floor !== null ? member.floor : '—' }}{{ member.apartmentNumber || '—' }}</td>
+
+            <td class="text-end">
+              <span
+                [ngClass]="{
+                  'badge bg-success': member.status === 'Joined' || member.status === 'ACCEPTED',
+                  'badge bg-outline-info': member.status === 'PENDING' || member.status === 'Invited',
+                  'badge bg-secondary': member.status === 'EXPIRED',
+                  'badge bg-danger': member.status === 'DECLINED'
+                }"
+              >
+                {{ getTranslatedStatus(member.status) }}
+              </span>
+            </td>
+
+            <td class="text-end">
+              <a href="javascript:" class="avatar avatar-s btn-link-secondary" title="Επεξεργασία">
+                <i class="ti ti-dots f-18"></i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </app-card>
+
+  <!-- Πλοήγηση μεταξύ πολυκατοικιών -->
+  <div class="datatable-bottom mt-3" *ngIf="apartments.length > 1">
+    <ngb-pagination
+      [collectionSize]="apartments.length"
+      [(page)]="currentPage"
+      [pageSize]="1"
+      (pageChange)="onPageChange($event)"
+      class="table-pagination"
+    ></ngb-pagination>
+  </div>
+</ng-container>

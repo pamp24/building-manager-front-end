@@ -30,4 +30,8 @@ export class PaymentService {
   getBuildingSummary(buildingId: number): Observable<CommonStatementSummaryDTO> {
     return this.http.get<CommonStatementSummaryDTO>(`${this.apiUrl}/building/${buildingId}/summary`);
   }
+
+  getCurrentMonthByBuilding(buildingId: number): Observable<StatementUserPaymentDTO[]> {
+  return this.http.get<StatementUserPaymentDTO[]>(`${this.apiUrl}/building/${buildingId}/current-month`);
+}
 }

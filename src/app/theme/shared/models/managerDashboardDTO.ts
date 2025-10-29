@@ -6,8 +6,10 @@ export interface ManagerDashboardDTO {
   totalIssued: number;
   totalPaid: number;
   totalPending: number;
-  totalOverdue: number;
+  totalExpired: number;
   totalIncome: number;
   totalDebt: number;
+  totalCancelled: number;
+  totalDraft: number;
   monthlyStats: MonthlyStatsDTO[];
 }

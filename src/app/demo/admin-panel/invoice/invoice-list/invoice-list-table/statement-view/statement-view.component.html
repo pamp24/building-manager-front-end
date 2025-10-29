@@ -54,8 +54,8 @@
                   <li *ngFor="let apt of apartments" class="list-group-item px-0">
                     <div class="d-flex flex-column">
                       <span class="fw-bold">Διαμέρισμα {{ apt.number }} (Όροφος: {{ apt.floor }})</span>
-                      <small class="text-muted">Ιδιοκτήτης: {{ apt.ownerFullName || '— Χωρίς Ιδιοκτήτη —' }}</small>
-                      <small class="text-muted">Ενοικιαστής: {{ apt.tenantFullName || '— Χωρίς Ενοικιαστή —' }}</small>
+                      <small class="text-muted">Ιδιοκτήτης: {{ apt.ownerLastName || '—' }} {{ apt.ownerFirstName || '—' }}</small>
+                      <small class="text-muted">Ενοικιαστής: {{ apt.residentLastName || '—' }} {{ apt.residentFirstName || '—' }}</small>
                     </div>
                   </li>
                 </ul>

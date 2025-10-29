@@ -44,4 +44,11 @@ export class CommonExpenseStatementService {
   saveDraft(buildingId: number, statement: any) {
     return this.http.post<CommonExpenseStatement>(`${this.baseUrl}/${buildingId}/draft`, statement);
   }
+
+  getExpenseCategories(buildingId: number, period: 'month' | 'year' | 'all'): Observable<{ category: string; totalAmount: number }[]> {
+    return this.http.get<{ category: string; totalAmount: number }[]>(
+      `http://localhost:8080/api/v1/expenses/building/${buildingId}/summary?period=${period}`
+    );
+  }
+  
 }

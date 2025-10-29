@@ -1,23 +1,30 @@
 <app-card [showHeader]="false">
-  <div class="mb-3">
-    <h5 class="mb-0">Γραφικό Διάγραμμα</h5>
-    <small class="text-muted">Ανά μήνα</small>
+  <div class="mb-3 text-center">
+    <h5 class="mb-0">Κατάσταση Παραστατικών</h5>
+    <small class="text-muted">Ανά Μήνα</small>
   </div>
 
-  <div id="chart" *ngIf="chartOptions" >
-    <apx-chart
-      [chart]="chartOptions.chart"
-      [series]="chartOptions.series"
-      [colors]="chartOptions.colors"
-      [dataLabels]="chartOptions.dataLabels"
-      [stroke]="chartOptions.stroke"
-      [xaxis]="chartOptions.xaxis"
-      [yaxis]="chartOptions.yaxis"
-      [grid]="chartOptions.grid"
-      [legend]="chartOptions.legend"
-      [tooltip]="chartOptions.tooltip"
-      [plotOptions]="chartOptions.plotOptions"
-      [labels]="chartOptions.labels"
-    ></apx-chart>
-  </div>
+  <ng-container *ngIf="chartOptions; else noData">
+    <div id="chart">
+      <apx-chart
+        [chart]="chartOptions.chart"
+        [series]="chartOptions.series"
+        [colors]="chartOptions.colors"
+        [dataLabels]="chartOptions.dataLabels"
+        [xaxis]="chartOptions.xaxis"
+        [yaxis]="chartOptions.yaxis"
+        [grid]="chartOptions.grid"
+        [legend]="chartOptions.legend"
+        [tooltip]="chartOptions.tooltip"
+        [plotOptions]="chartOptions.plotOptions"
+      ></apx-chart>
+    </div>
+  </ng-container>
+
+  <ng-template #noData>
+    <div class="text-center my-4 text-muted">
+      Δεν υπάρχουν διαθέσιμα δεδομένα
+    </div>
+  </ng-template>
 </app-card>
+

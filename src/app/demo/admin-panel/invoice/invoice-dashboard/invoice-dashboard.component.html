@@ -1,10 +1,30 @@
 <div class="row">
-  <div class="mb-3">
-    <label for="buildingSelect">Επέλεξε πολυκατοικία:</label>
-    <select id="buildingSelect" class="form-select w-auto d-inline ms-2" [(ngModel)]="buildingId" (change)="loadDashboard()">
-      <option *ngFor="let b of managedBuildings" [value]="b.id">{{ b.name }}</option>
-    </select>
-  </div>
+  <!-- Κάρτα Πολυκατοικίας -->
+  <app-card cardTitle="Πολυκατοικία" [padding]="24" class="mb-3" *ngIf="managedBuildings?.length > 0">
+    <div class="row align-items-end">
+      <div class="col-md-6">
+        <label for="buildingSelect">Επιλογή Πολυκατοικίας</label>
+        <select id="buildingSelect" class="form-select" [(ngModel)]="currentBuildingIndex" (ngModelChange)="setCurrentBuilding($event)">
+          <option *ngFor="let b of managedBuildings; let i = index" [ngValue]="i">
+            {{ b.name }} — {{ b.street1 }} {{ b.stNumber1 }}, {{ b.city }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col-md-6" *ngIf="currentBuilding">
+        <label>Διεύθυνση</label>
+        <input
+          type="text"
+          class="form-control readonly-input"
+          [value]="(currentBuilding.street1 || '') + ' ' + (currentBuilding.stNumber1 || '') + ', ' + (currentBuilding.city || '')"
+          readonly
+        />
+      </div>
+    </div>
+  </app-card>
+
+  <hr class="mb-4" />
+
   <div class="row align-items-stretch">
     <div class="col-lg-9 d-flex">
       <app-invoice-chart class="flex-fill h-100" [monthlyStats]="dashboardData?.monthlyStats || []"></app-invoice-chart>
@@ -13,62 +33,68 @@
     <div class="col-lg-3 d-flex">
       <app-card class="flex-fill h-100" [showHeader]="false">
         <div class="row g-3 text-center">
+          <!-- Εκδοθέντα -->
           <div class="col-6" (click)="goToTab(1)" style="cursor: pointer">
             <app-card [showHeader]="false" cardClass="mb-0" blockClass="py-4 px-2">
-              <div class="avatar bg-primary rounded-circle">
+              <div class="avatar bg-primary rounded-circle shadow-sm">
                 <i antIcon type="file-text" theme="fill" class="text-white d-flex"></i>
               </div>
-              <h5 class="mt-2">{{ dashboardData?.totalIssued || 0 }}</h5>
+              <h5 class="mt-2 fw-semibold text-primary">{{ totalCount }}</h5>
               <h6 class="mb-0 text-muted">Εκδοθέντα</h6>
             </app-card>
           </div>
 
+          <!-- Πληρωμένα -->
           <div class="col-6" (click)="goToTab(2)" style="cursor: pointer">
             <app-card [showHeader]="false" cardClass="mb-0" blockClass="py-4 px-2">
-              <div class="avatar bg-success rounded-circle">
+              <div class="avatar bg-success rounded-circle shadow-sm">
                 <i antIcon type="dollar-circle" theme="fill" class="text-white d-flex"></i>
               </div>
-              <h5 class="mt-2">{{ dashboardData?.totalPaid || 0 }}</h5>
+              <h5 class="mt-2 fw-semibold text-success">{{ paidCount }}</h5>
               <h6 class="mb-0 text-muted">Πληρωμένα</h6>
             </app-card>
           </div>
 
+          <!-- Εκκρεμείς -->
           <div class="col-6" (click)="goToTab(3)" style="cursor: pointer">
             <app-card [showHeader]="false" cardClass="mb-0" blockClass="py-4 px-2">
-              <div class="avatar bg-warning rounded-circle">
+              <div class="avatar bg-warning rounded-circle shadow-sm">
                 <i antIcon type="hourglass" theme="fill" class="text-white d-flex"></i>
               </div>
-              <h5 class="mt-2">{{ dashboardData?.totalPending || 0 }}</h5>
+              <h5 class="mt-2 fw-semibold text-warning">{{ pendingCount }}</h5>
               <h6 class="mb-0 text-muted">Εκκρεμείς</h6>
             </app-card>
           </div>
 
+          <!-- Ληξιπρόθεσμα -->
           <div class="col-6" (click)="goToTab(4)" style="cursor: pointer">
             <app-card [showHeader]="false" cardClass="mb-0" blockClass="py-4 px-2">
-              <div class="avatar bg-danger rounded-circle">
-                <i antIcon type="close-circle" theme="fill" class="text-white d-flex"></i>
+              <div class="avatar bg-danger rounded-circle shadow-sm">
+                <i antIcon type="alert" theme="fill" class="text-white d-flex"></i>
               </div>
-              <h5 class="mt-2">{{ dashboardData?.totalOverdue || 0 }}</h5>
+              <h5 class="mt-2 fw-semibold text-danger">{{ expiredCount }}</h5>
               <h6 class="mb-0 text-muted">Ληξιπρόθεσμα</h6>
             </app-card>
           </div>
 
+          <!-- Ακυρωμένα -->
           <div class="col-6" (click)="goToTab(5)" style="cursor: pointer">
             <app-card [showHeader]="false" cardClass="mb-0" blockClass="py-4 px-2">
-              <div class="avatar bg-danger rounded-circle">
-                <i antIcon type="close-circle" theme="fill" class="text-white d-flex"></i>
+              <div class="avatar bg-secondary rounded-circle shadow-sm">
+                <i antIcon type="delete" theme="fill" class="text-white d-flex"></i>
               </div>
-              <h5 class="mt-2">{{ dashboardData?.totalOverdue || 0 }}</h5>
+              <h5 class="mt-2 fw-semibold text-secondary">{{ closedCount }}</h5>
               <h6 class="mb-0 text-muted">Ακυρωμένα</h6>
             </app-card>
           </div>
 
+          <!-- Πρόχειρα -->
           <div class="col-6" (click)="goToTab(6)" style="cursor: pointer">
             <app-card [showHeader]="false" cardClass="mb-0" blockClass="py-4 px-2">
-              <div class="avatar bg-danger rounded-circle">
-                <i antIcon type="close-circle" theme="fill" class="text-white d-flex"></i>
+              <div class="avatar bg-info rounded-circle shadow-sm">
+                <i antIcon type="edit" theme="fill" class="text-white d-flex"></i>
               </div>
-              <h5 class="mt-2">{{ dashboardData?.totalOverdue || 0 }}</h5>
+              <h5 class="mt-2 fw-semibold text-info">{{ draftCount }}</h5>
               <h6 class="mb-0 text-muted">Πρόχειρα</h6>
             </app-card>
           </div>
@@ -78,65 +104,71 @@
   </div>
 
   <div class="col-sm-12">
-    <app-card cardTitle="Τελευταίες Μηνιαίες Πληρωμές Χρηστών " [padding]="0">
+    <app-card cardTitle="Πληρωμές Χρηστών Τρέχοντος Μήνα ({{ currentMonthLabel }})" [padding]="0">
       <ng-template #headerOptionsTemplate>
-        <button class="btn btn-sm btn-link-primary">View All</button>
+        <button class="btn btn-sm btn-link-primary">Περισσότερα</button>
       </ng-template>
-      <div class="table-responsive">
-        <table class="table table-hover mb-0">
+      <div class="table-responsive table-scroll-10">
+        <table class="table table-sm table-striped align-middle mb-0">
           <thead>
             <tr>
-              <th>Ονοματεπόνυμο</th>
-              <th>Αρ.Εγγράφου</th>
-              <th>Μήνας</th>
-              <th>Ποσό</th>
+              <th>Χρήστης</th>
+              <th>Διαμέρισμα</th>
+              <th>Οφειλή</th>
+              <th>Πληρωμένο</th>
+              <th>Ημερομηνία</th>
+              <th>Τρόπος</th>
               <th>Κατάσταση</th>
               <th>Ενέργειες</th>
             </tr>
           </thead>
           <tbody>
-            @for (history of transactionsHistoryList; track history) {
-              <tr>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0">
-                      <img src="{{ history.image }}" alt="user image" class="img-radius wid-40" />
-                    </div>
-                    <div class="flex-grow-1 ms-3">
-                      <h6 class="mb-0">{{ history.name }}</h6>
-                    </div>
-                  </div>
-                </td>
-                <td>{{ history.category }}</td>
-                <td>
-                  {{ history.date }}
-                  <span class="text-muted text-sm d-block">{{ history.time }}</span>
-                </td>
-                <td>{{ history.amount }}</td>
-                <td>
-                  @if (history.status === 'completed') {
-                    <span class="badge text-bg-success text-sm">Completed</span>
-                  } @else if (history.status === 'pending') {
-                    <span class="badge text-bg-warning text-sm">Pending</span>
-                  } @else if (history.status === 'canceled') {
-                    <span class="badge text-bg-danger text-sm">Canceled</span>
-                  } @else if (history.status === 'progress') {
-                    <span class="badge text-bg-primary text-sm">In Progress</span>
-                  }
-                </td>
-                <td>
-                  <a href="javascript:" class="avatar avatar-xs btn-link-secondary">
-                    <i class="f-18 d-flex" antIcon type="eye" theme="outline"></i>
-                  </a>
-                  <a href="javascript:" class="avatar avatar-xs btn-link-secondary mx-1">
-                    <i class="f-18 d-flex" antIcon type="edit" theme="outline"></i>
-                  </a>
-                  <a href="javascript:" class="avatar avatar-xs btn-link-secondary">
-                    <i class="f-18 d-flex" antIcon type="delete" theme="outline"></i>
-                  </a>
-                </td>
-              </tr>
-            }
+            <tr *ngFor="let p of statementUserPayments">
+              <td>{{ p.userLastName }} {{ p.userFirstName }}</td>
+              <td>{{ getFloorLabel(p.apartmentFloor) }}{{ p.apartmentNumber }}</td>
+              <td>{{ p.amountToPay | number: '1.2-2' }} €</td>
+              <td>{{ p.paidAmount | number: '1.2-2' }} €</td>
+              <td>{{ p.paidDate ? (p.paidDate | date: 'dd/MM/yyyy HH:mm') : '-' }}</td>
+              <td>{{ translatePaymentMethod(p.paymentMethod) || '-' }}</td>
+              <td>
+                <span
+                  class="badge px-3 py-2"
+                  [ngClass]="{
+                    'bg-success': p.status === 'PAID',
+                    'bg-warning text-dark': p.status === 'PENDING',
+                    'bg-info': p.status === 'PARTIALLY_PAID'
+                  }"
+                >
+                  {{ translateStatus(p.status) }}
+                </span>
+              </td>
+              <td>
+                <a
+                  href="javascript:"
+                  class="avatar avatar-xs"
+                  [ngClass]="{
+                    'btn-link-primary': p.status !== 'PAID',
+                    'btn-link-secondary disabled': p.status === 'PAID'
+                  }"
+                  ngbTooltip="{{ p.status === 'PAID' ? 'Έχει εξοφληθεί' : 'Επεξεργασία' }}"
+                  (click)="p.status !== 'PAID' && onEditUser(p)"
+                >
+                  <i
+                    class="f-16 d-flex"
+                    [ngClass]="{
+                      'text-primary': p.status !== 'PAID',
+                      'text-muted': p.status === 'PAID'
+                    }"
+                    antIcon
+                    type="edit"
+                    theme="outline"
+                  ></i>
+                </a>
+              </td>
+            </tr>
+            <tr *ngIf="!statementUserPayments.length && !paymentsLoading">
+              <td colspan="8" class="text-center text-muted">Δεν υπάρχουν δεδομένα χρηστών για αυτό το παραστατικό</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -157,7 +189,6 @@
           </div>
         </div>
       </ng-template>
-
 
       <ul class="list-group list-group-flush border-top-0">
         <li class="list-group-item border-0" *ngFor="let payment of recentPayments">
@@ -186,8 +217,8 @@
       </ul>
     </app-card>
   </div>
-  <div class="col-md-6 col-xl-4">
-    <app-total-expenses-chart />
+  <div class="col-md-6 col-xl-4" *ngIf="currentBuilding">
+    <app-total-expenses-chart *ngIf="currentBuilding" [buildingId]="buildingId" [attr.key]="buildingId"></app-total-expenses-chart>
   </div>
   <div class="col-sm-12 col-xl-4">
     <app-card cardTitle="Notification" [padding]="0">
@@ -204,7 +235,7 @@
         </div>
       </ng-template>
       <ul class="list-group list-group-flush border-top-0">
-        @for (item of notificationList; track $index) {
+        <!-- @for (item of notificationList; track $index) {
           <li class="list-group-item border-0">
             <div class="d-flex align-items-center">
               <div class="flex-shrink-0">
@@ -231,7 +262,7 @@
               </div>
             </div>
           </li>
-        }
+        } -->
         <li class="list-group-item border-0">
           <div class="d-grid">
             <button class="btn btn-outline-secondary">Προβολή Όλων</button>

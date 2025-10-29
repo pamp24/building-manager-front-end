@@ -1,5 +1,24 @@
 <div class="row">
   <div class="col-sm-12">
+    <app-card *ngIf="currentBuildingIndex" cardTitle="Πολυκατοικία" [padding]="24" class="mb-3">
+      <div class="row align-items-end">
+        <div class="col-md-6">
+          <label>Όνομα Πολυκατοικίας</label>
+          <input type="text" class="form-control readonly-input" [value]="currentBuilding.name" readonly />
+        </div>
+
+        <div class="col-md-6">
+          <label>Διεύθυνση Πολυκατοικίας</label>
+          <input
+            type="text"
+            class="form-control readonly-input"
+            [value]="(currentBuilding.street1 || '') + ' ' + (currentBuilding.stNumber1 || '') + ', ' + (currentBuilding.city || '')"
+            readonly
+          />
+        </div>
+      </div>
+    </app-card>
+
     <app-card [showHeader]="false">
       <form [formGroup]="form">
         <div class="row g-3">
@@ -67,8 +86,8 @@
               >
                 <div *ngFor="let a of selectedApartments" class="mb-2 pb-2 border-bottom">
                   <p class="mb-0 fw-bold">Διαμέρισμα {{ a.floor }}{{ a.apartmentNumber }}</p>
-                  <p class="mb-0">Ιδιοκτήτης: {{ a.ownerFullName || '—' }}</p>
-                  <p class="mb-0">Ένοικος: {{ a.residentFullName || '—' }}</p>
+                  <p class="mb-0">Ιδιοκτήτης: {{ a.ownerLastName || '—' }} {{ a.ownerFirstName || '—' }}</p>
+                  <p class="mb-0">Ένοικος: {{ a.residentLastName || '—' }} {{ a.residentFirstName || '—' }}</p>
                 </div>
               </div>
             </div>
@@ -107,7 +126,7 @@
                     </td>
                     <td><input type="text" class="form-control" formControlName="descriptionItem" /></td>
                     <td><input type="number" class="form-control" formControlName="price" /></td>
-                    <td class="text-end">{{(item.value.price || 0) | number: '1.2-2' }} €</td>
+                    <td class="text-end">{{ item.value.price || 0 | number: '1.2-2' }} €</td>
                     <td class="text-center">
                       <a href="javascript:" class="avatar avatar-s btn-link-danger btn-pc-default" (click)="removeItem(i)" title="Διαγραφή">
                         <i class="f-20" antIcon type="delete" theme="outline"></i>

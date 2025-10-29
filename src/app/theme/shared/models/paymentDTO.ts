@@ -3,6 +3,6 @@ export interface PaymentDTO {
   statementId: number;
   amount: number;
   paymentMethod: string;
-
+  apartmentId?: number;
   referenceNumber?: string;
 }

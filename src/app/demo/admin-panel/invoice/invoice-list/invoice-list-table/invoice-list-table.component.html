@@ -1,5 +1,41 @@
 <div class="table-responsive">
-  <table class="table table-hover mb-0">
+  <!-- === Toolbar: Search + Page Size === -->
+  <div class="d-flex align-items-center justify-content-between p-3">
+    <div class="dataTable-dropdown">
+      <select
+        class="form-select"
+        title="select item per page"
+        style="width: auto"
+        name="pageSize"
+        [(ngModel)]="pageSize"
+        (ngModelChange)="applyFilters()"
+      >
+        <option [ngValue]="5">5 εγγραφές ανά σελίδα</option>
+        <option [ngValue]="10">10 εγγραφές ανά σελίδα</option>
+        <option [ngValue]="15">15 εγγραφές ανά σελίδα</option>
+      </select>
+    </div>
+
+    <div class="dataTable-search d-flex align-items-center">
+      <input
+        id="table-complete-search"
+        type="text"
+        class="form-control"
+        name="searchTerm"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange()"
+        placeholder="Αναζήτηση..."
+      />
+    </div>
+  </div>
+
+  <!-- === Spinner κύριου πίνακα === -->
+  <div *ngIf="loading" class="text-center my-3">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+
+  <!-- === Main Table === -->
+  <table class="table table-hover mb-0" *ngIf="!loading">
     <thead>
       <tr>
         <th (click)="onSort('code')" style="cursor: pointer">ID Παραστατικού {{ getSortIcon('code') }}</th>
@@ -12,7 +48,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (s of statements; track s; let i = $index) {
+      @for (s of filteredStatements; track s; let i = $index) {
         <tr>
           <td>{{ s.code }}</td>
           <td>{{ s.month }}</td>
@@ -21,12 +57,13 @@
           <td>{{ s.total | number: '1.2-2' }} €</td>
           <td>
             <span
-              class="badge"
+              class="badge px-3 py-2"
               [ngClass]="{
-                'bg-success': s.isPaid || s.status === 'PAID',
-                'bg-warning': s.status === 'ISSUED' && !s.isPaid,
+                'bg-success': s.status === 'PAID' || s.isPaid,
+                'bg-warning text-dark': s.status === 'ISSUED',
                 'bg-danger': s.status === 'CLOSED',
-                'bg-info': s.status === 'DRAFT'
+                'bg-info': s.status === 'DRAFT',
+                'bg-secondary': s.status === 'EXPIRED'
               }"
             >
               {{ translateStatus(s.status, s.isPaid) }}
@@ -34,22 +71,22 @@
           </td>
           <td class="text-center">
             <ul class="list-inline me-auto mb-0">
-              <li class="list-inline-item align-bottom">
+              <li class="list-inline-item">
                 <a href="javascript:" class="avatar avatar-xs btn-link-secondary" ngbTooltip="Προβολή" (click)="onView(s)">
                   <i class="f-16 text-secondary d-flex" antIcon type="eye" theme="outline"></i>
                 </a>
               </li>
-              <li class="list-inline-item align-bottom">
+              <li class="list-inline-item">
                 <a href="javascript:" class="avatar avatar-xs btn-link-primary" ngbTooltip="Επεξεργασία" (click)="onEdit(s)">
                   <i class="f-16 text-primary d-flex" antIcon type="edit" theme="outline"></i>
                 </a>
               </li>
-              <li class="list-inline-item align-bottom">
-                <a href="javascript:" ngbTooltip="Διαγραφή" class="avatar avatar-xs btn-link-danger" (click)="onDelete(s)">
+              <li class="list-inline-item">
+                <a href="javascript:" class="avatar avatar-xs btn-link-danger" ngbTooltip="Διαγραφή" (click)="onDelete(s)">
                   <i class="f-16 text-danger d-flex" antIcon type="delete" theme="outline"></i>
                 </a>
               </li>
-              <li class="list-inline-item align-bottom">
+              <li class="list-inline-item">
                 <a
                   href="javascript:"
                   class="avatar avatar-xs btn-link-success"
@@ -67,12 +104,15 @@
             </ul>
           </td>
         </tr>
+
+        <!-- === Υποπίνακας πληρωμών === -->
         <tr *ngIf="expandedStatementId === s.id">
           <td colspan="100%">
             <div class="p-3 bg-light border rounded">
               <div *ngIf="paymentsLoading" class="text-center">
                 <div class="spinner-border text-primary" role="status"></div>
               </div>
+
               <div *ngIf="!paymentsLoading">
                 <table class="table table-sm table-striped align-middle mb-0">
                   <thead>
@@ -89,19 +129,19 @@
                   </thead>
                   <tbody>
                     <tr *ngFor="let p of statementUserPayments">
-                      <td>{{ p.userFullName }}</td>
+                      <td>{{ p.userLastName }} {{ p.userFirstName }}</td>
                       <td>{{ getFloorLabel(p.apartmentFloor) }}{{ p.apartmentNumber }}</td>
                       <td>{{ p.amountToPay | number: '1.2-2' }} €</td>
                       <td>{{ p.paidAmount | number: '1.2-2' }} €</td>
                       <td>{{ p.paidDate ? (p.paidDate | date: 'dd/MM/yyyy HH:mm') : '-' }}</td>
-                      <td>{{ p.paymentMethod || '-' }}</td>
+                      <td>{{ translatePaymentMethod(p.paymentMethod) || '-' }}</td>
                       <td>
                         <span
                           class="badge px-3 py-2"
                           [ngClass]="{
                             'bg-success': p.status === 'PAID',
                             'bg-warning text-dark': p.status === 'PENDING',
-                            'bg-warning': p.status === 'PARTIALLY_PAID'
+                            'bg-info': p.status === 'PARTIALLY_PAID'
                           }"
                         >
                           {{ translateStatus(p.status) }}
@@ -143,4 +183,18 @@
       }
     </tbody>
   </table>
+
+  <!-- === Pagination Info === -->
+  <div class="p-3 d-sm-flex align-items-center justify-content-between" *ngIf="!loading">
+    <div class="datatable-info">
+      Δείχνει {{ (page - 1) * pageSize + 1 }} έως {{ Math.min(page * pageSize, total) }} από {{ total }} εγγραφές
+    </div>
+    <ngb-pagination
+      [collectionSize]="total"
+      [(page)]="page"
+      [pageSize]="pageSize"
+      (pageChange)="onPageChange($event)"
+      class="table-pagination"
+    ></ngb-pagination>
+  </div>
 </div>

@@ -57,26 +57,4 @@ export class ManagerModalComponent implements OnInit {
     this.isRtlMode = isRtl;
   }
 
-  inputList = [
-    {
-      label: 'Όνομα :',
-      subTitle: 'Εισάγετε το όνομά σας',
-      type: 'text'
-    },
-    {
-      label: 'Επίθετο :',
-      subTitle: 'Εισάγετε το επίθετό σας',
-      type: 'text'
-    },
-    {
-      label: 'Email :',
-      subTitle: 'Εισάγετε το email σας',
-      type: 'email'
-    },
-    {
-      label: 'Τηλέφωνο :',
-      subTitle: 'Εισάγετε τον αριθμό τηλεφώνου σας',
-      type: 'number'
-    }
-  ];
 }

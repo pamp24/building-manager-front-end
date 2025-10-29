@@ -4,21 +4,27 @@ import { Component, inject, OnInit } from '@angular/core';
 // icons
 import { IconService } from '@ant-design/icons-angular';
 import {
+  AlertFill,
   CloseCircleFill,
+  DeleteFill,
   DeleteOutline,
   DollarCircleFill,
   DownloadOutline,
-  EditOutline,
+  EditFill,
   EyeOutline,
   FileTextFill,
   FileTextOutline,
   HourglassFill,
   LinkOutline,
   MoreOutline,
+  PauseCircleFill,
   PlusOutline,
   ReconciliationFill,
   SettingOutline,
-  ShoppingFill
+  ShoppingFill,
+  StopOutline,
+  LeftOutline,
+  RightOutline
 } from '@ant-design/icons-angular/icons';
 
 // project import
@@ -28,12 +34,13 @@ import { TotalExpensesChartComponent } from './total-expenses-chart/total-expens
 import { ManagerDashboardService } from '../../../../theme/shared/service/managerDashboard.service';
 import { ManagerDashboardDTO } from '../../../../theme/shared/models/managerDashboardDTO';
 import { BuildingService } from '../../../../theme/shared/service/building.service';
-import { BuildingDTO } from '../../../../theme/shared/models/buildingDTO';
 import { TabNavigationService } from '../../../../theme/shared/service/TabNavigation.service';
 import { PaymentService } from '../../../../theme/shared/service/payment.service';
 import { PaymentDTO } from '../../../../theme/shared/models/paymentDTO';
 import { effect } from '@angular/core';
 import { ThemeService } from '../../../../theme/shared/service/customs-theme.service';
+import { StatementUserPaymentDTO } from '../../../../theme/shared/models/StatementUserPaymentDTO';
+import { ManagedBuildingDTO } from '../../../../theme/shared/models/managedBuildingDTO';
 
 @Component({
   selector: 'app-invoice-dashboard',
@@ -43,21 +50,36 @@ import { ThemeService } from '../../../../theme/shared/service/customs-theme.ser
 })
 export class InvoiceDashboardComponent implements OnInit {
   private themeService = inject(ThemeService);
-  backgroundColor!: string;
   private managerDashboardService = inject(ManagerDashboardService);
   private iconService = inject(IconService);
+  private tabNav = inject(TabNavigationService);
+  private buildingService = inject(BuildingService);
+  private paymentService = inject(PaymentService);
+
+  backgroundColor!: string;
+
   dashboardData?: ManagerDashboardDTO;
   buildingId: number = Number(localStorage.getItem('buildingId'));
-  managedBuildings: BuildingDTO[] = [];
-  private tabNav = inject(TabNavigationService);
+  currentBuildingIndex: number = 0;
   activeTab = 1;
-  recentPayments: PaymentDTO[] = [];
 
-  // constructor
-  constructor(
-    private buildingService: BuildingService,
-    private paymentService: PaymentService
-  ) {
+  managedBuildings: ManagedBuildingDTO[] = [];
+  currentBuilding?: ManagedBuildingDTO;
+
+  recentPayments: PaymentDTO[] = [];
+  statementUserPayments: StatementUserPaymentDTO[] = [];
+  paymentsLoading = false;
+  currentMonthLabel = new Date().toLocaleString('el-GR', { month: 'long', year: 'numeric' });
+
+  //Μετρητές για tabs
+  totalCount = 0;
+  paidCount = 0;
+  pendingCount = 0;
+  expiredCount = 0;
+  closedCount = 0;
+  draftCount = 0;
+
+  constructor() {
     this.iconService.addIcon(
       ...[
         CloseCircleFill,
@@ -70,45 +92,81 @@ export class InvoiceDashboardComponent implements OnInit {
         LinkOutline,
         DownloadOutline,
         FileTextOutline,
-        SettingOutline
+        SettingOutline,
+        PlusOutline,
+        EyeOutline,
+        EditFill,
+        DeleteOutline,
+        LeftOutline,
+        RightOutline,
+        StopOutline,
+        AlertFill,
+        DeleteFill,
+        PauseCircleFill
       ]
     );
-    this.iconService.addIcon(...[MoreOutline, PlusOutline, EyeOutline, EditOutline, DeleteOutline]);
+
     effect(() => {
       this.isDarkTheme(this.themeService.isDarkMode());
     });
   }
+
   ngOnInit(): void {
     this.loadBuildingsAndManagerDashboard();
     this.loadRecentPayments();
-  }
-    private isDarkTheme(isDark: boolean) {
-    this.backgroundColor = isDark ? 'bg-gray-800' : 'bg-gray-200';
+    this.loadCurrentMonthPayments();
   }
 
-  loadBuildingsAndManagerDashboard() {
-    this.buildingService.getMyManagedBuildings().subscribe({
-      next: (buildings) => {
-        if (buildings && buildings.length > 0) {
-          console.log('Buildings:', buildings);
-          this.buildingId = buildings[0].id; // default το πρώτο
-          this.loadDashboard();
-        } else {
-          console.warn('Δεν βρέθηκαν πολυκατοικίες για τον διαχειριστή');
-        }
-      },
-      error: (err) => {
-        console.error('Σφάλμα κατά τη λήψη των πολυκατοικιών διαχειριστή', err);
-      }
-    });
+  private isDarkTheme(isDark: boolean) {
+    this.backgroundColor = isDark ? 'bg-gray-800' : 'bg-gray-200';
   }
 
   loadDashboard() {
     if (!this.buildingId) return;
+
     this.managerDashboardService.getDashboardForBuilding(this.buildingId).subscribe({
       next: (data) => {
         console.log('Dashboard data:', data);
+        console.log('Monthly stats:', data.monthlyStats);
+
         this.dashboardData = data;
+
+        //Αν το backend επιστρέφει αναλυτικά monthlyStats
+        if (data.monthlyStats && data.monthlyStats.length > 0) {
+          const totalIssued = data.monthlyStats.reduce((sum, m) => sum + (m.issued || 0), 0);
+          const totalPaid = data.monthlyStats.reduce((sum, m) => sum + (m.paid || 0), 0);
+          const totalExpired = data.monthlyStats.reduce((sum, m) => sum + (m.expired || 0), 0);
+
+          this.totalCount = totalIssued;
+          this.paidCount = totalPaid;
+          this.expiredCount = totalExpired;
+
+          //Εκκρεμή = Εκδοθέντα - (Πληρωμένα + Ληξιπρόθεσμα)
+          this.pendingCount = Math.max(totalIssued - (totalPaid + totalExpired), 0);
+        } else {
+          //fallback στα συνολικά του backend (χωρίς draft στα pending)
+          const issued = data.totalIssued || 0;
+          const paid = data.totalPaid || 0;
+          const expired = data.totalExpired || 0;
+
+          this.totalCount = issued;
+          this.paidCount = paid;
+          this.expiredCount = expired;
+          this.pendingCount = Math.max(issued - (paid + expired), 0);
+        }
+
+        //υπόλοιπα σταθερά
+        this.closedCount = data.totalCancelled || 0;
+        this.draftCount = data.totalDraft || 0;
+
+        console.log('Counts (final):', {
+          total: this.totalCount,
+          paid: this.paidCount,
+          pending: this.pendingCount,
+          expired: this.expiredCount,
+          cancelled: this.closedCount,
+          draft: this.draftCount
+        });
       },
       error: (err) => console.error('Σφάλμα φόρτωσης dashboard', err)
     });
@@ -116,19 +174,11 @@ export class InvoiceDashboardComponent implements OnInit {
 
   goToTab(tabId: number) {
     console.log('Μετάβαση στην καρτέλα:', tabId);
+    this.activeTab = tabId;
     this.tabNav.goToTab(tabId);
-
     setTimeout(() => {
-      const element = document.getElementById('invoice-section');
-      if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('invoice-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 100);
-  }
-
-  scrollToInvoices() {
-    document.querySelector('#invoice-section')?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start'
-    });
   }
 
   loadRecentPayments(): void {
@@ -139,94 +189,94 @@ export class InvoiceDashboardComponent implements OnInit {
     });
   }
 
-  notificationList = [
-    {
-      title: 'Johnny sent you an invoice billed',
-      link: true,
-      linkValue: '$1,000',
-      date: '2 August',
-      icon: 'download',
-      background: 'bg-light-success',
-      text: false
-    },
-    {
-      title: 'Sent an invoice to Aida Bugg amount of',
-      link: true,
-      linkValue: '$200',
-      date: '7 hours ago',
-      icon: 'file-text',
-      background: 'bg-light-primary',
-      text: false
-    },
-    {
-      title: 'There was a failure to your setup',
-      link: false,
-      date: '5 hours ago',
-      icon: 'setting',
-      background: 'bg-light-danger',
-      text: false
-    },
-    {
-      title: 'Cristina danny invited to you join Meetingp',
-      link: false,
-      date: '6 hours ago',
-      background: 'bg-light-primary',
-      text: true
-    },
-    {
-      title: 'Cristina danny invited to you join Meetingp',
-      link: false,
-      date: '5 hours ago',
-      background: 'bg-light-primary',
-      text: true
+  loadCurrentMonthPayments(): void {
+    if (!this.buildingId) return;
+    this.paymentsLoading = true;
+    this.paymentService.getCurrentMonthByBuilding(this.buildingId).subscribe({
+      next: (data) => {
+        this.statementUserPayments = data;
+        this.paymentsLoading = false;
+      },
+      error: (err) => {
+        console.error('Σφάλμα φόρτωσης πληρωμών τρέχοντος μήνα', err);
+        this.paymentsLoading = false;
+      }
+    });
+  }
+
+  loadBuildingsAndManagerDashboard() {
+    this.buildingService.getMyManagedBuildings().subscribe({
+      next: (buildings) => {
+        if (buildings && buildings.length > 0) {
+          this.managedBuildings = buildings;
+          this.setCurrentBuilding(0);
+        } else {
+          console.warn('Δεν βρέθηκαν πολυκατοικίες για τον διαχειριστή');
+        }
+      },
+      error: (err) => console.error('Σφάλμα κατά τη λήψη πολυκατοικιών', err)
+    });
+  }
+
+  setCurrentBuilding(index: number) {
+    this.currentBuildingIndex = index;
+    this.currentBuilding = this.managedBuildings[index];
+    this.buildingId = this.currentBuilding.id;
+
+    this.dashboardData = undefined;
+    this.recentPayments = [];
+    this.statementUserPayments = [];
+
+    console.log('Επιλέχθηκε πολυκατοικία:', this.currentBuilding.name);
+    this.loadDashboard();
+    this.loadRecentPayments();
+    this.loadCurrentMonthPayments();
+  }
+
+  translateStatus(status: string): string {
+    switch (status) {
+      case 'PAID':
+        return 'Πληρωμένο';
+      case 'PARTIALLY_PAID':
+        return 'Μερικώς πληρωμένο';
+      case 'PENDING':
+      case 'UNPAID':
+        return 'Σε εκκρεμότητα';
+      default:
+        return 'Άγνωστη κατάσταση';
     }
-  ];
-  
-  transactionsHistoryList = [
-    {
-      image: 'assets/images/user/avatar-1.jpg',
-      name: 'John lu',
-      category: 'Salary Payment',
-      date: '2023/02/07',
-      time: '09:05 PM',
-      amount: '$950.54',
-      status: 'completed'
-    },
-    {
-      image: 'assets/images/user/avatar-2.jpg',
-      name: 'Ashton Cox',
-      category: 'Project Payment',
-      date: '2023/02/01',
-      time: '02:14 PM',
-      amount: '$520.30',
-      status: 'completed'
-    },
-    {
-      image: 'assets/images/user/avatar-3.jpg',
-      name: 'Bradley Greer',
-      category: 'You Tube Subscribe',
-      date: '2023/01/22',
-      time: '10:32 AM',
-      amount: '$100.00',
-      status: 'pending'
-    },
-    {
-      image: 'assets/images/user/avatar-4.jpg',
-      name: 'Brielle Williamson',
-      category: 'Slary Payment',
-      date: '2023/02/07',
-      time: '09:05 PM',
-      amount: '$760.25',
-      status: 'progress'
-    },
-    {
-      image: 'assets/images/user/avatar-5.jpg',
-      name: 'Airi Satou',
-      category: 'Spotify Subscribe',
-      date: '2023/02/07',
-      time: '09:05 PM',
-      amount: '$60.05',
-      status: 'canceled'
+  }
+
+  translatePaymentMethod(method: string): string {
+    switch (method) {
+      case 'CASH':
+        return 'Μετρητά';
+      case 'BANK_TRANSFER':
+        return 'Τραπεζική μεταφορά';
+      case 'CARD':
+        return 'Κάρτα';
+      case 'ONLINE':
+        return 'Ηλεκτρονική πληρωμή';
+      default:
+        return '-';
     }
-  ];
+  }
+
+  getFloorLabel(floor: string | number | null): string {
+    if (!floor) return '';
+    const map: Record<string, string> = {
+      '0': 'Ι',
+      '1': 'Α',
+      '2': 'Β',
+      '3': 'Γ',
+      '4': 'Δ',
+      '5': 'Ε',
+      '6': 'ΣΤ',
+      '7': 'Ζ',
+      '8': 'Η',
+      '9': 'Θ',
+      '10': 'Ι'
+    };
+    return map[floor.toString()] || floor.toString();
+  }
 }
