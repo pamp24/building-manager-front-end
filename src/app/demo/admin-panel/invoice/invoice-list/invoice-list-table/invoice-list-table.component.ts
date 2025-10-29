@@ -1,25 +1,18 @@
-// angular import
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, OnChanges, Output, EventEmitter } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
-
-// project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-
-// icon service
-import { DeleteOutline, EditOutline, EyeOutline, CaretDownOutline, CaretUpOutline } from '@ant-design/icons-angular/icons';
-
 import { IconService } from '@ant-design/icons-angular';
-import { CommonExpenseStatement } from '../../../../../theme/shared/models/commonExpenseStatement';
-import { CommonExpenseStatementService } from '../../../../../theme/shared/service/commonExpensesStatement.service';
-import { SortDirection } from '../../../../../theme/shared/directive/sortable.directive';
+import { DeleteOutline, EditOutline, EyeOutline, CaretDownOutline, CaretUpOutline } from '@ant-design/icons-angular/icons';
+import { CommonExpenseStatement } from 'src/app/theme/shared/models/commonExpenseStatement';
+import { CommonExpenseStatementService } from 'src/app/theme/shared/service/commonExpensesStatement.service';
+import { SortDirection } from 'src/app/theme/shared/directive/sortable.directive';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { StatementViewComponent } from './statement-view/statement-view.component';
-import { OnChanges } from '@angular/core';
-import { PaymentService } from '../../../../../theme/shared/service/payment.service';
-import { StatementUserPaymentDTO } from '../../../../../theme/shared/models/StatementUserPaymentDTO';
+import { PaymentService } from 'src/app/theme/shared/service/payment.service';
+import { StatementUserPaymentDTO } from 'src/app/theme/shared/models/StatementUserPaymentDTO';
 import { StatementPaymentComponent } from './statement-payment/statement-payment.component';
-import { PaymentDTO } from '../../../../../theme/shared/models/paymentDTO';
+import { PaymentDTO } from 'src/app/theme/shared/models/paymentDTO';
 
 @Component({
   selector: 'app-invoice-list-table',
@@ -30,7 +23,10 @@ import { PaymentDTO } from '../../../../../theme/shared/models/paymentDTO';
 })
 export class InvoiceListTableComponent implements OnChanges {
   private iconService = inject(IconService);
+
   @Input() statements: CommonExpenseStatement[] = [];
+  @Output() refreshRequested = new EventEmitter<void>();
+  Math = Math;
 
   filteredStatements: CommonExpenseStatement[] = [];
   loading = false;
@@ -61,13 +57,13 @@ export class InvoiceListTableComponent implements OnChanges {
   }
 
   ngOnChanges() {
-    this.applyFilters(); // κάθε φορά που αλλάζει το Input ξαναφιλτράρουμε
+    this.applyFilters();
   }
 
   applyFilters() {
     let result = [...this.statements];
 
-    // φιλτράρισμα
+    // Φιλτράρισμα
     if (this.searchTerm) {
       const term = this.searchTerm.toLowerCase();
       result = result.filter(
@@ -79,25 +75,21 @@ export class InvoiceListTableComponent implements OnChanges {
       );
     }
 
-    // ταξινόμηση
+    // Ταξινόμηση
     if (this.sortColumn && this.sortDirection) {
       result.sort((a, b) => {
-        if (this.sortColumn) {
-          const valA = a[this.sortColumn as keyof CommonExpenseStatement] ?? '';
-          const valB = b[this.sortColumn as keyof CommonExpenseStatement] ?? '';
-          if (valA < valB) return this.sortDirection === 'asc' ? -1 : 1;
-          if (valA > valB) return this.sortDirection === 'asc' ? 1 : -1;
-        }
+        const column = this.sortColumn as keyof CommonExpenseStatement;
+        const valA = a[column] ?? '';
+        const valB = b[column] ?? '';
+        if (valA < valB) return this.sortDirection === 'asc' ? -1 : 1;
+        if (valA > valB) return this.sortDirection === 'asc' ? 1 : -1;
         return 0;
       });
     }
 
     this.total = result.length;
-
-    // pagination
     const start = (this.page - 1) * this.pageSize;
-    const end = start + this.pageSize;
-    this.filteredStatements = result.slice(start, end);
+    this.filteredStatements = result.slice(start, start + this.pageSize);
   }
 
   onSearchChange() {
@@ -112,7 +104,6 @@ export class InvoiceListTableComponent implements OnChanges {
 
   onSort(column: keyof CommonExpenseStatement) {
     if (this.sortColumn === column) {
-      // toggle asc/desc
       this.sortDirection = this.sortDirection === 'asc' ? 'desc' : this.sortDirection === 'desc' ? '' : 'asc';
     } else {
       this.sortColumn = column;
@@ -132,7 +123,7 @@ export class InvoiceListTableComponent implements OnChanges {
       case 'PAID':
         return 'Πληρώθηκε';
       case 'ISSUED':
-        return 'Εκδόθηκε';
+        return 'Εκκρεμεί';
       case 'EXPIRED':
         return 'Έληξε';
       case 'CLOSED':
@@ -143,14 +134,26 @@ export class InvoiceListTableComponent implements OnChanges {
         return 'Μερικώς Πληρωμένο';
       case 'PENDING':
         return 'Εκκρεμεί';
-
       default:
         return status ?? '';
     }
   }
-  // Ενέργειες
+  translatePaymentMethod(method: string): string {
+    switch (method) {
+      case 'CASH':
+        return 'Μετρητά';
+      case 'BANK_TRANSFER':
+        return 'Τραπεζική μεταφορά';
+      case 'CARD':
+        return 'Κάρτα';
+      case 'ONLINE':
+        return 'Ηλεκτρονική πληρωμή';
+      default:
+        return '-';
+    }
+  }
+
   onView(statement: CommonExpenseStatement) {
-    console.log('Modal statement:', statement);
     const modalRef = this.modalService.open(StatementViewComponent, { size: 'xl' });
     modalRef.componentInstance.statement = statement;
   }
@@ -160,36 +163,43 @@ export class InvoiceListTableComponent implements OnChanges {
   }
 
   onDelete(statement: CommonExpenseStatement) {
-    console.log('Διαγραφή:', statement);
-    if (statement.id === undefined) {
-      console.error('Το παραστατικό δεν έχει id και δεν μπορεί να διαγραφεί.');
-      return;
+  if (!statement.id) return;
+
+  const confirmed = confirm(`Είσαι σίγουρος ότι θέλεις να ακυρώσεις το παραστατικό ${statement.code};`);
+  if (!confirmed) return;
+
+  this.commonStatementService.deleteStatement(statement.id).subscribe({
+    next: () => {
+      // Ενημέρωσε το αντικείμενο τοπικά
+      statement.status = 'CLOSED';
+      statement.active = false;
+
+      // Ενημέρωσε τη λίστα
+      this.applyFilters();
+
+      //Πες στον parent component να κάνει refresh από το backend
+      this.refreshRequested.emit();
+
+      alert('Το παραστατικό ακυρώθηκε επιτυχώς.');
+    },
+    error: (err) => {
+      console.error('Σφάλμα διαγραφής:', err);
+      alert('Παρουσιάστηκε σφάλμα κατά την ακύρωση του παραστατικού.');
     }
-    if (confirm('Είσαι σίγουρος ότι θέλεις να διαγράψεις αυτό το παραστατικό;')) {
-      this.commonStatementService.deleteStatement(statement.id).subscribe({
-        next: () => {
-          console.log('Διαγράφηκε');
-          this.statements = this.statements.filter((s) => s.id !== statement.id);
-        },
-        error: (err) => console.error('Σφάλμα διαγραφής:', err)
-      });
-    }
-  }
+  });
+}
+
 
   togglePayments(statementId: number) {
-    // Αν ήδη είναι ανοιχτό αυτό το statement → το κλείνουμε
     if (this.expandedStatementId === statementId) {
       this.expandedStatementId = null;
       this.statementUserPayments = [];
       return;
     }
 
-    // Κλείνουμε όποιο άλλο ήταν ανοιχτό
     this.expandedStatementId = statementId;
     this.paymentsLoading = true;
-    this.statementUserPayments = [];
 
-    // Κάνουμε call στο backend
     this.paymentService.getUserPaymentsByStatement(statementId).subscribe({
       next: (data) => {
         this.statementUserPayments = data;
@@ -202,64 +212,39 @@ export class InvoiceListTableComponent implements OnChanges {
     });
   }
 
-  getFloorLabel(floor: string) {
-    const f = String(floor);
-
-    if (f === 'Ισόγειο') return 'Ι';
-    if (f === 'Υπόγειο') return 'Υ';
-    if (f === 'Ημιόροφος') return `H`;
-    else return f;
+  getFloorLabel(floor: string): string {
+    const map: Record<string, string> = {
+      Ισόγειο: 'Ι',
+      Υπόγειο: 'Υ',
+      Ημιόροφος: 'Η'
+    };
+    return map[floor] ?? floor;
   }
 
   onEditUser(payment: StatementUserPaymentDTO): void {
-    console.log('Επιλεγμένη πληρωμή:', payment);
-
     if (payment.status === 'PAID') {
       alert('Ο χρήστης έχει ήδη εξοφλήσει πλήρως αυτό το παραστατικό.');
       return;
     }
 
     const modalRef = this.modalService.open(StatementPaymentComponent, { size: 'md', backdrop: 'static' });
-
-    modalRef.componentInstance.payment = {
-      ...payment,
-      statementId: this.expandedStatementId
-    };
+    modalRef.componentInstance.payment = { ...payment, statementId: this.expandedStatementId };
 
     modalRef.componentInstance.paymentSaved.subscribe((req: PaymentDTO) => {
-      // === Spinner ===
       this.paymentsLoading = true;
-      console.log('🔄 Αποστολή πληρωμής στο backend:', req);
-
       this.paymentService.createPayment(req).subscribe({
         next: () => {
-          console.log('✅ Πληρωμή αποθηκεύτηκε με επιτυχία.');
+          const currentStatement = this.statements.find((s) => s.id === this.expandedStatementId);
+          if (!currentStatement?.buildingId) return;
 
-          // === 1️⃣ Επαναφόρτωση πληρωμών για αυτό το statement ===
           this.paymentService.getUserPaymentsByStatement(this.expandedStatementId!).subscribe({
             next: (paymentsData) => {
               this.statementUserPayments = paymentsData;
-
-              // === 2️⃣ Επαναφόρτωση statements για ενημέρωση status & ποσών ===
-              const currentStatement = this.statements.find((s) => s.id === this.expandedStatementId);
-              if (!currentStatement?.buildingId) {
-                console.error('Δεν βρέθηκε buildingId για το παραστατικό');
-                this.paymentsLoading = false;
-                return;
-              }
-
-              this.commonStatementService.getStatementsByBuilding(currentStatement.buildingId).subscribe({
-                next: (statementsData) => {
-                  this.statements = statementsData;
-                  this.applyFilters(); // φιλτράρισμα/ταξινόμηση
-
+              this.commonStatementService.getStatementsByBuilding(currentStatement.buildingId!).subscribe({
+                next: (data) => {
+                  this.statements = data;
+                  this.applyFilters();
                   this.paymentsLoading = false;
-
-                  // === Highlight γραμμής ===
-                  const highlightId = req.userId || payment.apartmentId;
-                  this.highlightRow = highlightId;
-                  setTimeout(() => (this.highlightRow = null), 1500);
-
                   alert('Η πληρωμή καταχωρήθηκε με επιτυχία!');
                 },
                 error: (err) => {
@@ -269,19 +254,14 @@ export class InvoiceListTableComponent implements OnChanges {
               });
             },
             error: (err) => {
-              console.error('Σφάλμα επαναφόρτωσης πληρωμών:', err);
+              console.error('Σφάλμα φόρτωσης πληρωμών:', err);
               this.paymentsLoading = false;
             }
           });
         },
         error: (err) => {
-          this.paymentsLoading = false;
           console.error('Σφάλμα αποθήκευσης πληρωμής:', err);
-          if (err.error?.message?.includes('already fully paid')) {
-            alert('Ο χρήστης έχει ήδη εξοφλήσει πλήρως αυτό το παραστατικό.');
-          } else {
-            alert('Σφάλμα κατά την αποθήκευση της πληρωμής.');
-          }
+          this.paymentsLoading = false;
         }
       });
     });

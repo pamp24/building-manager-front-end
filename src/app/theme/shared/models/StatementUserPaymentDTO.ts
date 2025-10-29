@@ -1,6 +1,7 @@
 export interface StatementUserPaymentDTO {
   userId: number;
-  userFullName: string;
+  userFirstName: string;
+  userLastName: string;
   apartmentId: number | null;
   apartmentNumber: string;
   apartmentFloor: string;

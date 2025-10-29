@@ -47,7 +47,7 @@ export class UserCardComponent implements OnInit {
   currentPage = 1;
   pageSize = 1;
   total = 0;
-
+  messageApartments = '';
   // Constructor
   constructor(
     apartmentService: ApartmentService,
@@ -78,37 +78,55 @@ export class UserCardComponent implements OnInit {
       error: (err) => console.error('Σφάλμα φόρτωσης πολυκατοικιών:', err)
     });
   }
-  // 🔹 Βήμα 2: φόρτωση στοιχείων μίας πολυκατοικίας
+  //Βήμα 2: φόρτωση στοιχείων μίας πολυκατοικίας
   private loadBuildingData(buildingId: number) {
-    this.buildingService.getBuilding(buildingId).subscribe((building) => {
-      this.buildingName = building.name;
-      this.buildingAddress = `${building.street1} ${building.stNumber1}, ${building.city}`;
+    this.buildingService.getBuilding(buildingId).subscribe({
+      next: (building) => {
+        this.buildingName = building.name;
+        this.buildingAddress = `${building.street1} ${building.stNumber1}, ${building.city}`;
 
-      // φέρε τα διαμερίσματα του συγκεκριμένου building
-      this.apartmentService.getApartmentsByBuilding(buildingId).subscribe((data) => {
-        this.card_detail = data.map((ap) => ({
-          apartment: ap,
-          name: ap.ownerLastName && ap.ownerFirstName ? `${ap.ownerLastName} ${ap.ownerFirstName}` : 'Άγνωστο Όνομα',
-          position: `Διαμ. ${ap.number}, Όροφος ${ap.floor}`,
-          src: 'assets/images/user/avatar-1.jpg',
-          description: ap.apDescription || 'Δεν υπάρχει περιγραφή',
-          email: ap.ownerEmail || 'Δεν είναι διαθέσιμο',
-          phone: ap.ownerPhone || 'Δεν είναι διαθέσιμο',
-          street: ap.ownerStreet || 'Δεν είναι διαθέσιμο',
-          streetNumber: ap.ownerStreetNumber || 'Δεν είναι διαθέσιμο',
-          buildingName: ap.buildingName || 'Δεν είναι διαθέσιμο',
-          buildingStreet: ap.buildingStreet || 'Δεν είναι διαθέσιμο',
-          buildingStreetNumber: ap.buildingStreetNumber || '',
-          buildingCity: ap.buildingCity || 'Άγνωστη Πόλη',
-          city: ap.ownerCity || 'Άγνωστη Πόλη',
-          lastModifiedDate: ap.lastModifiedDate || 'Άγνωστη ημερομηνία',
-          user_skill: [
-            { skill: 'Χιλιοστά κοινοχρήστων: ' + ap.commonPercent },
-            { skill: 'Χιλιοστά Ασανσέρ: ' + ap.elevatorPercent },
-            { skill: 'Χιλιοστά Θέρμανσης: ' + ap.heatingPercent }
-          ]
-        }));
-      });
+        // Φέρε τα διαμερίσματα του συγκεκριμένου building
+        this.apartmentService.getApartmentsByBuilding(buildingId).subscribe({
+          next: (data) => {
+            this.card_detail = data.map((ap) => ({
+              apartment: ap,
+              name: ap.ownerLastName && ap.ownerFirstName ? `${ap.ownerLastName} ${ap.ownerFirstName}` : 'Άγνωστο Όνομα',
+              position: `Διαμ. ${ap.number}, Όροφος ${ap.floor}`,
+              src: 'assets/images/user/avatar-1.jpg',
+              description: ap.apDescription || 'Δεν υπάρχει περιγραφή',
+              email: ap.ownerEmail || 'Δεν είναι διαθέσιμο',
+              phone: ap.ownerPhone || 'Δεν είναι διαθέσιμο',
+              street: ap.ownerStreet || 'Δεν είναι διαθέσιμο',
+              streetNumber: ap.ownerStreetNumber || 'Δεν είναι διαθέσιμο',
+              buildingName: ap.buildingName || 'Δεν είναι διαθέσιμο',
+              buildingStreet: ap.buildingStreet || 'Δεν είναι διαθέσιμο',
+              buildingStreetNumber: ap.buildingStreetNumber || '',
+              buildingCity: ap.buildingCity || 'Άγνωστη Πόλη',
+              city: ap.ownerCity || 'Άγνωστη Πόλη',
+              lastModifiedDate: ap.lastModifiedDate || 'Άγνωστη ημερομηνία',
+              user_skill: [
+                { skill: 'Χιλιοστά κοινοχρήστων: ' + ap.commonPercent },
+                { skill: 'Χιλιοστά Ασανσέρ: ' + ap.elevatorPercent },
+                { skill: 'Χιλιοστά Θέρμανσης: ' + ap.heatingPercent }
+              ]
+            }));
+
+            //Αν δεν υπάρχουν καθόλου διαμερίσματα → εμφάνισε μήνυμα
+            if (data.length === 0) {
+              this.messageApartments = 'Δεν υπάρχουν ακόμα καταχωρημένα διαμερίσματα σε αυτήν την πολυκατοικία.';
+            } else {
+              this.messageApartments = '';
+            }
+          },
+          error: (err) => {
+            console.error('Σφάλμα φόρτωσης διαμερισμάτων:', err);
+            this.messageApartments = 'Αποτυχία φόρτωσης διαμερισμάτων.';
+          }
+        });
+      },
+      error: (err) => {
+        console.error('Σφάλμα φόρτωσης πολυκατοικίας:', err);
+      }
     });
   }
 

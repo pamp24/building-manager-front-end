@@ -4,6 +4,7 @@ import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } fr
 import { ApartmentService, ApartmentRequest } from 'src/app/theme/shared/service/apartment.service';
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
 import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-new-apartment',
@@ -29,7 +30,8 @@ export class NewApartmentComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private apartmentService: ApartmentService,
-    private buildingService: BuildingService
+    private buildingService: BuildingService,
+    public activeModal: NgbActiveModal
   ) {}
 
   ngOnInit(): void {
@@ -49,8 +51,33 @@ export class NewApartmentComponent implements OnInit {
       this.parkingLimit = building.parkingSpacesNum || 0;
       this.storageLimit = building.storageNum || 0;
       this.currentManagerHouseUsed = building.managerHouseExist || false;
+      this.updateFormControlsState();
     });
   }
+  private updateFormControlsState(): void {
+  this.apartments.controls.forEach((group) => {
+    // Parking
+    if (this.currentUsedParking >= this.parkingLimit) {
+      group.get('hasParking')?.disable({ emitEvent: false });
+    } else {
+      group.get('hasParking')?.enable({ emitEvent: false });
+    }
+
+    // Storage
+    if (this.currentUsedStorages >= this.storageLimit) {
+      group.get('hasStorage')?.disable({ emitEvent: false });
+    } else {
+      group.get('hasStorage')?.enable({ emitEvent: false });
+    }
+
+    // Manager house
+    if (this.currentManagerHouseUsed) {
+      group.get('isManagerHouse')?.disable({ emitEvent: false });
+    } else {
+      group.get('isManagerHouse')?.enable({ emitEvent: false });
+    }
+  });
+}
 
   // === Helpers ===
   get apartments(): FormArray {
@@ -58,6 +85,9 @@ export class NewApartmentComponent implements OnInit {
   }
 
   createApartmentGroup(): FormGroup {
+    const hasParkingDisabled = this.currentUsedParking >= this.parkingLimit;
+    const hasStorageDisabled = this.currentUsedStorages >= this.storageLimit;
+
     return this.fb.group({
       ownerFirstName: ['', [Validators.required, Validators.minLength(3)]],
       ownerLastName: ['', [Validators.required, Validators.minLength(3)]],
@@ -67,12 +97,12 @@ export class NewApartmentComponent implements OnInit {
       apartmentNumber: ['', Validators.required],
       floor: ['', Validators.required],
       sqMetersApart: ['', [Validators.required, Validators.min(1)]],
-      hasParking: ['', Validators.required],
+      hasParking: [{ value: '', disabled: hasParkingDisabled }, Validators.required],
       parkingSlot: [''],
       commonPercent: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
       elevatorPercent: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
       heatingPercent: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
-      hasStorage: [false],
+      hasStorage: [{ value: '', disabled: hasStorageDisabled}, Validators.required],
       storageSlot: [''],
       isManagerHouse: [false]
     });
@@ -87,15 +117,14 @@ export class NewApartmentComponent implements OnInit {
     this.apartments.removeAt(index);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onCancel(modal?: any): void {
-    if (confirm('Είστε σίγουρος ότι θέλετε να ακυρώσετε;')) {
-      this.form.reset();
-      this.apartments.clear();
-      this.apartments.push(this.createApartmentGroup());
-      if (modal) modal.dismiss();
-    }
+  onCancel(): void {
+  if (confirm('Είστε σίγουρος ότι θέλετε να ακυρώσετε;')) {
+    this.form.reset();
+    this.apartments.clear();
+    this.apartments.push(this.createApartmentGroup());
+    this.activeModal.dismiss(); 
   }
+}
 
   onFinish(): void {
     this.isSubmitted = true;
@@ -132,7 +161,6 @@ export class NewApartmentComponent implements OnInit {
     });
   }
 
-  // === Utils ===
   // === Utils ===
   private generateFloors(building: BuildingDTO): string[] {
     const result: string[] = [];

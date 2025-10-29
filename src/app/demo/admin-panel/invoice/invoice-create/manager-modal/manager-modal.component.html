@@ -69,23 +69,6 @@
               </div>
             </div>
           </div>
-          @for (details of inputList; track $index) {
-            <div class="mb-3 row">
-              <label class="col-lg-4 col-form-label">
-                {{ details.label }} :
-                <small class="text-muted d-block">{{ details.subTitle }}</small>
-              </label>
-              <div class="col-lg-8">
-                <input type="{{ details.type }}" class="form-control" />
-              </div>
-            </div>
-          }
-          <div class="mb-3">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="checkaddres" checked />
-              <label class="form-check-label" for="checkaddres">Αποθήκευση και για επόμενες χρήσεις</label>
-            </div>
-          </div>
           <div class="text-end btn-page mb-0 mt-4">
             <button class="btn btn-outline-secondary" type="button" (click)="cancel()">Άκυρο</button>
             <button class="btn btn-primary" (click)="close()">Αποθήκευση και επιλογή</button>
@@ -96,13 +79,6 @@
   </div>
   @if (isCollapsed === false) {
     <div class="modal-footer justify-content-between">
-      <ul class="list-inline me-auto mb-0">
-        <li class="list-inline-item align-bottom">
-          <!-- <a href="javascript:" class="avatar avatar-s btn-link-danger w-sm-auto" (click)="close()" ngbTooltip="Delete">
-            <i class="d-flex f-18" antIcon type="delete" theme="outline"></i>
-          </a> -->
-        </li>
-      </ul>
       <div class="flex-grow-1 text-end">
         <button type="button" class="btn btn-link-danger me-2" (click)="cancel()">Άκυρο</button>
         <button type="button" class="btn btn-primary" (click)="close()">Αποθήκευση</button>

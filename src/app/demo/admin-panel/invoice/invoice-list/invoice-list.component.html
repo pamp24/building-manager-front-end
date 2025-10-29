@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-xxl-8">
     <div class="row g-3 mb-3">
-      @for (cards of widgetCards; track cards) {
+      @for (cards of widgetCards; track cards.title) {
         <div class="col-md-6 col-lg-4">
           <div class="card mb-0">
             <div class="card-body">
@@ -46,19 +46,15 @@
             <p class="mb-0 text-white">Συνολικό Ποσό Εκκρεμών Πληρωμών</p>
             <p class="mb-0 text-white text-sm">
               Τελευταία Ημερομηνία Λήξης:
-              {{ summary?.lastDueDate | date: 'dd/MM/yyyy' }}
+              <strong>
+                {{ summary?.lastDueDate ? (summary.lastDueDate | date: 'longDate') : 'Χωρίς Εκκρεμείς Πληρωμές' }}
+              </strong>
             </p>
           </div>
         </div>
-        <div class="text-end">
-          <p class="mb-0 text-white text-sm">Απομένουν</p>
-          <p class="mb-0 text-white">{{ summary?.totalPending | number: '1.2-2' }} €</p>
-        </div>
       </div>
 
-      <h4 class="mt-3 text-white mb-1">
-        {{ summary?.totalAmount | currency: 'EUR' : 'symbol' : '1.2-2' }}
-      </h4>
+      <h4 class="mt-3 text-white mb-1">Απομένουν - {{ summary?.totalAmount | currency: 'EUR' : 'symbol' : '1.2-2' }}</h4>
 
       <div class="d-flex align-items-center">
         <div class="flex-grow-1 me-3">
@@ -70,6 +66,7 @@
       </div>
     </app-card>
   </div>
+
   <div class="col-12">
     <div class="card">
       <div class="card-body pb-0">
@@ -80,7 +77,7 @@
               <span class="avatar bg-light-primary lh-1">{{ totalCount }}</span>
             </button>
             <ng-template ngbNavContent>
-              <app-invoice-list-table [statements]="statements" />
+              <app-invoice-list-table [statements]="statements" (refreshRequested)="reloadStatements()" />
             </ng-template>
           </li>
 
@@ -90,27 +87,27 @@
               <span class="avatar bg-light-success lh-1">{{ paidCount }}</span>
             </button>
             <ng-template ngbNavContent>
-              <app-invoice-list-table [statements]="paidStatements" />
+              <app-invoice-list-table [statements]="paidStatements" (refreshRequested)="reloadStatements()" />
             </ng-template>
           </li>
 
           <li [ngbNavItem]="3">
             <button ngbNavLink>
-              Εκδόθηκε
+              Εκκρεμούν
               <span class="avatar bg-light-warning lh-1">{{ pendingCount }}</span>
             </button>
             <ng-template ngbNavContent>
-              <app-invoice-list-table [statements]="pendingStatements" />
+              <app-invoice-list-table [statements]="pendingStatements" (refreshRequested)="reloadStatements()" />
             </ng-template>
           </li>
 
           <li [ngbNavItem]="4">
             <button ngbNavLink>
-              Έληξαν
-              <span class="avatar bg-light-danger lh-1">{{ overdueCount }}</span>
+              Ληξιπρόθεσμα
+              <span class="avatar bg-light-danger lh-1">{{ expiredCount }}</span>
             </button>
             <ng-template ngbNavContent>
-              <app-invoice-list-table [statements]="overdueStatements" />
+              <app-invoice-list-table [statements]="expiredStatements" (refreshRequested)="reloadStatements()" />
             </ng-template>
           </li>
 
@@ -120,7 +117,7 @@
               <span class="avatar bg-light-danger lh-1">{{ closedCount }}</span>
             </button>
             <ng-template ngbNavContent>
-              <app-invoice-list-table [statements]="closedStatements" />
+              <app-invoice-list-table [statements]="closedStatements" (refreshRequested)="reloadStatements()" />
             </ng-template>
           </li>
 
@@ -130,7 +127,7 @@
               <span class="avatar bg-light-primary lh-1">{{ draftCount }}</span>
             </button>
             <ng-template ngbNavContent>
-              <app-invoice-list-table [statements]="draftStatements" />
+              <app-invoice-list-table [statements]="draftStatements" (refreshRequested)="reloadStatements()" />
             </ng-template>
           </li>
         </ul>

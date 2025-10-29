@@ -18,18 +18,15 @@ import { ApartmentDTO } from 'src/app/theme/shared/models/apartmentDTO';
   styleUrls: ['./role.component.scss']
 })
 export class RoleComponent implements OnInit {
-  // Μέλη τρέχουσας πολυκατοικίας
   members: BuildingMemberDTO[] = [];
 
-  // Invite form
   emailToInvite = '';
   isSending = false;
   roleToInvite: string = '';
   apartmentToInvite: number | null = null;
   apartmentFloor: string = '';
 
-  // Building info
-  apartments: BuildingDTO[] = []; // όλες οι πολυκατοικίες του χρήστη
+  apartments: BuildingDTO[] = [];
   floorOptions: string[] = [];
   buildingName = '';
   buildingAddress = '';
@@ -37,8 +34,11 @@ export class RoleComponent implements OnInit {
   total = 0;
   currentBuildingId: number | null = null;
   buildingApartments: ApartmentDTO[] = [];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  filteredApartments: any[] = [];
+  filteredApartments: ApartmentDTO[] = [];
+
+  messageBuildings = '';
+  messageMembers = '';
+  messageApartments = '';
 
   constructor(
     private userService: UserService,
@@ -49,53 +49,57 @@ export class RoleComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Φέρε όλες τις πολυκατοικίες του χρήστη
-    this.buildingService.getMyBuildings().subscribe({
-      next: (buildings) => {
-        this.apartments = buildings;
-        this.total = buildings.length;
-
-        if (this.apartments.length > 0) {
-          const first = this.apartments[0];
-          this.currentPage = 1;
-          this.loadBuilding(first.id);
-          this.loadMembers(first.id);
-        }
-      },
-      error: (err) => console.error('Σφάλμα φόρτωσης πολυκατοικιών', err)
-    });
-    // Φόρτωση διαμερισμάτων για το select
-    if (this.currentBuildingId) {
-      this.loadApartments(this.currentBuildingId);
-    }
-    if (this.apartments.length > 0) {
-      const first = this.apartments[0];
-      this.currentPage = 1;
-      this.loadBuilding(first.id);
-      this.loadApartments(first.id); // να φορτώσει διαμερίσματα από την αρχή
-      this.loadMembers(first.id);
-    }
+    this.loadMyBuildings();
   }
 
-  // 🔹 Φόρτωση μελών
+  private loadMyBuildings(): void {
+    this.buildingService.getMyBuildings().subscribe({
+      next: (buildings) => {
+        if (!buildings || buildings.length === 0) {
+          this.messageBuildings = 'Δεν έχετε ακόμα καταχωρημένες πολυκατοικίες.';
+          this.apartments = [];
+          this.members = [];
+          this.buildingApartments = [];
+          return;
+        }
+
+        this.apartments = buildings;
+        this.total = buildings.length;
+        this.messageBuildings = '';
+
+        const first = this.apartments[0];
+        this.currentPage = 1;
+        this.loadBuilding(first.id);
+        this.loadMembers(first.id);
+      },
+      error: (err) => {
+        console.error('Σφάλμα φόρτωσης πολυκατοικιών', err);
+        this.messageBuildings = 'Παρουσιάστηκε σφάλμα κατά τη φόρτωση πολυκατοικιών.';
+      }
+    });
+  }
+
   private loadMembers(buildingId: number): void {
     this.buildingMemberService.getMembersByBuilding(buildingId).subscribe({
       next: (data) => {
         this.members = data;
         this.currentBuildingId = buildingId;
-        // Κράτα χωριστές λίστες αν χρειάζεται
-        const joined = this.members.filter((m) => m.status === 'Joined');
-        const invited = this.members.filter((m) => m.status === 'Invited');
-        console.log('Joined members:', joined);
-        console.log('Invited members:', invited);
+
+        if (this.members.length === 0) {
+          this.messageMembers = 'Δεν υπάρχουν μέλη για αυτήν την πολυκατοικία.';
+        } else {
+          this.messageMembers = '';
+        }
 
         this.loadApartments(buildingId);
       },
-      error: (err) => console.error('Σφάλμα φόρτωσης μελών', err)
+      error: (err) => {
+        console.error('Σφάλμα φόρτωσης μελών', err);
+        this.messageMembers = 'Αποτυχία φόρτωσης μελών.';
+      }
     });
   }
 
-  // 🔹 Φόρτωση πολυκατοικίας
   private loadBuilding(buildingId: number): void {
     this.buildingService.getBuilding(buildingId).subscribe({
       next: (building) => {
@@ -103,22 +107,33 @@ export class RoleComponent implements OnInit {
         this.buildingAddress = `${building.street1} ${building.stNumber1}, ${building.city}`;
         this.floorOptions = this.generateFloors(building);
       },
-      error: (err) => console.error('Σφάλμα φόρτωσης πολυκατοικίας:', err)
+      error: (err) => {
+        console.error('Σφάλμα φόρτωσης πολυκατοικίας:', err);
+      }
     });
   }
-  // 🔹 Φόρτωση διαμερισμάτων για το select
+
   private loadApartments(buildingId: number): void {
     this.apartmentService.getApartmentsByBuilding(buildingId).subscribe({
       next: (data) => {
         this.buildingApartments = data;
         this.filteredApartments = [...data];
-        this.apartmentToInvite = null; // ✅ default πρώτο
+
+        if (data.length === 0) {
+          this.messageApartments = 'Δεν υπάρχουν καταχωρημένα διαμερίσματα.';
+        } else {
+          this.messageApartments = '';
+        }
+
+        this.apartmentToInvite = null;
       },
-      error: (err) => console.error('Σφάλμα φόρτωσης διαμερισμάτων:', err)
+      error: (err) => {
+        console.error('Σφάλμα φόρτωσης διαμερισμάτων:', err);
+        this.messageApartments = 'Αποτυχία φόρτωσης διαμερισμάτων.';
+      }
     });
   }
 
-  // 🔹 Δυναμική λίστα ορόφων
   private generateFloors(building: BuildingDTO): string[] {
     const result: string[] = [];
     if (building.undergroundFloorExist) result.push('Υπόγειο');
@@ -129,12 +144,7 @@ export class RoleComponent implements OnInit {
     return result;
   }
 
-  // 🔹 Αποστολή πρόσκλησης
   sendInvite(): void {
-    console.log('email:', this.emailToInvite);
-    console.log('role:', this.roleToInvite);
-    console.log('apartment:', this.apartmentToInvite);
-
     if (!this.emailToInvite || !this.roleToInvite || !this.apartmentToInvite) {
       alert('Παρακαλώ συμπληρώστε όλα τα πεδία.');
       return;
@@ -146,13 +156,11 @@ export class RoleComponent implements OnInit {
       role: this.roleToInvite as 'Resident' | 'Owner',
       apartmentId: this.apartmentToInvite
     };
-    console.log('payload:', payload);
 
     this.userService.inviteUserToBuilding(payload).subscribe({
       next: () => {
         alert('Η πρόσκληση στάλθηκε με επιτυχία!');
         this.resetInviteForm();
-        console.log('selected apartmentId:', this.apartmentToInvite);
       },
       error: (err) => {
         alert(err.error?.message || 'Απέτυχε η αποστολή πρόσκλησης.');
@@ -169,7 +177,6 @@ export class RoleComponent implements OnInit {
     this.isSending = false;
   }
 
-  // 🔹 Μεταφράσεις
   getTranslatedRole(role: string): string {
     switch (role) {
       case 'Owner':
@@ -191,6 +198,7 @@ export class RoleComponent implements OnInit {
       case 'ACCEPTED':
         return 'Μέλος';
       case 'PENDING':
+      case 'Invited':
         return 'Προσκεκλημένος';
       case 'EXPIRED':
         return 'Έληξε';
@@ -201,16 +209,14 @@ export class RoleComponent implements OnInit {
     }
   }
 
-  // 🔹 Έλεγχος αν είναι admin σε αυτήν την πολυκατοικία
   canInvite(): boolean {
     if (!this.currentBuildingId) return false;
     const user = this.authService.currentUserValue;
-    // ψάχνουμε στο members αν ο τρέχων χρήστης έχει admin ρόλο
     const me = this.members.find((m) => m.email === user?.email);
     return me?.role === 'BuildingManager' || me?.role === 'PropertyManager';
   }
 
-  onRoleChange() {
+  onRoleChange(): void {
     if (this.roleToInvite === 'Owner') {
       this.filteredApartments = this.buildingApartments.filter((ap) => !ap.ownerId);
     } else if (this.roleToInvite === 'Resident') {
@@ -218,12 +224,10 @@ export class RoleComponent implements OnInit {
     } else {
       this.filteredApartments = [];
     }
-
-    this.apartmentToInvite = null; // πάντα reset
+    this.apartmentToInvite = null;
   }
 
-  // 🔹 Pagination αλλαγή σελίδας (άλλη πολυκατοικία)
-  onPageChange(page: number) {
+  onPageChange(page: number): void {
     this.currentPage = page;
     const selectedBuilding = this.apartments[page - 1];
     if (selectedBuilding) {

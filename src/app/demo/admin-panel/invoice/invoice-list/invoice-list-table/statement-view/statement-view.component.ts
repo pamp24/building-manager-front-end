@@ -37,42 +37,43 @@ export class StatementViewComponent implements OnChanges, OnInit {
   ) {}
 
   ngOnInit() {
-  if (!this.statement) return;
+    if (!this.statement) return;
 
-  // Από -> Φόρτωσε το κτίριο + manager
-  if (this.statement.buildingId) {
-    this.buildingService.getBuilding(this.statement.buildingId).subscribe((b: BuildingDTO) => {
-      this.selectedBuilding = b;
-      this.manager = b.manager; // έρχεται από backend
-    });
-  }
+    // Από -> Φόρτωσε το κτίριο + manager
+    if (this.statement.buildingId) {
+      this.buildingService.getBuilding(this.statement.buildingId).subscribe((b: BuildingDTO) => {
+        this.selectedBuilding = b;
+        this.manager = b.manager; // έρχεται από backend
+      });
+    }
 
-  // Προς -> Όλα τα διαμερίσματα της πολυκατοικίας
-  if (this.statement.buildingId) {
-    this.apartmentService.getApartmentsByBuilding(this.statement.buildingId).subscribe((a: ApartmentDTO[]) => {
-      this.apartments = a;
-    });
+    // Προς -> Όλα τα διαμερίσματα της πολυκατοικίας
+    if (this.statement.buildingId) {
+      this.apartmentService.getApartmentsByBuilding(this.statement.buildingId).subscribe((a: ApartmentDTO[]) => {
+        this.apartments = a;
+      });
+    }
   }
-}
 
   close() {
     this.activeModal.dismiss();
   }
 
   get statusBadgeClass(): string {
-    switch (this.statement?.status) {
+    const status = this.statement?.status?.toUpperCase();
+    switch (status) {
       case 'PAID':
         return 'badge bg-success';
       case 'ISSUED':
-        return 'badge bg-warning';
-        case 'EXPIRED':
+        return 'badge bg-warning text-dark';
+      case 'EXPIRED':
         return 'badge bg-danger';
       case 'CLOSED':
         return 'badge bg-dark';
       case 'DRAFT':
         return 'badge bg-secondary';
       default:
-        return 'badge bg-light';
+        return 'badge bg-light text-dark';
     }
   }
 
@@ -82,7 +83,9 @@ export class StatementViewComponent implements OnChanges, OnInit {
       case 'PAID':
         return 'Πληρώθηκε';
       case 'ISSUED':
-        return 'Εκδόθηκε';
+        return 'Εκκρεμεί';
+      case 'EXPIRED':
+        return 'Έληξε';
       case 'CLOSED':
         return 'Ακυρώθηκε';
       case 'DRAFT':

@@ -60,6 +60,7 @@ export class StatementPaymentComponent implements OnInit {
 
     const payload: PaymentDTO = {
       userId: this.payment.userId,
+      apartmentId: this.payment.apartmentId,
       statementId: this.payment.statementId,
       amount: formValue.paymentAmount,
       paymentMethod: formValue.paymentMethod

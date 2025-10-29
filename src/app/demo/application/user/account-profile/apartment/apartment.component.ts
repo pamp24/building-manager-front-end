@@ -33,7 +33,7 @@ export class ApartmentComponent implements OnInit {
   tenantPhone = '';
   buildingName = '';
   buildingAddress1 = '';
-
+  message = '';
   constructor(
     private fb: FormBuilder,
     private apartmentService: ApartmentService,
@@ -56,17 +56,27 @@ export class ApartmentComponent implements OnInit {
     });
 
     // Φόρτωση όλων των διαμερισμάτων
-    this.apartmentService.getMyApartments().subscribe({
-      next: (apartments) => {
-        this.apartments = apartments;
-        this.total = apartments.length;
+this.apartmentService.getMyApartments().subscribe({
+  next: (apartments) => {
+    this.apartments = apartments;
+    this.total = apartments.length;
 
-        if (apartments.length > 0) {
-          this.loadForm(apartments[0]); // ξεκινάμε με το πρώτο
-        }
-      },
-      error: (err) => console.error('Σφάλμα φόρτωσης διαμερισμάτων:', err)
-    });
+    if (apartments.length > 0) {
+      this.loadForm(apartments[0]); // ξεκινάμε με το πρώτο
+    } else {
+      this.message = 'Δεν υπάρχουν καταχωρημένα διαμερίσματα.';
+    }
+  },
+  error: (err) => {
+    if (err.status === 404) {
+      this.message = 'Δεν υπάρχουν καταχωρημένα διαμερίσματα.';
+    } else {
+      this.message = 'Παρουσιάστηκε σφάλμα κατά τη φόρτωση.';
+    }
+    console.error('Σφάλμα φόρτωσης διαμερισμάτων:', err);
+  }
+});
+
   }
 
   // Φόρτωση φόρμας για το τρέχον διαμέρισμα

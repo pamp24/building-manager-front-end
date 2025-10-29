@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
 import { Component, inject } from '@angular/core';
 
@@ -36,19 +37,18 @@ export class InvoiceListComponent implements OnInit {
   pendingStatements: CommonExpenseStatement[] = [];
   closedStatements: CommonExpenseStatement[] = [];
   draftStatements: CommonExpenseStatement[] = [];
-  overdueStatements: CommonExpenseStatement[] = [];
+  expiredStatements: CommonExpenseStatement[] = [];
 
   // Counters
   totalCount = 0;
   paidCount = 0;
   pendingCount = 0;
-  overdueCount = 0;
+  expiredCount = 0;
   closedCount = 0;
   draftCount = 0;
 
   activeTab = 1; // default tab
   summary!: CommonStatementSummaryDTO;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   widgetCards: any[] = [];
 
   // constructor
@@ -73,7 +73,10 @@ export class InvoiceListComponent implements OnInit {
     //Καλούμε το summary ΜΟΝΟ αν υπάρχει buildingId
     this.paymentService.getBuildingSummary(buildingId).subscribe({
       next: (data) => {
-        this.summary = data;
+        this.summary = {
+          ...data,
+          lastDueDate: data.lastDueDate ? new Date(data.lastDueDate).toISOString() : null
+        };
       },
       error: (err) => console.error('Σφάλμα φόρτωσης summary:', err)
     });
@@ -98,6 +101,7 @@ export class InvoiceListComponent implements OnInit {
         this.statements = data;
         this.splitStatements();
         this.updateWidgetCards();
+        this.updateSummaryFromStatements();
       },
       error: (err) => console.error('Σφάλμα φόρτωσης statements:', err)
     });
@@ -111,26 +115,62 @@ export class InvoiceListComponent implements OnInit {
   }
   /** Σπάμε τα statements ανά κατηγορία */
   private splitStatements(): void {
+    if (!this.statements?.length) {
+      this.resetCounts();
+      return;
+    }
+
     const now = new Date();
+    const isTrue = (val: any) => val === true || val === 'true';
+    const isFalse = (val: any) => val === false || val === 'false';
 
-    this.paidStatements = this.statements.filter((s) => s.isPaid || s.status === 'PAID');
-    this.pendingStatements = this.statements.filter((s) => s.status === 'ISSUED' && s.endDate && new Date(s.endDate) >= now && !s.isPaid);
-    this.overdueStatements = this.statements.filter((s) => s.status === 'ISSUED' && s.endDate && new Date(s.endDate) < now && !s.isPaid);
-    this.closedStatements = this.statements.filter((s) => s.status === 'CLOSED');
-    this.draftStatements = this.statements.filter((s) => s.status === 'DRAFT');
+    // Αρχικοποίηση λιστών
+    const paid: CommonExpenseStatement[] = [];
+    const pending: CommonExpenseStatement[] = [];
+    const expired: CommonExpenseStatement[] = [];
+    const draft: CommonExpenseStatement[] = [];
+    const closed: CommonExpenseStatement[] = [];
 
+    for (const s of this.statements) {
+      if (isTrue(s.active)) {
+        if (s.isPaid || s.status === 'PAID') {
+          paid.push(s);
+        } else if (s.status === 'ISSUED') {
+          if (s.endDate && new Date(s.endDate) < now) {
+            expired.push(s);
+          } else {
+            pending.push(s);
+          }
+        } else if (s.status === 'DRAFT') {
+          draft.push(s);
+        } else if (s.status === 'EXPIRED') {
+          expired.push(s);
+        }
+      } else if (isFalse(s.active) && s.status === 'CLOSED') {
+        closed.push(s);
+      }
+    }
+
+    // Ανάθεση στα properties του component
+    this.paidStatements = paid;
+    this.pendingStatements = pending;
+    this.expiredStatements = expired;
+    this.draftStatements = draft;
+    this.closedStatements = closed;
+
+    // Counts
     this.totalCount = this.statements.length;
-    this.paidCount = this.paidStatements.length;
-    this.pendingCount = this.pendingStatements.length;
-    this.overdueCount = this.overdueStatements.length;
-    this.closedCount = this.closedStatements.length;
-    this.draftCount = this.draftStatements.length;
+    this.paidCount = paid.length;
+    this.pendingCount = pending.length;
+    this.expiredCount = expired.length;
+    this.closedCount = closed.length;
+    this.draftCount = draft.length;
   }
 
   private updateWidgetCards() {
     const totalPaid = this.paidStatements.reduce((sum, s) => sum + (s.total ?? 0), 0);
     const totalPending = this.pendingStatements.reduce((sum, s) => sum + (s.total ?? 0), 0);
-    const totalOverdue = this.overdueStatements.reduce((sum, s) => sum + (s.total ?? 0), 0);
+    const totalOverdue = this.expiredStatements.reduce((sum, s) => sum + (s.total ?? 0), 0);
 
     const grandTotal = totalPaid + totalPending + totalOverdue;
 
@@ -161,7 +201,7 @@ export class InvoiceListComponent implements OnInit {
         value: `${totalOverdue.toLocaleString('el-GR')} €`,
         percentage: grandTotal ? ((totalOverdue / grandTotal) * 100).toFixed(1) : 0,
         color: 'text-danger',
-        invoice: this.overdueStatements.length,
+        invoice: this.expiredStatements.length,
         data: [0, 20, 10, 45, 30, 55, 20, 30],
         colors: ['#ff4d4f']
       }
@@ -173,7 +213,7 @@ export class InvoiceListComponent implements OnInit {
       case 'PAID':
         return 'Πληρώθηκε';
       case 'ISSUED':
-        return 'Εκδόθηκε';
+        return 'Εκκρεμεί';
       case 'EXPIRED':
         return 'Έληξε';
       case 'CLOSED':
@@ -183,5 +223,48 @@ export class InvoiceListComponent implements OnInit {
       default:
         return status ?? '';
     }
+  }
+
+  updateSummaryFromStatements(): void {
+    // Πάρε όλες τις επιμέρους χρεώσεις (allocations)
+    const allAllocations = this.statements.flatMap((s) => s.allocations || []);
+
+    // Φιλτράρουμε μόνο τις ενεργές
+    const activeAllocations = allAllocations.filter((a) => a.active !== false);
+
+    // Διαχωρίζουμε πληρωμένες και εκκρεμείς
+    const pendingAllocations = activeAllocations.filter((a) => !a.isPaid);
+    const paidAllocations = activeAllocations.filter((a) => a.isPaid);
+
+    // Υπολογισμός ποσών
+    const totalPending = pendingAllocations.reduce((sum, a) => sum + (a.amount ?? 0), 0);
+    const totalPaid = paidAllocations.reduce((sum, a) => sum + (a.paidAmount ?? 0), 0);
+    const totalAll = totalPending + totalPaid;
+
+    // Ποσοστό εξόφλησης
+    const percentPaid = totalAll > 0 ? (totalPaid / totalAll) * 100 : 0;
+
+    // Εύρεση τελευταίας ημερομηνίας λήξης από τις εκκρεμείς
+    const lastDueDate = pendingAllocations.length
+      ? new Date(
+          Math.max(...pendingAllocations.filter((a: any) => !!a['dueDate']).map((a: any) => new Date(a['dueDate'] as string).getTime()))
+        )
+      : null;
+
+    // Ενημέρωση summary
+    this.summary = {
+      totalAmount: totalPending, // συνολικές εκκρεμείς οφειλές
+      totalPending,
+      lastDueDate,
+      percentPaid
+    } as any;
+  }
+  private resetCounts(): void {
+    this.totalCount = this.paidCount = this.pendingCount = this.expiredCount = this.closedCount = this.draftCount = 0;
+    this.paidStatements = [];
+    this.pendingStatements = [];
+    this.expiredStatements = [];
+    this.closedStatements = [];
+    this.draftStatements = [];
   }
 }

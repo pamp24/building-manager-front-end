@@ -28,13 +28,13 @@
           </div>
 
           <!-- Ονοματεπώνυμο Ενοικιαστή -->
+           <div class="col-md-4 mt-3" *ngIf="group.get('isRented')?.value === 'Ναι'">
+            <label>Επώνυμο Ενοικιαστή</label>
+            <input class="form-control" formControlName="residentLastName" />
+          </div>
           <div class="col-md-4 mt-3" *ngIf="group.get('isRented')?.value === 'Ναι'">
             <label>Όνομα Ενοικιαστή</label>
             <input class="form-control" formControlName="residentFirstName" />
-          </div>
-          <div class="col-md-4 mt-3" *ngIf="group.get('isRented')?.value === 'Ναι'">
-            <label>Επώνυμο Ενοικιαστή</label>
-            <input class="form-control" formControlName="residentLastName" />
           </div>
 
           <!-- Αριθμός / Όροφος / Τ.Μ. -->
@@ -57,7 +57,7 @@
           <!-- Parking -->
           <div class="col-md-4 mt-3">
             <label>Διαθέτει Parking</label>
-            <select class="form-select" formControlName="hasParking" [disabled]="currentUsedParking >= parkingLimit">
+            <select class="form-select" formControlName="hasParking" >
               <option value="">Επιλέξτε</option>
               <option value="Ναι">Ναι</option>
               <option value="Όχι">Όχι</option>
@@ -91,7 +91,6 @@
               <input
                 type="checkbox"
                 formControlName="hasStorage"
-                [disabled]="!group.get('hasStorage')?.value && currentUsedStorages >= storageLimit"
               />
               Διαθέτει Αποθήκη
             </label>
