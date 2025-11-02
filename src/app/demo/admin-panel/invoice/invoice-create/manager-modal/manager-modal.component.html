@@ -1,88 +1,41 @@
 <div class="modal-content">
   <div class="modal-header justify-content-between">
-    <div class="collapse multi-collapse show">
-      <h5 class="mb-0">Επιλογή</h5>
-    </div>
-    <div class="d-flex align-items-center justify-content-end">
-      <div class="collapse multi-collapse show">
-        @if (multiCollapsed === true) {
-        }
-      </div>
-      <a href="javascript:" class="avatar avatar-s btn-link-danger" (click)="close()">
-        <i class="f-20" antIcon theme="outline" type="close"></i>
-      </a>
-    </div>
+    <h5 class="mb-0">Επιλογή Πολυκατοικίας</h5>
+    <a href="javascript:" class="avatar avatar-s btn-link-danger" (click)="cancel()">
+      <i class="f-20" antIcon theme="outline" type="close"></i>
+    </a>
   </div>
+
   <div class="modal-body">
-    <div [(ngbCollapse)]="isCollapsed">
-      <div class="address-check-block">
-        <div *ngFor="let b of addressList; let i = index" class="address-check border rounded p-3">
-          <div class="form-check">
-            <input
-              type="radio"
-              name="name1"
-              class="form-check-input input-primary"
-              [id]="'building-' + i"
-              (change)="selectedBuilding = b"
-              [checked]="selectedBuilding?.id === b.id"
-            />
-            <label class="form-check-label d-block" [for]="'building-' + i">
-              <!-- Μοτίβο εμφάνισης -->
-              <h5 class="mb-0">Όνομα Κτιρίου: {{ b.name }}</h5>
-              <p class="mb-0">
-                Διεύθυνση: {{ b.street1 }} {{ b.stNumber1 }}
-                <ng-container *ngIf="b.street2">- {{ b.street2 }} {{ b.stNumber2 }}</ng-container>
-              </p>
-              <p class="mb-0">Πόλη: {{ b.city }}, ΤΚ: {{ b.postalCode }}</p>
-              <p class="mb-0">Διαχειριστής: {{ b.manager?.fullName }}</p>
-              <p class="mb-0">Τηλέφωνο: {{ b.manager?.phoneNumber }}</p>
-              <p class="mb-0">E-mail: {{ b.manager?.email }}</p>
-              <span class="row align-items-center justify-content-between">
-                <span class="col-sm-6">
-                  <span class="text-muted mb-0">{{ b.phone }}</span>
-                </span>
-                <span class="col-sm-6 text-end">
-                  <span class="btn btn-sm btn-outline-primary" (click)="choose(b)">Επιλογή</span>
-                </span>
-              </span>
-            </label>
-          </div>
+    <div class="address-check-block">
+      <div *ngFor="let b of addressList; let i = index" class="address-check border rounded p-3 mb-3">
+        <div class="form-check">
+          <input
+            type="radio"
+            name="building"
+            class="form-check-input input-primary"
+            [id]="'building-' + i"
+            (change)="selectedBuilding = b"
+            [checked]="selectedBuilding?.id === b.id"
+          />
+          <label class="form-check-label d-block" [for]="'building-' + i">
+            <h5 class="mb-0">{{ b.name }}</h5>
+            <p class="mb-0">
+              Διεύθυνση: {{ b.street1 }} {{ b.stNumber1 }}
+              <ng-container *ngIf="b.street2">- {{ b.street2 }} {{ b.stNumber2 }}</ng-container>
+            </p>
+            <p class="mb-0">Πόλη: {{ b.city }}, ΤΚ: {{ b.postalCode }}</p>
+            <p class="mb-0">Διαχειριστής: {{ b.manager?.fullName }}</p>
+            <p class="mb-0">Τηλέφωνο: {{ b.manager?.phoneNumber }}</p>
+            <p class="mb-0">E-mail: {{ b.manager?.email }}</p>
+          </label>
         </div>
       </div>
     </div>
-    <div [(ngbCollapse)]="multiCollapsed">
-      <div class="row">
-        <div class="col-12">
-          <div class="mb-3 row align-items-center">
-            <label class="col-lg-4 col-form-label">
-              Τύπος Διεύθυνσης:
-              <small class="text-muted d-block">Επιλογή</small>
-            </label>
-            <div class="col-lg-8">
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" id="addtypecheck1" checked />
-                <label class="form-check-label" for="addtypecheck1">Σπίτι(All day Delivery)</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" id="addtypecheck2" />
-                <label class="form-check-label" for="addtypecheck2">Γραφείο (Between 10 AM to 5 PM)</label>
-              </div>
-            </div>
-          </div>
-          <div class="text-end btn-page mb-0 mt-4">
-            <button class="btn btn-outline-secondary" type="button" (click)="cancel()">Άκυρο</button>
-            <button class="btn btn-primary" (click)="close()">Αποθήκευση και επιλογή</button>
-          </div>
-        </div>
-      </div>
+
+    <div class="text-end btn-page mt-3">
+      <button class="btn btn-outline-secondary me-2" type="button" (click)="cancel()">Άκυρο</button>
+      <button class="btn btn-primary" (click)="saveSelection()">Αποθήκευση και επιλογή</button>
     </div>
   </div>
-  @if (isCollapsed === false) {
-    <div class="modal-footer justify-content-between">
-      <div class="flex-grow-1 text-end">
-        <button type="button" class="btn btn-link-danger me-2" (click)="cancel()">Άκυρο</button>
-        <button type="button" class="btn btn-primary" (click)="close()">Αποθήκευση</button>
-      </div>
-    </div>
-  }
 </div>

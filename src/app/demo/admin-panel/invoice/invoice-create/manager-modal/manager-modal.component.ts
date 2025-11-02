@@ -1,32 +1,23 @@
-// angular import
-import { Component, effect, inject } from '@angular/core';
-
-// bootstrap import
+import { Component, effect, inject, OnInit, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-
-// project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { ThemeService } from 'src/app/theme/shared/service/customs-theme.service';
-import { Input } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { BuildingService } from '../../../../../theme/shared/service/building.service';
 import { ManagedBuildingDTO } from '../../../../../theme/shared/models/managedBuildingDTO';
 
 @Component({
   selector: 'app-manager-modal',
+  standalone: true,
   imports: [SharedModule],
   templateUrl: './manager-modal.component.html',
-  styleUrl: './manager-modal.component.scss'
+  styleUrls: ['./manager-modal.component.scss']
 })
 export class ManagerModalComponent implements OnInit {
-  // public props
   @Input() buildings: ManagedBuildingDTO[] = [];
   activeModal = inject(NgbActiveModal);
   themeService = inject(ThemeService);
   addressList: ManagedBuildingDTO[] = [];
   selectedBuilding: ManagedBuildingDTO | null = null;
-  isCollapsed = false;
-  multiCollapsed = true;
   isRtlMode!: boolean;
 
   constructor(private buildingService: BuildingService) {
@@ -34,6 +25,7 @@ export class ManagerModalComponent implements OnInit {
       this.isRtlTheme(this.themeService.isRTLMode());
     });
   }
+
   ngOnInit(): void {
     this.buildingService.getMyManagedBuildings().subscribe({
       next: (data) => (this.addressList = data),
@@ -41,20 +33,25 @@ export class ManagerModalComponent implements OnInit {
     });
   }
 
-  choose(building: ManagedBuildingDTO) {
-    this.activeModal.close(building); //όλο το object
+  saveSelection() {
+    if (!this.selectedBuilding || !this.selectedBuilding.id) {
+      alert('Παρακαλώ επιλέξτε μία πολυκατοικία πριν συνεχίσετε.');
+      return;
+    }
+
+    const active = document.activeElement as HTMLElement;
+    if (active) active.blur();
+
+    this.activeModal.close(this.selectedBuilding);
   }
 
-  // public method
-  close() {
-    this.activeModal.close('Send data');
-  }
   cancel() {
+    const active = document.activeElement as HTMLElement;
+    if (active) active.blur();
     this.activeModal.dismiss();
   }
 
   private isRtlTheme(isRtl: boolean) {
     this.isRtlMode = isRtl;
   }
-
 }

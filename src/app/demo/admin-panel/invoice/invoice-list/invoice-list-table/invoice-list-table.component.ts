@@ -163,32 +163,31 @@ export class InvoiceListTableComponent implements OnChanges {
   }
 
   onDelete(statement: CommonExpenseStatement) {
-  if (!statement.id) return;
+    if (!statement.id) return;
 
-  const confirmed = confirm(`Είσαι σίγουρος ότι θέλεις να ακυρώσεις το παραστατικό ${statement.code};`);
-  if (!confirmed) return;
+    const confirmed = confirm(`Είσαι σίγουρος ότι θέλεις να ακυρώσεις το παραστατικό ${statement.code};`);
+    if (!confirmed) return;
 
-  this.commonStatementService.deleteStatement(statement.id).subscribe({
-    next: () => {
-      // Ενημέρωσε το αντικείμενο τοπικά
-      statement.status = 'CLOSED';
-      statement.active = false;
+    this.commonStatementService.deleteStatement(statement.id).subscribe({
+      next: () => {
+        // Ενημέρωσε το αντικείμενο τοπικά
+        statement.status = 'CLOSED';
+        statement.active = false;
 
-      // Ενημέρωσε τη λίστα
-      this.applyFilters();
+        // Ενημέρωσε τη λίστα
+        this.applyFilters();
 
-      //Πες στον parent component να κάνει refresh από το backend
-      this.refreshRequested.emit();
+        //Πες στον parent component να κάνει refresh από το backend
+        this.refreshRequested.emit();
 
-      alert('Το παραστατικό ακυρώθηκε επιτυχώς.');
-    },
-    error: (err) => {
-      console.error('Σφάλμα διαγραφής:', err);
-      alert('Παρουσιάστηκε σφάλμα κατά την ακύρωση του παραστατικού.');
-    }
-  });
-}
-
+        alert('Το παραστατικό ακυρώθηκε επιτυχώς.');
+      },
+      error: (err) => {
+        console.error('Σφάλμα διαγραφής:', err);
+        alert('Παρουσιάστηκε σφάλμα κατά την ακύρωση του παραστατικού.');
+      }
+    });
+  }
 
   togglePayments(statementId: number) {
     if (this.expandedStatementId === statementId) {
@@ -227,34 +226,48 @@ export class InvoiceListTableComponent implements OnChanges {
       return;
     }
 
-    const modalRef = this.modalService.open(StatementPaymentComponent, { size: 'md', backdrop: 'static' });
-    modalRef.componentInstance.payment = { ...payment, statementId: this.expandedStatementId };
+    const modalRef = this.modalService.open(StatementPaymentComponent, {
+      size: 'md',
+      backdrop: 'static'
+    });
 
+    // περνάμε τα δεδομένα στο modal
+    modalRef.componentInstance.payment = {
+      ...payment,
+      statementId: this.expandedStatementId
+    };
+
+    // όταν γίνει emit το paymentSaved event
     modalRef.componentInstance.paymentSaved.subscribe((req: PaymentDTO) => {
       this.paymentsLoading = true;
-      this.paymentService.createPayment(req).subscribe({
-        next: () => {
-          const currentStatement = this.statements.find((s) => s.id === this.expandedStatementId);
-          if (!currentStatement?.buildingId) return;
 
+      this.paymentService.createPayment(req).subscribe({
+        next: (savedPayment) => {
+          console.log('Πληρωμή καταχωρήθηκε:', savedPayment);
+
+          // κάνουμε refresh ΜΟΝΟ τη λίστα πληρωμών του συγκεκριμένου statement
           this.paymentService.getUserPaymentsByStatement(this.expandedStatementId!).subscribe({
             next: (paymentsData) => {
               this.statementUserPayments = paymentsData;
-              this.commonStatementService.getStatementsByBuilding(currentStatement.buildingId!).subscribe({
-                next: (data) => {
-                  this.statements = data;
-                  this.applyFilters();
-                  this.paymentsLoading = false;
-                  alert('Η πληρωμή καταχωρήθηκε με επιτυχία!');
-                },
-                error: (err) => {
-                  console.error('Σφάλμα επαναφόρτωσης statements:', err);
-                  this.paymentsLoading = false;
-                }
-              });
+
+              // ενημέρωσε και το statement table (ώστε να αλλάξει status/ποσοστά)
+              const currentStatement = this.statements.find((s) => s.id === this.expandedStatementId);
+              if (currentStatement?.buildingId) {
+                this.commonStatementService.getStatementsByBuilding(currentStatement.buildingId).subscribe({
+                  next: (updatedStatements) => {
+                    this.statements = updatedStatements;
+                    this.applyFilters();
+                    alert('Η πληρωμή καταχωρήθηκε με επιτυχία!');
+                  },
+                  error: (err) => console.error('Σφάλμα κατά την επαναφόρτωση statements:', err),
+                  complete: () => (this.paymentsLoading = false)
+                });
+              } else {
+                this.paymentsLoading = false;
+              }
             },
             error: (err) => {
-              console.error('Σφάλμα φόρτωσης πληρωμών:', err);
+              console.error('Σφάλμα κατά τη φόρτωση πληρωμών:', err);
               this.paymentsLoading = false;
             }
           });

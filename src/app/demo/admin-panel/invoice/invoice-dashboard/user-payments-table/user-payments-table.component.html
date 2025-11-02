@@ -1,0 +1,76 @@
+<div class="table-responsive table-scroll-10">
+  <table class="table table-sm table-striped align-middle mb-0">
+    <thead>
+      <tr>
+        <th>Χρήστης</th>
+        <th>Διαμέρισμα</th>
+        <th>Οφειλή</th>
+        <th>Πληρωμένο</th>
+        <th>Ημερομηνία</th>
+        <th>Τρόπος</th>
+        <th>Κατάσταση</th>
+        <th>Ενέργειες</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let p of statementUserPayments">
+        <td>{{ p.userLastName }} {{ p.userFirstName }}</td>
+        <td>{{ getFloorLabel(p.apartmentFloor) }}{{ p.apartmentNumber }}</td>
+        <td>{{ p.amountToPay | number: '1.2-2' }} €</td>
+        <td>{{ p.paidAmount | number: '1.2-2' }} €</td>
+        <td>{{ p.paidDate ? (p.paidDate | date: 'dd/MM/yyyy HH:mm') : '-' }}</td>
+        <td>{{ translatePaymentMethod(p.paymentMethod) || '-' }}</td>
+        <td>
+          <span
+            class="badge px-3 py-2"
+            [ngClass]="{
+              'bg-success': p.status === 'PAID',
+              'bg-warning text-dark': p.status === 'PENDING',
+              'bg-info': p.status === 'PARTIALLY_PAID'
+            }"
+          >
+            {{ translateStatus(p.status) }}
+          </span>
+        </td>
+        <td>
+          <a
+            href="javascript:"
+            class="avatar avatar-xs"
+            [ngClass]="{
+              'btn-link-primary': p.status !== 'PAID',
+              'btn-link-secondary disabled': p.status === 'PAID'
+            }"
+            ngbTooltip="{{ p.status === 'PAID' ? 'Έχει εξοφληθεί' : 'Επεξεργασία' }}"
+            (click)="p.status !== 'PAID' && onEdit(p)"
+          >
+            <i
+              class="f-16 d-flex"
+              [ngClass]="{
+                'text-primary': p.status !== 'PAID',
+                'text-muted': p.status === 'PAID'
+              }"
+              antIcon
+              type="edit"
+              theme="outline"
+            ></i>
+          </a>
+        </td>
+      </tr>
+
+      <tr *ngIf="!statementUserPayments.length && !paymentsLoading">
+        <td colspan="8" class="text-center text-muted">
+          Δεν υπάρχουν δεδομένα χρηστών για αυτό το παραστατικό
+        </td>
+      </tr>
+
+      <tr *ngIf="paymentsLoading">
+        <td colspan="8" class="text-center">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Φόρτωση...</span>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
-import { OnInit } from '@angular/core';
 import { PaymentDTO } from '../../../../../../theme/shared/models/paymentDTO';
 
 @Component({
@@ -12,12 +12,12 @@ import { PaymentDTO } from '../../../../../../theme/shared/models/paymentDTO';
   templateUrl: './statement-payment.component.html'
 })
 export class StatementPaymentComponent implements OnInit {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Input() payment: any;
   @Output() paymentSaved = new EventEmitter<PaymentDTO>();
 
   form!: FormGroup;
   fullAmountChecked = true; // ✅ αρχικά επιλεγμένο
+  remainingAmount = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -25,49 +25,55 @@ export class StatementPaymentComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log('Received payment object:', this.payment);
-    // Υπολογισμός υπολοίπου
-    const remaining = this.payment
-      ? (this.payment.amountToPay ?? 0) - (this.payment.paidAmount ?? 0)
-      : 0;
+    console.log('🧾 Received payment data:', this.payment);
 
-    // Δημιουργία φόρμας
+    const total = this.payment?.amountToPay ?? 0;
+    const paid = this.payment?.paidAmount ?? 0;
+    this.remainingAmount = total - paid;
+
     this.form = this.fb.group({
-      paymentAmount: [{ value: remaining, disabled: this.fullAmountChecked }, [Validators.required, Validators.min(0.01)]],
+      paymentAmount: [{ value: this.remainingAmount, disabled: true }, [Validators.required, Validators.min(0.01)]],
       paymentMethod: ['CASH', Validators.required]
     });
   }
 
-  // Όταν αλλάζει το checkbox
-  onFullAmountToggle(): void {
+  /** ✅ Ενεργοποίηση / απενεργοποίηση του input */
+  onFullAmountToggle(checked: boolean): void {
+    this.fullAmountChecked = checked; // ενημερώνουμε ρητά τη μεταβλητή
     const ctrl = this.form.get('paymentAmount');
-    const remaining = (this.payment.amountToPay ?? 0) - (this.payment.paidAmount ?? 0);
+    if (!ctrl) return;
 
-    if (this.fullAmountChecked) {
-      // Αν είναι τικαρισμένο → γέμισε αυτόματα και disable
-      ctrl?.setValue(remaining);
-      ctrl?.disable({ emitEvent: false });
+    if (checked) {
+      // Τσεκαρισμένο → πλήρες ποσό και κλειδωμένο
+      ctrl.setValue(this.remainingAmount);
+      ctrl.disable({ emitEvent: false });
     } else {
-      // Αν είναι ξετικαρισμένο → ενεργοποίησε για manual ποσό
-      ctrl?.enable({ emitEvent: false });
-      ctrl?.setValue(null);
+      // Ξε-τσεκαρισμένο → ενεργό πεδίο για μερικό ποσό
+      ctrl.enable({ emitEvent: false });
+      ctrl.setValue(null);
     }
   }
 
-  // Αποθήκευση πληρωμής
+  /** ✅ Αποθήκευση πληρωμής */
   save(): void {
-    const formValue = this.form.getRawValue(); // παίρνει και disabled πεδία
+    const formValue = this.form.getRawValue();
+    const amount = formValue.paymentAmount;
+
+    if (!amount || amount <= 0) {
+      alert('Παρακαλώ εισάγετε έγκυρο ποσό.');
+      return;
+    }
 
     const payload: PaymentDTO = {
       userId: this.payment.userId,
       apartmentId: this.payment.apartmentId,
       statementId: this.payment.statementId,
-      amount: formValue.paymentAmount,
+      amount: amount,
       paymentMethod: formValue.paymentMethod
     };
 
-    console.log('Αποστολή πληρωμής:', payload);
+    console.log('📤 Αποστολή πληρωμής:', payload);
     this.paymentSaved.emit(payload);
-    this.activeModal.close();
+    this.activeModal.close(payload);
   }
 }

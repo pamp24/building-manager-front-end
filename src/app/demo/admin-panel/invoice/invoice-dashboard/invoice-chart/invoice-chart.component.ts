@@ -27,10 +27,9 @@ export class InvoiceChartComponent implements OnChanges {
       return;
     }
 
-    console.log('📊 Loading chart with data:', this.monthlyStats);
+    console.log('Loading chart with data:', this.monthlyStats);
 
     const months = this.monthlyStats.map((s) => s.month);
-    const issued = this.monthlyStats.map((s) => s.issued || 0);
     const paid = this.monthlyStats.map((s) => s.paid || 0);
     const expired = this.monthlyStats.map((s) => s.expired || 0);
     const pending = this.monthlyStats.map((s) => s.pending || Math.max((s.issued || 0) - ((s.paid || 0) + (s.expired || 0)), 0));
@@ -50,10 +49,6 @@ export class InvoiceChartComponent implements OnChanges {
       dataLabels: { enabled: false },
       series: [
         {
-          name: 'Εκδοθέντα',
-          data: issued
-        },
-        {
           name: 'Πληρωμένα',
           data: paid
         },
@@ -66,7 +61,7 @@ export class InvoiceChartComponent implements OnChanges {
           data: expired
         }
       ],
-      colors: ['#3474ff', '#52c41a', '#fcb023', '#ff4d4f'],
+      colors: ['#52c41a', '#fcb023', '#ff4d4f'],
       xaxis: {
         categories: months,
         labels: {

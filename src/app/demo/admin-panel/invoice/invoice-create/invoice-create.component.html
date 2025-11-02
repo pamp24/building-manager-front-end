@@ -85,7 +85,7 @@
                 style="max-height: 200px; overflow-y: auto"
               >
                 <div *ngFor="let a of selectedApartments" class="mb-2 pb-2 border-bottom">
-                  <p class="mb-0 fw-bold">Διαμέρισμα {{ a.floor }}{{ a.apartmentNumber }}</p>
+                  <p class="mb-0 fw-bold">Διαμέρισμα {{ a.floor }}{{ a.number }}</p>
                   <p class="mb-0">Ιδιοκτήτης: {{ a.ownerLastName || '—' }} {{ a.ownerFirstName || '—' }}</p>
                   <p class="mb-0">Ένοικος: {{ a.residentLastName || '—' }} {{ a.residentFirstName || '—' }}</p>
                 </div>

@@ -68,23 +68,26 @@ export class InvoiceCreateComponent implements OnInit {
       next: (data) => {
         this.managedBuildings = data;
         if (data.length > 0) {
-          // default → πρώτη πολυκατοικία
           this.selectBuilding(data[0]);
         }
       },
       error: (err) => console.error('Σφάλμα φόρτωσης πολυκατοικιών', err)
     });
-    this.loadBuildingsAndManagerDashboard();
   }
 
   // public methods
   openManagerModal() {
     const modalRef = this.modalService.open(ManagerModalComponent, { size: 'lg', scrollable: true });
-    modalRef.result.then((result) => {
-      if (result) {
-        this.selectBuilding(result);
+    modalRef.result.then(
+      (result) => {
+        if (result && result.id) {
+          this.selectBuilding(result);
+        }
+      },
+      () => {
+        console.log('Ο χρήστης έκλεισε το modal χωρίς επιλογή');
       }
-    });
+    );
   }
 
   selectBuilding(building: ManagedBuildingDTO) {
@@ -102,7 +105,7 @@ export class InvoiceCreateComponent implements OnInit {
       error: (err) => console.error('Σφάλμα φόρτωσης κωδικού', err)
     });
 
-    // 🔹 Φόρτωσε αυτόματα όλα τα διαμερίσματα της πολυκατοικίας
+    //Φόρτωσε αυτόματα όλα τα διαμερίσματα της πολυκατοικίας
     this.ApartmentService.getApartmentsByBuilding(building.id).subscribe({
       next: (apartments) => {
         this.selectedApartments = apartments;

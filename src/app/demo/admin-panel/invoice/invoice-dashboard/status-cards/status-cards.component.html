@@ -1,0 +1,67 @@
+<div class="row g-3 text-center">
+          <!-- Εκδοθέντα -->
+          <div class="col-6" (click)="selectTab(1)" style="cursor: pointer">
+            <app-card [showHeader]="false" cardClass="mb-0" blockClass="py-4 px-2">
+              <div class="avatar bg-primary rounded-circle shadow-sm">
+                <i antIcon type="file-text" theme="fill" class="text-white d-flex"></i>
+              </div>
+              <h5 class="mt-2 fw-semibold text-primary">{{ totalAll }}</h5>
+              <h6 class="mb-0 text-muted">Εκδοθέντα</h6>
+            </app-card>
+          </div>
+
+          <!-- Πληρωμένα -->
+          <div class="col-6" (click)="selectTab(2)" style="cursor: pointer">
+            <app-card [showHeader]="false" cardClass="mb-0" blockClass="py-4 px-2">
+              <div class="avatar bg-success rounded-circle shadow-sm">
+                <i antIcon type="dollar-circle" theme="fill" class="text-white d-flex"></i>
+              </div>
+              <h5 class="mt-2 fw-semibold text-success">{{ dashboardData?.totalPaid }}</h5>
+              <h6 class="mb-0 text-muted">Πληρωμένα</h6>
+            </app-card>
+          </div>
+
+          <!-- Εκκρεμείς -->
+          <div class="col-6" (click)="selectTab(3)" style="cursor: pointer">
+            <app-card [showHeader]="false" cardClass="mb-0" blockClass="py-4 px-2">
+              <div class="avatar bg-warning rounded-circle shadow-sm">
+                <i antIcon type="hourglass" theme="fill" class="text-white d-flex"></i>
+              </div>
+              <h5 class="mt-2 fw-semibold text-warning">{{ dashboardData?.totalPending }}</h5>
+              <h6 class="mb-0 text-muted">Εκκρεμείς</h6>
+            </app-card>
+          </div>
+
+          <!-- Ληξιπρόθεσμα -->
+          <div class="col-6" (click)="selectTab(4)" style="cursor: pointer">
+            <app-card [showHeader]="false" cardClass="mb-0" blockClass="py-4 px-2">
+              <div class="avatar bg-danger rounded-circle shadow-sm">
+                <i antIcon type="alert" theme="fill" class="text-white d-flex"></i>
+              </div>
+              <h5 class="mt-2 fw-semibold text-danger">{{ dashboardData?.totalExpired }}</h5>
+              <h6 class="mb-0 text-muted">Ληξιπρόθεσμα</h6>
+            </app-card>
+          </div>
+
+          <!-- Ακυρωμένα -->
+          <div class="col-6" (click)="selectTab(5)" style="cursor: pointer">
+            <app-card [showHeader]="false" cardClass="mb-0" blockClass="py-4 px-2">
+              <div class="avatar bg-secondary rounded-circle shadow-sm">
+                <i antIcon type="delete" theme="fill" class="text-white d-flex"></i>
+              </div>
+              <h5 class="mt-2 fw-semibold text-secondary">{{ dashboardData?.totalCancelled }}</h5>
+              <h6 class="mb-0 text-muted">Ακυρωμένα</h6>
+            </app-card>
+          </div>
+
+          <!-- Πρόχειρα -->
+          <div class="col-6" (click)="selectTab(6)" style="cursor: pointer">
+            <app-card [showHeader]="false" cardClass="mb-0" blockClass="py-4 px-2">
+              <div class="avatar bg-info rounded-circle shadow-sm">
+                <i antIcon type="edit" theme="fill" class="text-white d-flex"></i>
+              </div>
+              <h5 class="mt-2 fw-semibold text-info">{{ dashboardData?.totalDraft }}</h5>
+              <h6 class="mb-0 text-muted">Πρόχειρα</h6>
+            </app-card>
+          </div>
+        </div>
