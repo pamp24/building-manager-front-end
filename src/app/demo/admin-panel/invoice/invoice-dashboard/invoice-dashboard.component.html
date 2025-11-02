@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-12">
+  <div class="col-12" *ngIf="showBuildingSelector">
     <app-card cardTitle="Επιλογή Πολυκατοικίας" [padding]="24">
       <app-building-selector (buildingSelected)="onBuildingSelected($event)"></app-building-selector>
     </app-card>
