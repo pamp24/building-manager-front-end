@@ -54,13 +54,13 @@
         </div>
       </div>
 
-      <h4 class="mt-3 text-white mb-1">Απομένουν - {{ summary?.totalAmount | currency: 'EUR' : 'symbol' : '1.2-2' }}</h4>
+      <h4 class="mt-3 text-white mb-1">Απομένουν - {{ totalUnpaidAmount | currency: 'EUR' : 'symbol' : '1.2-2' }}</h4>
 
-      <div class="d-flex align-items-center">
-        <div class="flex-grow-1 me-3">
+      <div class="d-flex align-items-center mt-2">
+        <div class="flex-grow-1 me-3" style="width: 70%;">
           <ngb-progressbar type="warning" [value]="summary?.percentPaid" height="7px"></ngb-progressbar>
         </div>
-        <div class="flex-shrink-0 text-end wid-30">
+        <div class="flex-shrink-0 text-end" style="min-width: 40px;">
           <p class="text-white mb-0">{{ summary?.percentPaid | number: '1.0-0' }}%</p>
         </div>
       </div>

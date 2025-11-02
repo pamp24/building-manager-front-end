@@ -1,0 +1,18 @@
+.table-scroll-10 {
+  max-height: 250px; /* μπορείς να το αλλάξεις π.χ. 300px ή 500px */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.table-scroll-10 table {
+  margin-bottom: 0;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-scroll-10 thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+

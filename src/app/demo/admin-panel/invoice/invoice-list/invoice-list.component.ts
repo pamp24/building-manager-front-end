@@ -46,6 +46,7 @@ export class InvoiceListComponent implements OnInit {
   expiredCount = 0;
   closedCount = 0;
   draftCount = 0;
+  totalUnpaidAmount = 0;
 
   activeTab = 1; // default tab
   summary!: CommonStatementSummaryDTO;
@@ -226,39 +227,32 @@ export class InvoiceListComponent implements OnInit {
   }
 
   updateSummaryFromStatements(): void {
-    // Πάρε όλες τις επιμέρους χρεώσεις (allocations)
-    const allAllocations = this.statements.flatMap((s) => s.allocations || []);
+    if (!this.statements?.length) return;
 
-    // Φιλτράρουμε μόνο τις ενεργές
-    const activeAllocations = allAllocations.filter((a) => a.active !== false);
+    // Φιλτράρουμε μόνο όσα είναι ISSUED ή EXPIRED
+    const unpaidStatements = this.statements.filter((s) => s.status === 'ISSUED' || s.status === 'EXPIRED');
 
-    // Διαχωρίζουμε πληρωμένες και εκκρεμείς
-    const pendingAllocations = activeAllocations.filter((a) => !a.isPaid);
-    const paidAllocations = activeAllocations.filter((a) => a.isPaid);
+    // Υπολογισμός συνολικού ποσού
+    this.totalUnpaidAmount = unpaidStatements.reduce((sum, s) => sum + (s.total ?? 0), 0);
 
-    // Υπολογισμός ποσών
-    const totalPending = pendingAllocations.reduce((sum, a) => sum + (a.amount ?? 0), 0);
-    const totalPaid = paidAllocations.reduce((sum, a) => sum + (a.paidAmount ?? 0), 0);
-    const totalAll = totalPending + totalPaid;
+    // Υπολογισμός ποσών για progress bar
+    const paidStatements = this.statements.filter((s) => s.status === 'PAID');
+    const totalPaid = paidStatements.reduce((sum, s) => sum + (s.total ?? 0), 0);
+    const totalAll = totalPaid + this.totalUnpaidAmount;
 
-    // Ποσοστό εξόφλησης
-    const percentPaid = totalAll > 0 ? (totalPaid / totalAll) * 100 : 0;
-
-    // Εύρεση τελευταίας ημερομηνίας λήξης από τις εκκρεμείς
-    const lastDueDate = pendingAllocations.length
-      ? new Date(
-          Math.max(...pendingAllocations.filter((a: any) => !!a['dueDate']).map((a: any) => new Date(a['dueDate'] as string).getTime()))
-        )
+    // Υπολογισμός τελευταίας ημερομηνίας λήξης
+    const lastDueDate = unpaidStatements.length
+      ? new Date(Math.max(...unpaidStatements.filter((s) => !!s.endDate).map((s) => new Date(s.endDate!).getTime())))
       : null;
 
-    // Ενημέρωση summary
     this.summary = {
-      totalAmount: totalPending, // συνολικές εκκρεμείς οφειλές
-      totalPending,
+      totalAmount: this.totalUnpaidAmount,
+      totalPending: this.totalUnpaidAmount,
       lastDueDate,
-      percentPaid
+      percentPaid: totalAll > 0 ? (totalPaid / totalAll) * 100 : 0
     } as any;
   }
+
   private resetCounts(): void {
     this.totalCount = this.paidCount = this.pendingCount = this.expiredCount = this.closedCount = this.draftCount = 0;
     this.paidStatements = [];

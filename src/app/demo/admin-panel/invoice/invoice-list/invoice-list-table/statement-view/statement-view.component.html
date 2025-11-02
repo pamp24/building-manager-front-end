@@ -9,7 +9,7 @@
               <div class="d-flex align-items-center mb-2 navbar-brand">
                 <img src="assets/images/logo-dark.svg" class="img-fluid logo-lg" alt="images" />
                 <span class="badge rounded ms-2 {{ statusBadgeClass }}">
-                  {{ statement?.status }}
+                  {{ translateStatus(statement?.status) }}
                 </span>
               </div>
               <p class="mb-0">Κωδικός: {{ statement?.code }}</p>
