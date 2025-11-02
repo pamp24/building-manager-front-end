@@ -20,10 +20,13 @@ import { ViewChild } from '@angular/core';
 import { NgbNav } from '@ng-bootstrap/ng-bootstrap';
 import { CommonStatementSummaryDTO } from '../../../../theme/shared/models/commonExpenseSummaryDTO';
 import { PaymentService } from '../../../../theme/shared/service/payment.service';
+import { BuildingService } from 'src/app/theme/shared/service/building.service';
+import { ManagedBuildingDTO } from 'src/app/theme/shared/models/managedBuildingDTO';
+import { BuildingSelectorInlineComponent } from './building-selector-inline/building-selector-inline.component';
 
 @Component({
   selector: 'app-invoice-list',
-  imports: [SharedModule, InvoiceListChartComponent, InvoiceListTableComponent],
+  imports: [SharedModule, InvoiceListChartComponent, InvoiceListTableComponent, BuildingSelectorInlineComponent],
   templateUrl: './invoice-list.component.html',
   styleUrl: './invoice-list.component.scss'
 })
@@ -38,7 +41,10 @@ export class InvoiceListComponent implements OnInit {
   closedStatements: CommonExpenseStatement[] = [];
   draftStatements: CommonExpenseStatement[] = [];
   expiredStatements: CommonExpenseStatement[] = [];
-
+  managedBuildings: ManagedBuildingDTO[] = [];
+  showBuildingSelector = false;
+  currentBuildingId?: number;
+  currentBuildingIndex = 0;
   // Counters
   totalCount = 0;
   paidCount = 0;
@@ -58,20 +64,55 @@ export class InvoiceListComponent implements OnInit {
     private tabNav: TabNavigationService,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
-    private paymentService: PaymentService
+    private paymentService: PaymentService,
+    private buildingService: BuildingService
   ) {
     this.iconService.addIcon(...[CaretUpOutline, CaretDownOutline, FileDoneOutline, InfoCircleOutline, BankOutline]);
   }
 
   ngOnInit(): void {
-    const buildingId = Number(localStorage.getItem('buildingId'));
+    this.buildingService.getMyManagedBuildings().subscribe({
+      next: (buildings) => {
+        this.managedBuildings = buildings || [];
+        const storedId = Number(localStorage.getItem('buildingId'));
 
-    if (!buildingId) {
-      console.error('Δεν υπάρχει buildingId στο localStorage');
-      return;
-    }
+        // Αν υπάρχει stored buildingId, βρες το index
+        const foundIndex = this.managedBuildings.findIndex((b) => b.id === storedId);
+        this.currentBuildingIndex = foundIndex >= 0 ? foundIndex : 0;
 
-    //Καλούμε το summary ΜΟΝΟ αν υπάρχει buildingId
+        // Φόρτωσε την τρέχουσα πολυκατοικία
+        const activeId = this.managedBuildings[this.currentBuildingIndex]?.id;
+        if (activeId) this.loadStatementsAndSummary(activeId);
+      },
+      error: (err) => console.error('Σφάλμα λήψης πολυκατοικιών:', err)
+    });
+  }
+
+  private loadBuildingsAndData(): void {
+    this.buildingService.getMyManagedBuildings().subscribe({
+      next: (buildings) => {
+        console.log('[DEBUG] Buildings received:', buildings);
+        this.managedBuildings = buildings || [];
+        this.showBuildingSelector = this.managedBuildings.length > 1;
+        console.log('[DEBUG] showBuildingSelector:', this.showBuildingSelector);
+
+        let buildingId = Number(localStorage.getItem('buildingId'));
+        if (!buildingId && this.managedBuildings.length > 0) {
+          buildingId = this.managedBuildings[0].id;
+          localStorage.setItem('buildingId', buildingId.toString());
+        }
+
+        if (buildingId) {
+          this.loadStatementsAndSummary(buildingId);
+        } else {
+          console.warn('Δεν βρέθηκε buildingId για φόρτωση δεδομένων.');
+        }
+      },
+      error: (err) => console.error('Σφάλμα λήψης πολυκατοικιών:', err)
+    });
+  }
+  private loadStatementsAndSummary(buildingId: number): void {
+    // Φόρτωση Summary
     this.paymentService.getBuildingSummary(buildingId).subscribe({
       next: (data) => {
         this.summary = {
@@ -82,21 +123,7 @@ export class InvoiceListComponent implements OnInit {
       error: (err) => console.error('Σφάλμα φόρτωσης summary:', err)
     });
 
-    // Διαβάζουμε το query param
-    this.route.queryParams.subscribe((params) => {
-      const tabParam = Number(params['tab']);
-      if (tabParam) {
-        this.activeTab = tabParam;
-        console.log('Query tab:', this.activeTab);
-        setTimeout(() => {
-          if (this.nav) this.nav.select(this.activeTab);
-          this.cdr.detectChanges();
-          this.scrollToInvoices();
-        });
-      }
-    });
-
-    //Φόρτωση όλων των statements για το κτίριο
+    // Φόρτωση Statements
     this.commonExpenseStatementService.getStatementsByBuilding(buildingId).subscribe({
       next: (data) => {
         this.statements = data;
@@ -106,6 +133,11 @@ export class InvoiceListComponent implements OnInit {
       },
       error: (err) => console.error('Σφάλμα φόρτωσης statements:', err)
     });
+  }
+
+  onBuildingSelected(buildingId: number): void {
+    localStorage.setItem('buildingId', buildingId.toString());
+    this.loadStatementsAndSummary(buildingId);
   }
 
   private scrollToInvoices() {

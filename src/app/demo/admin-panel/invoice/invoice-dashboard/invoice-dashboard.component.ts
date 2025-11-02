@@ -86,7 +86,7 @@ export class InvoiceDashboardComponent implements OnInit {
   paymentsLoading = false;
   currentMonthLabel = new Date().toLocaleString('el-GR', { month: 'long', year: 'numeric' });
   statements: CommonExpenseStatement[] = [];
-
+  showBuildingSelector = false;
   //Μετρητές για tabs
   totalCount = 0;
   paidCount = 0;
@@ -128,11 +128,7 @@ export class InvoiceDashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.buildingId) {
-      this.loadAll();
-    } else {
-      this.loadBuildingsAndManagerDashboard();
-    }
+    this.loadBuildingsAndManagerDashboard();
   }
 
   private isDarkTheme(isDark: boolean) {
@@ -194,18 +190,39 @@ export class InvoiceDashboardComponent implements OnInit {
   loadBuildingsAndManagerDashboard() {
     this.buildingService.getMyManagedBuildings().subscribe({
       next: (buildings) => {
-        if (buildings && buildings.length > 0) {
-          this.managedBuildings = buildings;
+        console.log('[DEBUG] Buildings received:', buildings);
 
-          if (!this.buildingId) {
+        // ✅ Ελέγχουμε ότι είναι array και όχι άδειο
+        if (Array.isArray(buildings) && buildings.length > 0) {
+          this.managedBuildings = buildings;
+          this.showBuildingSelector = buildings.length > 1;
+
+          console.log('[DEBUG] Managed buildings count:', buildings.length);
+          console.log('[DEBUG] showBuildingSelector:', this.showBuildingSelector);
+
+          // Αν υπάρχει μόνο μία πολυκατοικία → επιλέγεται αυτόματα
+          if (buildings.length === 1) {
             this.buildingId = buildings[0].id;
-            this.onBuildingSelected(this.buildingId);
+            localStorage.setItem('buildingId', this.buildingId.toString());
+            this.loadAll();
+          }
+          // Αν υπάρχουν πολλές → επιλέγεται η πρώτη προεπιλεγμένα αλλά φαίνεται ο selector
+          else if (buildings.length > 1) {
+            this.buildingId = this.buildingId || buildings[0].id;
+            localStorage.setItem('buildingId', this.buildingId.toString());
+            this.loadAll();
           }
         } else {
-          console.warn('Δεν βρέθηκαν πολυκατοικίες για τον διαχειριστή');
+          console.warn('⚠️ Δεν βρέθηκαν πολυκατοικίες για τον διαχειριστή');
+          this.managedBuildings = [];
+          this.showBuildingSelector = false;
         }
       },
-      error: (err) => console.error('Σφάλμα κατά τη λήψη πολυκατοικιών', err)
+      error: (err) => {
+        console.error('Σφάλμα κατά τη λήψη πολυκατοικιών', err);
+        this.showBuildingSelector = false;
+        this.managedBuildings = [];
+      }
     });
   }
 
