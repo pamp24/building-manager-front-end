@@ -1,25 +1,41 @@
-<ul class="list-group list-group-flush border-top-0">
-  <li class="list-group-item border-0" *ngFor="let payment of recentPayments">
-    <div class="d-flex align-items-center">
-      <div class="flex-shrink-0">
-        <img src="assets/images/user/avatar-10.jpg" alt="user-image" class="user-avatar rounded-circle wid-40 hie-40" />
-      </div>
-      <div class="flex-grow-1 mx-2">
-        <h6 class="mb-1">
-          {{ payment.userFullName }}
-          <span class="text-muted">- {{ payment.referenceNumber }}</span>
-        </h6>
-        <p class="mb-0 text-primary">{{ payment.amount | currency: 'EUR' : 'symbol' : '1.2-2' }}</p>
-      </div>
-      <div class="flex-shrink-0">
-        <p class="text-muted mb-0">{{ payment.paymentDate | date: 'short' }}</p>
-      </div>
-    </div>
-  </li>
+<div class="scrollable-payments">
+  <ul class="list-group list-group-flush border-top-0">
+    <li class="list-group-item border-0" *ngFor="let payment of recentPayments | slice:0:5">
+      <div class="d-flex align-items-center">
+        <div class="flex-shrink-0">
+          <img
+            src="assets/images/user/avatar-10.jpg"
+            alt="user-image"
+            class="user-avatar rounded-circle wid-40 hie-40"
+          />
+        </div>
 
-  <li class="list-group-item border-0">
-    <div class="d-grid">
-      <button class="btn btn-outline-secondary" (click)="goToInvoiceList()">Προβολή Όλων</button>
-    </div>
-  </li>
-</ul>
+        <div class="flex-grow-1 mx-2">
+          <h6 class="mb-1">
+            {{ payment.userFullName || '—' }}
+            <span class="text-muted"> - {{ payment.paymentMethod || 'Χωρίς αναφορά' }} </span>
+          </h6>
+          <p class="mb-0 text-primary">
+            {{ payment.amount | currency: 'EUR' : 'symbol' : '1.2-2' }}
+          </p>
+        </div>
+
+        <div class="flex-shrink-0">
+          <p class="text-muted mb-0">
+            {{ payment.paymentDate ? (payment.paymentDate | date: 'short') : '—' }}
+          </p>
+        </div>
+      </div>
+    </li>
+
+    <li class="list-group-item border-0" *ngIf="recentPayments.length === 0">
+      <p class="text-center text-muted mb-0">Δεν υπάρχουν πληρωμές.</p>
+    </li>
+
+    <li class="list-group-item border-0" *ngIf="recentPayments.length > 0">
+      <div class="d-grid">
+        <button class="btn btn-outline-secondary" (click)="goToInvoiceList()">Προβολή Όλων</button>
+      </div>
+    </li>
+  </ul>
+</div>

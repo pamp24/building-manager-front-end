@@ -25,7 +25,7 @@ export class StatementPaymentComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log('Received payment data:', this.payment);
+    console.log('🧾 Received payment data:', this.payment);
 
     const total = this.payment?.amountToPay ?? 0;
     const paid = this.payment?.paidAmount ?? 0;
@@ -37,7 +37,7 @@ export class StatementPaymentComponent implements OnInit {
     });
   }
 
-  /**Ενεργοποίηση / απενεργοποίηση του input */
+  /** ✅ Ενεργοποίηση / απενεργοποίηση του input */
   onFullAmountToggle(checked: boolean): void {
     this.fullAmountChecked = checked; // ενημερώνουμε ρητά τη μεταβλητή
     const ctrl = this.form.get('paymentAmount');
@@ -54,7 +54,7 @@ export class StatementPaymentComponent implements OnInit {
     }
   }
 
-  /**Αποθήκευση πληρωμής */
+  /** ✅ Αποθήκευση πληρωμής */
   save(): void {
     const formValue = this.form.getRawValue();
     const amount = formValue.paymentAmount;
@@ -72,7 +72,7 @@ export class StatementPaymentComponent implements OnInit {
       paymentMethod: formValue.paymentMethod
     };
 
-    console.log('Αποστολή πληρωμής:', payload);
+    console.log('📤 Αποστολή πληρωμής:', payload);
     this.paymentSaved.emit(payload);
     this.activeModal.close(payload);
   }

@@ -1,0 +1,55 @@
+<div class="modal-header">
+  <h5 class="modal-title">Καταχώριση Πληρωμής</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss()"></button>
+</div>
+
+<div class="modal-body">
+  <div class="mb-3">
+    <p class="mb-1"><strong>Ένοικος:</strong> {{ payment?.userFullName }}</p>
+    <p class="mb-1"><strong>Σύνολο:</strong> {{ payment?.amountToPay | currency:'EUR' }}</p>
+    <p class="mb-1"><strong>Έχει πληρωθεί:</strong> {{ payment?.paidAmount | currency:'EUR' }}</p>
+    <p class="mb-2"><strong>Απομένει:</strong> {{ remainingAmount | currency:'EUR' }}</p>
+  </div>
+
+  <form [formGroup]="form">
+    <div class="form-check mb-3">
+      <input
+        type="checkbox"
+        class="form-check-input"
+        id="fullAmount"
+        [(ngModel)]="fullAmountChecked"
+        (change)="onFullAmountToggle($event.target.checked)"
+        [checked]="true" 
+      />
+      <label class="form-check-label" for="fullAmount">Πλήρες ποσό</label>
+    </div>
+
+    <div class="mb-3">
+      <label for="amount" class="form-label">Ποσό Πληρωμής (€)</label>
+      <input
+        type="number"
+        id="amount"
+        formControlName="paymentAmount"
+        class="form-control"
+        [readonly]="fullAmountChecked"
+      />
+      <div *ngIf="form.get('paymentAmount')?.invalid && form.get('paymentAmount')?.touched" class="text-danger small">
+        Εισάγετε έγκυρο ποσό
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="method" class="form-label">Τρόπος Πληρωμής</label>
+      <select id="method" formControlName="paymentMethod" class="form-select">
+        <option value="CASH">Μετρητά</option>
+        <option value="BANK_TRANSFER">Τραπεζική Κατάθεση</option>
+        <option value="CARD">Κάρτα</option>
+      </select>
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-secondary" (click)="activeModal.dismiss()">Άκυρο</button>
+  <button type="button" class="btn btn-primary" (click)="save()">Αποθήκευση</button>
+</div>

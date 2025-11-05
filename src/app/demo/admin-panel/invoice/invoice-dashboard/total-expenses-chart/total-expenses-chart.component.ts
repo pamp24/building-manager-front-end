@@ -19,6 +19,17 @@ export class TotalExpensesChartComponent implements OnInit, OnChanges {
   chartOptions!: Partial<ApexOptions>;
   expenses: { title: string; value: string; color: string }[] = [];
 
+  private categoryColors: Record<string, string> = {
+    COMMON: '#faad14',
+    HEATING: '#ff4d4f',
+    ELEVATOR: '#1677ff',
+    EQUAL: '#52c41a',
+    BOILER: '#13c2c2',
+    SPECIAL: '#722ed1',
+    OWNERS: '#a0d911',
+    OTHER: '#595959'
+  };
+
   constructor(private commonExpenseStatementService: CommonExpenseStatementService) {}
 
   ngOnInit(): void {
@@ -101,7 +112,8 @@ export class TotalExpensesChartComponent implements OnInit, OnChanges {
           },
           series,
           labels,
-          colors: ['#faad14', '#52c41a', '#ff4d4f', '#1677ff', '#13c2c2', '#722ed1'],
+          colors: filtered.map((d) => this.categoryColors[d.category] || '#bfbfbf'),
+
           tooltip: {
             y: {
               formatter: (value: number) =>
@@ -135,13 +147,13 @@ export class TotalExpensesChartComponent implements OnInit, OnChanges {
         };
 
         // κάτω λίστα
-        this.expenses = filtered.map((d, i) => ({
+        this.expenses = filtered.map((d) => ({
           title: this.translateCategory(d.category),
           value: d.totalAmount.toLocaleString('el-GR', {
             style: 'currency',
             currency: 'EUR'
           }),
-          color: ['text-warning', 'text-success', 'text-danger', 'text-primary', 'text-info', 'text-purple'][i % 6]
+          color: this.mapColorClass(d.category)
         }));
       },
       error: (err) => {
@@ -154,6 +166,29 @@ export class TotalExpensesChartComponent implements OnInit, OnChanges {
         };
       }
     });
+  }
+
+  mapColorClass(category: string): string {
+    switch (category) {
+      case 'COMMON':
+        return 'text-warning';
+      case 'HEATING':
+        return 'text-danger';
+      case 'ELEVATOR':
+        return 'text-primary';
+      case 'EQUAL':
+        return 'text-success';
+      case 'BOILER':
+        return 'text-info';
+      case 'SPECIAL':
+        return 'text-purple';
+      case 'OWNERS':
+        return 'text-lime';
+      case 'OTHER':
+        return 'text-muted';
+      default:
+        return 'text-secondary';
+    }
   }
 
   translateCategory(category: string): string {
