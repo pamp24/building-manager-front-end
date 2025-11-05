@@ -23,6 +23,9 @@ export class CommonExpenseStatementService {
   getStatementsByBuilding(buildingId: number): Observable<CommonExpenseStatement[]> {
     return this.http.get<CommonExpenseStatement[]>(`${this.baseUrl}/building/${buildingId}/statement`);
   }
+  getActiveStatementsByBuilding(buildingId: number) {
+    return this.http.get<CommonExpenseStatement[]>(`${this.baseUrl}/building/${buildingId}/active`);
+  }
 
   getStatementById(id: number): Observable<CommonExpenseStatement> {
     return this.http.get<CommonExpenseStatement>(`${this.baseUrl}/${id}`);
@@ -50,5 +53,4 @@ export class CommonExpenseStatementService {
       `http://localhost:8080/api/v1/expenses/building/${buildingId}/summary?period=${period}`
     );
   }
-  
 }

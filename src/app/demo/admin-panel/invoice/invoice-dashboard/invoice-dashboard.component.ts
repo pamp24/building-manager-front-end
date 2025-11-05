@@ -48,6 +48,7 @@ import { StatusCardsComponent } from './status-cards/status-cards.component';
 import { RecentPaymentsComponent } from './recent-payments/recent-payments.component';
 import { Router } from '@angular/router';
 import { UserPaymentsTableComponent } from './user-payments-table/user-payments-table.component';
+import { CommonExpenseStatementService } from '../../../../theme/shared/service/commonExpensesStatement.service';
 
 @Component({
   selector: 'app-invoice-dashboard',
@@ -94,8 +95,9 @@ export class InvoiceDashboardComponent implements OnInit {
   expiredCount = 0;
   closedCount = 0;
   draftCount = 0;
+  selectedStatementId?: number;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private commonExpenseStatementService: CommonExpenseStatementService) {
     this.iconService.addIcon(
       ...[
         CloseCircleFill,
@@ -148,6 +150,30 @@ export class InvoiceDashboardComponent implements OnInit {
     this.loadDashboard();
     this.loadRecentPayments();
     this.loadCurrentMonthPayments();
+    this.loadStatementsForBuilding();
+  }
+
+  loadStatementsForBuilding(): void {
+    if (!this.buildingId) return;
+
+    this.commonExpenseStatementService.getActiveStatementsByBuilding(this.buildingId).subscribe({
+      next: (data) => {
+        this.statements = data;
+        if (data.length > 0) {
+          // επιλέγουμε το πιο πρόσφατο statement ως default
+          const lastStatement = data[data.length - 1];
+          this.selectedStatementId = lastStatement.id;
+        }
+      },
+      error: (err) => console.error('Σφάλμα φόρτωσης statements', err)
+    });
+  }
+  onStatementChange(): void {
+    if (!this.selectedStatementId) return;
+    this.paymentService.getUserPaymentsByStatement(this.selectedStatementId).subscribe({
+      next: (data) => (this.statementUserPayments = data),
+      error: (err) => console.error('Σφάλμα φόρτωσης πληρωμών statement', err)
+    });
   }
 
   loadDashboard() {
@@ -168,20 +194,23 @@ export class InvoiceDashboardComponent implements OnInit {
     if (!this.buildingId) return;
     this.paymentService.getRecentByBuilding(this.buildingId).subscribe({
       next: (data) => (this.recentPayments = data),
+
       error: (err) => console.error('Σφάλμα φόρτωσης πρόσφατων πληρωμών', err)
     });
+    console.log('Building ID που στέλνω:', this.buildingId);
   }
 
   loadCurrentMonthPayments(): void {
     if (!this.buildingId) return;
     this.paymentsLoading = true;
-    this.paymentService.getCurrentMonthByBuilding(this.buildingId).subscribe({
+
+    this.paymentService.getLastStatementPayments(this.buildingId).subscribe({
       next: (data) => {
         this.statementUserPayments = data;
         this.paymentsLoading = false;
       },
       error: (err) => {
-        console.error('Σφάλμα φόρτωσης πληρωμών τρέχοντος μήνα', err);
+        console.error('Σφάλμα φόρτωσης πληρωμών τελευταίου statement', err);
         this.paymentsLoading = false;
       }
     });
@@ -190,15 +219,15 @@ export class InvoiceDashboardComponent implements OnInit {
   loadBuildingsAndManagerDashboard() {
     this.buildingService.getMyManagedBuildings().subscribe({
       next: (buildings) => {
-        console.log('[DEBUG] Buildings received:', buildings);
+        console.log('Buildings received:', buildings);
 
-        // ✅ Ελέγχουμε ότι είναι array και όχι άδειο
+        //Ελέγχουμε ότι είναι array και όχι άδειο
         if (Array.isArray(buildings) && buildings.length > 0) {
           this.managedBuildings = buildings;
           this.showBuildingSelector = buildings.length > 1;
 
-          console.log('[DEBUG] Managed buildings count:', buildings.length);
-          console.log('[DEBUG] showBuildingSelector:', this.showBuildingSelector);
+          console.log('Managed buildings count:', buildings.length);
+          console.log('ShowBuildingSelector:', this.showBuildingSelector);
 
           // Αν υπάρχει μόνο μία πολυκατοικία → επιλέγεται αυτόματα
           if (buildings.length === 1) {
@@ -209,11 +238,12 @@ export class InvoiceDashboardComponent implements OnInit {
           // Αν υπάρχουν πολλές → επιλέγεται η πρώτη προεπιλεγμένα αλλά φαίνεται ο selector
           else if (buildings.length > 1) {
             this.buildingId = this.buildingId || buildings[0].id;
+            this.currentBuilding = this.managedBuildings.find((b) => b.id === this.buildingId) || this.managedBuildings[0];
             localStorage.setItem('buildingId', this.buildingId.toString());
             this.loadAll();
           }
         } else {
-          console.warn('⚠️ Δεν βρέθηκαν πολυκατοικίες για τον διαχειριστή');
+          console.warn('Δεν βρέθηκαν πολυκατοικίες για τον διαχειριστή');
           this.managedBuildings = [];
           this.showBuildingSelector = false;
         }

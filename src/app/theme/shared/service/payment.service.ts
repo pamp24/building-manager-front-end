@@ -32,6 +32,10 @@ export class PaymentService {
   }
 
   getCurrentMonthByBuilding(buildingId: number): Observable<StatementUserPaymentDTO[]> {
-  return this.http.get<StatementUserPaymentDTO[]>(`${this.apiUrl}/building/${buildingId}/current-month`);
-}
+    return this.http.get<StatementUserPaymentDTO[]>(`${this.apiUrl}/building/${buildingId}/current-month`);
+  }
+
+  getLastStatementPayments(buildingId: number) {
+    return this.http.get<StatementUserPaymentDTO[]>(`${this.apiUrl}/building/${buildingId}/last-statement`);
+  }
 }

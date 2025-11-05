@@ -18,10 +18,24 @@
   </div>
 
   <div class="col-sm-12">
-    <app-card cardTitle="Πληρωμές Χρηστών Τρέχοντος Μήνα ({{ currentMonthLabel }})" [padding]="0">
+    <app-card [cardTitle]="'Πληρωμές Χρηστών για Παραστατικό'" [padding]="0">
       <ng-template #headerOptionsTemplate>
         <button class="btn btn-sm btn-link-primary" (click)="goToInvoiceList()">Περισσότερα</button>
       </ng-template>
+
+      <!--Dropdown παραστατικού -->
+      <div class="d-flex align-items-center justify-content-start ms-3 mt-3 mb-3">
+        <label for="statementSelect" class="me-2 fw-semibold">Παραστατικό:</label>
+        <select
+          id="statementSelect"
+          class="form-select form-select-sm w-auto"
+          [(ngModel)]="selectedStatementId"
+          (change)="onStatementChange()"
+        >
+          <option *ngFor="let s of statements" [value]="s.id">{{ s.code }} ({{ s.startDate | date: 'MMM yyyy' }})</option>
+        </select>
+      </div>
+
       <app-user-payments-table
         [statementUserPayments]="statementUserPayments"
         [currentMonthLabel]="currentMonthLabel"
@@ -36,11 +50,13 @@
       <app-recent-payments [recentPayments]="recentPayments"></app-recent-payments>
     </app-card>
   </div>
+
   <div class="col-md-6 col-xl-4" *ngIf="currentBuilding">
     <app-total-expenses-chart *ngIf="currentBuilding" [buildingId]="buildingId" [attr.key]="buildingId"></app-total-expenses-chart>
   </div>
+
   <div class="col-sm-12 col-xl-4">
-    <app-card cardTitle="Notification" [padding]="0">
+    <app-card cardTitle="Ανακοινώσεις" [padding]="0">
       <ng-template #headerOptionsTemplate>
         <div ngbDropdown placement="bottom-end">
           <a class="avatar avatar-s btn-link-secondary arrow-none" href="javascript:" ngbDropdownToggle>
