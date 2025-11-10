@@ -49,7 +49,7 @@
               [viewDate]="viewDate"
               [events]="events"
               [refresh]="refresh"
-              (eventClicked)="handleEvent('Clicked', $event.event)"
+              (eventClicked)="handleEvent('Clicked', $event.event)  "
               (eventTimesChanged)="eventTimesChanged($event)"
             ></mwl-calendar-week-view>
           }
@@ -68,113 +68,62 @@
       <br />
       <br />
       <h3>
-        Edit events
-        <button class="btn btn-primary float-end" (click)="addEvent()">Προσθήκη</button>
+        <button class="btn btn-primary float-end" (click)="openAddModal()">Προσθήκη</button>
         <div class="clearfix"></div>
       </h3>
+      <h3>Επεξεργασία Ανακοινώσεων</h3>
 
-      <div class="table-responsive">
-        <table class="table table-bordered">
-          <thead>
+      <div class="table-responsive mt-4">
+        <h5 class="mb-3">Γεγονότα που έχουν προστεθεί</h5>
+        <table class="table table-bordered align-middle text-center">
+          <thead class="table-light">
             <tr>
               <th>Τίτλος</th>
-              <th>Κύριο Χρώμα</th>
-              <th>Δευτερεύον Χρώμα</th>
               <th>Αρχή</th>
-              <th>Τέλος</th>
-              <th>Αφαίρεση</th>
+              <th>Λήξη</th>
+              <th>Ενέργειες</th>
             </tr>
           </thead>
-
           <tbody>
             @for (event of events; track event) {
               <tr>
+                <td>{{ event.title }}</td>
+                <td>{{ event.start | date: 'medium' }}</td>
+                <td>{{ event.end | date: 'medium' }}</td>
                 <td>
-                  <input type="text" title="Event Details" class="form-control" [(ngModel)]="event.title" (keyup)="refresh.next()" />
+                  <ul class="list-inline mb-0">
+                    <li class="list-inline-item">
+                      <a
+                        href="javascript:void(0)"
+                        class="avatar avatar-xs btn-link-primary"
+                        ngbTooltip="Επεξεργασία"
+                        (click)="openEditModal(event)"
+                      >
+                        <i class="f-16 text-primary d-flex" antIcon type="edit" theme="outline"></i>
+                      </a>
+                    </li>
+
+                    <li class="list-inline-item">
+                      <a
+                        href="javascript:void(0)"
+                        class="avatar avatar-xs btn-link-danger"
+                        ngbTooltip="Διαγραφή"
+                        (click)="deleteEvent(event)"
+                      >
+                        <i class="f-16 text-danger d-flex" antIcon type="delete" theme="outline"></i>
+                      </a>
+                    </li>
+                  </ul>
                 </td>
-                <td>
-                  <input
-                    type="color"
-                    title="primary color"
-                    class="choose-color"
-                    [(ngModel)]="event?.color.primary"
-                    (change)="refresh.next()"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="color"
-                    title="secondary color"
-                    class="text-color-pick m-2"
-                    [(ngModel)]="event?.color.secondary"
-                    (change)="refresh.next()"
-                  />
-                  <input
-                    type="color"
-                    title="start Date"
-                    class="text-color-pick m-2"
-                    [ngModel]="event?.color.secondaryText ?? '#1e90ff'"
-                    (ngModelChange)="event?.color.secondaryText = $event"
-                    (change)="refresh.next()"
-                  />
-                </td>
-                <td>
-                  <input
-                    class="form-control"
-                    type="text"
-                    title="end Date"
-                    mwlFlatpickr
-                    [(ngModel)]="event.start"
-                    (ngModelChange)="refresh.next()"
-                    [altInput]="true"
-                    [convertModelValue]="true"
-                    [enableTime]="true"
-                    dateFormat="Y-m-dTH:i"
-                    altFormat="F j, Y H:i"
-                    placeholder="Not set"
-                  />
-                </td>
-                <td>
-                  <input
-                    class="form-control"
-                    type="text"
-                    mwlFlatpickr
-                    [(ngModel)]="event.end"
-                    (ngModelChange)="refresh.next()"
-                    [altInput]="true"
-                    [convertModelValue]="true"
-                    [enableTime]="true"
-                    dateFormat="Y-m-dTH:i"
-                    altFormat="F j, Y H:i"
-                    placeholder="Not set"
-                  />
-                </td>
-                <td>
-                  <button class="btn btn-danger" (click)="deleteEvent(event)">Διαγραφή</button>
-                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="5" class="text-muted text-center">Δεν έχουν προστεθεί γεγονότα ακόμα</td>
               </tr>
             }
           </tbody>
         </table>
       </div>
-
-      <ng-template #modalContent let-close="close">
-        <div class="modal-header justify-content-between">
-          <h5 class="modal-title">Γεγονός</h5>
-          <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
-        </div>
-        <div class="modal-body">
-          <div>
-            <!-- Γεγονός: -->
-            <div>Αρχή: {{ modalData?.event?.start | date: 'medium' }}</div>
-            <div>Τέλος: {{ modalData?.event?.end | date: 'medium' }}</div>
-            <div>Τίτλος: {{ modalData?.event?.title }}</div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary" (click)="close()">ΟΚ</button>
-        </div>
-      </ng-template>
     </app-card>
   </div>
 </div>
