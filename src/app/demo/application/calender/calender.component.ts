@@ -1,16 +1,11 @@
-// Angular Imports
-import { Component, TemplateRef, viewChild, inject } from '@angular/core';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import { Component, TemplateRef, viewChild, inject, Input, OnInit, SimpleChanges, OnChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
-
-// Bootstrap
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
-// Third party
-import { startOfDay, endOfDay, subDays, addDays, endOfMonth, isSameDay, isSameMonth, addHours } from 'date-fns';
 import {
   CalendarEvent,
-  CalendarEventAction,
   CalendarEventTimesChangedEvent,
   CalendarView,
   CalendarCommonModule,
@@ -18,15 +13,22 @@ import {
   CalendarWeekModule,
   CalendarDayModule
 } from 'angular-calendar';
-import { EventColor } from 'calendar-utils';
 import { FlatpickrDirective } from 'angularx-flatpickr';
-
-// rxjs
 import { Subject } from 'rxjs';
 import { CardComponent } from 'src/app/theme/shared/components/card/card.component';
+import { CalendarService } from 'src/app/theme/shared/service/calendarService.service';
+import { isSameDay, isSameMonth } from 'date-fns';
+import { CalendarEventModalComponent } from './calendar-event-modal/calendar-event-modal.component';
+import { BuildingService } from 'src/app/theme/shared/service/building.service';
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { IconService } from '@ant-design/icons-angular';
+import { EditOutline, DeleteOutline } from '@ant-design/icons-angular/icons';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
+
 
 @Component({
   selector: 'app-calender',
+  standalone: true,
   templateUrl: './calender.component.html',
   styleUrls: ['./calender.component.scss'],
   imports: [
@@ -37,136 +39,105 @@ import { CardComponent } from 'src/app/theme/shared/components/card/card.compone
     CalendarDayModule,
     FormsModule,
     FlatpickrDirective,
-    DatePipe
+    DatePipe,
+    CalendarEventModalComponent,
+    NgbTooltipModule,
+    NgbTooltipModule,
+    SharedModule 
   ]
 })
-export class CalenderComponent {
+export class CalenderComponent implements OnInit, OnChanges {
+  private iconService = inject(IconService);
+  @Input() buildingId!: number;
+  @Input() isEdit = false;
   private modal = inject(NgbModal);
 
-  // Private props
-  colors: Record<string, EventColor> = {
-    red: {
-      primary: '#000000ff',
-      secondary: '#008cffff'
-    },
-    blue: {
-      primary: '#ff0000ff',
-      secondary: '#01ff4dff'
-    },
-    yellow: {
-      primary: '#f704ffff',
-      secondary: '#ffd105ff'
-    }
-  };
-
-  // Public props
-  readonly modalContent = viewChild.required<TemplateRef<string>>('modalContent');
   view: CalendarView = CalendarView.Month;
   calendarView = CalendarView;
   viewDate: Date = new Date();
   activeDayIsOpen = true;
   refresh = new Subject<void>();
 
-  // Public methods
-  modalData!: {
-    action: string;
-    event: CalendarEvent;
-  };
+  events: CalendarEvent[] = [];
 
-  actions: CalendarEventAction[] = [
-    {
-      label: '<i class="fas fa-fw fa-pencil-alt"></i>',
-      a11yLabel: 'Edit',
-      onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.handleEvent('Edited', event);
-      }
-    },
-    {
-      label: '<i class="fas fa-fw fa-trash-alt"></i>',
-      a11yLabel: 'Delete',
-      onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.events = this.events.filter((iEvent) => iEvent !== event);
-        this.handleEvent('Deleted', event);
-      }
+  readonly modalContent = viewChild.required<TemplateRef<string>>('modalContent');
+
+  modalData!: { action: string; event: CalendarEvent };
+
+  selectedBuildingId!: number;
+  myBuildings: any[] = [];
+
+  constructor(
+    private calendarService: CalendarService,
+    private buildingService: BuildingService
+  ) {
+    this.iconService.addIcon(...[EditOutline, DeleteOutline]);
+  }
+
+  ngOnInit() {
+    this.buildingService.getMyBuildings().subscribe({
+      next: (buildings) => {
+        if (buildings.length > 0) {
+          this.buildingId = buildings[0].id; // παίρνουμε το πρώτο id
+          console.log('selectedBuildingId:', this.buildingId);
+          this.loadEvents();
+        } else {
+          console.warn('Δεν βρέθηκαν πολυκατοικίες για τον χρήστη');
+        }
+      },
+      error: (err) => console.error('Σφάλμα φόρτωσης πολυκατοικιών:', err)
+    });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['buildingId'] && this.buildingId) {
+      console.log('Building ID changed:', this.buildingId);
+      this.loadEvents();
     }
-  ];
+  }
 
-  events: CalendarEvent[] = [
-    {
-      start: subDays(startOfDay(new Date()), 1),
-      end: addDays(new Date(), 1),
-      title: 'A 3 day event',
-      color: { ...this.colors['red'] }
-    },
-    {
-      start: startOfDay(new Date()),
-      title: 'An event with no end date',
-      color: { ...this.colors['yellow'] }
-    },
-    {
-      start: subDays(endOfMonth(new Date()), 3),
-      end: addDays(endOfMonth(new Date()), 3),
-      title: 'A long event that spans 2 months',
-      color: { ...this.colors['blue'] },
-      allDay: true
-    },
-    {
-      start: addHours(startOfDay(new Date()), 2),
-      end: addHours(new Date(), 2),
-      title: 'A draggable and resizable event',
-      color: { ...this.colors['yellow'] }
-    }
-  ];
+  loadEvents(): void {
+    console.log('Loading events for building:', this.buildingId);
+    if (!this.buildingId) return;
 
-  dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
+    this.calendarService.getByBuilding(this.buildingId).subscribe({
+      next: (data) => {
+        console.log('Events loaded:', data);
+        this.events = data.map((e) => ({
+          id: e.id,
+          title: e.title,
+          description: e.description,
+          start: new Date(e.startDate),
+          end: e.endDate ? new Date(e.endDate) : undefined,
+          color: { primary: e.colorPrimary, secondary: e.colorSecondary }
+        }));
+        this.refresh.next();
+      },
+      error: (err) => console.error('Σφάλμα φόρτωσης γεγονότων:', err)
+    });
+  }
+
+  deleteEvent(eventToDelete: CalendarEvent): void {
+    if (!eventToDelete.id) return;
+    this.calendarService.delete(Number(eventToDelete.id)).subscribe(() => this.loadEvents());
+  }
+
+  dayClicked({ date }: { date: Date; events: CalendarEvent[] }): void {
     if (isSameMonth(date, this.viewDate)) {
-      if ((isSameDay(this.viewDate, date) && this.activeDayIsOpen === true) || events.length === 0) {
-        this.activeDayIsOpen = false;
-      } else {
-        this.activeDayIsOpen = true;
-      }
+      this.activeDayIsOpen = !(isSameDay(this.viewDate, date) && this.activeDayIsOpen);
       this.viewDate = date;
     }
   }
 
   eventTimesChanged({ event, newStart, newEnd }: CalendarEventTimesChangedEvent): void {
-    this.events = this.events.map((iEvent) => {
-      if (iEvent === event) {
-        return {
-          ...event,
-          start: newStart,
-          end: newEnd
-        };
-      }
-      return iEvent;
-    });
-    this.handleEvent('Dropped or resized', event);
+    event.start = newStart;
+    event.end = newEnd;
+    this.refresh.next();
   }
 
   handleEvent(action: string, event: CalendarEvent): void {
     this.modalData = { event, action };
-    this.modal.open(this.modalContent(), { size: 'lg' });
-  }
-
-  addEvent(): void {
-    this.events = [
-      ...this.events,
-      {
-        title: 'New event',
-        start: startOfDay(new Date()),
-        end: endOfDay(new Date()),
-        color: this.colors['red'],
-        draggable: true,
-        resizable: {
-          beforeStart: true,
-          afterEnd: true
-        }
-      }
-    ];
-  }
-
-  deleteEvent(eventToDelete: CalendarEvent) {
-    this.events = this.events.filter((event) => event !== eventToDelete);
+    this.modal.open(this.modalContent, { size: 'lg' });
   }
 
   setView(view: CalendarView) {
@@ -176,4 +147,36 @@ export class CalenderComponent {
   closeOpenMonthViewDay() {
     this.activeDayIsOpen = false;
   }
+
+  openAddModal() {
+    const modalRef = this.modal.open(CalendarEventModalComponent, { size: 'lg' });
+    modalRef.componentInstance.buildingId = this.buildingId;
+
+    modalRef.componentInstance.save.subscribe((newEvent: any) => {
+      this.calendarService.create(newEvent).subscribe({
+        next: () => this.loadEvents(),
+        error: (err) => console.error('Σφάλμα προσθήκης event:', err)
+      });
+    });
+  }
+
+  openEditModal(event: CalendarEvent) {
+  const modalRef = this.modal.open(CalendarEventModalComponent, { size: 'lg' });
+  modalRef.componentInstance.buildingId = this.buildingId;
+  modalRef.componentInstance.eventData = {
+    id: event.id,
+    title: event.title,
+    description: (event as any).description, // αν δεν το έχεις, πρόσθεσέ το
+    startDate: event.start,
+    endDate: event.end,
+    colorPrimary: event.color?.primary,
+    colorSecondary: event.color?.secondary
+  };
+  modalRef.componentInstance.isEdit = true;
+
+  modalRef.componentInstance.save.subscribe((updated: any) => {
+    this.calendarService.update(updated).subscribe(() => this.loadEvents());
+  });
+}
+
 }
