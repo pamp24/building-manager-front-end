@@ -57,25 +57,123 @@
 
   <div class="col-sm-12 col-xl-4">
     <app-card cardTitle="Ανακοινώσεις" [padding]="0">
-      <ng-template #headerOptionsTemplate>
-        <div ngbDropdown placement="bottom-end">
-          <a class="avatar avatar-s btn-link-secondary arrow-none" href="javascript:" ngbDropdownToggle>
-            <i class="f-18" antIcon type="more" theme="outline"></i>
-          </a>
-          <div ngbDropdownMenu>
-            <a ngbDropdownItem>Today</a>
-            <a ngbDropdownItem>Weekly</a>
-            <a ngbDropdownItem>Monthly</a>
+      <ng-template #headerOptionsTemplate></ng-template>
+      <ul class="list-group list-group-flush border-top-0 list-scroll-10">
+        <li class="list-group-item border-0" *ngFor="let ann of announcements">
+          <div>
+            <strong>{{ ann.title }}</strong>
+            <br />
+            <small class="text-muted">{{ ann.startDate | date: 'mediumDate' }}-{{ ann.endDate | date: 'mediumDate' }}</small>
+            <p class="mb-0">{{ ann.description }}</p>
           </div>
-        </div>
-      </ng-template>
-      <ul class="list-group list-group-flush border-top-0">
+        </li>
         <li class="list-group-item border-0">
           <div class="d-grid">
-            <button class="btn btn-outline-secondary">Προβολή Όλων</button>
+            <button class="btn btn-outline-secondary" (click)="goToAllAnnouncements()">Προβολή Όλων</button>
           </div>
         </li>
       </ul>
+    </app-card>
+  </div>
+
+  <div class="col-12 mt-4" *ngIf="currentBuilding">
+    <app-card cardTitle="Ψηφοφορίες Κτιρίου" [padding]="0">
+      <!-- Κουμπί στον τίτλο (δεξιά) -->
+      <ng-template #headerOptionsTemplate>
+        <button class="btn btn-sm btn-primary" (click)="onCreatePoll()">+ Νέα Ψηφοφορία</button>
+      </ng-template>
+
+      <div class="card-body p-0 table-scroll-10">
+        <table class="table table-hover mb-0" *ngIf="!loading">
+          <thead>
+            <tr>
+              <th (click)="onSort('title')" style="cursor: pointer">Τίτλος {{ getSortIcon('title') }}</th>
+              <th (click)="onSort('startDate')" style="cursor: pointer">Έναρξη {{ getSortIcon('startDate') }}</th>
+              <th (click)="onSort('endDate')" style="cursor: pointer">Λήξη {{ getSortIcon('endDate') }}</th>
+              <th (click)="onSort('active')" style="cursor: pointer">Κατάσταση {{ getSortIcon('active') }}</th>
+              <th>Επιλογές</th>
+              <th>Πρώτη Επιλογή</th>
+              <th class="text-center">Ενέργειες</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <ng-container *ngFor="let poll of polls">
+              <tr>
+                <td>{{ poll.title }}</td>
+                <td>{{ poll.startDate | date: 'dd/MM/yyyy' }}</td>
+                <td>{{ poll.endDate ? (poll.endDate | date: 'dd/MM/yyyy') : '-' }}</td>
+                <td>
+                  <span
+                    class="badge px-3 py-2"
+                    [ngClass]="{
+                      'bg-success': poll.active,
+                      'bg-secondary': !poll.active
+                    }"
+                  >
+                    {{ poll.active ? 'Ενεργή' : 'Ανενεργή' }}
+                  </span>
+                </td>
+                <td>{{ poll.options?.length || 0 }}</td>
+                <td>{{ poll.leadingOption || '-' }}</td>
+                <td class="text-center">
+                  <a
+                    href="javascript:"
+                    class="avatar avatar-xs btn-link-success"
+                    ngbTooltip="Προβολή Ψηφισάντων"
+                    (click)="toggleVotes(poll.id)"
+                  >
+                    <i
+                      class="f-16 text-success d-flex"
+                      antIcon
+                      [type]="expandedPollId === poll.id ? 'caret-up' : 'caret-down'"
+                      theme="outline"
+                    ></i>
+                  </a>
+                </td>
+              </tr>
+
+              <tr *ngIf="expandedPollId === poll.id">
+                <td colspan="100%">
+                  <div class="p-3 bg-light border rounded">
+                    <div *ngIf="votesLoading" class="text-center">
+                      <div class="spinner-border text-primary"></div>
+                    </div>
+
+                    <table class="table table-sm table-striped align-middle mb-0" *ngIf="!votesLoading">
+                      <thead>
+                        <tr>
+                          <th>Χρήστης</th>
+                          <th>Επιλογή</th>
+                          <th>Περιγραφή</th>
+                          <th>Ημερομηνία Ψήφου</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr *ngFor="let v of pollVotes">
+                          <td>{{ v?.userFullName }}</td>
+                          <td>{{ v?.optionNumber }}</td>
+                          <td>{{ v?.optionText}}</td>
+                          <td>{{ v?.voteDate | date: 'dd/MM/yyyy HH:mm' }}</td>
+                        </tr>
+
+                        <tr *ngIf="!pollVotes?.length">
+                          <td colspan="3" class="text-center text-muted">Δεν υπάρχουν ψήφοι</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+
+        <div *ngIf="loading" class="text-center p-3">
+          <div class="spinner-border text-primary"></div>
+        </div>
+      </div>
     </app-card>
   </div>
 </div>

@@ -1,0 +1,158 @@
+<div class="container mt-4">
+  <!-- ΜΗ ΜΕΛΟΣ -->
+  <div *ngIf="notMember" class="alert alert-warning text-center p-3 mt-3">
+    Δεν είστε μέλος κάποιας πολυκατοικίας.
+    <br />
+    Δεν μπορείτε να δείτε ή να συμμετάσχετε σε ψηφοφορίες.
+  </div>
+
+  <div *ngIf="voteError" class="alert alert-danger mt-3 text-center">
+    {{ voteError }}
+  </div>
+
+  <div *ngIf="!notMember">
+    <!--   ΠΙΝΑΚΑΣ ΔΙΑΧΕΙΡΙΣΤΗ    -->
+
+    <div class="d-flex justify-content-between align-items-center p-2">
+      <h5 class="mb-0">Λίστα Ψηφοφοριών</h5>
+    </div>
+    <div class="card mb-4 shadow-sm p-3">
+      <app-card cardTitle="Ψηφοφορίες Κτιρίου" [padding]="0">
+        <div class="card-body p-0 table-scroll-10">
+          <div class="table-wrapper">
+            <table class="table table-hover mb-0" *ngIf="!loading">
+              <thead>
+                <tr>
+                  <th (click)="onSort('title')" style="cursor: pointer">Τίτλος {{ getSortIcon('title') }}</th>
+                  <th (click)="onSort('startDate')" style="cursor: pointer">Έναρξη {{ getSortIcon('startDate') }}</th>
+                  <th (click)="onSort('endDate')" style="cursor: pointer">Λήξη {{ getSortIcon('endDate') }}</th>
+                  <th (click)="onSort('active')" style="cursor: pointer">Κατάσταση {{ getSortIcon('active') }}</th>
+                  <th>Επιλογές</th>
+                  <th>Πρώτη Επιλογή</th>
+                  <th class="text-center">Ενέργειες</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <ng-container *ngFor="let poll of polls">
+                  <tr>
+                    <td>{{ poll.title }}</td>
+                    <td>{{ poll.startDate | date: 'dd/MM/yyyy' }}</td>
+                    <td>{{ poll.endDate ? (poll.endDate | date: 'dd/MM/yyyy') : '-' }}</td>
+                    <td>
+                      <span class="badge px-3 py-2" [ngClass]="{ 'bg-success': poll.active, 'bg-secondary': !poll.active }">
+                        {{ poll.active ? 'Ενεργή' : 'Ανενεργή' }}
+                      </span>
+                    </td>
+                    <td>{{ poll.options?.length || 0 }}</td>
+                    <td>{{ poll.leadingOption || '-' }}</td>
+  
+                    <td class="text-center">
+                      <a
+                        href="javascript:"
+                        class="avatar avatar-xs btn-link-success"
+                        ngbTooltip="Προβολή Ψηφισάντων"
+                        (click)="toggleVotes(poll.id)"
+                      >
+                        <i
+                          class="f-16 text-success d-flex"
+                          antIcon
+                          [type]="expandedPollId === poll.id ? 'caret-up' : 'caret-down'"
+                          theme="outline"
+                        ></i>
+                      </a>
+                      <a
+                        href="javascript:"
+                        class="avatar avatar-xs btn-link-danger"
+                        ngbTooltip="Διαγραφή Ψηφοφορίας"
+                        (click)="confirmDelete(poll.id)"
+                      >
+                        <i class="f-16 text-danger d-flex" antIcon type="delete" theme="outline"></i>
+                      </a>
+                    </td>
+                  </tr>
+
+                  <!-- EXPANDED ROW -->
+                  <tr *ngIf="expandedPollId === poll.id">
+                    <td colspan="100%">
+                      <div class="p-3 bg-light border rounded">
+                        <div *ngIf="votesLoading" class="text-center">
+                          <div class="spinner-border text-primary"></div>
+                        </div>
+
+                        <table class="table table-sm table-striped align-middle mb-0" *ngIf="!votesLoading">
+                          <thead>
+                            <tr>
+                              <th>Χρήστης</th>
+                              <th>Επιλογή</th>
+                              <th>Περιγραφή</th>
+                            </tr>
+                          </thead>
+
+                          <tbody>
+                            <tr *ngFor="let v of pollVotes">
+                              <td>{{ v?.userFullName }}</td>
+                              <td>{{ v?.optionNumber }}</td>
+                              <td>{{ v?.optionText }}</td>
+                            </tr>
+
+                            <tr *ngIf="!pollVotes?.length">
+                              <td colspan="4" class="text-center text-muted">Δεν υπάρχουν ψήφοι</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+
+          <div *ngIf="loading" class="text-center p-3">
+            <div class="spinner-border text-primary"></div>
+          </div>
+        </div>
+      </app-card>
+      <div class="text-end p-3">
+        <button class="btn btn-primary" (click)="openAddModal()">+ Νέα Ψηφοφορία</button>
+      </div>
+    </div>
+
+    <!--   ΛΙΣΤΑ ΦΥΣΙΚΟΥ ΧΡΗΣΤΗ    -->
+    <div class="mt-4">
+      <div *ngFor="let poll of activePolls" class="card mb-3 shadow-sm">
+        <div class="card-header d-flex justify-content-between">
+          <div>
+            <h5>{{ poll.title }}</h5>
+            <small>{{ poll.description }}</small>
+          </div>
+          <div>
+            <span *ngIf="!poll.active" class="badge bg-danger">ΕΛΗΞΕ</span>
+            <span *ngIf="poll.multipleChoice" class="badge bg-info text-dark">Πολλαπλές Ψήφοι</span>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <ul class="list-group">
+            <li
+              *ngFor="let option of poll.options; let i = index"
+              class="list-group-item d-flex justify-content-between align-items-center"
+              [ngClass]="{
+                'list-group-item-success': isWinner(poll, option),
+                'fw-bold text-primary': userVoted(poll.id, option.id)
+              }"
+            >
+              {{ i + 1 }}) {{ option.text }}
+
+              <div>
+                <span class="badge bg-secondary me-2">{{ option.votes }}</span>
+                <button *ngIf="poll.active" class="btn btn-sm btn-outline-primary" (click)="vote(poll.id, option.id)">Ψήφισε</button>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

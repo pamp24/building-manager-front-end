@@ -13,7 +13,6 @@ import {
   CalendarWeekModule,
   CalendarDayModule
 } from 'angular-calendar';
-import { FlatpickrDirective } from 'angularx-flatpickr';
 import { Subject } from 'rxjs';
 import { CardComponent } from 'src/app/theme/shared/components/card/card.component';
 import { CalendarService } from 'src/app/theme/shared/service/calendarService.service';
@@ -38,9 +37,7 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
     CalendarWeekModule,
     CalendarDayModule,
     FormsModule,
-    FlatpickrDirective,
     DatePipe,
-    CalendarEventModalComponent,
     NgbTooltipModule,
     NgbTooltipModule,
     SharedModule 

@@ -25,7 +25,9 @@ import {
   ShoppingFill,
   StopOutline,
   LeftOutline,
-  RightOutline
+  RightOutline,
+  CaretDownOutline,
+  CaretUpOutline
 } from '@ant-design/icons-angular/icons';
 
 // project import
@@ -49,6 +51,8 @@ import { RecentPaymentsComponent } from './recent-payments/recent-payments.compo
 import { Router } from '@angular/router';
 import { UserPaymentsTableComponent } from './user-payments-table/user-payments-table.component';
 import { CommonExpenseStatementService } from '../../../../theme/shared/service/commonExpensesStatement.service';
+import { CalendarService } from '../../../../theme/shared/service/calendarService.service';
+import { PollService } from '../../../../theme/shared/service/poll.service';
 
 @Component({
   selector: 'app-invoice-dashboard',
@@ -81,13 +85,19 @@ export class InvoiceDashboardComponent implements OnInit {
 
   managedBuildings: ManagedBuildingDTO[] = [];
   currentBuilding?: ManagedBuildingDTO;
-
+  announcements: any[] = [];
   recentPayments: PaymentDTO[] = [];
   statementUserPayments: StatementUserPaymentDTO[] = [];
   paymentsLoading = false;
   currentMonthLabel = new Date().toLocaleString('el-GR', { month: 'long', year: 'numeric' });
   statements: CommonExpenseStatement[] = [];
   showBuildingSelector = false;
+
+  polls: any[] = [];
+  pollVotes: any[] = [];
+  expandedPollId: number | null = null;
+  loading = false;
+  votesLoading = false;
   //Μετρητές για tabs
   totalCount = 0;
   paidCount = 0;
@@ -96,8 +106,15 @@ export class InvoiceDashboardComponent implements OnInit {
   closedCount = 0;
   draftCount = 0;
   selectedStatementId?: number;
+  sortField: string = '';
+  sortAsc: boolean = true;
 
-  constructor(private router: Router, private commonExpenseStatementService: CommonExpenseStatementService) {
+  constructor(
+    private router: Router,
+    private commonExpenseStatementService: CommonExpenseStatementService,
+    private calendarService: CalendarService,
+    private pollService: PollService
+  ) {
     this.iconService.addIcon(
       ...[
         CloseCircleFill,
@@ -120,7 +137,9 @@ export class InvoiceDashboardComponent implements OnInit {
         StopOutline,
         AlertFill,
         DeleteFill,
-        PauseCircleFill
+        PauseCircleFill,
+        CaretDownOutline,
+        CaretUpOutline
       ]
     );
 
@@ -131,6 +150,8 @@ export class InvoiceDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadBuildingsAndManagerDashboard();
+    this.loadRecentAnnouncements();
+    this.loadPolls();
   }
 
   private isDarkTheme(isDark: boolean) {
@@ -272,5 +293,98 @@ export class InvoiceDashboardComponent implements OnInit {
 
   onEditUser(payment: any): void {
     console.log('Επεξεργασία πληρωμής χρήστη:', payment);
+  }
+
+  loadRecentAnnouncements(): void {
+    if (!this.buildingId) return;
+
+    this.calendarService.getByBuilding(this.buildingId).subscribe({
+      next: (events) => {
+        // ταξινόμηση κατά ημερομηνία φθίνουσα
+        this.announcements = events.sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime()); // π.χ. εμφάνιση 3 πιο πρόσφατων
+      },
+      error: (err) => console.error('Σφάλμα φόρτωσης ανακοινώσεων:', err)
+    });
+  }
+
+  goToAllAnnouncements(): void {
+    this.router.navigate(['/calendar']); // ή το route που έχεις ορίσει
+  }
+
+  loadPolls(): void {
+    this.loading = true;
+    this.pollService.getAll(this.buildingId).subscribe({
+      next: (res) => {
+        this.polls = res.sort((a, b) => b.id - a.id);
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Σφάλμα φόρτωσης ψηφοφοριών:', err);
+        this.loading = false;
+      }
+    });
+  }
+
+  toggleVotes(pollId: number): void {
+    if (this.expandedPollId === pollId) {
+      this.expandedPollId = null;
+      return;
+    }
+    this.expandedPollId = pollId;
+    this.loadVotes(pollId);
+  }
+
+  loadVotes(pollId: number): void {
+    this.votesLoading = true;
+    this.pollService.getVotes(pollId).subscribe({
+      next: (res: any[]) => {
+        this.pollVotes = res;
+        this.votesLoading = false;
+      },
+      error: (err) => {
+        console.error('Σφάλμα φόρτωσης ψήφων:', err);
+        this.votesLoading = false;
+      }
+    });
+  }
+
+  onDeactivate(poll: any): void {
+    this.pollService.deactivate(poll.id).subscribe({
+      next: () => this.loadPolls(),
+      error: (err) => console.error('Σφάλμα απενεργοποίησης:', err)
+    });
+  }
+
+  onView(poll: any): void {
+    // μπορείς να κάνεις redirect ή modal
+    console.log('Προβολή ψηφοφορίας:', poll);
+  }
+
+  onCreatePoll(): void {
+    this.router.navigate(['/polls']);
+  }
+
+  onSort(field: string) {
+    if (this.sortField === field) {
+      this.sortAsc = !this.sortAsc; // Αν πατήσεις την ίδια στήλη, αντιστρέφει τη σειρά
+    } else {
+      this.sortField = field;
+      this.sortAsc = true; // Ξεκινάει πάντα με αύξουσα
+    }
+
+    this.polls.sort((a, b) => {
+      const aValue = a[field];
+      const bValue = b[field];
+
+      if (aValue == null) return 1;
+      if (bValue == null) return -1;
+
+      return this.sortAsc ? (aValue > bValue ? 1 : -1) : aValue < bValue ? 1 : -1;
+    });
+  }
+
+  getSortIcon(field: string) {
+    if (this.sortField !== field) return ''; // δεν έχει επιλεγεί
+    return this.sortAsc ? '▲' : '▼';
   }
 }
