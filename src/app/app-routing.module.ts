@@ -144,6 +144,14 @@ const routes: Routes = [
         }
       },
       {
+        path: 'polls',
+        loadChildren: () => import('./demo/application/polls/polls.module').then((m) => m.PollsModule),
+        data: {
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+        }
+      },
+
+      {
         path: 'user',
         loadChildren: () => import('./demo/application/user/user.module').then((m) => m.UserModule),
         data: {

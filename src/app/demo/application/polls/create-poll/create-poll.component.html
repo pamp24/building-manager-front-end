@@ -1,0 +1,66 @@
+<div class="modal-header">
+  <h5 class="modal-title">Νέα Ψηφοφορία</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss()"></button>
+</div>
+
+<div class="modal-body">
+  <div class="card mb-3 p-3">
+
+    <form (ngSubmit)="createPoll()">
+      <div class="mb-3">
+        <label class="form-label">Τίτλος</label>
+        <input type="text" class="form-control" [(ngModel)]="newPoll.title" name="title" required />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Περιγραφή</label>
+        <textarea class="form-control" [(ngModel)]="newPoll.description" name="description"></textarea>
+      </div>
+
+      <div class="row mt-3">
+        <div class="col-md-6">
+          <label class="form-label">Ημερομηνία Έναρξης</label>
+          <input type="datetime-local" class="form-control" [(ngModel)]="newPoll.startDate" name="startDate" />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Ημερομηνία Λήξης</label>
+          <input type="datetime-local" class="form-control" [(ngModel)]="newPoll.endDate" name="endDate" />
+        </div>
+      </div>
+
+      <div class="form-check mt-3">
+        <input class="form-check-input" type="checkbox"
+               [(ngModel)]="newPoll.multipleChoice" id="multipleChoice" name="multipleChoice" />
+        <label class="form-check-label" for="multipleChoice">Πολλαπλές ψήφοι</label>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Επιλογές</label>
+
+        <div *ngFor="let opt of newPoll.options; let i = index" class="input-group mb-2">
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="newPoll.options[i].text"
+            name="option{{ i }}"
+            placeholder="Πληκτρολογήστε επιλογή"
+            required
+          />
+
+          <button type="button" class="btn btn-outline-danger" (click)="removeOption(i)">✕</button>
+        </div>
+
+        <button type="button" class="btn btn-sm btn-outline-success" (click)="addOption()">
+          + Προσθήκη επιλογής
+        </button>
+      </div>
+
+      <!-- ΚΑΤΩ ΚΟΥΜΠΙΑ -->
+      <div class="d-flex justify-content-start gap-2 mt-4">
+        <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss()">Άκυρο</button>
+        <button type="submit" class="btn btn-primary">Αποθήκευση</button>
+      </div>
+
+    </form>
+  </div>
+</div>

@@ -29,7 +29,7 @@ export const NavigationItems: NavigationItem[] = [
     title: 'Admin Panel',
     type: 'group',
     icon: 'icon-navigation',
-    role: [Role.Admin,   Role.PropertyManager, Role.BuildingManager],
+    role: [Role.Admin, Role.PropertyManager, Role.BuildingManager],
     children: [
       // {
       //   id: 'Online-Courses',
@@ -255,13 +255,13 @@ export const NavigationItems: NavigationItem[] = [
         id: 'dashboard',
         title: "Manager's Dashboard",
         type: 'item',
-        url: '/invoice/dashboard',
+        url: '/invoice/dashboard'
       },
       {
         id: 'create',
         title: 'Create Expenses Invoice',
         type: 'item',
-        url: '/invoice/create',
+        url: '/invoice/create'
       },
       // {
       //   id: 'details',
@@ -273,8 +273,8 @@ export const NavigationItems: NavigationItem[] = [
         id: 'list',
         title: 'List Expenses Invoices',
         type: 'item',
-        url: '/invoice/list',
-      },
+        url: '/invoice/list'
+      }
     ]
   },
   {
@@ -296,12 +296,12 @@ export const NavigationItems: NavigationItem[] = [
         role: [Role.User]
       },
       {
-        id: 'account-profile',  
+        id: 'account-profile',
         title: 'Building',
         type: 'item',
         icon: 'database',
         url: '/user/account-profile',
-        role: [Role.Admin, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+        role: [Role.Admin, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
       },
       {
         id: 'default',
@@ -378,6 +378,15 @@ export const NavigationItems: NavigationItem[] = [
         classes: 'nav-item',
         url: '/calendar',
         icon: 'calendar',
+        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+      },
+      {
+        id: 'polls',
+        title: 'Ψηφοφορίες',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/polls',
+        icon: 'line-chart',
         role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
       }
     ]
