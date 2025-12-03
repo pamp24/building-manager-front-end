@@ -3,10 +3,10 @@ import { Component, OnInit, input, output, inject } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 
 // project import
-import { NavigationItem } from '../../navigation';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NavCollapseComponent } from '../nav-collapse/nav-collapse.component';
 import { NavItemComponent } from '../nav-item/nav-item.component';
+import { NavigationItem } from 'src/app/theme/shared/models/navigation';
 
 @Component({
   selector: 'app-nav-group',

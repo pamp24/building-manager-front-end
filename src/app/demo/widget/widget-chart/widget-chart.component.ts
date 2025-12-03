@@ -6,14 +6,14 @@ import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { MonthlyBarChartComponent } from 'src/app/theme/shared/apexchart/monthly-bar-chart/monthly-bar-chart.component';
 import { IncomeOverviewChartComponent } from 'src/app/theme/shared/apexchart/income-overview-chart/income-overview-chart.component';
-import { AnalyticsChartComponent } from 'src/app/theme/shared/apexchart/analytics-chart/analytics-chart.component';
-import { UserCardChartComponent } from 'src/app/theme/shared/apexchart/user-card-chart/user-card-chart.component';
-import { SaleCardChartComponent } from 'src/app/theme/shared/apexchart/sale-card-chart/sale-card-chart.component';
-import { OrderCardChartComponent } from 'src/app/theme/shared/apexchart/order-card-chart/order-card-chart.component';
-import { MarketingCardChartComponent } from 'src/app/theme/shared/apexchart/marketing-card-chart/marketing-card-chart.component';
 import { SalesReportChartComponent } from 'src/app/theme/shared/apexchart/sales-report-chart/sales-report-chart.component';
-import { IncomeOverChartComponent } from 'src/app/theme/shared/apexchart/income-over-chart/income-over-chart.component';
 import { AcquisitionChartComponent } from 'src/app/theme/shared/apexchart/acquisition-chart/acquisition-chart.component';
+import { BuildingTotalCardComponent } from '../../../theme/shared/apexchart/building-total-card/building-total-card.component';
+import { BuildingChartComponent } from '../../../theme/shared/apexchart/building-chart/building-chart.component';
+import { ApartmentPendingCardComponent } from '../../../theme/shared/apexchart/apartment-pending-card/apartment-pending-card.component';
+import { LastStatementCardComponent } from '../../../theme/shared/apexchart/last-statement-card/last-statement-card.component';
+import { PollsTableComponent } from '../../../theme/shared/apexchart/polls-table/polls-table.component';
+import { BuildingPendingCardComponent } from '../../../theme/shared/apexchart/building-pedning-card/building-pedning-card.component';
 
 @Component({
   selector: 'app-widget-chart',
@@ -22,13 +22,13 @@ import { AcquisitionChartComponent } from 'src/app/theme/shared/apexchart/acquis
     SharedModule,
     MonthlyBarChartComponent,
     IncomeOverviewChartComponent,
-    AnalyticsChartComponent,
-    UserCardChartComponent,
-    SaleCardChartComponent,
-    OrderCardChartComponent,
-    MarketingCardChartComponent,
+    PollsTableComponent,
+    LastStatementCardComponent,
+    BuildingTotalCardComponent,
+    ApartmentPendingCardComponent,
+    BuildingPendingCardComponent,
     SalesReportChartComponent,
-    IncomeOverChartComponent,
+    BuildingChartComponent,
     AcquisitionChartComponent
   ],
   templateUrl: './widget-chart.component.html',

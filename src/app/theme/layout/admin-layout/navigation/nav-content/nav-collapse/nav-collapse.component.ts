@@ -5,7 +5,7 @@ import { CommonModule, Location } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 // project import
-import { NavigationItem } from '../../navigation';
+import { NavigationItem } from 'src/app/theme/shared/models/navigation';
 import { MantisConfig } from 'src/app/app-config';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NavItemComponent } from '../nav-item/nav-item.component';
