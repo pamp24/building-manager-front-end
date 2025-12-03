@@ -4,7 +4,7 @@ import { CommonModule, Location, LocationStrategy } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 // project import
-import { NavigationItem, NavigationItems } from '../navigation';
+import { NavigationItems } from '../navigation';
 import { MantisConfig } from 'src/app/app-config';
 import { environment } from 'src/environments/environment';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -52,6 +52,7 @@ import {
   ReadOutline,
   LockOutline
 } from '@ant-design/icons-angular/icons';
+import { NavigationItem } from 'src/app/theme/shared/models/navigation';
 
 @Component({
   selector: 'app-nav-content',

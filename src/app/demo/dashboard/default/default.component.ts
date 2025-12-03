@@ -1,23 +1,27 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
-import { Component, effect, inject } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // project import
-import tableData from 'src/fake-data/default-data.json';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { AnalyticsChartComponent } from 'src/app/theme/shared/apexchart/analytics-chart/analytics-chart.component';
 import { SalesReportChartComponent } from 'src/app/theme/shared/apexchart/sales-report-chart/sales-report-chart.component';
 
 // icons
 import { IconService } from '@ant-design/icons-angular';
-import { UserCardChartComponent } from 'src/app/theme/shared/apexchart/user-card-chart/user-card-chart.component';
-import { MarketingCardChartComponent } from 'src/app/theme/shared/apexchart/marketing-card-chart/marketing-card-chart.component';
 import { AcquisitionChartComponent } from 'src/app/theme/shared/apexchart/acquisition-chart/acquisition-chart.component';
-import { OrderCardChartComponent } from 'src/app/theme/shared/apexchart/order-card-chart/order-card-chart.component';
-import { SaleCardChartComponent } from 'src/app/theme/shared/apexchart/sale-card-chart/sale-card-chart.component';
-import { IncomeOverChartComponent } from 'src/app/theme/shared/apexchart/income-over-chart/income-over-chart.component';
 import { CheckOutline, CloseOutline, ClockCircleOutline, PlusOutline } from '@ant-design/icons-angular/icons';
 import { ThemeService } from 'src/app/theme/shared/service/customs-theme.service';
+import { Router, RouterModule } from '@angular/router';
+import { UserDashboardService } from '../../../theme/shared/service/userDashboard.service';
+import { PaymentModalComponent } from './payment-modal/payment-modal.component';
+import { BuildingTotalCardComponent } from '../../../theme/shared/apexchart/building-total-card/building-total-card.component';
+import { BuildingChartComponent } from '../../../theme/shared/apexchart/building-chart/building-chart.component';
+import { ApartmentPendingCardComponent } from '../../../theme/shared/apexchart/apartment-pending-card/apartment-pending-card.component';
+import { LastStatementCardComponent } from '../../../theme/shared/apexchart/last-statement-card/last-statement-card.component';
+import { PollsTableComponent } from '../../../theme/shared/apexchart/polls-table/polls-table.component';
+import { BuildingPendingCardComponent } from '../../../theme/shared/apexchart/building-pedning-card/building-pedning-card.component';
+import { NgbModalModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -25,35 +29,70 @@ import { ThemeService } from 'src/app/theme/shared/service/customs-theme.service
   imports: [
     CommonModule,
     SharedModule,
-    AnalyticsChartComponent,
+    PollsTableComponent,
     SalesReportChartComponent,
     CommonModule,
     SharedModule,
-    UserCardChartComponent,
-    MarketingCardChartComponent,
+    LastStatementCardComponent,
+    BuildingPendingCardComponent,
     AcquisitionChartComponent,
-    OrderCardChartComponent,
-    AnalyticsChartComponent,
-    SaleCardChartComponent,
-    IncomeOverChartComponent,
-    SalesReportChartComponent
+    ApartmentPendingCardComponent,
+    PollsTableComponent,
+    BuildingTotalCardComponent,
+    BuildingChartComponent,
+    SalesReportChartComponent,
+    RouterModule,
+    NgbModalModule   
   ],
   templateUrl: './default.component.html',
   styleUrls: ['./default.component.scss']
 })
-export class DefaultComponent {
+export class DefaultComponent implements OnInit {
+  dashboardLoaded = false;
+  dashboard: any;
   private iconService = inject(IconService);
   private themeService = inject(ThemeService);
-
+  private dashboardService = inject(UserDashboardService);
+  role: string | null = null;
+  totalAmount = 0;
+  lastStatementItems: any[] = [];
+  allocations: any[] = [];
+  selectedAllocation: any = null;
   // public props
   isDarkThemes!: boolean;
 
   // constructor
-  constructor() {
+  constructor(
+    private router: Router,
+    private userDashboardService: UserDashboardService,
+    private modal: NgbModal
+  ) {
     this.iconService.addIcon(...[CheckOutline, CloseOutline, ClockCircleOutline, PlusOutline]);
     effect(() => {
       this.isDarkTheme(this.themeService.isDarkMode());
     });
+    this.loadRole();
+  }
+
+  ngOnInit(): void {
+    this.loadLastStatementItems();
+
+    this.userDashboardService.getDashboard().subscribe({
+      next: (res) => {
+        this.dashboard = res;
+        this.dashboardLoaded = true;
+      }
+    });
+    this.loadAllocations();
+  }
+
+  private loadRole() {
+    const userStr = localStorage.getItem('currentUser');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      this.role = user.role || null;
+      console.log('USER ROLE (localStorage):', this.role);
+    }
   }
 
   // private methods
@@ -61,177 +100,58 @@ export class DefaultComponent {
     this.isDarkThemes = isDark;
   }
 
-  // public method
-  page_view = [
-    {
-      title: 'Admin Home',
-      link: '/demo/admin/index.html',
-      amount: '7755',
-      percentage: '31.74%'
-    },
-    {
-      title: 'Form Elements',
-      link: '/demo/admin/forms.html',
-      amount: '5215',
-      percentage: '28.53%'
-    },
-    {
-      title: 'Utilities',
-      link: '/demo/admin/util.html',
-      amount: '4848',
-      percentage: '25.74%'
-    },
-    {
-      title: 'Form Validation',
-      link: '/demo/admin/validation.html',
-      amount: '3275',
-      percentage: '23.17%'
-    },
-    {
-      title: 'Modals',
-      link: '/demo/admin/modals.html',
-      amount: '3003',
-      percentage: '22.21%'
-    }
-  ];
+  loadLastStatementItems() {
+    this.userDashboardService.getLastStatementItems().subscribe({
+      next: (items) => {
+        this.lastStatementItems = items;
 
-  transaction = [
-    {
-      background: 'text-success bg-light-success',
-      icon: 'check',
-      title: 'Order #002434',
-      time: 'Today, 2:00 AM',
-      amount: '+ $1,430',
-      percentage: '78%'
-    },
-    {
-      background: 'text-danger bg-light-danger',
-      icon: 'close',
-      title: 'Order #984947',
-      time: '5 August, 1:45 PM',
-      amount: '- $302',
-      percentage: '8%'
-    },
-    {
-      background: 'text-primary bg-light-primary',
-      icon: 'clock-circle',
-      title: 'Order #988784',
-      time: '7 hours ago',
-      amount: '- $682',
-      percentage: '16%'
-    }
-  ];
+        this.totalAmount = items.reduce((sum, i) => sum + (i.price || 0), 0);
+      },
+      error: (err) => console.error(err)
+    });
+  }
 
-  recentOrder = tableData;
+  categoryLabels: any = {
+    COMMON: 'Κοινόχρηστα',
+    HEATING: 'Θέρμανση',
+    ELEVATOR: 'Ανελκυστήρας',
+    EQUAL: 'Ίσα Έξοδα',
+    BOILER: 'Λέβητας',
+    SPECIAL: 'Ειδική Δαπάνη',
+    OWNERS: 'Ιδιοκτήτες',
+    OTHER: 'Άλλες Δαπάνες'
+  };
 
-  summaryIncome = [
-    {
-      title: 'Published Project',
-      color: 'primary',
-      background: 'progress-primary',
-      value: '30',
-      percentage: '30%'
-    },
-    {
-      title: 'Completed Task',
-      color: 'success',
-      background: 'progress-success',
-      value: '90',
-      percentage: '90%'
-    },
-    {
-      title: 'Pending Task',
-      color: 'danger',
-      background: 'progress-danger',
-      value: '50',
-      percentage: '50%'
-    },
-    {
-      title: 'Issues',
-      color: 'warning',
-      background: 'progress-warning',
-      value: '55',
-      percentage: '55%'
+  translateCategory(category: string): string {
+    return this.categoryLabels[category] || category;
+  }
+
+  loadAllocations() {
+  this.dashboardService.getUserStatements().subscribe({
+    next: (allocs) => {
+      this.allocations = allocs;
     }
-  ];
+  });
 }
-//   private iconService = inject(IconService);
 
-//   // constructor
-//   constructor() {
-//     this.iconService.addIcon(...[RiseOutline, FallOutline, SettingOutline, GiftOutline, MessageOutline]);
-//   }
+  openModal(task: any) {
+  const ref = this.modal.open(PaymentModalComponent, { size: 'md' });
+  ref.componentInstance.allocation = task;
 
-//   // public method
-//   recentOrder = tableData;
+  ref.result.then(
+    amount => this.handlePay(amount),
+    () => {}
+  );
+}
 
-//   AnalyticEcommerce = [
-//     {
-//       title: 'Total Page Views',
-//       amount: '4,42,236',
-//       background: 'bg-light-primary ',
-//       border: 'border-primary',
-//       icon: 'rise',
-//       percentage: '59.3%',
-//       color: 'text-primary',
-//       number: '35,000'
-//     },
-//     {
-//       title: 'Total Users',
-//       amount: '78,250',
-//       background: 'bg-light-primary ',
-//       border: 'border-primary',
-//       icon: 'rise',
-//       percentage: '70.5%',
-//       color: 'text-primary',
-//       number: '8,900'
-//     },
-//     {
-//       title: 'Total Order',
-//       amount: '18,800',
-//       background: 'bg-light-warning ',
-//       border: 'border-warning',
-//       icon: 'fall',
-//       percentage: '27.4%',
-//       color: 'text-warning',
-//       number: '1,943'
-//     },
-//     {
-//       title: 'Total Sales',
-//       amount: '$35,078',
-//       background: 'bg-light-warning ',
-//       border: 'border-warning',
-//       icon: 'fall',
-//       percentage: '27.4%',
-//       color: 'text-warning',
-//       number: '$20,395'
-//     }
-//   ];
 
-//   transaction = [
-//     {
-//       background: 'text-success bg-light-success',
-//       icon: 'gift',
-//       title: 'Order #002434',
-//       time: 'Today, 2:00 AM',
-//       amount: '+ $1,430',
-//       percentage: '78%'
-//     },
-//     {
-//       background: 'text-primary bg-light-primary',
-//       icon: 'message',
-//       title: 'Order #984947',
-//       time: '5 August, 1:45 PM',
-//       amount: '- $302',
-//       percentage: '8%'
-//     },
-//     {
-//       background: 'text-danger bg-light-danger',
-//       icon: 'setting',
-//       title: 'Order #988784',
-//       time: '7 hours ago',
-//       amount: '- $682',
-//       percentage: '16%'
-//     }
-//   ];
-// }
+  handlePay(amount: number) {
+    const id = this.selectedAllocation.id;
+
+    this.userDashboardService.payAllocation(id, amount).subscribe({
+      next: () => {
+        this.loadAllocations();
+      }
+    });
+  }
+}

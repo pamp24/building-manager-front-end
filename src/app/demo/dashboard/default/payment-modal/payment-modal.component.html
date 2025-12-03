@@ -1,0 +1,48 @@
+<div class="modal-header">
+  <h5 class="modal-title">Πληρωμή Κοινοχρήστων</h5>
+  <button type="button" class="btn-close" (click)="activeModal.dismiss()"></button>
+</div>
+
+<div class="modal-body">
+
+  <p><strong>Κωδικός:</strong> {{ allocation?.code }}</p>
+  <p><strong>Μήνας:</strong> {{ allocation?.month }}</p>
+  <p><strong>Υπόλοιπο:</strong> {{ allocation?.remainingAmount }} €</p>
+
+  <!-- Επιλογή Κάρτας -->
+  <label class="form-label mt-3">Επιλέξτε κάρτα</label>
+  <select class="form-select" [(ngModel)]="selectedCard">
+    <option *ngFor="let c of cards" [value]="c.id">
+      {{ c.name }} — {{ c.masked }}
+    </option>
+  </select>
+
+  <!-- Πλήρες ποσό checkbox -->
+  <div class="form-check mt-3">
+    <input 
+      type="checkbox" 
+      class="form-check-input"
+      id="fullAmount"
+      [(ngModel)]="fullAmount"
+      (change)="toggleFullAmount()" />
+
+    <label for="fullAmount" class="form-check-label">
+      Πλήρες ποσό ({{ allocation?.remainingAmount }} €)
+    </label>
+  </div>
+
+  <!-- Ποσό πληρωμής -->
+  <label class="form-label mt-3">Ποσό πληρωμής</label>
+  <input 
+    type="number" 
+    class="form-control"
+    [(ngModel)]="paymentAmount"
+    [disabled]="fullAmount"
+  />
+
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-secondary" (click)="activeModal.dismiss()">Κλείσιμο</button>
+  <button class="btn btn-primary" (click)="confirmPay()">Πληρωμή</button>
+</div>

@@ -6,8 +6,8 @@ import { Title } from '@angular/platform-browser';
 
 // project import
 import { SharedModule } from '../../shared.module';
-import { NavigationItem, NavigationItems } from 'src/app/theme/layout/admin-layout/navigation/navigation';
-import { componentMenus } from 'src/app/theme/layout/simple-layout/com-navigation/component-navigation';
+import { NavigationItems } from 'src/app/theme/layout/admin-layout/navigation/navigation';
+import { componentMenus, NavigationItem } from 'src/app/theme/layout/simple-layout/com-navigation/component-navigation';
 
 // icons
 import { IconModule, IconService } from '@ant-design/icons-angular';

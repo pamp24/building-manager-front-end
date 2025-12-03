@@ -11,22 +11,25 @@ import { RiseOutline } from '@ant-design/icons-angular/icons';
 
 // third party
 import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
+import { UserDashboardService } from '../../service/userDashboard.service';
+import { OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-marketing-card-chart',
+  selector: 'app-building-pedning-card',
   imports: [NgApexchartsModule, SharedModule],
-  templateUrl: './marketing-card-chart.component.html',
-  styleUrl: './marketing-card-chart.component.scss'
+  templateUrl: './building-pedning-card.component.html',
+  styleUrl: './building-pedning-card.component.scss'
 })
-export class MarketingCardChartComponent {
+export class BuildingPendingCardComponent implements OnInit {
   private themeService = inject(ThemeService);
   private iconService = inject(IconService);
-
+  totalUnpaid = 0;
+  unpaidMonths: string[] = [];
   // public props
   chartOptions!: ApexOptions;
 
   // constructor
-  constructor() {
+  constructor(private userDashboardService: UserDashboardService) {
     this.chartOptions = {
       chart: { type: 'area', height: 100, sparkline: { enabled: true } },
       colors: ['#1677ff'],
@@ -52,6 +55,13 @@ export class MarketingCardChartComponent {
       this.updateThemeColor(this.themeService.customsTheme());
       this.isDarkTheme(this.themeService.isDarkMode());
       this.rerenderChartOnContainerResize(this.themeService.isContainerMode());
+    });
+  }
+
+  ngOnInit() {
+    this.userDashboardService.getBuildingPending().subscribe((data) => {
+      this.totalUnpaid = data.totalUnpaid;
+      this.unpaidMonths = data.unpaidMonths;
     });
   }
 

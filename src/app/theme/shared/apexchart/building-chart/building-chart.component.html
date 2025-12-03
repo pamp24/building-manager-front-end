@@ -1,40 +1,38 @@
-<h5 class="mb-3">Income Overview</h5>
+<h5 class="mb-3">Γράφημα Πολυκατοικίας</h5>
 <div class="card">
   <div class="card-body">
     <div class="row mb-0 align-items-center">
-      <div class="col">
+      <!-- <div class="col">
         <p class="mb-1 text-danger">$1,12,900 (45.67%)</p>
         <p class="mb-1 text-muted">Compare to : 01 Dec 2021-08 Jan 2022</p>
-      </div>
+      </div> -->
       <div class="col-auto">
         <div class="btn-group">
-          <button class="btn income-week week" [ngClass]="isDarkThemes === true ? 'btn-dark' : 'btn-light'" (click)="toggleActive('week')">
-            Week
+          <button class="btn toggle-btn" [class.active]="selectedView === 'building'" (click)="toggleActive('building')">
+            Πολυκατοικία
           </button>
-          <button
-            class="btn income-month month"
-            [ngClass]="isDarkThemes === true ? 'btn-dark' : 'btn-light'"
-            (click)="toggleActive('month')"
-          >
-            Month
+
+          <button class="btn toggle-btn" [class.active]="selectedView === 'apartment'" (click)="toggleActive('apartment')">
+            Διαμέρισμα
           </button>
         </div>
       </div>
+
       <div class="col-auto">
-        <select class="form-select select-time" title="Select Item" [(ngModel)]="selectType" (change)="onOptionSelected()">
-          <option value="volume">By Volume</option>
-          <option value="margin">By Margin</option>
-          <option value="sales">By Sales</option>
+        <select class="form-select select-time" [(ngModel)]="selectedPeriod" (change)="loadChartData()">
+          <option value="month">Μήνας</option>
+          <option value="year">Χρόνος</option>
         </select>
       </div>
       <div class="col-auto">
-        <a href="javascript:" class="avatar avatar-xs btn btn-outline-secondary" title="Download">
+        <a href="javascript:" class="avatar avatar-xs btn btn-outline-secondary" title="Λήψη">
           <i antIcon type="download" theme="outline"></i>
         </a>
       </div>
     </div>
     <div id="chart">
       <apx-chart
+        #chart
         [series]="chartOptions.series"
         [chart]="chartOptions.chart"
         [dataLabels]="chartOptions.dataLabels"

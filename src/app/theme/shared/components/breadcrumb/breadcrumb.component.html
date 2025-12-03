@@ -8,10 +8,10 @@
               <ul class="breadcrumb">
                 <li class="breadcrumb-item">
                   @if (type === 'theme2') {
-                    <a [routerLink]="['/dashboard/analytics/']" title="Home" class="home"><i class="feather icon-home"></i></a>
+                    <a [routerLink]="['/dashboard/default']" title="Home" class="home"><i class="feather icon-home"></i></a>
                   }
                   @if (type === 'theme1') {
-                    <a [routerLink]="['/dashboard/analytics/']" class="home">{{ 'Home' | translate }}</a>
+                    <a [routerLink]="['/dashboard/default']" class="home">{{ 'Home' | translate }}</a>
                   }
                 </li>
                 @for (breadcrumb of navigationList; track breadcrumb) {

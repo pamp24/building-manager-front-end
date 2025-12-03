@@ -6,35 +6,41 @@ import { SharedModule } from '../../shared.module';
 import { ThemeService } from '../../service/customs-theme.service';
 
 // icons
-// icons
 import { IconService } from '@ant-design/icons-angular';
 import { FallOutline } from '@ant-design/icons-angular/icons';
+
+// services
+import { UserDashboardService } from '../../service/userDashboard.service';
 
 // third party
 import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
 
 @Component({
-  selector: 'app-order-card-chart',
+  selector: 'app-apartment-pending-card',
   imports: [NgApexchartsModule, SharedModule],
-  templateUrl: './order-card-chart.component.html',
-  styleUrl: './order-card-chart.component.scss'
+  templateUrl: './apartment-pending-card.component.html',
+  styleUrl: './apartment-pending-card.component.scss'
 })
-export class OrderCardChartComponent {
+export class ApartmentPendingCardComponent {
   private themeService = inject(ThemeService);
   private iconService = inject(IconService);
+  private dashboardService = inject(UserDashboardService);
 
-  // public props
   chartOptions!: ApexOptions;
+  unpaidAmount = 0; // <-- Εδώ αποθηκεύεται το ανεξόφλητο
 
-  // constructor
   constructor() {
+    // sparkline chart
     this.chartOptions = {
       chart: { type: 'area', height: 100, sparkline: { enabled: true } },
       colors: ['#ff4d4f'],
       plotOptions: { bar: { columnWidth: '80%' } },
       series: [
         {
-          data: [1800, 1500, 1800, 1700, 1400, 1200, 1000, 800, 600, 500, 600, 800, 500, 700, 400, 600, 500, 600]
+          data: [
+            1800, 1500, 1800, 1700, 1400, 1200, 1000, 800, 600, 500,
+            600, 800, 500, 700, 400, 600, 500, 600
+          ]
         }
       ],
       xaxis: { crosshairs: { width: 1 } },
@@ -45,17 +51,31 @@ export class OrderCardChartComponent {
         marker: { show: true }
       }
     };
+
     this.iconService.addIcon(...[FallOutline]);
+
+    // theme effects
     effect(() => {
       this.isDarkTheme(this.themeService.isDarkMode());
       this.rerenderChartOnContainerResize(this.themeService.isContainerMode());
     });
+
+    // load from backend
+    this.loadUnpaid();
   }
 
-  // private methods
+  // === LOAD BACKEND VALUE ===
+  loadUnpaid() {
+    this.dashboardService.getUnpaidForApartment().subscribe({
+      next: (amount) => (this.unpaidAmount = amount),
+      error: (err) => console.error('Unpaid fetch error:', err)
+    });
+  }
+
+  // === THEME ===
   private isDarkTheme(isDark: boolean) {
     const tooltip = { ...this.chartOptions.tooltip };
-    tooltip.theme = isDark === true ? 'dark' : 'light';
+    tooltip.theme = isDark ? 'dark' : 'light';
     this.chartOptions = { ...this.chartOptions, tooltip };
   }
 

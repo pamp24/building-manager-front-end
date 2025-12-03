@@ -1,5 +1,5 @@
-<div class="welcome-card">
-  <div class="body">  
+<div *ngIf="role === 'User'" class="welcome-card">
+  <div class="body">
     <div class="d-flex flex-wrap">
       <div class="row w-100">
         <div class="col-sm-6 col-xs-12">
@@ -9,7 +9,7 @@
               Πάρτε τον έλεγχο των κοινωστήστων σας με το Building Manager. Παρακολουθήστε την πρόοδο, διαχειριστείτε τις εργασίες και
               επικοινωνήστε με τους ενοίκους εύκολα και αποτελεσματικά.
             </h6>
-            <button routerLink="/dashboard/analytics" class="btn btn-outline-light">Δείτε Περισσότερα</button>
+            <button routerLink="/dashboard/forms-validator" class="btn btn-outline-light">Δείτε Περισσότερα</button>
           </div>
         </div>
         <div class="col-sm-6 col-xs-12">
@@ -26,90 +26,113 @@
 </div>
 <div class="row">
   <div class="col-md-6 col-xl-3">
-    <app-user-card-chart />
+    <app-last-statement-card />
   </div>
   <div class="col-md-6 col-xl-3">
-    <app-order-card-chart />
+    <app-building-total-card />
   </div>
   <div class="col-md-6 col-xl-3">
-    <app-sale-card-chart />
+    <app-apartment-pending-card />
   </div>
   <div class="col-md-6 col-xl-3">
-    <app-marketing-card-chart />
+    <app-building-pedning-card />
   </div>
   <div class="col-md-12 col-xl-8">
-    <app-income-over-chart />
+    <app-building-chart [isVisible]="dashboardLoaded"></app-building-chart>
   </div>
+  <!-- Ενεργείες/Πληρωμές -->
   <div class="col-md-12 col-xl-4">
-    <h5 class="mb-3">Page Views by Page Title</h5>
-    <div class="card">
+    <h5 class="mb-3">Ενέργειες Πληρωμών</h5>
+
+    <div class="card actions-card" style="max-height: 420px; overflow-y: auto">
       <div class="list-group list-group-flush">
-        @for (task of page_view; track task) {
-          <a href="javascript:" class="list-group-item list-group-item-action">
-            <div class="d-flex my-1">
-              <div class="flex-grow-1 me-2">
-                <h6 class="mb-1">{{ task.title }}</h6>
-                <p class="mb-0 text-muted">{{ task.link }}</p>
+        @for (task of allocations; track task) {
+          <div class="list-group-item py-3">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <h6 class="mb-1 d-flex align-items-center gap-2">
+                  Σύνολο: {{ task.remainingAmount }} €
+
+                  <span class="badge" [class.bg-success]="task.isPaid" [class.bg-danger]="!task.isPaid">
+                    {{ task.isPaid ? 'Πληρωμένο' : 'Απλήρωτο' }}
+                  </span>
+                </h6>
+                <br />
+
+                <small *ngIf="task.paidAmount" class="text-muted">Πληρωμένο: {{ task.paidAmount }} €</small>
               </div>
-              <div class="flex-shrink-0 text-end">
-                <h5 class="mb-1 text-primary">{{ task.amount }}</h5>
-                <p class="mb-0 text-muted">{{ task.percentage }}</p>
-              </div>
+
+              <button
+                class="btn btn-sm"
+                [disabled]="task.isPaid"
+                [class.btn-primary]="!task.isPaid"
+                [class.btn-secondary]="task.isPaid"
+                (click)="openModal(task)"
+              >
+                {{ task.isPaid ? 'Ολοκληρώθηκε' : 'Πληρωμή' }}
+              </button>
             </div>
-          </a>
+            <div>
+              <h6>Τίτλος: {{ task.code }}</h6>
+              <h6>Μήνας: {{ task.month }}</h6>
+            </div>
+            <div>
+              <small class="text-muted">
+                Ημερομηνία Έκδοσης: {{ task.issueDate | date: 'dd/MM/yyyy' }} Ημερομηνία Λήξης: {{ task.dueDate | date: 'dd/MM/yyyy' }}
+              </small>
+            </div>
+          </div>
         }
       </div>
     </div>
   </div>
 
+  <!-- Πίνακας Έξοδα Μήνα -->
   <div class="col-md-12 col-xl-8">
-    <h5 class="mb-3">Recent Orders</h5>
+    <h5 class="mb-3">Έξοδα Τελευταίου Μήνα</h5>
     <div class="card tbl-card">
-      <div class="table-responsive">
+      <div class="table-responsive scroll-10">
         <table class="table table-hover mb-0">
           <thead>
             <tr>
-              <th>TRACKING NO.</th>
-              <th>PRODUCT NAME</th>
-              <th class="text-end">TOTAL ORDER</th>
-              <th class="text-center">STATUS</th>
-              <th class="text-end">TOTAL AMOUNT</th>
+              <th>Α.Α.</th>
+              <th>Κατηγορία</th>
+              <th class="text-center">Περιγραφή</th>
+              <th class="text-end">Συνολικό Ποσό</th>
             </tr>
           </thead>
           <tbody>
-            @for (order of recentOrder; track order) {
+            @for (item of lastStatementItems; let i = $index; track item) {
               <tr>
-                <td>
-                  <a href="javascript:" class="text-muted">{{ order.id }}</a>
-                </td>
-                <td>{{ order.name }}</td>
-                <td class="text-end">{{ order.quantity }}</td>
-                <td>
-                  <span class="px-4 text-center d-block">
-                    <i class="fas fa-circle {{ order.status_type }} f-10 m-r-5"></i>
-                    {{ order.status }}
-                  </span>
-                </td>
-                <td class="text-end">{{ order.amount }}</td>
+                <td>{{ i + 1 }}</td>
+                <td>{{ translateCategory(item.category) }}</td>
+                <td class="text-center">{{ item.descriptionItem }}</td>
+                <td class="text-end">{{ item.price }} €</td>
               </tr>
             }
+            <tr class="table-secondary fw-bold">
+              <td class="text-end"></td>
+              <td colspan="3" class="text-end">Σύνολο: {{ totalAmount | number: '1.2-2' }} €</td>
+            </tr>
           </tbody>
         </table>
       </div>
     </div>
   </div>
+
   <div class="col-md-12 col-xl-4">
-    <app-analytics-chart />
+    <app-polls-table />
   </div>
 
   <div class="col-md-12 col-xl-8">
     <app-sales-report-chart />
   </div>
+
   <div class="col-md-12 col-xl-4">
-    <h5 class="mb-3">Transaction History</h5>
+    <h5 class="mb-3">Ιστορικό Συναλλαγών</h5>
     <div class="card">
       <div class="list-group list-group-flush">
-        @for (history of transaction; track history) {
+        <!-- @for (history of transaction; track history) {
           <a href="javascript:" class="list-group-item list-group-item-action">
             <div class="d-flex">
               <div class="flex-shrink-0">
@@ -127,7 +150,7 @@
               </div>
             </div>
           </a>
-        }
+        } -->
       </div>
     </div>
     <div class="card">
@@ -153,7 +176,7 @@
   <div class="col-md-12 col-xl-8">
     <div class="card">
       <div class="card-body">
-        @for (details of summaryIncome; track details) {
+        <!-- @for (details of summaryIncome; track details) {
           <div class="row align-items-center my-2">
             <div class="col-5">
               <p class="mb-0">{{ details.title }}</p>
@@ -165,7 +188,7 @@
               <p class="mb-0 text-sm text-muted">{{ details.percentage }}</p>
             </div>
           </div>
-        }
+        } -->
         <hr class="my-4" />
         <div class="d-flex align-items-center">
           <div class="flex-shrink-0">

@@ -4,10 +4,10 @@ import { CommonModule, Location } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 // Project import
-import { NavigationItem } from '../../navigation';
 import { MantisConfig } from 'src/app/app-config';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { AuthenticationService } from 'src/app/theme/shared/service';
+import { NavigationItem } from 'src/app/theme/shared/models/navigation';
 
 @Component({
   selector: 'app-nav-item',

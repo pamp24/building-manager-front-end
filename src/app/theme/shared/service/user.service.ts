@@ -10,8 +10,6 @@ import { inviteRequest } from '../models/inviteRequest';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private apiUrl = 'http://localhost:8080/api/v1/auth/authenticate';
-
   constructor(private http: HttpClient) {}
 
   getCurrentUser(): Observable<User> {

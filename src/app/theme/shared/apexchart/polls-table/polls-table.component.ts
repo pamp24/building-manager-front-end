@@ -9,12 +9,12 @@ import { ThemeService } from '../../service/customs-theme.service';
 import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
 
 @Component({
-  selector: 'app-analytics-chart',
+  selector: 'app-polls-table',
   imports: [SharedModule, NgApexchartsModule],
-  templateUrl: './analytics-chart.component.html',
-  styleUrl: './analytics-chart.component.scss'
+  templateUrl: './polls-table.component.html',
+  styleUrl: './polls-table.component.scss'
 })
-export class AnalyticsChartComponent {
+export class PollsTableComponent {
   private themeService = inject(ThemeService);
 
   // public props

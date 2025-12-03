@@ -1,14 +1,16 @@
 <div class="card">
   <div class="card-body">
-    <h6 class="mb-2 f-w-400 text-muted">Total Users</h6>
+    <h6 class="mb-2 f-w-400 text-muted">Ανεξόφλιτο Υπόλοιπο Διαμερίσματος</h6>
+
     <h4 class="mb-0 d-flex align-items-center gap-2">
-      78,250
-      <span class="badge bg-light-primary border border-primary">
-        <i antIcon type="rise" theme="outline"></i>
-        70.5%
+      {{ unpaidAmount | number:'1.2-2' }} €
+      <span class="badge bg-light-warning border border-warning">
+        <i antIcon type="fall" theme="outline"></i>
+        27.4%
       </span>
     </h4>
   </div>
+
   <div id="chart">
     <apx-chart
       [series]="chartOptions.series"

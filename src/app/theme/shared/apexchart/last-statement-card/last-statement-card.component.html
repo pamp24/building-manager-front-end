@@ -1,20 +1,27 @@
 <div class="card">
   <div class="card-body">
-    <h6 class="mb-2 f-w-400 text-muted">Total Sales</h6>
+
+    <h6 class="mb-2 f-w-400 text-muted">
+      Υπόλοιπο Εκδοτέου Λογαριασμού ({{month || '-'}})
+    </h6>
+
     <h4 class="mb-0 d-flex align-items-center gap-2">
-      $35,078
-      <span class="badge bg-light-warning border border-warning">
-        <i antIcon type="fall" theme="outline"></i>
-        27.4%
+
+      {{ debt | number:'1.2-2' }} €
+
+      <span class="badge" [ngClass]="badgeClass">
+        <i antIcon [type]="badgeIcon" theme="outline"></i>
+        {{ differencePercent | number:'1.1-1' }}%
       </span>
+
     </h4>
   </div>
+
   <div id="chart">
     <apx-chart
       [series]="chartOptions.series"
       [chart]="chartOptions.chart"
       [plotOptions]="chartOptions.plotOptions"
-      [xaxis]="chartOptions.xaxis"
       [colors]="chartOptions.colors"
       [tooltip]="chartOptions.tooltip"
     ></apx-chart>
