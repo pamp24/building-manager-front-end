@@ -1,34 +1,26 @@
-// angular import
 import { Component, effect, inject, Input } from '@angular/core';
-
-// third party
 import { NgScrollbarModule } from 'ngx-scrollbar';
-
-// project import
 import { ThemeService } from '../../service/customs-theme.service';
 
 @Component({
   selector: 'app-scrollbar',
+  standalone: true,                 // ✅ FIX #1
   imports: [NgScrollbarModule],
   templateUrl: './scrollbar.component.html',
-  styleUrl: './scrollbar.component.scss'
+  styleUrls: ['./scrollbar.component.scss'] // ✅ FIX #2 (styleUrls όχι styleUrl)
 })
 export class ScrollbarComponent {
   private themeService = inject(ThemeService);
 
-  @Input() customStyle: { [key: string]: string } = {};
+  // ✅ Το customStyle τελικά το χρησιμοποιείς σαν height στο template
+  // άρα καλύτερα να είναι string (π.χ. '280px')
+  @Input() customStyle: string = '280px';
 
   direction: string = 'ltr';
 
-  // constructor
   constructor() {
     effect(() => {
-      this.isRtlTheme(this.themeService.isRTLMode());
+      this.direction = this.themeService.isRTLMode() ? 'rtl' : 'ltr';
     });
-  }
-
-  // private method
-  private isRtlTheme(isRtl: boolean) {
-    this.direction = isRtl === true ? 'rtl' : 'ltr';
   }
 }

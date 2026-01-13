@@ -4,28 +4,49 @@
 </div>
 
 <!-- Κάρτα με στοιχεία πολυκατοικίας -->
-<app-card *ngIf="card_detail.length > 0" cardTitle="Πολυκατοικία" [padding]="24">
+<app-card *ngIf="buildings.length > 0" cardTitle="Πολυκατοικία" [padding]="24">
   <div class="row">
+    <!-- Όνομα Πολυκατοικίας (dropdown) -->
     <div class="col-md-6">
       <label>Όνομα Πολυκατοικίας</label>
-      <input type="text" class="form-control readonly-input" [value]="card_detail[0].buildingName" readonly />
+
+      <select class="form-select" [(ngModel)]="selectedBuildingIndex" (change)="onBuildingChange()">
+        <option *ngFor="let b of buildings; let i = index" [value]="i">
+          {{ b.name }}
+        </option>
+      </select>
     </div>
+
+    <!-- Διεύθυνση -->
     <div class="col-md-6">
       <label>Διεύθυνση Πολυκατοικίας</label>
       <input
         type="text"
         class="form-control readonly-input"
-        [value]="card_detail[0].buildingStreet + ' ' + card_detail[0].buildingStreetNumber + ', ' + card_detail[0].buildingCity"
+        [value]="
+          buildings[selectedBuildingIndex]?.street1 +
+          ' ' +
+          buildings[selectedBuildingIndex]?.stNumber1 +
+          ', ' +
+          buildings[selectedBuildingIndex]?.city
+        "
         readonly
       />
     </div>
   </div>
 </app-card>
+
 <!-- Κάρτες Διαμερισμάτων -->
 <div class="row">
   <div class="p-3 d-sm-flex align-items-center justify-content-between user-card">
     <div class="d-flex align-items-center m-sm-0 mt-3">
-      <select *ngIf="!messageApartments" class="form-select" aria-label="Επιλογή ταξινόμησης" [(ngModel)]="sortOption" (change)="sortCards()">
+      <select
+        *ngIf="!messageApartments"
+        class="form-select"
+        aria-label="Επιλογή ταξινόμησης"
+        [(ngModel)]="sortOption"
+        (change)="sortCards()"
+      >
         <option value="default">Ταξινόμηση (Προεπιλογή)</option>
         <option value="name">Όνομα</option>
         <option value="floorAsc">Όροφος Αύξουσα</option>
@@ -115,16 +136,6 @@
       </div>
     </div>
   }
-  <!-- Pagination -->
-  <div class="datatable-bottom mt-3" *ngIf="total > 1">
-    <ngb-pagination
-      [collectionSize]="total"
-      [(page)]="currentPage"
-      [pageSize]="pageSize"
-      (pageChange)="onPageChange($event)"
-      class="table-pagination"
-    ></ngb-pagination>
-  </div>
 </div>
 
 <ng-template #preview let-modal>
@@ -133,5 +144,3 @@
     <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="modal.close('Close click')">Κλείσιμο</button>
   </div>
 </ng-template>
-
-

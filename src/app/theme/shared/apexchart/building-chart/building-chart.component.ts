@@ -49,7 +49,7 @@ export class BuildingChartComponent implements OnInit, OnChanges {
 }
 
 
-  // ===  LOAD DATA FROM BACKEND  ===
+  //FROM BACKEND
   loadChartData() {
     this.userDashboardService.getChartData(this.selectedView, this.selectedPeriod).subscribe({
       next: (data) => {

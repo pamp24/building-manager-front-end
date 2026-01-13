@@ -21,7 +21,7 @@ export class StatusCardsComponent implements OnChanges {
   expiredCount = 0;
   closedCount = 0;
   draftCount = 0;
-  totalAll = 0; 
+  totalAll = 0;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dashboardData'] && this.dashboardData) {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnInit, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -9,11 +10,14 @@ import { AuthenticationService } from 'src/app/theme/shared/service/authenticati
 import { UserService } from 'src/app/theme/shared/service';
 import { ApartmentService } from 'src/app/theme/shared/service/apartment.service';
 import { ApartmentDTO } from 'src/app/theme/shared/models/apartmentDTO';
+import { NgbDropdownModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { MemberEditModalComponent } from './member-edit-modal/member-edit-modal.component';
+import { ConfirmDeleteModalComponent } from './confirm-delete-modal/confirm-delete-modal.component';
 
 @Component({
   selector: 'app-role',
   standalone: true,
-  imports: [CommonModule, SharedModule],
+  imports: [CommonModule, SharedModule, NgbDropdownModule],
   templateUrl: './role.component.html',
   styleUrls: ['./role.component.scss']
 })
@@ -25,6 +29,8 @@ export class RoleComponent implements OnInit {
   roleToInvite: string = '';
   apartmentToInvite: number | null = null;
   apartmentFloor: string = '';
+  buildings: BuildingDTO[] = [];
+  selectedBuildingIndex = 0;
 
   apartments: BuildingDTO[] = [];
   floorOptions: string[] = [];
@@ -45,6 +51,7 @@ export class RoleComponent implements OnInit {
     private buildingService: BuildingService,
     private buildingMemberService: BuildingMemberService,
     private apartmentService: ApartmentService,
+    private modal: NgbModal,
     @Inject(AuthenticationService) private authService: AuthenticationService
   ) {}
 
@@ -57,26 +64,31 @@ export class RoleComponent implements OnInit {
       next: (buildings) => {
         if (!buildings || buildings.length === 0) {
           this.messageBuildings = 'Δεν έχετε ακόμα καταχωρημένες πολυκατοικίες.';
-          this.apartments = [];
-          this.members = [];
-          this.buildingApartments = [];
           return;
         }
 
-        this.apartments = buildings;
-        this.total = buildings.length;
-        this.messageBuildings = '';
-
-        const first = this.apartments[0];
-        this.currentPage = 1;
-        this.loadBuilding(first.id);
-        this.loadMembers(first.id);
+        this.buildings = buildings;
+        this.selectedBuildingIndex = 0;
+        this.onBuildingChange();
       },
-      error: (err) => {
-        console.error('Σφάλμα φόρτωσης πολυκατοικιών', err);
-        this.messageBuildings = 'Παρουσιάστηκε σφάλμα κατά τη φόρτωση πολυκατοικιών.';
+      error: () => {
+        this.messageBuildings = 'Σφάλμα φόρτωσης πολυκατοικιών.';
       }
     });
+  }
+  onBuildingChange(): void {
+    const building = this.buildings[this.selectedBuildingIndex];
+    if (!building) return;
+
+    this.currentBuildingId = building.id;
+
+    this.buildingName = building.name;
+    this.buildingAddress = `${building.street1} ${building.stNumber1}, ${building.city}`;
+
+    localStorage.setItem('buildingId', building.id.toString());
+
+    this.loadMembers(building.id);
+    this.loadApartments(building.id);
   }
 
   private loadMembers(buildingId: number): void {
@@ -100,19 +112,6 @@ export class RoleComponent implements OnInit {
     });
   }
 
-  private loadBuilding(buildingId: number): void {
-    this.buildingService.getBuilding(buildingId).subscribe({
-      next: (building) => {
-        this.buildingName = building.name;
-        this.buildingAddress = `${building.street1} ${building.stNumber1}, ${building.city}`;
-        this.floorOptions = this.generateFloors(building);
-      },
-      error: (err) => {
-        console.error('Σφάλμα φόρτωσης πολυκατοικίας:', err);
-      }
-    });
-  }
-
   private loadApartments(buildingId: number): void {
     this.apartmentService.getApartmentsByBuilding(buildingId).subscribe({
       next: (data) => {
@@ -132,16 +131,6 @@ export class RoleComponent implements OnInit {
         this.messageApartments = 'Αποτυχία φόρτωσης διαμερισμάτων.';
       }
     });
-  }
-
-  private generateFloors(building: BuildingDTO): string[] {
-    const result: string[] = [];
-    if (building.undergroundFloorExist) result.push('Υπόγειο');
-    result.push('Ισόγειο');
-    if (building.halfFloorExist) result.push('Ημιώροφος');
-    for (let i = 1; i <= building.floors; i++) result.push(`${i}ος`);
-    if (building.overTopFloorExist) result.push('Δώμα');
-    return result;
   }
 
   sendInvite(): void {
@@ -181,6 +170,8 @@ export class RoleComponent implements OnInit {
     switch (role) {
       case 'Owner':
         return 'Ιδιοκτήτης';
+      case 'User':
+        return 'Χρήστης';
       case 'Resident':
         return 'Ένοικος';
       case 'BuildingManager':
@@ -204,6 +195,8 @@ export class RoleComponent implements OnInit {
         return 'Έληξε';
       case 'DECLINED':
         return 'Απορρίφθηκε';
+      case 'PENDING_APARTMENT':
+        return 'Αναμονή για ανάθεση διαμερίσματος';
       default:
         return status;
     }
@@ -227,14 +220,57 @@ export class RoleComponent implements OnInit {
     this.apartmentToInvite = null;
   }
 
-  onPageChange(page: number): void {
-    this.currentPage = page;
-    const selectedBuilding = this.apartments[page - 1];
-    if (selectedBuilding) {
-      this.loadBuilding(selectedBuilding.id);
-      this.loadApartments(selectedBuilding.id);
-      this.loadMembers(selectedBuilding.id);
-      localStorage.setItem('buildingId', selectedBuilding.id.toString());
-    }
+  openEditModal(member: any): void {
+    const ref = this.modal.open(MemberEditModalComponent, { centered: true, backdrop: 'static' });
+
+    ref.componentInstance.member = member;
+    ref.componentInstance.filteredApartments = this.filteredApartments;
+
+    ref.componentInstance.roleChanged.subscribe((role: 'Owner' | 'Resident' | '') => {
+      this.roleToInvite = role;
+      this.onRoleChange();
+      ref.componentInstance.filteredApartments = this.filteredApartments;
+    });
+
+    ref.result.then(
+      (result) => {
+        if (result?.saved) {
+          const role = result.role as 'Owner' | 'Resident';
+          const apartmentId = Number(result.apartmentId);
+
+          this.buildingMemberService.assignApartment(member.id, role, apartmentId).subscribe({
+            next: () => {
+              // refresh members + apartments
+              this.loadMembers(this.currentBuildingId!);
+              this.loadApartments(this.currentBuildingId!);
+            },
+            error: (err) => console.error('Assign failed', err)
+          });
+        }
+      },
+      () => {}
+    );
+  }
+
+  openDeleteModal(member: any): void {
+    const ref = this.modal.open(ConfirmDeleteModalComponent, { centered: true });
+
+    ref.componentInstance.title = 'Διαγραφή μέλους';
+    ref.componentInstance.message = `Θέλεις σίγουρα να διαγράψεις τον χρήστη ${member.fullName || member.email};`;
+
+    ref.result.then(
+      (result) => {
+        if (result === 'confirm') {
+          this.buildingMemberService.deleteMember(member.id).subscribe({
+            next: () => {
+              this.loadMembers(this.currentBuildingId!);
+              this.loadApartments(this.currentBuildingId!);
+            },
+            error: (err) => console.error('Delete failed', err)
+          });
+        }
+      },
+      () => {}
+    );
   }
 }

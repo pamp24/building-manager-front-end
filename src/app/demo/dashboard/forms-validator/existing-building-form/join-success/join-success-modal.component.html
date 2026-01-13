@@ -1,0 +1,25 @@
+<div class="modal-header">
+  <h5 class="modal-title">Επιτυχής Σύνδεση ✅</h5>
+  <button type="button" class="btn-close" (click)="close()"></button>
+</div>
+
+<div class="modal-body">
+  <p class="mb-2">
+    Συνδέθηκες με επιτυχία στην πολυκατοικία
+    <strong *ngIf="buildingName">{{ buildingName }}</strong>
+    <span *ngIf="!buildingName">.</span>
+  </p>
+
+  <p class="text-muted mb-2">
+    Παρακαλώ περιμένετε την έγκριση από τον διαχειριστή της πολυκατοικίας και την ανάθεση του διαμερίσματός σας.
+  </p>
+
+  <div class="alert alert-warning mb-0">
+    Κατάσταση:
+    <strong>Αναμονή ανάθεσης διαμερίσματος</strong>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-secondary" (click)="close()">Κλείσιμο</button>
+</div>

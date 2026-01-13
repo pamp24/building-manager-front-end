@@ -41,7 +41,6 @@ export const NavigationItems: NavigationItem[] = [
     type: 'group',
     classes: 'first-group',
     icon: 'icon-navigation',
-    role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
     children: [
       {
         id: 'default',

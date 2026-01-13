@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../../../theme/shared/service/user.service';
 import { BuildingService } from '../../../../theme/shared/service/building.service';
 import { AuthenticationService } from 'src/app/theme/shared/service/authentication.service';
@@ -12,12 +12,13 @@ import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
   selector: 'app-building-form',
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './building-form.component.html',
-  styleUrl: './building-form.component.scss'
+  styleUrls: ['./building-form.component.scss']
 })
 export class BuildingFormComponent implements OnInit {
   @Input() selectedAction!: 'many' | 'new' | 'existing';
   @Output() backClicked = new EventEmitter<void>();
-  @Output() formSubmitted = new EventEmitter<{ id: number; form: FormGroup }>();
+  @Output() formSubmitted = new EventEmitter<{ buildingId: number; buildingForm: FormGroup }>();
+  @Input({ required: true }) form!: FormGroup;
 
   buildings: BuildingDTO[] = [];
   buildingData?: BuildingDTO;
@@ -25,8 +26,7 @@ export class BuildingFormComponent implements OnInit {
   currentPage = 1;
   pageSize = 1;
   total = 0;
-
-  buildingForm: FormGroup;
+  selectedRegulationFile: File | null = null;
   isSubmitted = false;
   countries = ['Ελλάδα'];
   states = [
@@ -89,7 +89,7 @@ export class BuildingFormComponent implements OnInit {
     private buildingService: BuildingService,
     private authenticationService: AuthenticationService
   ) {
-    this.buildingForm = this.fb.group({
+    this.form = this.fb.group({
       name: ['', Validators.required],
       street1: ['', Validators.required],
       stNumber1: ['', Validators.required],
@@ -100,100 +100,26 @@ export class BuildingFormComponent implements OnInit {
       city: ['', Validators.required],
       region: ['', Validators.required],
       postalCode: ['', [Validators.required, Validators.pattern(/^\d{5}$/)]],
-      floors: ['', Validators.required],
-      apartmentsNum: ['', [Validators.required, Validators.min(1)]],
-      sqMetersTotal: ['', Validators.required],
-      sqMetersCommonSpaces: ['', Validators.required],
-      parkingExist: [false],
-      parkingSpacesNum: [''],
+      floors: [0, [Validators.required, Validators.min(0)]],
+      apartmentsNum: [1, [Validators.required, Validators.min(1)]],
+      sqMetersTotal: [0, [Validators.required, Validators.min(1)]],
+      sqMetersCommonSpaces: [0],
       description: [''],
+      parkingExist: [false],
+      parkingSpacesNum: [0],
       undergroundFloorExist: [false],
       halfFloorExist: [false],
       overTopFloorExist: [false],
       managerHouseExist: [false],
       storageExist: [false],
-      storageNum: [''],
+      storageNum: [0],
       hasCentralHeating: [false],
-      heatingType: [''],
-      heatingCapacityLitres: ['']
-    });
-    this.buildingForm.get('parkingExist')?.valueChanges.subscribe((checked: boolean) => {
-      const parkingSpacesNumCtrl = this.buildingForm.get('parkingSpacesNum');
-      if (checked) {
-        parkingSpacesNumCtrl?.setValidators([Validators.required, Validators.min(1)]);
-        parkingSpacesNumCtrl?.enable();
-      } else {
-        parkingSpacesNumCtrl?.clearValidators();
-        parkingSpacesNumCtrl?.setValue('');
-        parkingSpacesNumCtrl?.disable();
-      }
-      parkingSpacesNumCtrl?.updateValueAndValidity();
-    });
-
-    this.buildingForm.get('storageExist')?.valueChanges.subscribe((checked: boolean) => {
-      const storageNumCtrl = this.buildingForm.get('storageNum');
-      if (checked) {
-        storageNumCtrl?.setValidators([Validators.required, Validators.min(1)]);
-        storageNumCtrl?.enable();
-      } else {
-        storageNumCtrl?.clearValidators();
-        storageNumCtrl?.setValue('');
-        storageNumCtrl?.disable();
-      }
-      storageNumCtrl?.updateValueAndValidity();
-    });
-
-    this.buildingForm.get('hasCentralHeating')?.valueChanges.subscribe((checked: boolean) => {
-      const heatingTypeCtrl = this.buildingForm.get('heatingType');
-      const heatingLitresCtrl = this.buildingForm.get('heatingCapacityLitres');
-      if (checked) {
-        heatingTypeCtrl?.setValidators([Validators.required]);
-        heatingLitresCtrl?.setValidators([Validators.required, Validators.min(1)]);
-        heatingTypeCtrl?.enable();
-        heatingLitresCtrl?.enable();
-      } else {
-        heatingTypeCtrl?.clearValidators();
-        heatingLitresCtrl?.clearValidators();
-        heatingTypeCtrl?.setValue('');
-        heatingLitresCtrl?.setValue('');
-        heatingTypeCtrl?.disable();
-        heatingLitresCtrl?.disable();
-      }
-      heatingTypeCtrl?.updateValueAndValidity();
-      heatingLitresCtrl?.updateValueAndValidity();
+      heatingType: ['NONE'],
+      heatingCapacityLitres: [0]
     });
   }
 
   ngOnInit(): void {
-    this.buildingForm = this.fb.group({
-      name: [''],
-      street1: [''],
-      stNumber1: [''],
-      street2: [''],
-      stNumber2: [''],
-      city: [''],
-      region: [''],
-      postalCode: [''],
-      country: [''],
-      state: [''],
-      floors: [''],
-      apartmentsNum: [''],
-      sqMetersTotal: [''],
-      sqMetersCommonSpaces: [''],
-      parkingExist: [''],
-      parkingSpacesNum: [''],
-      buildingDescription: [''],
-      managerHouseExist: [''],
-      undergroundFloorExist: [''],
-      halfFloorExist: [''],
-      overTopFloorExist: [''],
-      storageExist: [''],
-      storageNum: [''],
-      hasCentralHeating: [''],
-      heatingType: [''],
-      heatingCapacityLitres: ['']
-    });
-
     this.buildingService.getMyBuildings().subscribe({
       next: (buildings) => {
         this.buildings = buildings;
@@ -211,11 +137,11 @@ export class BuildingFormComponent implements OnInit {
 
   submitBuildingForm(): void {
     this.isSubmitted = true;
-    if (this.buildingForm.invalid) {
-      this.buildingForm.markAllAsTouched();
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
       return;
     }
-    const formValue = this.buildingForm.value;
+    const formValue = this.form.value;
     const currentUserId = this.authenticationService.currentUserValue?.id;
 
     if (!currentUserId) {
@@ -256,19 +182,16 @@ export class BuildingFormComponent implements OnInit {
     this.buildingService.createBuilding(building).subscribe({
       next: (buildingId: number) => {
         console.log('Η πολυκατοικία δημιουργήθηκε με επιτυχία', buildingId);
-        localStorage.setItem('buildingId', buildingId.toString());
-        localStorage.setItem('storageNum', building.storageNum.toString());
-        localStorage.setItem('managerHouseExist', building.managerHouseExist ? 'true' : 'false');
         const currentUserId = this.authenticationService.currentUserValue?.id;
         if (currentUserId) {
           this.userService.assignRole(currentUserId, 'BuildingManager').subscribe({
             next: () => {
               console.log('Ο ρόλος BuildingManager δόθηκε');
-              this.formSubmitted.emit({ id: buildingId, form: this.buildingForm });
+              this.formSubmitted.emit({ buildingId, buildingForm: this.form });
             },
             error: (err) => {
               console.warn('Ο χρήστης έχει ήδη τον ρόλο BuildingManager ή υπήρξε άλλο σφάλμα:', err);
-              this.formSubmitted.emit({ id: buildingId, form: this.buildingForm });
+              this.formSubmitted.emit({ buildingId, buildingForm: this.form });
             }
           });
         }
@@ -279,17 +202,48 @@ export class BuildingFormComponent implements OnInit {
     });
   }
   get managerHouseExistSelected(): boolean {
-    return this.buildingForm?.get('managerHouseExist')?.value;
+    return this.form?.get('managerHouseExist')?.value;
   }
 
   loadBuilding(building: BuildingDTO) {
     this.buildingData = building;
-    this.buildingForm.patchValue(building);
+    this.form.patchValue(building);
   }
 
   onPageChange(page: number) {
     this.currentPage = page;
     const building = this.buildings[page - 1];
     this.loadBuilding(building);
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (!input.files || input.files.length === 0) {
+      this.selectedRegulationFile = null;
+      return;
+    }
+
+    const file = input.files[0];
+
+    // basic guard
+    if (file.type !== 'application/pdf') {
+      alert('Παρακαλώ επιλέξτε αρχείο PDF.');
+      input.value = '';
+      this.selectedRegulationFile = null;
+      return;
+    }
+
+    // (optional) size limit, π.χ. 10MB
+    const maxSizeMb = 10;
+    if (file.size > maxSizeMb * 1024 * 1024) {
+      alert(`Το αρχείο είναι μεγάλο. Μέγιστο επιτρεπτό: ${maxSizeMb}MB.`);
+      input.value = '';
+      this.selectedRegulationFile = null;
+      return;
+    }
+
+    this.selectedRegulationFile = file;
+    console.log('PDF selected:', file.name, file.size);
   }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -36,9 +37,10 @@ export class UserCardComponent implements OnInit {
   private apartmentService!: ApartmentService;
   buildingName: string = '';
   buildingAddress: string = '';
-
+  selectedBuildingIndex = 0;
+  buildings: any[] = [];
   sortOption: string = 'default'; // προεπιλογή
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  
   card_detail: any[] = [];
   currentUsedParking = 0;
   currentUsedStorages = 0;
@@ -68,14 +70,14 @@ export class UserCardComponent implements OnInit {
     // 🔹 Βήμα 1: φέρνουμε τις πολυκατοικίες του χρήστη
     this.buildingService.getMyBuildings().subscribe({
       next: (buildings) => {
-        this.total = buildings.length;
+        this.buildings = buildings;
 
         if (buildings.length > 0) {
-          const firstBuilding = buildings[0];
-          this.loadBuildingData(firstBuilding.id);
+          this.selectedBuildingIndex = 0; // ✅ πρώτη πολυκατοικία
+          this.onBuildingChange(); // ✅ φόρτωσε data
         }
       },
-      error: (err) => console.error('Σφάλμα φόρτωσης πολυκατοικιών:', err)
+      error: (err) => console.error('Σφάλμα φόρτωσης πολυκατοικιών', err)
     });
   }
   //Βήμα 2: φόρτωση στοιχείων μίας πολυκατοικίας
@@ -130,8 +132,18 @@ export class UserCardComponent implements OnInit {
     });
   }
 
+  onBuildingChange() {
+  const selectedBuilding = this.buildings[this.selectedBuildingIndex];
+  if (!selectedBuilding) return;
+
+  // αποθήκευση αν τη χρειάζεσαι αλλού
+  localStorage.setItem('buildingId', selectedBuilding.id);
+
+  // αν θες να φορτώνεις και διαμερίσματα κ.λπ.
+  this.loadBuildingData(selectedBuilding.id);
+}
+
   // public method
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   open(preview: any, card: any) {
     this.selectedApartment = card?.apartment ?? null;
     this.modalService.open(preview, { size: 'xl' });

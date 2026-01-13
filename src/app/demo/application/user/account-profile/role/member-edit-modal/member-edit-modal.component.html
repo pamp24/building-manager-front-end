@@ -1,0 +1,44 @@
+<div class="modal-header">
+  <h5 class="modal-title">Ανάθεση Ρόλου & Διαμερίσματος</h5>
+  <button type="button" class="btn-close" (click)="activeModal.dismiss()"></button>
+</div>
+
+<div class="modal-body">
+  <div class="mb-2">
+    <div><b>Ονοματεπώνυμο:</b> {{ displayFullName }}</div>
+    <div><b>Email:</b> {{ member?.email || '—' }}</div>
+  </div>
+
+  <hr />
+
+  <div class="row g-3 align-items-end">
+    <!-- Role dropdown -->
+    <div class="col">
+      <label class="form-label">Ρόλος</label>
+      <select class="form-select" [(ngModel)]="roleToInvite" (change)="onRoleChange()" [disabled]="isSending">
+        <option value="" disabled>Επιλέξτε Ρόλο</option>
+        <option value="Owner">Ιδιοκτήτης</option>
+        <option value="Resident">Ένοικος</option>
+      </select>
+    </div>
+
+    <!-- Apartment dropdown -->
+    <div class="col">
+      <label class="form-label">Διαμέρισμα</label>
+      <select class="form-select" [(ngModel)]="apartmentToInvite" [disabled]="isSending">
+        <option [ngValue]="null" disabled>Επιλέξτε Διαμέρισμα</option>
+        <option *ngIf="filteredApartments.length === 0" disabled>Δεν υπάρχουν διαθέσιμα διαμερίσματα</option>
+        <option *ngFor="let ap of filteredApartments" [ngValue]="ap.id">
+          Διαμέρισμα {{ ap.floor }}{{ ap.number }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="text-danger mt-3" *ngIf="errorMsg">{{ errorMsg }}</div>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-outline-secondary" (click)="activeModal.dismiss()" [disabled]="isSending">Ακύρωση</button>
+  <button class="btn btn-primary" (click)="save()" [disabled]="isSending">Ανάθεση</button>
+</div>

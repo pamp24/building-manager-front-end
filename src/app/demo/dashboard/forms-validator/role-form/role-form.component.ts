@@ -1,23 +1,19 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ActionType } from '../forms-validator.component';
 
 @Component({
   selector: 'app-role-form',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './role-form.component.html',
-  styleUrl: './role-form.component.scss'
+  styleUrls: ['./role-form.component.scss']
 })
 export class RoleFormComponent {
-  @Output() actionSelected = new EventEmitter<'many' | 'new' | 'existing'>();
-  @Output() formCompleted = new EventEmitter<void>();
+  @Output() actionSelected = new EventEmitter<ActionType>();
 
-  selectedAction: 'many' | 'new' | 'existing' | null = null;
-
-  setAction(action: 'many' | 'new' | 'existing') {
-    this.selectedAction = action;
-    this.actionSelected.emit(action);  // <- απαραίτητο
-    this.formCompleted.emit();         // <- για να πας στο επόμενο βήμα
+  select(action: ActionType): void {
+    this.actionSelected.emit(action);
   }
 }

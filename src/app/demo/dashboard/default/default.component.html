@@ -51,25 +51,17 @@
             <div class="d-flex justify-content-between align-items-start">
               <div>
                 <h6 class="mb-1 d-flex align-items-center gap-2">
-                  Σύνολο: {{ task.remainingAmount }} €
+                  Σύνολο: {{ task.totalForApartment }} €
 
                   <span class="badge" [class.bg-success]="task.isPaid" [class.bg-danger]="!task.isPaid">
                     {{ task.isPaid ? 'Πληρωμένο' : 'Απλήρωτο' }}
                   </span>
                 </h6>
                 <br />
-
-                <small *ngIf="task.paidAmount" class="text-muted">Πληρωμένο: {{ task.paidAmount }} €</small>
               </div>
 
-              <button
-                class="btn btn-sm"
-                [disabled]="task.isPaid"
-                [class.btn-primary]="!task.isPaid"
-                [class.btn-secondary]="task.isPaid"
-                (click)="openModal(task)"
-              >
-                {{ task.isPaid ? 'Ολοκληρώθηκε' : 'Πληρωμή' }}
+              <button class="btn btn-sm" [class.btn-primary]="!task.isPaid" [class.btn-secondary]="task.isPaid" (click)="openModal(task)">
+                {{ task.isPaid ? 'Εμφάνιση' : 'Πληρωμή' }}
               </button>
             </div>
             <div>

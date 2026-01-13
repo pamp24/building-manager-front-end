@@ -1,4 +1,4 @@
-<form [formGroup]="buildingForm" *ngIf="selectedAction === 'new'" class="editForm" novalidate>
+<form *ngIf="form" [formGroup]="form" class="editForm" novalidate>
   <h5 class="mb-3">Βήμα 2: Επιπλέον Στοιχεία Κτιρίου (Η Εισαγωγή πρέπει να γίνει από τον Διαχειριστή)</h5>
 
   <div class="row">
@@ -9,9 +9,9 @@
         type="text"
         class="form-control"
         formControlName="name"
-        [ngClass]="{ 'is-invalid': buildingForm.get('name')?.invalid && buildingForm.get('name')?.touched }"
+        [ngClass]="{ 'is-invalid': form.get('name')?.invalid && form.get('name')?.touched }"
       />
-      <div class="invalid-feedback" *ngIf="buildingForm.get('name')?.invalid && buildingForm.get('name')?.touched">
+      <div class="invalid-feedback" *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
         Το πεδίο είναι υποχρεωτικό.
       </div>
     </div>
@@ -23,9 +23,9 @@
         type="text"
         class="form-control"
         formControlName="street1"
-        [ngClass]="{ 'is-invalid': buildingForm.get('street1')?.invalid && buildingForm.get('street1')?.touched }"
+        [ngClass]="{ 'is-invalid': form.get('street1')?.invalid && form.get('street1')?.touched }"
       />
-      <div class="invalid-feedback" *ngIf="buildingForm.get('street1')?.invalid && buildingForm.get('street1')?.touched">
+      <div class="invalid-feedback" *ngIf="form.get('street1')?.invalid && form.get('street1')?.touched">
         Το πεδίο είναι υποχρεωτικό.
       </div>
     </div>
@@ -37,9 +37,9 @@
         type="text"
         class="form-control"
         formControlName="stNumber1"
-        [ngClass]="{ 'is-invalid': buildingForm.get('stNumber1')?.invalid && buildingForm.get('stNumber1')?.touched }"
+        [ngClass]="{ 'is-invalid': form.get('stNumber1')?.invalid && form.get('stNumber1')?.touched }"
       />
-      <div class="invalid-feedback" *ngIf="buildingForm.get('stNumber1')?.invalid && buildingForm.get('stNumber1')?.touched">
+      <div class="invalid-feedback" *ngIf="form.get('stNumber1')?.invalid && form.get('stNumber1')?.touched">
         Το πεδίο είναι υποχρεωτικό.
       </div>
     </div>
@@ -63,9 +63,9 @@
         type="text"
         class="form-control"
         formControlName="city"
-        [ngClass]="{ 'is-invalid': buildingForm.get('city')?.invalid && buildingForm.get('city')?.touched }"
+        [ngClass]="{ 'is-invalid': form.get('city')?.invalid && form.get('city')?.touched }"
       />
-      <div class="invalid-feedback" *ngIf="buildingForm.get('city')?.invalid && buildingForm.get('city')?.touched">
+      <div class="invalid-feedback" *ngIf="form.get('city')?.invalid && form.get('city')?.touched">
         Το πεδίο είναι υποχρεωτικό.
       </div>
     </div>
@@ -77,9 +77,9 @@
         type="text"
         class="form-control"
         formControlName="region"
-        [ngClass]="{ 'is-invalid': buildingForm.get('region')?.invalid && buildingForm.get('region')?.touched }"
+        [ngClass]="{ 'is-invalid': form.get('region')?.invalid && form.get('region')?.touched }"
       />
-      <div class="invalid-feedback" *ngIf="buildingForm.get('region')?.invalid && buildingForm.get('region')?.touched">
+      <div class="invalid-feedback" *ngIf="form.get('region')?.invalid && form.get('region')?.touched">
         Το πεδίο είναι υποχρεωτικό.
       </div>
     </div>
@@ -91,9 +91,9 @@
         type="text"
         class="form-control"
         formControlName="postalCode"
-        [ngClass]="{ 'is-invalid': buildingForm.get('postalCode')?.invalid && buildingForm.get('postalCode')?.touched }"
+        [ngClass]="{ 'is-invalid': form.get('postalCode')?.invalid && form.get('postalCode')?.touched }"
       />
-      <div class="invalid-feedback" *ngIf="buildingForm.get('postalCode')?.invalid && buildingForm.get('postalCode')?.touched">
+      <div class="invalid-feedback" *ngIf="form.get('postalCode')?.invalid && form.get('postalCode')?.touched">
         Το πεδίο είναι υποχρεωτικό και πρέπει να είναι 5 ψηφία.
       </div>
     </div>
@@ -104,12 +104,12 @@
       <select
         class="form-select"
         formControlName="country"
-        [ngClass]="{ 'is-invalid': buildingForm.get('country')?.invalid && buildingForm.get('country')?.touched }"
+        [ngClass]="{ 'is-invalid': form.get('country')?.invalid && form.get('country')?.touched }"
       >
         <option value="">-- Επιλέξτε Χώρα --</option>
         <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
       </select>
-      <div class="invalid-feedback" *ngIf="buildingForm.get('country')?.invalid && buildingForm.get('country')?.touched">
+      <div class="invalid-feedback" *ngIf="form.get('country')?.invalid && form.get('country')?.touched">
         Η επιλογή είναι υποχρεωτική.
       </div>
     </div>
@@ -120,12 +120,12 @@
       <select
         class="form-select"
         formControlName="state"
-        [ngClass]="{ 'is-invalid': buildingForm.get('state')?.invalid && buildingForm.get('state')?.touched }"
+        [ngClass]="{ 'is-invalid': form.get('state')?.invalid && form.get('state')?.touched }"
       >
         <option value="">-- Επιλέξτε Νομό --</option>
         <option *ngFor="let state of states" [value]="state">{{ state }}</option>
       </select>
-      <div class="invalid-feedback" *ngIf="buildingForm.get('state')?.invalid && buildingForm.get('state')?.touched">
+      <div class="invalid-feedback" *ngIf="form.get('state')?.invalid && form.get('state')?.touched">
         Η επιλογή είναι υποχρεωτική.
       </div>
     </div>
@@ -137,9 +137,9 @@
         type="number"
         class="form-control"
         formControlName="floors"
-        [ngClass]="{ 'is-invalid': buildingForm.get('floors')?.invalid && buildingForm.get('floors')?.touched }"
+        [ngClass]="{ 'is-invalid': form.get('floors')?.invalid && form.get('floors')?.touched }"
       />
-      <div class="invalid-feedback" *ngIf="buildingForm.get('floors')?.invalid && buildingForm.get('floors')?.touched">
+      <div class="invalid-feedback" *ngIf="form.get('floors')?.invalid && form.get('floors')?.touched">
         Υποχρεωτικό πεδίο.
       </div>
     </div>
@@ -151,9 +151,9 @@
         type="number"
         class="form-control"
         formControlName="apartmentsNum"
-        [ngClass]="{ 'is-invalid': buildingForm.get('apartmentsNum')?.invalid && buildingForm.get('apartmentsNum')?.touched }"
+        [ngClass]="{ 'is-invalid': form.get('apartmentsNum')?.invalid && form.get('apartmentsNum')?.touched }"
       />
-      <div class="invalid-feedback" *ngIf="buildingForm.get('apartmentsNum')?.invalid && buildingForm.get('apartmentsNum')?.touched">
+      <div class="invalid-feedback" *ngIf="form.get('apartmentsNum')?.invalid && form.get('apartmentsNum')?.touched">
         Υποχρεωτικό πεδίο.
       </div>
     </div>
@@ -165,9 +165,9 @@
         type="number"
         class="form-control"
         formControlName="sqMetersTotal"
-        [ngClass]="{ 'is-invalid': buildingForm.get('sqMetersTotal')?.invalid && buildingForm.get('sqMetersTotal')?.touched }"
+        [ngClass]="{ 'is-invalid': form.get('sqMetersTotal')?.invalid && form.get('sqMetersTotal')?.touched }"
       />
-      <div class="invalid-feedback" *ngIf="buildingForm.get('sqMetersTotal')?.invalid && buildingForm.get('sqMetersTotal')?.touched">
+      <div class="invalid-feedback" *ngIf="form.get('sqMetersTotal')?.invalid && form.get('sqMetersTotal')?.touched">
         Υποχρεωτικό πεδίο.
       </div>
     </div>
@@ -179,7 +179,7 @@
         type="number"
         class="form-control"
         formControlName="sqMetersCommonSpaces"
-        [ngClass]="{ 'is-invalid': buildingForm.get('sqMetersCommonSpaces')?.invalid && buildingForm.get('sqMetersCommonSpaces')?.touched }"
+        [ngClass]="{ 'is-invalid': form.get('sqMetersCommonSpaces')?.invalid && form.get('sqMetersCommonSpaces')?.touched }"
       />
     </div>
     <!-- Περιγραφή -->
@@ -195,15 +195,15 @@
       </label>
     </div>
     <!-- Θέσεις Πάρκινγκ -->
-    <div class="col-md-6 form-group" *ngIf="buildingForm.get('parkingExist')?.value">
+    <div class="col-md-6 form-group" *ngIf="form.get('parkingExist')?.value">
       <label>Αριθμός Θέσεων Πάρκινγκ*</label>
       <input
         type="number"
         class="form-control"
         formControlName="parkingSpacesNum"
-        [ngClass]="{ 'is-invalid': buildingForm.get('parkingSpacesNum')?.invalid && buildingForm.get('parkingSpacesNum')?.touched }"
+        [ngClass]="{ 'is-invalid': form.get('parkingSpacesNum')?.invalid && form.get('parkingSpacesNum')?.touched }"
       />
-      <div class="invalid-feedback" *ngIf="buildingForm.get('parkingSpacesNum')?.invalid && buildingForm.get('parkingSpacesNum')?.touched">
+      <div class="invalid-feedback" *ngIf="form.get('parkingSpacesNum')?.invalid && form.get('parkingSpacesNum')?.touched">
         Το πεδίο είναι υποχρεωτικό.
       </div>
     </div>
@@ -217,15 +217,15 @@
       </label>
     </div>
     <!-- Αριθμός Αποθηκών -->
-    <div class="col-md-6 form-group" *ngIf="buildingForm.get('storageExist')?.value">
+    <div class="col-md-6 form-group" *ngIf="form.get('storageExist')?.value">
       <label>Αριθμός Αποθηκών*</label>
       <input
         type="number"
         class="form-control"
         formControlName="storageNum"
-        [ngClass]="{ 'is-invalid': buildingForm.get('storageNum')?.invalid && buildingForm.get('storageNum')?.touched }"
+        [ngClass]="{ 'is-invalid': form.get('storageNum')?.invalid && form.get('storageNum')?.touched }"
       />
-      <div class="invalid-feedback" *ngIf="buildingForm.get('storageNum')?.invalid && buildingForm.get('storageNum')?.touched">
+      <div class="invalid-feedback" *ngIf="form.get('storageNum')?.invalid && form.get('storageNum')?.touched">
         Το πεδίο είναι υποχρεωτικό.
       </div>
     </div>
@@ -268,7 +268,7 @@
     </select>
   </div>
 
-  <div class="col-md-6 form-group" *ngIf="buildingForm.get('hasCentralHeating')?.value">
+  <div class="col-md-6 form-group" *ngIf="form.get('hasCentralHeating')?.value">
     <label>Τύπος Θέρμανσης</label>
     <select class="form-select" formControlName="heatingType">
       <option value="">-- Επιλέξτε --</option>
@@ -280,7 +280,7 @@
     </select>
   </div>
 
-  <div class="col-md-6 form-group" *ngIf="buildingForm.get('hasCentralHeating')?.value">
+  <div class="col-md-6 form-group" *ngIf="form.get('hasCentralHeating')?.value">
     <label>Χωρητικότητα (Λίτρα)</label>
     <input type="number" class="form-control" formControlName="heatingCapacityLitres" />
   </div>
