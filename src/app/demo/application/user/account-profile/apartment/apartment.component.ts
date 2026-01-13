@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { IconService } from '@ant-design/icons-angular';
@@ -18,7 +19,6 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 export class ApartmentComponent implements OnInit {
   private iconService = inject(IconService);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   apartments: any[] = []; // όλα τα διαμερίσματα του χρήστη
   currentPage = 1; // τρέχουσα σελίδα
   pageSize = 1; // 1 διαμέρισμα ανά σελίδα
@@ -34,6 +34,14 @@ export class ApartmentComponent implements OnInit {
   buildingName = '';
   buildingAddress1 = '';
   message = '';
+  currentIndex: number | null = 1;
+
+  buildings: any[] = [];
+  selectedBuildingIndex = 0;
+
+  filteredApartments: any[] = [];
+  currentApartmentIndex = 0;
+
   constructor(
     private fb: FormBuilder,
     private apartmentService: ApartmentService,
@@ -56,31 +64,40 @@ export class ApartmentComponent implements OnInit {
     });
 
     // Φόρτωση όλων των διαμερισμάτων
-this.apartmentService.getMyApartments().subscribe({
-  next: (apartments) => {
-    this.apartments = apartments;
-    this.total = apartments.length;
+    this.apartmentService.getMyApartments().subscribe({
+      next: (apartments) => {
+        this.apartments = apartments;
 
-    if (apartments.length > 0) {
-      this.loadForm(apartments[0]); // ξεκινάμε με το πρώτο
-    } else {
-      this.message = 'Δεν υπάρχουν καταχωρημένα διαμερίσματα.';
-    }
-  },
-  error: (err) => {
-    if (err.status === 404) {
-      this.message = 'Δεν υπάρχουν καταχωρημένα διαμερίσματα.';
-    } else {
-      this.message = 'Παρουσιάστηκε σφάλμα κατά τη φόρτωση.';
-    }
-    console.error('Σφάλμα φόρτωσης διαμερισμάτων:', err);
-  }
-});
+        if (apartments.length === 0) {
+          this.message = 'Δεν υπάρχουν καταχωρημένα διαμερίσματα.';
+          return;
+        }
 
+        this.buildings = Array.from(
+          new Map(
+            apartments.map((ap) => [
+              ap.buildingId,
+              {
+                buildingId: ap.buildingId,
+                buildingName: ap.buildingName,
+                buildingStreet: ap.buildingStreet,
+                buildingStreetNumber: ap.buildingStreetNumber,
+                buildingCity: ap.buildingCity
+              }
+            ])
+          ).values()
+        );
+
+        this.selectedBuildingIndex = 0;
+        this.applyBuilding();
+      },
+      error: () => {
+        this.message = 'Σφάλμα φόρτωσης.';
+      }
+    });
   }
 
   // Φόρτωση φόρμας για το τρέχον διαμέρισμα
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   loadForm(apartment: any) {
     this.form = this.fb.group({
       ownerFirstName: [apartment.ownerFirstName, [Validators.required, Validators.minLength(3)]],
@@ -99,7 +116,7 @@ this.apartmentService.getMyApartments().subscribe({
       commonPercent: [apartment.commonPercent, [Validators.required, Validators.min(0), Validators.max(100)]],
       elevatorPercent: [apartment.elevatorPercent, [Validators.required, Validators.min(0), Validators.max(100)]],
       heatingPercent: [apartment.heatingPercent, [Validators.required, Validators.min(0), Validators.max(100)]],
-      apDescription: [apartment.apDescription],
+      apDescription: [apartment.apDescription]
     });
     this.buildingName = apartment.buildingName ?? '';
     this.buildingAddress1 = apartment.buildingAddress1 ?? '';
@@ -131,7 +148,7 @@ this.apartmentService.getMyApartments().subscribe({
     if (this.form.invalid) return;
 
     const payload = {
-      id: this.apartments[this.currentPage - 1].id,
+      id: this.filteredApartments[this.currentApartmentIndex].id,
       ...this.form.value,
       isRented: this.form.value.isRented === 'true',
       hasParking: this.form.value.hasParking === 'true',
@@ -149,5 +166,27 @@ this.apartmentService.getMyApartments().subscribe({
         alert('Παρουσιάστηκε σφάλμα κατά την ενημέρωση.');
       }
     });
+  }
+
+  onApartmentSelect(index: string) {
+    const i = Number(index);
+    this.currentIndex = i;
+
+    const apartment = this.apartments[i];
+    this.loadForm(apartment);
+  }
+
+  onBuildingChange(index: number) {
+    this.selectedBuildingIndex = index;
+    this.applyBuilding();
+  }
+
+  applyBuilding() {
+    const buildingId = this.buildings[this.selectedBuildingIndex].buildingId;
+
+    this.filteredApartments = this.apartments.filter((a) => a.buildingId === buildingId);
+
+    this.currentApartmentIndex = 0;
+    this.loadForm(this.filteredApartments[0]);
   }
 }

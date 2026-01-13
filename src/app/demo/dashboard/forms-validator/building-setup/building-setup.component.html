@@ -1,0 +1,22 @@
+<!-- MANY -->
+<app-multiple-building-form
+  *ngIf="action === 'many' && !companyCompleted"
+  (companyCreated)="onCompanyCreated($event)"
+  (backClicked)="onBack()"
+></app-multiple-building-form>
+
+<!-- NEW -->
+<app-building-form
+  *ngIf="action === 'new'"
+  [form]="buildingForm"
+  (formSubmitted)="onBuildingCreated($event)"
+  (backClicked)="back.emit()"
+></app-building-form>
+
+
+<!-- EXISTING -->
+<app-existing-building-form
+  *ngIf="action === 'existing'"
+  (completed)="onBuildingCreated($event)"
+  (backClicked)="back.emit()"
+></app-existing-building-form>

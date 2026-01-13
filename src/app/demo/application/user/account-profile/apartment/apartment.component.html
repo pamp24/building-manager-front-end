@@ -2,29 +2,42 @@
   {{ message }}
 </div>
 <form form *ngIf="form" [formGroup]="form" (ngSubmit)="onUpdate()">
-  <app-card *ngIf="buildingName" cardTitle="Πολυκατοικία" [padding]="24">
+  <app-card *ngIf="buildings.length > 0" cardTitle="Πολυκατοικία" [padding]="24">
     <div class="row">
       <div class="col-md-6">
         <label>Όνομα Πολυκατοικίας</label>
-        <input type="text" class="form-control readonly-input" [value]="buildingName" readonly />
+
+        <!-- Dropdown -->
+        <select
+          class="form-select"
+          [(ngModel)]="selectedBuildingIndex"
+          (ngModelChange)="onBuildingChange($event)"
+          [ngModelOptions]="{ standalone: true }"
+        >
+          <option *ngFor="let b of buildings; let i = index" [ngValue]="i">
+            {{ b.buildingName }}
+          </option>
+        </select>
       </div>
+
       <div class="col-md-6">
         <label>Διεύθυνση Πολυκατοικίας</label>
         <input
           type="text"
           class="form-control readonly-input"
           [value]="
-            apartments[currentPage - 1]?.buildingStreet +
+            buildings[selectedBuildingIndex]?.buildingStreet +
             ' ' +
-            apartments[currentPage - 1]?.buildingStreetNumber +
+            buildings[selectedBuildingIndex]?.buildingStreetNumber +
             ', ' +
-            apartments[currentPage - 1]?.buildingCity
+            buildings[selectedBuildingIndex]?.buildingCity
           "
           readonly
         />
       </div>
     </div>
   </app-card>
+
   <div class="row">
     <!-- Αριστερά: Φόρμα Διαμερίσματος -->
     <div class="col-lg-6">
@@ -151,11 +164,11 @@
   <!-- Pagination κάτω από όλα -->
   <div class="datatable-bottom mt-3" *ngIf="apartments.length > 1">
     <ngb-pagination
-      [collectionSize]="total"
-      [(page)]="currentPage"
-      [pageSize]="pageSize"
-      (pageChange)="onPageChange($event)"
-      class="table-pagination"
+      *ngIf="filteredApartments.length > 1"
+      [collectionSize]="filteredApartments.length"
+      [pageSize]="1"
+      [(page)]="currentApartmentIndex"
+      (pageChange)="loadForm(filteredApartments[$event - 1])"
     ></ngb-pagination>
   </div>
 </form>

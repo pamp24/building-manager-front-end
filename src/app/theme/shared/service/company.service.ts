@@ -7,7 +7,7 @@ import { Company } from '../models/companyDTO';
 
 @Injectable({ providedIn: 'root' })
 export class CompanyService {
-  private baseUrl = 'http://localhost:8080/api/companies';
+  private baseUrl = 'http://localhost:8080/api/v1/companies';
 
   constructor(private http: HttpClient) {}
 

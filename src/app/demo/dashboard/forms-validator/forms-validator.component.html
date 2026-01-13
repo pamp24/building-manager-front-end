@@ -26,43 +26,29 @@
   </div>
 </div>
 
-<!-- Βήματα Εγγραφής -->
 <div class="row mt-4">
   <div class="col-sm-12">
     <app-card cardTitle="Έλεγχος Στοιχείων">
-      <!-- Βήμα 1: Επιλογή Ρόλου -->
-      <ng-container *ngIf="currentStep === 1" class="text-center mt-4">
-        <app-role-form (actionSelected)="onActionSelected($event)" (formCompleted)="goToNextStep()"></app-role-form>
-      </ng-container>
-      <!-- Βήμα 2: Εισαγωγή Πολυκατοικίας -->
-      <ng-container *ngIf="currentStep === 2">
-        <div class="d-flex justify-content-center flex-wrap gap-2">
-          <!-- Εισαγωγή πολλών πολυκατοικιών -->
-          <app-multiple-building-form
-            *ngIf="selectedAction === 'many'"
-            [selectedAction]="selectedAction"
-            (backClicked)="previousStep()"
-          ></app-multiple-building-form>
-          <!-- Νέα πολυκατοικία -->
-          <app-building-form
-            *ngIf="selectedAction === 'new' && currentStep === 2"
-            [selectedAction]="selectedAction"
-            (formSubmitted)="onBuildingFormSubmitted($event)"
-            (backClicked)="previousStep()"
-            >
-          </app-building-form>
-          <!-- Υπάρχουσα πολυκατοικία -->
-          <app-existing-building-form
-            *ngIf="selectedAction === 'existing'"
-            [selectedAction]="selectedAction"
-            (backClicked)="previousStep()"
-          ></app-existing-building-form>
-        </div>
+      
+      <ng-container *ngIf="currentStep() === 1">
+        <app-role-form (actionSelected)="onActionSelected($event)"></app-role-form>
       </ng-container>
 
-      <!-- Βήμα 3: Προσθήκη Διαμερισμάτων -->
-      <ng-container *ngIf="currentStep === 3">
-        <app-apartment-form [buildingForm]="buildingForm" (backClicked)="previousStep()"></app-apartment-form>
+      <ng-container *ngIf="currentStep() === 2 && selectedAction()">
+        <app-building-setup
+          [action]="selectedAction()!"
+          (completed)="onBuildingSetupCompleted($event)"
+          (back)="previousStep()"
+        ></app-building-setup>
+      </ng-container>
+
+      <ng-container *ngIf="currentStep() === 3">
+        <app-apartment-form
+          [buildingId]="buildingId!"
+          [buildingMeta]="buildingMeta"
+          (backClicked)="previousStep()"
+          (finished)="onWizardFinished()"
+        ></app-apartment-form>
       </ng-container>
     </app-card>
   </div>

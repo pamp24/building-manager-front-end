@@ -114,7 +114,7 @@
           </div>
         </div>
       </app-card>
-      <div class="text-end p-3">
+      <div *ngIf="isManager" class="text-end p-3">
         <button class="btn btn-primary" (click)="openAddModal()">+ Νέα Ψηφοφορία</button>
       </div>
     </div>
@@ -124,8 +124,8 @@
       <div *ngFor="let poll of activePolls" class="card mb-3 shadow-sm">
         <div class="card-header d-flex justify-content-between">
           <div>
-            <h5>{{ poll.title }}</h5>
-            <small>{{ poll.description }}</small>
+            <h5>Τίτλος: {{ poll.title }}</h5>
+            <p>Περιγραφή: {{ poll.description }}</p>
           </div>
           <div>
             <span *ngIf="!poll.active" class="badge bg-danger">ΕΛΗΞΕ</span>

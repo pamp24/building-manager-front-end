@@ -1,12 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
-import { Component, effect, inject } from '@angular/core';
+import { Component } from '@angular/core';
 
 // project import
 import { SharedModule } from '../../shared.module';
-import { ThemeService } from '../../service/customs-theme.service';
 
 // third party
-import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { OnInit } from '@angular/core';
+import { PollService } from '../../service/poll.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-polls-table',
@@ -14,93 +17,44 @@ import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
   templateUrl: './polls-table.component.html',
   styleUrl: './polls-table.component.scss'
 })
-export class PollsTableComponent {
-  private themeService = inject(ThemeService);
+export class PollsTableComponent implements OnInit {
+  polls: any[] = [];
+  buildingId!: number;
+  isManager: any;
+  activePolls: any[] = [];
 
-  // public props
-  chartOptions!: ApexOptions;
+  constructor(
+    private pollService: PollService,
+    private router: Router
+  ) {}
 
-  //  constructor
-  constructor() {
-    this.chartOptions = {
-      chart: {
-        type: 'line',
-        height: 340,
-        toolbar: {
-          show: false
-        },
-        background: 'transparent'
-      },
-      plotOptions: {
-        bar: {
-          columnWidth: '45%',
-          borderRadius: 4
-        }
-      },
-      colors: ['#FFB814'],
-      stroke: {
-        curve: 'smooth',
-        width: 1.5
-      },
-      grid: {
-        strokeDashArray: 4,
-        borderColor: '#f5f5f5'
-      },
-      series: [
-        {
-          data: [58, 90, 38, 83, 63, 75, 35, 55]
-        }
-      ],
-      xaxis: {
-        type: 'datetime',
-        categories: [
-          '2018-05-19T00:00:00.000Z',
-          '2018-06-19T00:00:00.000Z',
-          '2018-07-19T01:30:00.000Z',
-          '2018-08-19T02:30:00.000Z',
-          '2018-09-19T03:30:00.000Z',
-          '2018-10-19T04:30:00.000Z',
-          '2018-11-19T05:30:00.000Z',
-          '2018-12-19T06:30:00.000Z'
-        ],
-        labels: {
-          format: 'MMM',
-          style: {
-            colors: ['#8C8C8C', '#8C8C8C', '#8C8C8C', '#8C8C8C', '#8C8C8C', '#8C8C8C', '#8C8C8C']
-          }
-        },
-        axisBorder: {
-          show: false
-        },
-        axisTicks: {
-          show: false
-        }
-      },
-      yaxis: {
-        show: false
-      },
-      tooltip: {
-        theme: 'light'
-      }
-    };
-    effect(() => {
-      this.isDarkTheme(this.themeService.isDarkMode());
-      this.rerenderChartOnContainerResize(this.themeService.isContainerMode());
+  ngOnInit() {
+    this.buildingId = Number(localStorage.getItem('buildingId'));
+    this.loadPolls();
+  }
+
+  loadPolls() {
+    this.pollService.getAll(this.buildingId).subscribe({
+      next: (data) => (this.polls = data || []),
+      error: (err) => console.error(err)
     });
   }
 
-  // private methods
-  private isDarkTheme(isDark: boolean) {
-    const tooltip = { ...this.chartOptions.tooltip };
-    const grid = { ...this.chartOptions.grid };
-    tooltip.theme = isDark === true ? 'dark' : 'light';
-    grid.borderColor = isDark === true ? '#fafafa0d' : '#f5f5f5';
-    this.chartOptions = { ...this.chartOptions, tooltip, grid };
+  viewPoll(poll: any) {
+    console.log('View poll', poll);
+    // θα κάνουμε modal αργότερα
   }
 
-  private rerenderChartOnContainerResize(isContainer: boolean) {
-    const chart = { ...this.chartOptions.chart };
-    chart!.redrawOnParentResize = !isContainer;
-    this.chartOptions = { ...this.chartOptions, chart } as ApexOptions;
+  deactivatePoll(poll: any) {
+    if (!confirm('Είστε σίγουροι ότι θέλετε να απενεργοποιήσετε τη ψηφοφορία;')) return;
+
+    this.pollService.deactivate(poll.id).subscribe({
+      next: () => this.loadPolls(),
+      error: (err) => console.error(err)
+    });
+  }
+
+  openPollsPage() {
+    this.router.navigate(['/polls']);
   }
 }

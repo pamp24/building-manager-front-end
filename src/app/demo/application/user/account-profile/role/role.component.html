@@ -4,17 +4,34 @@
 </div>
 
 <!-- Εμφάνιση περιεχομένου μόνο αν υπάρχουν πολυκατοικίες -->
-<ng-container >
+<ng-container>
   <!-- Κάρτα με πληροφορίες πολυκατοικίας -->
-  <app-card *ngIf="buildingName" cardTitle="Πολυκατοικία" [padding]="24">
+  <app-card *ngIf="buildings.length > 0" cardTitle="Πολυκατοικία" [padding]="24">
     <div class="row">
       <div class="col-md-6">
         <label>Όνομα Πολυκατοικίας</label>
-        <input type="text" class="form-control readonly-input" [value]="buildingName" readonly />
+
+        <select class="form-select" [(ngModel)]="selectedBuildingIndex" (change)="onBuildingChange()">
+          <option *ngFor="let b of buildings; let i = index" [value]="i">
+            {{ b.name }}
+          </option>
+        </select>
       </div>
+
       <div class="col-md-6">
         <label>Διεύθυνση Πολυκατοικίας</label>
-        <input type="text" class="form-control readonly-input" [value]="buildingAddress" readonly />
+        <input
+          type="text"
+          class="form-control readonly-input"
+          [value]="
+            buildings[selectedBuildingIndex]?.street1 +
+            ' ' +
+            buildings[selectedBuildingIndex]?.stNumber1 +
+            ', ' +
+            buildings[selectedBuildingIndex]?.city
+          "
+          readonly
+        />
       </div>
     </div>
   </app-card>
@@ -41,9 +58,7 @@
             required
             #emailCtrl="ngModel"
           />
-          <div *ngIf="emailCtrl.invalid && (emailCtrl.dirty || emailCtrl.touched)" class="text-danger">
-            Παρακαλώ εισάγετε έγκυρο email.
-          </div>
+          <div *ngIf="emailCtrl.invalid && (emailCtrl.dirty || emailCtrl.touched)" class="text-danger">Παρακαλώ εισάγετε έγκυρο email.</div>
         </div>
 
         <div class="col">
@@ -57,12 +72,8 @@
         <div class="col">
           <select class="form-select" [(ngModel)]="apartmentToInvite" [disabled]="isSending">
             <option [ngValue]="null" disabled selected>Επιλέξτε Διαμέρισμα</option>
-            <option *ngIf="filteredApartments.length === 0" disabled>
-              Δεν υπάρχουν διαθέσιμα διαμερίσματα
-            </option>
-            <option *ngFor="let ap of filteredApartments" [ngValue]="ap.id">
-              Διαμέρισμα {{ ap.floor }}{{ ap.number }}
-            </option>
+            <option *ngIf="filteredApartments.length === 0" disabled>Δεν υπάρχουν διαθέσιμα διαμερίσματα</option>
+            <option *ngFor="let ap of filteredApartments" [ngValue]="ap.id">Διαμέρισμα {{ ap.floor }}{{ ap.number }}</option>
           </select>
         </div>
 
@@ -91,8 +102,8 @@
           <!-- Αν δεν υπάρχουν μέλη -->
           <tr *ngIf="!members || members.length === 0">
             <td colspan="5" class="text-center text-muted py-4">
-              Δεν υπάρχουν μέλη για αυτήν την πολυκατοικία.
-              Θα πρέπει να προσθέσετε διαμερίσματα και να προσκαλέσετε μέλη για να δείτε πληροφορίες εδώ.
+              Δεν υπάρχουν μέλη για αυτήν την πολυκατοικία. Θα πρέπει να προσθέσετε διαμερίσματα και να προσκαλέσετε μέλη για να δείτε
+              πληροφορίες εδώ.
             </td>
           </tr>
 
@@ -118,7 +129,8 @@
                   'badge bg-primary': member.role === 'Owner',
                   'badge bg-info': member.role === 'Resident',
                   'badge bg-warning': member.role === 'BuildingManager',
-                  'badge bg-dark': member.role === 'PropertyManager'
+                  'badge bg-dark': member.role === 'PropertyManager',
+                  'badge bg-secondary': member.role === 'User'
                 }"
               >
                 {{ getTranslatedRole(member.role) }}
@@ -133,7 +145,8 @@
                   'badge bg-success': member.status === 'Joined' || member.status === 'ACCEPTED',
                   'badge bg-outline-info': member.status === 'PENDING' || member.status === 'Invited',
                   'badge bg-secondary': member.status === 'EXPIRED',
-                  'badge bg-danger': member.status === 'DECLINED'
+                  'badge bg-danger': member.status === 'DECLINED',
+                  'badge bg-warning': member.status === 'PENDING_APARTMENT'
                 }"
               >
                 {{ getTranslatedStatus(member.status) }}
@@ -141,24 +154,21 @@
             </td>
 
             <td class="text-end">
-              <a href="javascript:" class="avatar avatar-s btn-link-secondary" title="Επεξεργασία">
-                <i class="ti ti-dots f-18"></i>
-              </a>
+              <div ngbDropdown container="body" class="d-inline-block">
+                <a href="javascript:" class="avatar avatar-s btn-link-secondary" ngbDropdownToggle aria-label="Actions" title="Ενέργειες">
+                  <i class="ti ti-dots f-18"></i>
+                </a>
+
+                <div ngbDropdownMenu class="dropdown-menu-end">
+                  <button ngbDropdownItem type="button" (click)="openEditModal(member)">Επεξεργασία</button>
+                  <button ngbDropdownItem type="button" class="text-danger" (click)="openDeleteModal(member)">Διαγραφή</button>
+                </div>
+              </div>
             </td>
+            
           </tr>
         </tbody>
       </table>
     </div>
   </app-card>
-
-  <!-- Πλοήγηση μεταξύ πολυκατοικιών -->
-  <div class="datatable-bottom mt-3" *ngIf="apartments.length > 1">
-    <ngb-pagination
-      [collectionSize]="apartments.length"
-      [(page)]="currentPage"
-      [pageSize]="1"
-      (pageChange)="onPageChange($event)"
-      class="table-pagination"
-    ></ngb-pagination>
-  </div>
 </ng-container>

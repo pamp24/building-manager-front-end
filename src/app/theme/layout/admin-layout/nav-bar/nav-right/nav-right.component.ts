@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
 import { Component, Input, OnInit, output, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -38,10 +39,12 @@ import {
   UnorderedListOutline,
   ArrowRightOutline
 } from '@ant-design/icons-angular/icons';
+import { NotificationService } from 'src/app/theme/shared/service/notification.service';
+import { NotificationDropdownComponent } from './notification-dropdown/notification-dropdown.component';
 
 @Component({
   selector: 'app-nav-right',
-  imports: [SharedModule, RouterModule, ScrollbarComponent],
+  imports: [SharedModule, RouterModule, ScrollbarComponent, NotificationDropdownComponent],
   templateUrl: './nav-right.component.html',
   styleUrls: ['./nav-right.component.scss']
 })
@@ -49,15 +52,18 @@ export class NavRightComponent implements OnInit {
   authenticationService = inject(AuthenticationService);
   private translate = inject(TranslateService);
   private iconService = inject(IconService);
+  notifications: any[] = [];
 
   // public props
   @Input() styleSelectorToggle!: boolean;
   readonly Customize = output();
   windowWidth: number;
   screenFull: boolean = true;
+  unreadCount = 0;
+
 
   // constructor
-  constructor() {
+  constructor(private notificationService: NotificationService) {
     this.windowWidth = window.innerWidth;
     this.iconService.addIcon(
       ...[
@@ -100,6 +106,7 @@ export class NavRightComponent implements OnInit {
   useLanguage(language: string) {
     this.translate.use(language);
   }
+
 
   megaMenus = [
     {
@@ -176,37 +183,6 @@ export class NavRightComponent implements OnInit {
     }
   ];
 
-  notifications = [
-    {
-      avatarClass: 'user-avatar bg-light-success',
-      iconClass: 'gift',
-      time: '3:00 AM',
-      message: "It's <b>Cristina danny's</b> birthday today.",
-      date: '2 min ago'
-    },
-    {
-      avatarClass: 'user-avatar bg-light-primary',
-      iconClass: 'message',
-      time: '6:00 PM',
-      message: '<b>Aida Burg</b> commented your post.',
-      date: '5 August'
-    },
-    {
-      avatarClass: 'user-avatar bg-light-danger',
-      iconClass: 'setting',
-      time: '2:45 PM',
-      message: 'Your Profile is Complete &nbsp;<b>60%</b>',
-      date: '7 hours ago'
-    },
-    {
-      avatarClass: 'user-avatar bg-light-primary',
-      iconClass: 'phone',
-      time: '9:10 PM',
-      message: '<b>Cristina Danny</b> invited to join <b>Meeting.</b>',
-      date: 'Daily scrum meeting time'
-    }
-  ];
-
   profile = [
     {
       icon: 'profile',
@@ -216,7 +192,7 @@ export class NavRightComponent implements OnInit {
     {
       icon: 'user',
       title: 'Προσωπικό προφίλ',
-      url: '/user/user-profile',
+      url: '/user/user-profile'
     },
     {
       icon: 'edit',

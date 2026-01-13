@@ -130,10 +130,10 @@ export class BuildingComponent implements OnInit {
     }
   }
 
-  skills = [
-    { title: 'Πάρκινγκ', value: 30 },
-    { title: 'Αποθήκη', value: 80 }
-  ];
+  // skills = [
+  //   { title: 'Πάρκινγκ', value: 30 },
+  //   { title: 'Αποθήκη', value: 80 }
+  // ];
 
   getTranslatedHeatingType(type?: string): string {
     switch (type) {

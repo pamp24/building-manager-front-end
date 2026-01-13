@@ -75,26 +75,15 @@ export class PollsComponent implements OnInit {
   }
 
   loadPolls() {
-    if (this.isManager) {
-      //ΟΛΕΣ
-      this.pollService.getAll(this.buildingId).subscribe({
-        next: (data) => {
-          this.polls = data || [];
-          this.activePolls = this.polls.filter((p) => p.active);
-        },
-        error: (err) => console.error(err)
-      });
-    } else {
-      //μόνο ενεργές
-      this.pollService.getByBuilding(this.buildingId).subscribe({
-        next: (data) => {
-          this.polls = data || [];
-          this.activePolls = this.polls.filter((p) => p.active);
-        },
-        error: (err) => console.error(err)
-      });
-    }
-  }
+  this.pollService.getAll(this.buildingId).subscribe({
+    next: (data) => {
+      this.polls = data || [];
+      this.activePolls = this.polls.filter((p) => p.active);
+    },
+    error: (err) => console.error(err)
+  });
+}
+
 
   // === Δημιουργία νέας ψηφοφορίας ===
   refreshPolls() {
@@ -116,30 +105,28 @@ export class PollsComponent implements OnInit {
     return this.userVotedPolls[pollId]?.includes(optionId);
   }
 
-vote(pollId: number, optionId: number) {
-  this.pollService.vote(pollId, optionId).subscribe({
-    next: (updatedPoll: any) => {
+  vote(pollId: number, optionId: number) {
+    this.pollService.vote(pollId, optionId).subscribe({
+      next: (updatedPoll: any) => {
+        const index = this.polls.findIndex((p) => p.id === pollId);
+        if (index !== -1) {
+          this.polls[index].options = updatedPoll.options;
+          this.polls[index].active = updatedPoll.active;
+          this.polls = [...this.polls];
+        }
 
-      const index = this.polls.findIndex((p) => p.id === pollId);
-      if (index !== -1) {
-        this.polls[index].options = updatedPoll.options;
-        this.polls[index].active = updatedPoll.active;
-        this.polls = [...this.polls]; 
+        if (this.expandedPollId === pollId) {
+          this.loadVotes(pollId);
+        }
+        setTimeout(() => (this.toastMessage = null), 3000);
+      },
+      error: (err) => {
+        console.error(err);
+        this.toastMessage = 'Σφάλμα κατά την ψήφο.';
+        setTimeout(() => (this.toastMessage = null), 3000);
       }
-
-      if (this.expandedPollId === pollId) {
-        this.loadVotes(pollId);
-      }
-      setTimeout(() => (this.toastMessage = null), 3000);
-    },
-    error: (err) => {
-      console.error(err);
-      this.toastMessage = 'Σφάλμα κατά την ψήφο.';
-      setTimeout(() => (this.toastMessage = null), 3000);
-    }
-  });
-}
-
+    });
+  }
 
   getSortIcon(column: string): string {
     if (this.sortedColumn !== column) {

@@ -1,4 +1,5 @@
 export interface Company {
+  companyId: number;
   companyName: string;
   afm: string;
   responsiblePerson: string;
