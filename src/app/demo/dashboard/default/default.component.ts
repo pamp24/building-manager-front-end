@@ -17,11 +17,10 @@ import { UserDashboardService } from '../../../theme/shared/service/userDashboar
 import { PaymentModalComponent } from './payment-modal/payment-modal.component';
 import { BuildingTotalCardComponent } from '../../../theme/shared/apexchart/building-total-card/building-total-card.component';
 import { BuildingChartComponent } from '../../../theme/shared/apexchart/building-chart/building-chart.component';
-import { ApartmentPendingCardComponent } from '../../../theme/shared/apexchart/apartment-pending-card/apartment-pending-card.component';
 import { LastStatementCardComponent } from '../../../theme/shared/apexchart/last-statement-card/last-statement-card.component';
 import { PollsTableComponent } from '../../../theme/shared/apexchart/polls-table/polls-table.component';
-import { BuildingPendingCardComponent } from '../../../theme/shared/apexchart/building-pedning-card/building-pedning-card.component';
 import { NgbModalModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { BuildingAnnouncementsCardComponent } from "src/app/theme/shared/apexchart/building-announcements-card/building-announcements-card.component";
 
 
 @Component({
@@ -34,16 +33,15 @@ import { NgbModalModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
     CommonModule,
     SharedModule,
     LastStatementCardComponent,
-    BuildingPendingCardComponent,
     AcquisitionChartComponent,
-    ApartmentPendingCardComponent,
     PollsTableComponent,
     BuildingTotalCardComponent,
     BuildingChartComponent,
     SalesReportChartComponent,
     RouterModule,
-    NgbModalModule   
-  ],
+    NgbModalModule,
+    BuildingAnnouncementsCardComponent
+],
   templateUrl: './default.component.html',
   styleUrls: ['./default.component.scss']
 })
@@ -60,6 +58,7 @@ export class DefaultComponent implements OnInit {
   selectedAllocation: any = null;
   // public props
   isDarkThemes!: boolean;
+buildingId: any;
 
   // constructor
   constructor(

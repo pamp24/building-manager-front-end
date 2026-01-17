@@ -1,0 +1,13 @@
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.announcement-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 4; // δείξε 4 γραμμές
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

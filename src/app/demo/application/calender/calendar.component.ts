@@ -21,15 +21,16 @@ import { CalendarEventModalComponent } from './calendar-event-modal/calendar-eve
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { IconService } from '@ant-design/icons-angular';
-import { EditOutline, DeleteOutline } from '@ant-design/icons-angular/icons';
+import { EditOutline, DeleteOutline, PushpinOutline, PushpinFill } from '@ant-design/icons-angular/icons';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 
+type UiCalendarEvent = CalendarEvent & { pinned?: boolean; description?: string };
 
 @Component({
-  selector: 'app-calender',
+  selector: 'app-calendar',
   standalone: true,
-  templateUrl: './calender.component.html',
-  styleUrls: ['./calender.component.scss'],
+  templateUrl: './calendar.component.html',
+  styleUrls: ['./calendar.component.scss'],
   imports: [
     CardComponent,
     CalendarCommonModule,
@@ -40,7 +41,7 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
     DatePipe,
     NgbTooltipModule,
     NgbTooltipModule,
-    SharedModule 
+    SharedModule
   ]
 })
 export class CalenderComponent implements OnInit, OnChanges {
@@ -55,7 +56,7 @@ export class CalenderComponent implements OnInit, OnChanges {
   activeDayIsOpen = true;
   refresh = new Subject<void>();
 
-  events: CalendarEvent[] = [];
+  events: UiCalendarEvent[] = [];
 
   readonly modalContent = viewChild.required<TemplateRef<string>>('modalContent');
 
@@ -68,7 +69,7 @@ export class CalenderComponent implements OnInit, OnChanges {
     private calendarService: CalendarService,
     private buildingService: BuildingService
   ) {
-    this.iconService.addIcon(...[EditOutline, DeleteOutline]);
+    this.iconService.addIcon(...[EditOutline, DeleteOutline, PushpinOutline, PushpinFill]);
   }
 
   ngOnInit() {
@@ -94,20 +95,23 @@ export class CalenderComponent implements OnInit, OnChanges {
   }
 
   loadEvents(): void {
-    console.log('Loading events for building:', this.buildingId);
     if (!this.buildingId) return;
 
     this.calendarService.getByBuilding(this.buildingId).subscribe({
       next: (data) => {
-        console.log('Events loaded:', data);
         this.events = data.map((e) => ({
           id: e.id,
           title: e.title,
           description: e.description,
           start: new Date(e.startDate),
           end: e.endDate ? new Date(e.endDate) : undefined,
-          color: { primary: e.colorPrimary, secondary: e.colorSecondary }
+          color: {
+            primary: e.colorPrimary ?? '#1677ff',
+            secondary: '#D1E8FF'
+          },
+          pinned: !!e.pinned
         }));
+
         this.refresh.next();
       },
       error: (err) => console.error('Σφάλμα φόρτωσης γεγονότων:', err)
@@ -158,22 +162,31 @@ export class CalenderComponent implements OnInit, OnChanges {
   }
 
   openEditModal(event: CalendarEvent) {
-  const modalRef = this.modal.open(CalendarEventModalComponent, { size: 'lg' });
-  modalRef.componentInstance.buildingId = this.buildingId;
-  modalRef.componentInstance.eventData = {
-    id: event.id,
-    title: event.title,
-    description: (event as any).description, // αν δεν το έχεις, πρόσθεσέ το
-    startDate: event.start,
-    endDate: event.end,
-    colorPrimary: event.color?.primary,
-    colorSecondary: event.color?.secondary
-  };
-  modalRef.componentInstance.isEdit = true;
+    const modalRef = this.modal.open(CalendarEventModalComponent, { size: 'lg' });
+    modalRef.componentInstance.buildingId = this.buildingId;
+    modalRef.componentInstance.eventData = {
+      id: event.id,
+      title: event.title,
+      description: (event as any).description, // αν δεν το έχεις, πρόσθεσέ το
+      startDate: event.start,
+      endDate: event.end,
+      colorPrimary: event.color?.primary,
+      colorSecondary: event.color?.secondary
+    };
+    modalRef.componentInstance.isEdit = true;
 
-  modalRef.componentInstance.save.subscribe((updated: any) => {
-    this.calendarService.update(updated).subscribe(() => this.loadEvents());
-  });
-}
+    modalRef.componentInstance.save.subscribe((updated: any) => {
+      this.calendarService.update(updated).subscribe(() => this.loadEvents());
+    });
+  }
 
+  togglePin(event: CalendarEvent): void {
+    const id = Number(event.id);
+    const pinnedNow = !!(event as any).pinned;
+
+    this.calendarService.pinEvent(id, !pinnedNow).subscribe({
+      next: () => this.loadEvents(),
+      error: (err) => console.error('Pin failed', err)
+    });
+  }
 }

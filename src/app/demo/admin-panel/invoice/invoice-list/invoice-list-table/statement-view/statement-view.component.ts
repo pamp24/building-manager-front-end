@@ -113,4 +113,20 @@ export class StatementViewComponent implements OnChanges, OnInit {
       pdf.save(`statement_${this.statement?.code ?? 'invoice'}.pdf`);
     });
   }
+
+  categoryLabelMap: Record<string, string> = {
+    COMMON: 'ΚΟΙΝΟΧΡΗΣΤΑ',
+    HEATING: 'ΘΕΡΜΑΝΣΗ',
+    ELEVATOR: 'ΑΣΑΝΣΕΡ',
+    EQUAL: 'ΔΑΠΑΝΕΣ ΣΕ ΙΣΑ ΜΕΡΗ',
+    BOILER: 'ΛΕΒΗΤΑΣ',
+    SPECIAL: 'ΕΙΔΙΚΕΣ ΔΑΠΑΝΕΣ',
+    OWNERS: 'ΔΑΠΑΝΕΣ ΙΔΙΟΚΤΗΤΩΝ',
+    OTHER: 'ΆΛΛΕΣ ΔΑΠΑΝΕΣ',
+  };
+
+  translateCategory(category: string | undefined): string {
+    if (!category) return '—';
+    return this.categoryLabelMap[category] ?? category;
+  }
 }

@@ -181,9 +181,16 @@ export class InvoiceDashboardComponent implements OnInit {
       next: (data) => {
         this.statements = data;
         if (data.length > 0) {
-          // επιλέγουμε το πιο πρόσφατο statement ως default
-          const lastStatement = data[data.length - 1];
-          this.selectedStatementId = lastStatement.id;
+          // Τo πρώτο να είναι το πιο πρόσφατο
+          const sorted = [...data].sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
+
+          const latest = sorted[0];
+
+          this.statements = sorted;
+          this.selectedStatementId = latest.id;
+
+          // φόρτωσε και τα payments του επιλεγμένου
+          this.onStatementChange();
         }
       },
       error: (err) => console.error('Σφάλμα φόρτωσης statements', err)

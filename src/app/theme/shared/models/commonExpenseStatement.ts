@@ -16,6 +16,8 @@ export interface CommonExpenseStatement {
   items: CommonExpenseItem[];
   buildingId?: number;
   isPaid?: boolean;
+  hasPayments?: boolean;
+  
   status?: 'PAID' | 'EXPIRED' | 'DRAFT' | 'ISSUED' | 'CLOSED';
   createdAt?: string;
   allocations?: CommonExpenseAllocation[];

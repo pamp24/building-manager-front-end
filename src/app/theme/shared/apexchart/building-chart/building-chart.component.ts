@@ -38,16 +38,14 @@ export class BuildingChartComponent implements OnInit, OnChanges {
     this.initializeChart();
   }
   ngOnChanges(changes: SimpleChanges) {
-  if (changes['isVisible'] && this.isVisible) {
-    this.loadChartData();
+    if (changes['isVisible'] && this.isVisible) {
+      this.loadChartData();
 
-
-    setTimeout(() => {
-      window.dispatchEvent(new Event('resize'));
-    }, 150);
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+      }, 150);
+    }
   }
-}
-
 
   //FROM BACKEND
   loadChartData() {
@@ -61,7 +59,10 @@ export class BuildingChartComponent implements OnInit, OnChanges {
               data: data.values
             }
           ],
-          xaxis: { ...this.chartOptions.xaxis, categories: data.labels }
+          xaxis: {
+            ...this.chartOptions.xaxis,
+            categories: data.labels.map((l: string) => (this.selectedPeriod === 'month' ? this.formatMonthLabel(l) : l))
+          }
         };
         setTimeout(() => {
           window.dispatchEvent(new Event('resize'));
@@ -80,6 +81,7 @@ export class BuildingChartComponent implements OnInit, OnChanges {
         toolbar: { show: false },
         background: 'transparent'
       },
+
       fill: {
         type: 'gradient',
         gradient: {
@@ -88,28 +90,61 @@ export class BuildingChartComponent implements OnInit, OnChanges {
           opacityTo: 0
         }
       },
+
       tooltip: {
         theme: 'light',
         y: {
-          formatter(val: number) {
-            return `${val} €`;
+          formatter: (val: number) => {
+            return val.toLocaleString('el-GR', {
+              style: 'currency',
+              currency: 'EUR',
+              maximumFractionDigits: 2
+            });
           }
         }
       },
-      dataLabels: { enabled: false },
+
+      dataLabels: {
+        enabled: false
+      },
+
       colors: ['#1677ff', '#0050b3'],
-      series: [{ name: '', data: [] }],
-      stroke: { curve: 'straight', width: 1 },
+
+      series: [
+        {
+          name: '',
+          data: []
+        }
+      ],
+
+      stroke: {
+        curve: 'straight',
+        width: 2
+      },
+
       grid: {
         show: true,
         borderColor: '#f5f5f5',
         position: 'back'
       },
+
       xaxis: {
         categories: [],
-        labels: { style: { colors: '#8C8C8C' } }
+        labels: {
+          style: { colors: '#8C8C8C' }
+        }
       },
-      yaxis: { labels: { style: { colors: '#8C8C8C' } } }
+
+      yaxis: {
+        labels: {
+          style: { colors: '#8C8C8C' },
+          formatter: (val: number) => {
+            return val.toLocaleString('el-GR', {
+              maximumFractionDigits: 2
+            });
+          }
+        }
+      }
     };
   }
 
@@ -117,7 +152,7 @@ export class BuildingChartComponent implements OnInit, OnChanges {
   toggleActive(type: 'building' | 'apartment') {
     this.selectedView = type;
     this.selectedType = type;
-    this.loadChartData(); // Φόρτωσε καινούρια δεδομένα
+    this.loadChartData(); // Φόρτωσε δεδομένα
   }
 
   onOptionSelected() {
@@ -137,5 +172,11 @@ export class BuildingChartComponent implements OnInit, OnChanges {
 
   private updateThemeColor() {
     this.chartOptions.colors = ['#1677ff', '#0050b3'];
+  }
+
+  private formatMonthLabel(iso: string) {
+    const [y, m] = iso.split('-').map(Number);
+    const names = ['Ιαν', 'Φεβ', 'Μαρ', 'Απρ', 'Μαι', 'Ιουν', 'Ιουλ', 'Αυγ', 'Σεπ', 'Οκτ', 'Νοε', 'Δεκ'];
+    return `${names[m - 1]} ${y}`;
   }
 }
