@@ -24,15 +24,16 @@
     </div>
   </div>
 </div>
-<div class="row">
-  <div class="col-md-6 col-xl-3">
-    <app-last-statement-card />
+<div class="row align-items-stretch">
+  <div class="col-md-6 col-xl-3 d-flex">
+    <app-last-statement-card class="w-100"/>
   </div>
-  <div class="col-md-6 col-xl-3">
-    <app-building-total-card />
+  <div class="col-md-6 col-xl-3 d-flex">
+    <app-building-total-card class="w-100"/>
   </div>
-  <div class="col-md-12 col-xl-6">
+  <div class="col-md-12 col-xl-6 d-flex">
     <app-building-announcements-card
+    class="w-100"
       [buildingId]="buildingId"
       [isManager]="true"
     />

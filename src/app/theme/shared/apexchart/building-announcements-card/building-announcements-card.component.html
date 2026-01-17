@@ -21,15 +21,25 @@
     </div>
 
     <ng-container *ngIf="!loading">
-      <div *ngIf="!announcements.length" class="text-center text-muted py-4">
-        Δεν υπάρχουν ανακοινώσεις.
-      </div>
+      <div *ngIf="!announcements.length" class="text-center text-muted py-4">Δεν υπάρχουν ανακοινώσεις.</div>
 
       <ng-container *ngIf="current as a">
-        <div class="d-flex justify-content-between align-items-start gap-3">
-          <div class="w-100">
+        <div class="announcement-carousel">
+          <!-- LEFT ARROW -->
+          <button
+            class="btn btn-sm btn-outline-secondary nav-arrow"
+            (click)="prev()"
+            [disabled]="announcements.length <= 1"
+            aria-label="Προηγούμενη ανακοίνωση"
+          >
+            ‹
+          </button>
+
+          <!-- CONTENT -->
+          <div class="announcement-content">
             <div class="d-flex align-items-center gap-2">
               <span class="dot" [style.background]="a.colorPrimary || '#1677ff'"></span>
+
               <h6 class="mb-0">
                 {{ a.title }}
                 <span *ngIf="a.pinned" class="badge bg-warning text-dark ms-2">Καρφιτσωμένο</span>
@@ -37,22 +47,26 @@
             </div>
 
             <div class="text-muted small mt-1">
-              {{ a.startDate | date:'dd/MM/yyyy HH:mm' }}
-              <span *ngIf="a.endDate"> → {{ a.endDate | date:'dd/MM/yyyy HH:mm' }}</span>
+              {{ a.startDate | date: 'dd/MM/yyyy HH:mm' }}
+              <span *ngIf="a.endDate">→ {{ a.endDate | date: 'dd/MM/yyyy HH:mm' }}</span>
             </div>
 
             <div class="mt-3 announcement-text">
               {{ a.description || '—' }}
             </div>
+
+            <div class="text-muted small mt-3">{{ index + 1 }} / {{ announcements.length }}</div>
           </div>
 
-          <div class="d-flex flex-column align-items-end gap-2">
-            <button class="btn btn-sm btn-outline-secondary" (click)="prev()" [disabled]="announcements.length <= 1">‹</button>
-            <button class="btn btn-sm btn-outline-secondary" (click)="next()" [disabled]="announcements.length <= 1">›</button>
-            <div class="text-muted small">
-              {{ index + 1 }} / {{ announcements.length }}
-            </div>
-          </div>
+          <!-- RIGHT ARROW -->
+          <button
+            class="btn btn-sm btn-outline-secondary nav-arrow"
+            (click)="next()"
+            [disabled]="announcements.length <= 1"
+            aria-label="Επόμενη ανακοίνωση"
+          >
+            ›
+          </button>
         </div>
       </ng-container>
     </ng-container>
