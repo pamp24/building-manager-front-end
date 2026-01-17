@@ -9,9 +9,6 @@ export class PollService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(buildingId: number) {
-    return this.http.get<any[]>(`${this.apiUrl}/building/${buildingId}/all`);
-  }
 
   getByBuilding(buildingId: number) {
     return this.http.get<any[]>(`${this.apiUrl}/building/${buildingId}`);
@@ -31,5 +28,8 @@ export class PollService {
 
   deactivate(pollId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${pollId}`);
+  }
+  getMy(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/myPolls`);
   }
 }

@@ -8,6 +8,34 @@
 .announcement-text {
   display: -webkit-box;
   -webkit-line-clamp: 4; // δείξε 4 γραμμές
+  line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.announcement-carousel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-arrow {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  flex: 0 0 auto;
+}
+
+.announcement-content {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.announcement-text {
+  white-space: pre-wrap; // κρατάει αλλαγές γραμμής αν υπάρχουν
+  word-break: break-word;
 }

@@ -320,7 +320,7 @@ export class InvoiceDashboardComponent implements OnInit {
 
   loadPolls(): void {
     this.loading = true;
-    this.pollService.getAll(this.buildingId).subscribe({
+    this.pollService.getByBuilding(this.buildingId).subscribe({
       next: (res) => {
         this.polls = res.sort((a, b) => b.id - a.id);
         this.loading = false;

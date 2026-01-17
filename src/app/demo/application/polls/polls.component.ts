@@ -75,15 +75,14 @@ export class PollsComponent implements OnInit {
   }
 
   loadPolls() {
-  this.pollService.getAll(this.buildingId).subscribe({
-    next: (data) => {
-      this.polls = data || [];
-      this.activePolls = this.polls.filter((p) => p.active);
-    },
-    error: (err) => console.error(err)
-  });
-}
-
+    this.pollService.getMy().subscribe({
+      next: (data) => {
+        this.polls = data || [];
+        this.activePolls = this.polls.filter((p) => p.active);
+      },
+      error: (err) => console.error(err)
+    });
+  }
 
   // === Δημιουργία νέας ψηφοφορίας ===
   refreshPolls() {

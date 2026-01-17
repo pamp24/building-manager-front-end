@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, inject, OnInit } from '@angular/core';
 import { SharedModule } from '../../shared.module';
 import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
@@ -75,56 +76,16 @@ export class LastStatementCardComponent implements OnInit {
       next: (history) => {
         if (!history || history.length === 0) return;
 
-        history.sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
+        // Αν το backend δεν στέλνει startDate, μην κάνεις sort με startDate
+        // Κάνε sort με month (YYYY-MM) που είναι safe:
+        history.sort((a: any, b: any) => (a.month || '').localeCompare(b.month || ''));
 
-        // Μετατροπή labels → "Νοέμβριος 2025"
-        const labels = history.map((h) => this.monthToGreek(h.month));
-        const amounts = history.map((h) => h.total);
+        const labels = history.map((h: any) => this.monthToGreek(h.month));
+        const amounts = history.map((h: any) => h.billed ?? 0);
 
-        // === CASE 1 — ΜΟΝΟ ΕΝΑ STATEMENT ===
-        if (history.length === 1) {
-          const amount = amounts[0];
-
-          this.lastAmount = amount;
-          this.previousAmount = amount;
-          this.differencePercent = 0;
-
-          this.badgeClass = 'bg-light-primary border border-primary';
-          this.badgeIcon = 'rise';
-
-          this.chartOptions = {
-            chart: { type: 'bar', height: 100, sparkline: { enabled: true } },
-            colors: ['#1677ff'],
-            plotOptions: { bar: { columnWidth: '80%' } },
-            dataLabels: { enabled: false },
-            legend: { show: false },
-            series: [{ data: [amount] }],
-            labels: labels,
-            tooltip: {
-              theme: 'light',
-              x: { show: false },
-              marker: { show: false },
-              fillSeriesColor: false,
-              custom: ({ series, seriesIndex, dataPointIndex }) => {
-                const label = this.chartOptions.labels?.[dataPointIndex] || '';
-                const value = series[seriesIndex][dataPointIndex];
-                return `
-      <div class="p-2">
-        <strong>${label}</strong><br>
-        ${value}€
-      </div>
-    `;
-              }
-            }
-          };
-
-          return;
-        }
-
-        // === CASE 2 — Multiple statements ===
-        // always compare latest vs previous
-        const latest = history[0].total;
-        const previous = history[1]?.total ?? latest;
+        const lastIndex = history.length - 1;
+        const latest = amounts[lastIndex];
+        const previous = lastIndex > 0 ? amounts[lastIndex - 1] : latest;
 
         this.lastAmount = latest;
         this.previousAmount = previous;
@@ -140,37 +101,33 @@ export class LastStatementCardComponent implements OnInit {
           this.badgeIcon = 'fall';
         }
 
-        // Αντιστροφή ώστε το γράφημα να δείχνει παλαιότερα αριστερά
-        const reversedAmounts = [...amounts].reverse();
-        const reversedLabels = [...labels].reverse();
-
+        // Chart δείχνει παλιά -> νέα (αριστερά -> δεξιά)
         this.chartOptions = {
           chart: { type: 'bar', height: 100, sparkline: { enabled: true } },
           colors: ['#1677ff'],
           plotOptions: { bar: { columnWidth: '80%' } },
           dataLabels: { enabled: false },
           legend: { show: false },
-          series: [{ data: reversedAmounts }],
-          labels: reversedLabels,
+          series: [{ data: amounts }],
+          labels,
           tooltip: {
             theme: 'light',
             x: { show: false },
             marker: { show: false },
             fillSeriesColor: false,
             custom: ({ series, seriesIndex, dataPointIndex }) => {
-              const label = reversedLabels[dataPointIndex] || '';
+              const label = labels[dataPointIndex] || '';
               const value = series[seriesIndex][dataPointIndex];
               return `
-        <div class="p-2">
-          <strong>${label}:</strong><br>
-          ${value}€
-        </div>
-      `;
+              <div class="p-2">
+                <strong>${label}</strong><br>
+                ${value}€
+              </div>
+            `;
             }
           }
         };
       },
-
       error: (err) => console.error('History error:', err)
     });
   }

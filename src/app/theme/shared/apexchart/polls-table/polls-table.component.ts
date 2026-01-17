@@ -34,7 +34,7 @@ export class PollsTableComponent implements OnInit {
   }
 
   loadPolls() {
-    this.pollService.getAll(this.buildingId).subscribe({
+    this.pollService.getByBuilding(this.buildingId).subscribe({
       next: (data) => (this.polls = data || []),
       error: (err) => console.error(err)
     });
