@@ -77,12 +77,25 @@
                 </a>
               </li>
               <li class="list-inline-item">
-                <a href="javascript:" class="avatar avatar-xs btn-link-primary" ngbTooltip="Επεξεργασία" (click)="onEdit(s)">
+                <a
+                  href="javascript:"
+                  class="avatar avatar-xs btn-link-primary"
+                  [ngbTooltip]="hasAnyPayment(s) ? 'Δεν επιτρέπεται αλλαγή/διαγραφή μετά από πληρωμή' : 'Επεξεργασία'"
+                  [class.disabled]="hasAnyPayment(s)"
+                  (click)="hasAnyPayment(s) ? $event.preventDefault() : onEdit(s)"
+                >
                   <i class="f-16 text-primary d-flex" antIcon type="edit" theme="outline"></i>
                 </a>
               </li>
               <li class="list-inline-item">
-                <a href="javascript:" class="avatar avatar-xs btn-link-danger" ngbTooltip="Διαγραφή" (click)="onDelete(s)">
+                <a
+                  href="javascript:"
+                  class="avatar avatar-xs btn-link-danger"
+                  ngbTooltip="Διαγραφή"
+                  [class.disabled]="hasAnyPayment(s)"
+                  [attr.aria-disabled]="hasAnyPayment(s)"
+                  (click)="hasAnyPayment(s) ? $event.preventDefault() : onDelete(s)"
+                >
                   <i class="f-16 text-danger d-flex" antIcon type="delete" theme="outline"></i>
                 </a>
               </li>

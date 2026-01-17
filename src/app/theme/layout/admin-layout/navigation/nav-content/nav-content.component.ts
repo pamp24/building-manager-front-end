@@ -1,7 +1,7 @@
 // Angular import
 import { AfterViewInit, Component, ElementRef, OnInit, viewChild, output, inject } from '@angular/core';
 import { CommonModule, Location, LocationStrategy } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 // project import
 import { NavigationItems } from '../navigation';
@@ -91,7 +91,7 @@ export class NavContentComponent implements AfterViewInit, OnInit {
   readonly navbarWrapper = viewChild.required<ElementRef>('navbarWrapper');
 
   // Constructor
-  constructor() {
+  constructor(private router: Router) {
     this.windowWidth = window.innerWidth;
     this.iconService.addIcon(
       ...[

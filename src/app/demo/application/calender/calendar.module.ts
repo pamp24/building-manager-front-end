@@ -2,8 +2,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { CalenderRoutingModule } from './calender-routing.module';
-import { CalenderComponent } from './calender.component';
+import { CalenderRoutingModule } from './calendar-routing.module';
+import { CalenderComponent } from './calendar.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 
 // third party

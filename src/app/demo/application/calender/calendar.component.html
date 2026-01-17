@@ -49,7 +49,7 @@
               [viewDate]="viewDate"
               [events]="events"
               [refresh]="refresh"
-              (eventClicked)="handleEvent('Clicked', $event.event)  "
+              (eventClicked)="handleEvent('Clicked', $event.event)"
               (eventTimesChanged)="eventTimesChanged($event)"
             ></mwl-calendar-week-view>
           }
@@ -92,6 +92,20 @@
                 <td>{{ event.end | date: 'medium' }}</td>
                 <td>
                   <ul class="list-inline mb-0">
+                    <!-- Pin -->
+                    <li class="list-inline-item">
+                      <a
+                        href="javascript:void(0)"
+                        class="avatar avatar-xs"
+                        [ngClass]="$any(event).pinned ? 'btn-link-warning' : 'btn-link-secondary'"
+                        ngbTooltip="Pin / Unpin"
+                        (click)="togglePin(event)"
+                      >
+                        <i class="f-16 d-flex" antIcon type="pushpin" [theme]="$any(event).pinned ? 'fill' : 'outline'"></i>
+                      </a>
+                    </li>
+
+                    <!-- Edit -->
                     <li class="list-inline-item">
                       <a
                         href="javascript:void(0)"
@@ -102,7 +116,7 @@
                         <i class="f-16 text-primary d-flex" antIcon type="edit" theme="outline"></i>
                       </a>
                     </li>
-
+                    <!-- Delete -->
                     <li class="list-inline-item">
                       <a
                         href="javascript:void(0)"

@@ -1,4 +1,5 @@
 import { MonthlyStatsDTO } from './monthlyStatsDTO';
+import { MonthlyAmountStatsDTO } from 'src/app/theme/shared/models/monthlyAmountStatsDTO';
 
 export interface ManagerDashboardDTO {
   buildingId: number;
@@ -12,4 +13,5 @@ export interface ManagerDashboardDTO {
   totalCancelled: number;
   totalDraft: number;
   monthlyStats: MonthlyStatsDTO[];
+  monthlyAmountStats: MonthlyAmountStatsDTO[];
 }

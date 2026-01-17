@@ -83,7 +83,7 @@
               <tbody>
                 <tr *ngFor="let item of statement?.items; let i = index">
                   <td>{{ i + 1 }}</td>
-                  <td>{{ item.category }}</td>
+                  <td>{{ translateCategory(item.category) }}</td>
                   <td>{{ item.descriptionItem }}</td>
                   <td class="text-end">{{ item.price | number: '1.2-2' }} €</td>
                 </tr>

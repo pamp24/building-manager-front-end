@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/component-class-suffix */
 // Angular import
 import { Component, OnDestroy } from '@angular/core';
 

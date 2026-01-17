@@ -138,7 +138,7 @@ const routes: Routes = [
       },
       {
         path: 'calendar',
-        loadChildren: () => import('./demo/application/calender/calender.module').then((m) => m.CalenderModule),
+        loadChildren: () => import('./demo/application/calender/calendar.module').then((m) => m.CalenderModule),
         data: {
           role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }

@@ -31,12 +31,18 @@
   <div class="col-md-6 col-xl-3">
     <app-building-total-card />
   </div>
-  <div class="col-md-6 col-xl-3">
+  <div class="col-md-12 col-xl-6">
+    <app-building-announcements-card
+      [buildingId]="buildingId"
+      [isManager]="true"
+    />
+  </div>
+  <!-- <div class="col-md-6 col-xl-3">
     <app-apartment-pending-card />
   </div>
   <div class="col-md-6 col-xl-3">
     <app-building-pedning-card />
-  </div>
+  </div> -->
   <div class="col-md-12 col-xl-8">
     <app-building-chart [isVisible]="dashboardLoaded"></app-building-chart>
   </div>

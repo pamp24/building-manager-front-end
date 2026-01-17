@@ -61,7 +61,6 @@ export class NavRightComponent implements OnInit {
   screenFull: boolean = true;
   unreadCount = 0;
 
-
   // constructor
   constructor(private notificationService: NotificationService) {
     this.windowWidth = window.innerWidth;
@@ -106,7 +105,6 @@ export class NavRightComponent implements OnInit {
   useLanguage(language: string) {
     this.translate.use(language);
   }
-
 
   megaMenus = [
     {
@@ -194,20 +192,32 @@ export class NavRightComponent implements OnInit {
       title: 'Προσωπικό προφίλ',
       url: '/user/user-profile'
     },
+    // {
+    //   icon: 'edit',
+    //   title: 'Social Profile'
+    // },
     {
-      icon: 'edit',
-      title: 'Social Profile'
+      icon: 'calendar',
+      title: 'Ημερολόγιο',
+      url: '/calendar'
+    },
+    {
+      icon: 'line-chart',
+      title: 'Ψηφοφορίες',
+      url: '/polls'
     },
     {
       icon: 'wallet',
-      title: 'Billing'
+      title: 'Τιμολόγηση',
+      url: '/price'
     }
   ];
 
   setting = [
     {
       icon: 'question-circle',
-      title: 'Υποστήριξη'
+      title: 'Υποστήριξη',
+      url: '/helpdesk/ticket/create'
     },
     {
       icon: 'user',

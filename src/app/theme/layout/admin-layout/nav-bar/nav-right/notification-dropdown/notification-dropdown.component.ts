@@ -130,6 +130,20 @@ export class NotificationDropdownComponent implements OnInit {
           payloadObj: p
         };
       }
+      case 'NEW_STATEMENT': {
+        const code = (p as any)?.code ?? '';
+        const month = (p as any)?.month ?? '';
+        return {
+          id: n.id,
+          type: n.type,
+          avatarClass: 'user-avatar bg-light-primary',
+          iconClass: 'file-text',
+          time,
+          message: `Εκδόθηκε νέο παραστατικό <b>${code}</b> (${month}).`,
+          date,
+          payloadObj: p
+        };
+      }
 
       default:
         return {
@@ -146,11 +160,21 @@ export class NotificationDropdownComponent implements OnInit {
   }
 
   openNotification(item: UiNotification): void {
-    // mark read (αν έχεις endpoint)
-    // this.notificationService.markRead(item.id).subscribe();
+    const p: any = item.payloadObj || null;
 
-    const p = item.payloadObj || null;
+    //Αν είναι νέο παραστατικό → πήγαινε στα invoices
+    if (item.type === 'NEW_STATEMENT' && p?.statementId) {
+      this.router.navigate(['/dashboard/default'], {
+        queryParams: {
+          buildingId: p.buildingId,
+          statementId: p.statementId
+        }
+      });
+      this.close();
+      return;
+    }
 
+    //Αν είναι ανάθεση διαμερίσματος → πήγαινε στο προφίλ με το σωστό tab
     const tab = p?.tab ?? (item.type === 'APARTMENT_ASSIGNED' ? 'my-apartment' : item.type === 'MEMBER_JOIN_REQUEST' ? 'members' : null);
 
     const queryParams: any = {};
