@@ -31,11 +31,20 @@
 }
 
 .announcement-content {
-  flex: 1 1 auto;
-  min-width: 0;
+  max-height: 220px;   // άλλαξέ το όπως θες
+  overflow: auto;
 }
 
-.announcement-text {
-  white-space: pre-wrap; // κρατάει αλλαγές γραμμής αν υπάρχουν
-  word-break: break-word;
+.announcement-content {
+  max-height: 220px;   // άλλαξέ το όπως θες
+  overflow: auto;
+}
+
+:host {
+  display: block;
+  height: 100%;
+}
+
+:host ::ng-deep .card {
+  height: 100%;
 }

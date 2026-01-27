@@ -24,29 +24,33 @@
     </div>
   </div>
 </div>
-<div class="row align-items-stretch">
+<div class="row g-3 align-items-stretch">
   <div class="col-md-6 col-xl-3 d-flex">
-    <app-last-statement-card class="w-100"/>
+    <app-last-statement-card class="w-100"></app-last-statement-card>
   </div>
+
   <div class="col-md-6 col-xl-3 d-flex">
-    <app-building-total-card class="w-100"/>
+    <app-building-total-card class="w-100"></app-building-total-card>
   </div>
+
   <div class="col-md-12 col-xl-6 d-flex">
-    <app-building-announcements-card
-    class="w-100"
-      [buildingId]="buildingId"
-      [isManager]="true"
-    />
+    <app-building-announcements-card class="w-100" [buildingId]="buildingId" [isManager]="true"></app-building-announcements-card>
   </div>
+
+  <!-- Δεν το χρησιμοποιούμε -->
   <!-- <div class="col-md-6 col-xl-3">
     <app-apartment-pending-card />
-  </div>
-  <div class="col-md-6 col-xl-3">
+  </div> -->
+  <!-- Δεν το χρησιμοποιούμε -->
+  <!-- <div class="col-md-6 col-xl-3">
     <app-building-pedning-card />
   </div> -->
+
   <div class="col-md-12 col-xl-8">
     <app-building-chart [isVisible]="dashboardLoaded"></app-building-chart>
   </div>
+
+
   <!-- Ενεργείες/Πληρωμές -->
   <div class="col-md-12 col-xl-4">
     <h5 class="mb-3">Ενέργειες Πληρωμών</h5>

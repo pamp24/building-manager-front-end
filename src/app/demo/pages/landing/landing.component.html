@@ -20,13 +20,13 @@
       <div class="collapse navbar-collapse" [ngbCollapse]="isCollapsed">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
           <li class="nav-item landing-header-title">
-            <a class="nav-link" [routerLink]="['/dashboard/default']">{{ userLogin ? 'Dashboard' : 'Login' }}</a>
+            <a class="nav-link" [routerLink]="['/dashboard/default']">{{ userLogin ? 'Πίνακας Ελέγχου' : 'Σύνδεση' }}</a>
           </li>
           <li class="nav-item ms-3 landing-header-title">
-            <a class="nav-link" [routerLink]="['/components/basic/alert']">Components</a>
+            <a class="nav-link" [routerLink]="['/price']">Τιμολόγιση</a>
           </li>
           <li class="nav-item ms-3 landing-header-title">
-            <a class="nav-link me-2">Documentation</a>
+            <a class="nav-link me-2">Περισσότερα</a>
           </li>
           <li class="nav-item ms-2">
             <a class="btn btn-primary" [routerLink]="['/register']">Εγγραφή</a>
