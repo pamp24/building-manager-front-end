@@ -63,7 +63,7 @@
                 'bg-warning text-dark': s.status === 'ISSUED',
                 'bg-danger': s.status === 'CLOSED',
                 'bg-info': s.status === 'DRAFT',
-                'bg-secondary': s.status === 'EXPIRED'
+                'bg-danger': s.status === 'EXPIRED'
               }"
             >
               {{ translateStatus(s.status, s.isPaid) }}
