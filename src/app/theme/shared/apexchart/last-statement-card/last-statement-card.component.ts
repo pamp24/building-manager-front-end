@@ -39,6 +39,7 @@ export class LastStatementCardComponent implements OnInit {
     this.initChart();
     this.loadDashboard();
     this.loadHistory();
+    
   }
 
   private initChart() {
@@ -130,6 +131,7 @@ export class LastStatementCardComponent implements OnInit {
       },
       error: (err) => console.error('History error:', err)
     });
+    console.log(history)
   }
 
   private monthToGreek(date: string | null): string {

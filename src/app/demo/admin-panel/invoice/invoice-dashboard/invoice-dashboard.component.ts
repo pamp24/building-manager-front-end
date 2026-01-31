@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 
 // icons
 import { IconService } from '@ant-design/icons-angular';
@@ -53,6 +53,7 @@ import { UserPaymentsTableComponent } from './user-payments-table/user-payments-
 import { CommonExpenseStatementService } from '../../../../theme/shared/service/commonExpensesStatement.service';
 import { CalendarService } from '../../../../theme/shared/service/calendarService.service';
 import { PollService } from '../../../../theme/shared/service/poll.service';
+import { NgbNav, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-invoice-dashboard',
@@ -63,7 +64,8 @@ import { PollService } from '../../../../theme/shared/service/poll.service';
     BuildingSelectorComponent,
     StatusCardsComponent,
     RecentPaymentsComponent,
-    UserPaymentsTableComponent
+    UserPaymentsTableComponent,
+    NgbNavModule
   ],
   templateUrl: './invoice-dashboard.component.html',
   styleUrl: './invoice-dashboard.component.scss'
@@ -75,7 +77,7 @@ export class InvoiceDashboardComponent implements OnInit {
   private tabNav = inject(TabNavigationService);
   private buildingService = inject(BuildingService);
   private paymentService = inject(PaymentService);
-
+  @ViewChild('nav', { static: false }) nav?: NgbNav;
   backgroundColor!: string;
 
   dashboardData?: ManagerDashboardDTO;
@@ -285,15 +287,9 @@ export class InvoiceDashboardComponent implements OnInit {
   }
 
   goToTab(tabId: number): void {
-    console.log('Μετάβαση στην καρτέλα:', tabId);
-    this.activeTab = tabId;
-    if (this.tabNav) {
-      this.tabNav.goToTab(tabId);
-    }
-    setTimeout(() => {
-      document.getElementById('invoice-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
-  }
+  this.router.navigate(['/invoice/list'], { queryParams: { tab: tabId } });
+}
+
   goToInvoiceList(): void {
     this.router.navigate(['/invoice/list']);
   }

@@ -86,6 +86,17 @@ export class InvoiceListComponent implements OnInit {
       },
       error: (err) => console.error('Σφάλμα λήψης πολυκατοικιών:', err)
     });
+    this.route.queryParamMap.subscribe((params) => {
+      const tab = Number(params.get('tab'));
+      if (!isNaN(tab) && tab >= 1 && tab <= 6) {
+        this.activeTab = tab;
+
+        setTimeout(() => {
+          this.nav?.select(tab);
+          document.getElementById('invoice-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 0);
+      }
+    });
   }
 
   private loadBuildingsAndData(): void {

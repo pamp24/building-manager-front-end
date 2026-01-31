@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { ChartDTO } from '../models/chartDTO';
 
 export interface UserDashboardSummary {
@@ -17,7 +17,14 @@ export interface UserDashboardSummary {
 export class UserDashboardService {
   private baseUrl = 'http://localhost:8080/api/v1/dashboard/user';
 
+  private refresh$ = new Subject<void>();
+  refreshDashboard$ = this.refresh$.asObservable();
+
   constructor(private http: HttpClient) {}
+
+  triggerRefresh() {
+    this.refresh$.next();
+  }
 
   getDashboard(): Observable<UserDashboardSummary> {
     return this.http.get<UserDashboardSummary>(this.baseUrl);
@@ -51,6 +58,6 @@ export class UserDashboardService {
   }
 
   getUserStatements() {
-  return this.http.get<any[]>(`${this.baseUrl}/statements`);
-}
+    return this.http.get<any[]>(`${this.baseUrl}/statements`);
+  }
 }

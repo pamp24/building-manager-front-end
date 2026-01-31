@@ -134,11 +134,13 @@ buildingId: any;
 }
 
   openModal(task: any) {
+  this.selectedAllocation = task; 
+
   const ref = this.modal.open(PaymentModalComponent, { size: 'md' });
   ref.componentInstance.allocation = task;
 
   ref.result.then(
-    amount => this.handlePay(amount),
+    (amount) => this.handlePay(amount),
     () => {}
   );
 }

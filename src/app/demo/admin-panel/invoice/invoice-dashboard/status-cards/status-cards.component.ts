@@ -52,15 +52,10 @@ export class StatusCardsComponent implements OnChanges {
     this.closedCount = data.totalCancelled || 0;
     this.draftCount = data.totalDraft || 0;
 
-    this.totalAll =
-    this.paidCount +
-    this.pendingCount +
-    this.expiredCount +
-    this.closedCount +
-    this.draftCount;
+    this.totalAll = this.paidCount + this.pendingCount + this.expiredCount + this.closedCount + this.draftCount;
   }
 
-  selectTab(tabId: number): void {
+  selectTab(tabId: number) {
     this.tabSelected.emit(tabId);
   }
 }

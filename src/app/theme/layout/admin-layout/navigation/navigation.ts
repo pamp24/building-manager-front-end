@@ -69,7 +69,7 @@ export const NavigationItems: NavigationItem[] = [
         url: '/dashboard/forms-validator',
         icon: 'file-protect',
         breadcrumbs: false,
-        role: [Role.User]
+        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
       },
       {
         id: 'account-profile',
