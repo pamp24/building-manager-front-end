@@ -162,5 +162,6 @@
   "Manager's Dashboard": "Πίνακας Ελέγχου Διαχειριστή",
   "Building": "Πολυκατοικία",
   "Create Expenses Invoice": "Έκδοση Κοινοχρήστων",
-  "List Expenses Invoices": "Λίστα Κοινοχρήστων"
+  "List Expenses Invoices": "Λίστα Κοινοχρήστων",
+  "BuildingManager": "Διαχειριστής Πολυκατοικίας"
 }

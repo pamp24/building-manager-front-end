@@ -10,35 +10,44 @@ import { inviteRequest } from '../models/inviteRequest';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
+  private readonly apiUrl = 'http://localhost:8080/api/v1';
+
   constructor(private http: HttpClient) {}
 
   getCurrentUser(): Observable<User> {
-    return this.http.get<User>('http://localhost:8080/api/v1/auth/me');
+    return this.http.get<User>(`${this.apiUrl}/auth/me`);
   }
 
   updateUser(user: UserUpdateDTO): Observable<void> {
-    return this.http.put<void>('http://localhost:8080/api/v1/users/update', user);
+    return this.http.put<void>(`${this.apiUrl}/users/update`, user);
   }
 
   removeUserFromBuilding(userId: number): Observable<void> {
-    return this.http.delete<void>(`http://localhost:8080/api/v1/users/${userId}/building`);
+    return this.http.delete<void>(`${this.apiUrl}/users/${userId}/building`);
   }
 
   assignRole(userId: number, role: string): Observable<void> {
-    return this.http.post<void>(`http://localhost:8080/api/v1/users/${userId}/roles/assign`, null, {
+    return this.http.post<void>(`${this.apiUrl}/users/${userId}/roles/assign`, null, {
       params: { roleName: role }
     });
   }
 
   getUsersInSameBuilding(): Observable<UserTableDto[]> {
-    return this.http.get<UserTableDto[]>('http://localhost:8080/api/v1/users/same-building');
+    return this.http.get<UserTableDto[]>(`${this.apiUrl}/users/same-building`);
   }
 
   inviteUserToBuilding(payload: inviteRequest): Observable<any> {
-    return this.http.post<any>('http://localhost:8080/api/v1/invites', payload);
+    return this.http.post<any>(`${this.apiUrl}/invites`, payload);
   }
 
   acceptInvite(code: string): Observable<void> {
-    return this.http.post<void>(`http://localhost:8080/api/v1/invites/accept?code=${code}`, {});
+    return this.http.post<void>(`${this.apiUrl}/invites/accept`, {}, { params: { code } });
+  }
+
+  uploadProfileImage(file: File): Observable<{ imageUrl: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post<{ imageUrl: string }>(`${this.apiUrl}/users/me/profile-image`, formData);
   }
 }

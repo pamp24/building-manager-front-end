@@ -19,6 +19,7 @@ import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
   styleUrl: './building.component.scss'
 })
 export class BuildingComponent implements OnInit {
+  private readonly apiBase = 'http://localhost:8080/api/v1';
   private iconService = inject(IconService);
   buildingForm!: FormGroup;
   buildingData!: BuildingDTO;
@@ -66,7 +67,6 @@ export class BuildingComponent implements OnInit {
       heatingCapacityLitres: ['']
     });
 
-
     this.buildingService.getMyBuildings().subscribe({
       next: (data: BuildingDTO[]) => {
         this.buildings = data;
@@ -105,6 +105,10 @@ export class BuildingComponent implements OnInit {
     this.buildingData = building;
     this.buildingForm.patchValue(building);
 
+    if (this.buildingData.managerProfileImgUrl?.startsWith('/uploads/')) {
+    this.buildingData.managerProfileImgUrl = this.apiBase + this.buildingData.managerProfileImgUrl;
+  }
+
     this.details = [
       { icon: 'mail', text: building?.managerEmail || 'Δεν έχει οριστεί' },
       { icon: 'phone', text: building?.managerPhone || 'Μη διαθέσιμο' },
@@ -130,10 +134,10 @@ export class BuildingComponent implements OnInit {
     }
   }
 
-  // skills = [
-  //   { title: 'Πάρκινγκ', value: 30 },
-  //   { title: 'Αποθήκη', value: 80 }
-  // ];
+  skills = [
+    { title: 'Πάρκινγκ', value: 30 },
+    { title: 'Αποθήκη', value: 80 }
+  ];
 
   getTranslatedHeatingType(type?: string): string {
     switch (type) {
@@ -152,13 +156,13 @@ export class BuildingComponent implements OnInit {
     }
   }
 
-toggleEdit() {
-  this.isEditing = !this.isEditing;
-  if (this.isEditing) {
-    this.buildingForm.enable();
-  } else {
-    this.buildingForm.disable();
-    this.buildingForm.patchValue(this.buildingData); // reset
-  }
-}
+  toggleEdit() {
+    this.isEditing = !this.isEditing;
+    if (this.isEditing) {
+      this.buildingForm.enable();
+    } else {
+      this.buildingForm.disable();
+      this.buildingForm.patchValue(this.buildingData); // reset
+    }
+  } 
 }

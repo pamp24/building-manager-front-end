@@ -142,6 +142,21 @@ export class NavContentComponent implements AfterViewInit, OnInit {
     this.navigation = this.filterMenu(NavigationItems, currentUserRole);
   }
 
+  getUserAvatar(): string {
+    const user = this.authenticationService.currentUserValue;
+
+    const url = user?.profileImageUrl?.trim();
+    if (!url) return 'assets/images/user/avatar-1.jpg';
+
+    if (url.startsWith('http')) return url;
+
+    return `http://localhost:8080/api/v1${url}`;
+  }
+
+  onAvatarError(e: Event) {
+    (e.target as HTMLImageElement).src = 'assets/images/user/avatar-1.jpg';
+  }
+
   filterMenu(NavigationItems: NavigationItem[], userRole: string, parentRole: string[] = [Role.Admin]): NavigationItem[] {
     return NavigationItems.map((item) => {
       // If item doesn't have a specific role, inherit roles from parent

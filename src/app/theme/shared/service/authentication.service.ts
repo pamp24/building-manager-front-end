@@ -65,21 +65,36 @@ export class AuthenticationService {
     this.currentUser = null;
     this.router.navigate(['/login']);
   }
+  
   confirm(token: string) {
     return this.http.post('http://localhost:8080/api/v1/auth/activate-account', { token });
   }
+
   sendResetPasswordEmail(email: string) {
     console.log('Κλήση API για forgot-password με email:', email);
     return this.http.post('http://localhost:8080/api/v1/auth/forgot-password', { email });
   }
+
   resetPassword(token: string, newPassword: string): Observable<AuthenticationResponse> {
     return this.http.post<AuthenticationResponse>('http://localhost:8080/api/v1/auth/reset-password', {
       token,
       newPassword
     });
   }
-getUser() {
-  const userJson = localStorage.getItem('currentUser');
-  return userJson ? JSON.parse(userJson) : null;
-}
+
+  getUser() {
+    const userJson = localStorage.getItem('currentUser');
+    return userJson ? JSON.parse(userJson) : null;
+  }
+
+  updateCurrentUserProfileImage(profileImageUrl: string) {
+    const stored = localStorage.getItem('currentUser');
+    if (!stored) return;
+
+    const user = JSON.parse(stored);
+    user.profileImageUrl = profileImageUrl;
+
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    this.currentUser = user; // refresh runtime value
+  }
 }

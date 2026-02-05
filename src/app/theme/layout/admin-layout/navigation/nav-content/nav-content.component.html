@@ -36,7 +36,7 @@
       <div class="d-flex align-items-center">
         <div class="flex-shrink-0 me-2">
           <div class="user-images">
-            <img src="assets/images/user/avatar-1.jpg" alt="user" class="img-fluid rounded-circle" />
+            <img [src]="getUserAvatar()" alt="user" class="user-dropdown-avatar" (error)="onAvatarError($event)" />
           </div>
         </div>
         <div class="flex-grow-1">
@@ -50,7 +50,7 @@
           <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
             <button ngbDropdownItem (click)="logout()">{{ 'Logout' | translate }}</button>
             <button ngbDropdownItem [routerLink]="['/user/user-profile']">{{ 'Profile' | translate }}</button>
-            <button ngbDropdownItem [routerLink]="['/user/account-profile']">{{ 'My Account' | translate }}</button>
+            <button ngbDropdownItem [routerLink]="['/user/account-profile']">{{ 'Building' | translate }}</button>
           </div>
         </div>
       </div>
