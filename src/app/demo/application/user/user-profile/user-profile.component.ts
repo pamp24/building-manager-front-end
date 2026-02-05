@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
 import { Component, OnInit, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -36,6 +37,8 @@ import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 //UserUpdateDTO
 import { UserUpdateDTO } from 'src/app/theme/shared/models/UserUpdateDTO';
+import { TranslateService } from '@ngx-translate/core';
+import { MantisConfig } from 'src/app/app-config';
 
 @Component({
   selector: 'app-user-profile',
@@ -44,11 +47,16 @@ import { UserUpdateDTO } from 'src/app/theme/shared/models/UserUpdateDTO';
   styleUrls: ['./user-profile.component.scss']
 })
 export class UserProfileComponent implements OnInit {
+  apiBase = 'http://localhost:8080/api/v1';
+  private translate = inject(TranslateService);
   private dataService = inject(DataService);
   private iconService = inject(IconService);
   private themeService = inject(ThemeService);
   userForm!: FormGroup;
   user!: User;
+
+  isEditing = false;
+  private initialFormValue: any;
 
   private calculateProfileCompletion(): number {
     const totalFields = [
@@ -69,7 +77,6 @@ export class UserProfileComponent implements OnInit {
     return percentage;
   }
 
-  // eslint-disable-next-line
   people$: Observable<any[]> | undefined;
   selectedPeople = [{ name: 'Karyn Wright' }];
   isDarkMode!: boolean;
@@ -107,6 +114,9 @@ export class UserProfileComponent implements OnInit {
 
   // life cycle event
   ngOnInit() {
+    setTimeout(() => {
+          this.useLanguage(MantisConfig.i18n);
+        }, 0);
     this.chartOptions = {
       series: [30],
       chart: {
@@ -168,18 +178,72 @@ export class UserProfileComponent implements OnInit {
       region: [''],
       postalCode: ['']
     });
+
+    this.setFormEditing(false);
+
     this.userForm.valueChanges.subscribe(() => {
       const completion = this.calculateProfileCompletion();
       this.updateChart(completion);
     });
+
     this.userService.getCurrentUser().subscribe({
       next: (user) => {
         this.user = user;
-        this.userForm.patchValue(user);
+
+        this.userForm.patchValue(user, { emitEvent: false });
+
+        this.initialFormValue = this.userForm.getRawValue();
+
+        const completion = this.calculateProfileCompletion();
+        this.updateChart(completion);
+
+        this.setFormEditing(false);
+      },
+      error: (err) => console.error('Δεν κατάφερε να φορτωθεί ο χρήστης', err)
+    });
+  }
+
+  useLanguage(language: string) {
+    this.translate.use(language);
+  }
+
+  private setFormEditing(editing: boolean): void {
+    this.isEditing = editing;
+
+    if (editing) {
+      this.userForm.enable({ emitEvent: false });
+
+      this.userForm.get('email')?.disable({ emitEvent: false });
+    } else {
+      this.userForm.disable({ emitEvent: false });
+    }
+  }
+
+  toggleEdit(): void {
+    if (!this.isEditing) {
+      // πάμε σε edit mode
+      this.setFormEditing(true);
+      return;
+    }
+
+    this.userForm.reset(this.initialFormValue, { emitEvent: false });
+    this.setFormEditing(false);
+    const completion = this.calculateProfileCompletion();
+    this.updateChart(completion);
+  }
+
+  savePersonalChanges(): void {
+    if (!this.isEditing) return;
+    const updateData: UserUpdateDTO = this.userForm.getRawValue();
+    this.userService.updateUser(updateData).subscribe({
+      next: () => {
+        alert('Τα στοιχεία αποθηκεύτηκαν!');
+        this.initialFormValue = this.userForm.getRawValue();
+        this.setFormEditing(false);
         const completion = this.calculateProfileCompletion();
         this.updateChart(completion);
       },
-      error: (err) => console.error('Δεν κατάφερε να φορτωθεί ο χρήστης', err)
+      error: (err) => console.error('Σφάλμα κατά την αποθήκευση:', err)
     });
   }
 
@@ -188,26 +252,6 @@ export class UserProfileComponent implements OnInit {
       ...this.chartOptions,
       series: [percentage]
     };
-  }
-  //apothikeusi allagon
-  savePersonalChanges(): void {
-    const updateData: UserUpdateDTO = this.userForm.value;
-
-    this.userService.updateUser(updateData).subscribe({
-      next: () => alert('Τα στοιχεία αποθηκεύτηκαν!'),
-      error: (err) => console.error('Σφάλμα κατά την αποθήκευση:', err)
-    });
-  }
-
-  onFileSelected(event: Event) {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.userForm.patchValue({ profileImageUrl: reader.result });
-      };
-      reader.readAsDataURL(file);
-    }
   }
 
   // private method
@@ -223,6 +267,42 @@ export class UserProfileComponent implements OnInit {
   changeModel() {
     this.selectedPeople = [{ name: 'New person' }];
   }
+
+  onFileSelected(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  if (!input.files || input.files.length === 0) return;
+
+  const file = input.files[0];
+
+  // preview άμεσα
+  const reader = new FileReader();
+  reader.onload = () => {
+    if (this.user) this.user.profileImageUrl = reader.result as string;
+  };
+  reader.readAsDataURL(file);
+
+  // upload
+  this.userService.uploadProfileImage(file).subscribe({
+    next: (res) => {
+      // backend δίνει π.χ. /uploads/profile-images/xxx.jpg
+      this.user.profileImageUrl = res.imageUrl;
+
+      // ⭐ ΕΔΩ ενημερώνεις localStorage + authenticationService
+      this.authenticationService.updateCurrentUserProfileImage(res.imageUrl);
+    },
+    error: (err) => {
+      console.error('Σφάλμα upload:', err);
+    }
+  });
+}
+
+
+  imgSrc(url?: string | null): string {
+  if (!url) return 'assets/images/user/avatar-5.jpg';
+  if (url.startsWith('http')) return url;
+  if (url.startsWith('/uploads/')) return `${this.apiBase}${url}`;
+  return url;
+}
 
   socialMedia = [
     {

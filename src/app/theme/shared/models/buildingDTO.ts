@@ -33,6 +33,7 @@ export interface BuildingDTO {
   managerPhone: string;
   managerAddress1: string;
   managerCity: string;
+  managerProfileImgUrl?: string;
 
   hasCentralHeating: boolean;
   heatingType?: string;

@@ -106,6 +106,19 @@ export class NavRightComponent implements OnInit {
     this.translate.use(language);
   }
 
+  getUserAvatar(): string {
+    const url = this.authenticationService.currentUserValue?.profileImageUrl?.trim();
+
+    if (!url) return 'assets/images/user/avatar-1.jpg';
+    if (url.startsWith('http')) return url;
+
+    return `http://localhost:8080/api/v1${url}`;
+  }
+
+  onAvatarError(e: Event) {
+    (e.target as HTMLImageElement).src = 'assets/images/user/avatar-1.jpg';
+  }
+
   megaMenus = [
     {
       name: 'Authentication',

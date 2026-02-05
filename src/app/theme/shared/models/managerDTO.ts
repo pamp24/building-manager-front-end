@@ -7,4 +7,5 @@ export interface ManagerDTO {
   addressNumber1?: string;
   address2?: string;
   addressNumber2?: string;
+  profileImgUrl?: string;
 }
