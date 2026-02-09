@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Company } from '../models/companyDTO';
+import { CompanyDTO } from '../models/companyDTO';
 
 
 
@@ -11,7 +11,11 @@ export class CompanyService {
 
   constructor(private http: HttpClient) {}
 
-  createCompany(company: Company): Observable<Company> {
-    return this.http.post<Company>(`${this.baseUrl}`, company);
+  createCompany(company: CompanyDTO): Observable<CompanyDTO> {
+    return this.http.post<CompanyDTO>(`${this.baseUrl}`, company);
+  }
+
+  getMyCompany(): Observable<CompanyDTO> {
+    return this.http.get<CompanyDTO>(`${this.baseUrl}/my/company`);
   }
 }

@@ -163,5 +163,9 @@
   "Building": "Πολυκατοικία",
   "Create Expenses Invoice": "Έκδοση Κοινοχρήστων",
   "List Expenses Invoices": "Λίστα Κοινοχρήστων",
-  "BuildingManager": "Διαχειριστής Πολυκατοικίας"
+  "BuildingManager": "Διαχειριστής Πολυκατοικίας",
+  "User": "Χρήστης",
+  "Owner": "Ιδιοκτήτης",
+  "Resident": "Ενοικιαστής"
+
 }

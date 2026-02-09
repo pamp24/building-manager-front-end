@@ -5,6 +5,28 @@
   (backClicked)="onBack()"
 ></app-multiple-building-form>
 
+<!-- MANY: 2) Create ONE Building (one-by-one) -->
+<ng-container *ngIf="action === 'many' && companyCompleted">
+  <app-card cardTitle="Πολυκατοικία Εταιρίας">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <div>
+        <div class="fw-bold">Εταιρία ID: {{ companyId }}</div>
+        <small class="text-muted">Προσθέστε μία πολυκατοικία, αποθήκευση, και μετά θα περάσετε στα διαμερίσματα.</small>
+      </div>
+
+      <button class="btn btn-outline-secondary" type="button" (click)="changeCompany()">
+        Αλλαγή Εταιρίας
+      </button>
+    </div>
+
+    <app-building-form
+      [form]="buildingForm"
+      (formSubmitted)="onManyBuildingCreated($event)"
+      (backClicked)="onBack()"
+    ></app-building-form>
+  </app-card>
+</ng-container>
+
 <!-- NEW -->
 <app-building-form
   *ngIf="action === 'new'"

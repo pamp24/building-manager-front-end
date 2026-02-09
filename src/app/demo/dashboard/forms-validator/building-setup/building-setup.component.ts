@@ -65,19 +65,19 @@ export class BuildingSetupComponent implements OnInit {
     });
   }
   ngOnInit() {
-  console.log('BuildingSetup action:', this.action);
-  console.log('BuildingSetup buildingForm instance:', this.buildingForm);
-  console.log('is FormGroup?', this.buildingForm instanceof FormGroup);
-}
+    console.log('BuildingSetup action:', this.action);
+    console.log('BuildingSetup buildingForm instance:', this.buildingForm);
+    console.log('is FormGroup?', this.buildingForm instanceof FormGroup);
+  }
 
   onBuildingCreated(event: { buildingId: number; buildingForm: FormGroup }) {
-  const meta = this.toMeta(event.buildingForm);
+    const meta = this.toMeta(event.buildingForm);
 
-  this.completed.emit({
-    buildingId: event.buildingId,
-    buildingMeta: meta
-  });
-}
+    this.completed.emit({
+      buildingId: event.buildingId,
+      buildingMeta: meta
+    });
+  }
 
   onBack(): void {
     this.back.emit();
@@ -86,7 +86,57 @@ export class BuildingSetupComponent implements OnInit {
   onCompanyCreated(companyId: number) {
     this.companyId = companyId;
     this.companyCompleted = true;
+
+    // reset building form για να ξεκινήσει “καθαρή” η πρώτη πολυκατοικία
+    this.buildingForm.reset({
+      name: '',
+      street1: '',
+      stNumber1: '',
+      street2: '',
+      stNumber2: '',
+      country: '',
+      state: '',
+      city: '',
+      region: '',
+      postalCode: '',
+      floors: 0,
+      apartmentsNum: 1,
+      sqMetersTotal: 0,
+      sqMetersCommonSpaces: 0,
+      description: '',
+      parkingExist: false,
+      parkingSpacesNum: 0,
+      undergroundFloorExist: false,
+      halfFloorExist: false,
+      overTopFloorExist: false,
+      managerHouseExist: false,
+      storageExist: false,
+      storageNum: 0,
+      hasCentralHeating: false,
+      heatingType: 'NONE',
+      heatingCapacityLitres: 0
+    });
   }
+
+  changeCompany(): void {
+    this.companyCompleted = false;
+    this.companyId = null;
+  }
+
+  // MANY path: όταν δημιουργηθεί building, προχώρα όπως στο new
+  onManyBuildingCreated(event: { buildingId: number; buildingForm: FormGroup }) {
+    // εδώ (προαιρετικά) μπορείς να κρατήσεις companyId σε state/localStorage,
+    // αλλά για το flow αρκεί να περάσεις στο parent το buildingId/meta:
+
+    const meta = this.toMeta(event.buildingForm);
+
+    this.completed.emit({
+      buildingId: event.buildingId,
+      buildingMeta: meta
+    });
+  }
+
+  
 
   private toMeta(form: FormGroup): BuildingMeta {
     const v = form.value;

@@ -1,9 +1,11 @@
 // angular import
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { CompanyService } from 'src/app/theme/shared/service/company.service';
+import { CompanyDTO } from 'src/app/theme/shared/models/companyDTO';
 
 @Component({
   selector: 'app-company',
@@ -11,61 +13,38 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
   templateUrl: './company.component.html',
   styleUrl: './company.component.scss'
 })
-export class CompanyComponent {
-  // public method
-  advance_setting = [
-    {
-      title: 'Secure Browsing',
-      text: "Browsing Securely ( https ) when it's necessary",
-      style: 'pt-0'
-    },
-    {
-      title: 'Login Notifications',
-      text: 'Notify when login attempted from other place'
-    },
-    {
-      title: 'Login Approvals',
-      text: 'Approvals is not required when login from unrecognized devices.',
-      style: 'pb-0'
-    }
-  ];
+export class CompanyComponent implements OnInit {
+  company?: CompanyDTO;
+  loading = true;
+  error?: string;
 
-  recognized_device = [
-    {
-      title: 'Celt Desktop',
-      text: '4351 Deans Lane',
-      status_type: 'text-success',
-      dot_background: 'bg-success',
-      status: 'Active',
-      style: 'pt-0'
-    },
-    {
-      title: 'Imco Tablet',
-      text: '4185 Michigan Avenue',
-      status_type: 'text-muted',
-      dot_background: 'bg-secondary',
-      status: 'Active 5 days ago'
-    },
-    {
-      title: 'Albs Mobile',
-      text: '3462 Fairfax Drive',
-      status_type: 'text-muted',
-      dot_background: 'bg-secondary',
-      status: ' Active 1 month ago',
-      style: 'pb-0'
-    }
-  ];
+  constructor(private companyService: CompanyService) {}
 
-  active_sessions = [
-    {
-      title: 'Celt Desktop',
-      value: '4351 Deans Lane',
-      style: 'pt-0'
-    },
-    {
-      title: 'Moon Tablet',
-      value: '4185 Michigan Avenue',
-      style: 'pb-0'
-    }
-  ];
+  ngOnInit(): void {
+    this.loadCompany();
+  }
+
+  loadCompany(): void {
+    this.loading = true;
+    this.error = undefined;
+
+    this.companyService.getMyCompany().subscribe({
+      next: (c) => {
+        this.company = c;
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.loading = false;
+
+        if (err?.status === 404) {
+          this.error = 'Δεν υπάρχει εταιρία συνδεδεμένη με τον λογαριασμό σας.';
+        } else if (err?.status === 401) {
+          this.error = 'Δεν είστε συνδεδεμένος.';
+        } else {
+          this.error = 'Αποτυχία φόρτωσης εταιρίας.';
+        }
+      }
+    });
+  }
 }

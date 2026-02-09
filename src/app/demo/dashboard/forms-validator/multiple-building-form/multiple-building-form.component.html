@@ -1,35 +1,53 @@
 <app-card cardTitle="Στοιχεία Εταιρίας Διαχείρισης">
-
   <form [formGroup]="form" (ngSubmit)="submit()">
     <div class="row g-3">
+
       <div class="col-md-6">
         <label class="form-label">Επωνυμία Εταιρίας</label>
         <input class="form-control" formControlName="companyName" />
+        <small class="text-danger" *ngIf="(f['companyName'].touched || submitted) && f['companyName'].invalid">
+          Υποχρεωτικό πεδίο (τουλάχιστον 2 χαρακτήρες).
+        </small>
       </div>
 
       <div class="col-md-6">
         <label class="form-label">ΑΦΜ</label>
-        <input class="form-control" formControlName="afm" />
+        <input class="form-control" formControlName="afm" inputmode="numeric" />
+        <small class="text-danger" *ngIf="(f['afm'].touched || submitted) && f['afm'].invalid">
+          Το ΑΦΜ πρέπει να έχει ακριβώς 9 ψηφία.
+        </small>
       </div>
 
       <div class="col-md-6">
         <label class="form-label">Υπεύθυνος</label>
         <input class="form-control" formControlName="responsiblePerson" />
+        <small class="text-danger" *ngIf="(f['responsiblePerson'].touched || submitted) && f['responsiblePerson'].invalid">
+          Υποχρεωτικό πεδίο (τουλάχιστον 3 χαρακτήρες).
+        </small>
       </div>
 
       <div class="col-md-6">
         <label class="form-label">Τηλέφωνο</label>
         <input class="form-control" formControlName="phoneNumber" />
+        <small class="text-danger" *ngIf="(f['phoneNumber'].touched || submitted) && f['phoneNumber'].invalid">
+          Δώστε έγκυρο τηλέφωνο.
+        </small>
       </div>
 
       <div class="col-md-6">
         <label class="form-label">Email</label>
         <input class="form-control" formControlName="email" />
+        <small class="text-danger" *ngIf="(f['email'].touched || submitted) && f['email'].invalid">
+          Δώστε έγκυρο email.
+        </small>
       </div>
 
       <div class="col-md-3">
         <label class="form-label">Πόλη</label>
         <input class="form-control" formControlName="city" />
+        <small class="text-danger" *ngIf="(f['city'].touched || submitted) && f['city'].invalid">
+          Υποχρεωτικό πεδίο.
+        </small>
       </div>
 
       <div class="col-md-3">
@@ -40,23 +58,42 @@
       <div class="col-md-6">
         <label class="form-label">Διεύθυνση</label>
         <input class="form-control" formControlName="address" />
+        <small class="text-danger" *ngIf="(f['address'].touched || submitted) && f['address'].invalid">
+          Υποχρεωτικό πεδίο.
+        </small>
       </div>
 
       <div class="col-md-3">
         <label class="form-label">Αριθμός</label>
         <input class="form-control" formControlName="addressNumber" />
+        <small class="text-danger" *ngIf="(f['addressNumber'].touched || submitted) && f['addressNumber'].invalid">
+          Υποχρεωτικό πεδίο.
+        </small>
       </div>
 
       <div class="col-md-3">
         <label class="form-label">Τ.Κ.</label>
-        <input class="form-control" formControlName="postalCode" />
+        <input class="form-control" formControlName="postalCode" inputmode="numeric" />
+        <small class="text-danger" *ngIf="(f['postalCode'].touched || submitted) && f['postalCode'].invalid">
+          Ο Τ.Κ. πρέπει να έχει 5 ψηφία.
+        </small>
       </div>
+
+    </div>
+
+    <div class="alert alert-danger mt-3" *ngIf="apiError">
+      {{ apiError }}
     </div>
 
     <div class="d-flex justify-content-end mt-4 gap-2">
-      <button type="button" class="btn btn-outline-secondary" (click)="back()">Πίσω</button>
+      <button type="button" class="btn btn-outline-secondary" (click)="back()" [disabled]="loading">
+        Πίσω
+      </button>
 
-      <button type="submit" class="btn btn-primary">Συνέχεια</button>
+      <button type="submit" class="btn btn-primary" [disabled]="loading">
+        <span *ngIf="!loading">Συνέχεια</span>
+        <span *ngIf="loading">Αποθήκευση...</span>
+      </button>
     </div>
   </form>
 </app-card>

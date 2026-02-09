@@ -11,14 +11,14 @@
           <img class="manager-avatar" [src]="buildingData?.managerProfileImgUrl || 'assets/images/user/avatar-5.jpg'" alt="Manager image" />
         </div>
         <h5 class="mb-0">{{ buildingData?.managerFullName }}</h5>
-        <p class="text-muted mb-0">Διαχειριστής</p>
+        <p class="text-muted mb-0">{{this.buildingData?.managerEmail}}</p>
         <p></p>
         <hr class="my-3" />
         <div class="row g-3">
-          <div class="col-4">
+          <!-- <div class="col-4">
             <h5 class="mb-0">86</h5>
             <p class="text-muted">Ένοικοι</p>
-          </div>
+          </div> -->
           <div class="col-4 border border-top-0 border-bottom-0">
             <h5 class="mb-0">{{ buildingData?.floors }}</h5>
             <p class="text-muted">Όροφοι</p>

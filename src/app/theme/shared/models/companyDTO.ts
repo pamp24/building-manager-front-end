@@ -1,7 +1,7 @@
-export interface Company {
-  companyId: number;
+export interface CompanyDTO {
+  companyId?: number;
   companyName: string;
-  afm: string;
+  taxNumber: string;
   responsiblePerson: string;
   phoneNumber: string;
   email: string;
@@ -9,5 +9,5 @@ export interface Company {
   addressNumber: string;
   postalCode: string;
   city: string;
-  region: string;
+  region?: string;
 }

@@ -88,12 +88,12 @@ export class AuthLoginComponent implements OnInit {
         if (inviteCode) {
           this.userService.acceptInvite(inviteCode).subscribe({
             next: () => {
-              console.log('✅ Η πρόσκληση αποδέχτηκε επιτυχώς');
+              console.log('Η πρόσκληση αποδέχτηκε επιτυχώς');
               localStorage.removeItem('inviteCode'); // καθάρισμα
               this.router.navigate(['/dashboard/default']);
             },
             error: (err) => {
-              console.error('❌ Σφάλμα αποδοχής πρόσκλησης:', err);
+              console.error('Σφάλμα αποδοχής πρόσκλησης:', err);
               this.router.navigate(['/dashboard/default']);
             }
           });
