@@ -1,12 +1,13 @@
 ﻿import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 import { AuthenticationResponse } from '../models/authentication-response.model';
 import { User } from 'src/app/theme/shared/components/_helpers/user';
 import { RegistrationRequest } from '../models/registration-request';
+import { UserService } from './user.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -15,7 +16,7 @@ export class AuthenticationService {
 
   private currentUser: User | null = null;
 
-  constructor() {
+  constructor(private userService: UserService) {
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
       this.currentUser = JSON.parse(storedUser) as User;
@@ -65,7 +66,7 @@ export class AuthenticationService {
     this.currentUser = null;
     this.router.navigate(['/login']);
   }
-  
+
   confirm(token: string) {
     return this.http.post('http://localhost:8080/api/v1/auth/activate-account', { token });
   }
@@ -96,5 +97,14 @@ export class AuthenticationService {
 
     localStorage.setItem('currentUser', JSON.stringify(user));
     this.currentUser = user; // refresh runtime value
+  }
+
+  refreshCurrentUser(): Observable<User> {
+    return this.userService.getCurrentUser().pipe(
+      tap((user) => {
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        this.currentUser = user;
+      })
+    );
   }
 }

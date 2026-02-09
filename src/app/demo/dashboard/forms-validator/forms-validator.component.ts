@@ -91,11 +91,15 @@ export class FormsValidatorComponent implements OnInit {
   }
 
   previousStep(): void {
-    if (this.currentStep() === 3 && this.buildingId) {
+    const action = this.selectedAction();
+
+    // Στο "new" αν πατήσει πίσω από step3, σβήσε draft
+    if (action === 'new' && this.currentStep() === 3 && this.buildingId) {
       this.deleteDraftBuildingAndBack();
       return;
     }
 
+    // Στο "many" και "existing" απλά back
     this.wizard.back();
   }
 
