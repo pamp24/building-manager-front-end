@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // project import
@@ -31,6 +31,8 @@ import { BuildingService } from 'src/app/theme/shared/service/building.service';
   styleUrls: ['./user-card.component.scss']
 })
 export class UserCardComponent implements OnInit {
+  @Input() pmView = false;  
+  
   private modalService = inject(NgbModal);
   private iconService = inject(IconService);
   selectedApartment: ApartmentDTO | null = null;
@@ -40,6 +42,7 @@ export class UserCardComponent implements OnInit {
   selectedBuildingIndex = 0;
   buildings: any[] = [];
   sortOption: string = 'default'; // προεπιλογή
+
   
   card_detail: any[] = [];
   currentUsedParking = 0;

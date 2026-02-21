@@ -63,8 +63,8 @@ export class MultipleBuildingFormComponent {
     const payload: CompanyDTO = {
       companyName: String(this.f['companyName'].value).trim(),
       taxNumber: String(this.f['afm'].value).trim(),
-      responsiblePerson: String(this.f['responsiblePerson'].value).trim(),
-      phoneNumber: String(this.f['phoneNumber'].value).trim(),
+      managerName: String(this.f['responsiblePerson'].value).trim(),
+      phone: String(this.f['phoneNumber'].value).trim(),
       email: String(this.f['email'].value).trim(),
       address: String(this.f['address'].value).trim(),
       addressNumber: String(this.f['addressNumber'].value).trim(),

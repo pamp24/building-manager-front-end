@@ -6,11 +6,48 @@ import { NavigationItem } from 'src/app/theme/shared/models/navigation';
 
 export const NavigationItems: NavigationItem[] = [
   {
-    id: 'admin',
-    title: 'Admin Panel',
+    id: 'property-management',
+    title: 'Property Manager Panel',
     type: 'group',
     icon: 'icon-navigation',
-    role: [Role.Admin, Role.PropertyManager, Role.BuildingManager],
+    role: [Role.Admin, Role.PropertyManager],
+    children: [
+      {
+        id: 'dashboard',
+        title: "Manager's Dashboard",
+        type: 'item',
+        classes: 'nav-item',
+        url: '/invoice/dashboard'
+      },
+      {
+        id: 'create',
+        title: 'Create Expenses Invoice',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/invoice/create'
+      },
+      {
+        id: 'list',
+        title: 'List Expenses Invoices',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/invoice/list'
+      },
+      {
+        id: 'buildings',
+        title: 'Buildings',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/pm/buildings',
+      }
+    ]
+  },
+  {
+    id: 'admin',
+    title: 'Building Manager Panel',
+    type: 'group',
+    icon: 'icon-navigation',
+    role: [Role.Admin, Role.BuildingManager],
     children: [
       {
         id: 'dashboard',
@@ -41,6 +78,7 @@ export const NavigationItems: NavigationItem[] = [
     type: 'group',
     classes: 'first-group',
     icon: 'icon-navigation',
+    role: [Role.Admin, Role.BuildingManager, Role.PropertyManager, Role.User, Role.Owner, Role.Resident],
     children: [
       {
         id: 'default',

@@ -1,0 +1,78 @@
+<app-card cardTitle="Κτίρια υπό διαχείριση" [padding]="0">
+  <ng-template #headerOptionsTemplate>
+    <a [routerLink]="['/pm/add']" class="btn btn-primary">Προσθήκη Κτιρίου</a>
+  </ng-template>
+
+  <ng-container *ngIf="loading">
+    <div class="py-4">Φόρτωση...</div>
+  </ng-container>
+
+  <ng-container *ngIf="!loading && error">
+    <div class="alert alert-warning mb-0">{{ error }}</div>
+  </ng-container>
+
+  <ng-container *ngIf="!loading && !error">
+    <div class="row" *ngIf="buildings.length; else empty">
+      @for (b of buildings; track trackById($index, b)) {
+        <div class="col-sm-6 col-lg-4 col-xxl-3">
+          <app-card [showHeader]="false" cardClass="border" blockClass="p-2">
+            <div class="position-relative">
+              <img src="assets/images/admin/img-course-1.png" alt="building" class="img-fluid w-100" />
+              <div class="position-absolute top-0 end-0 p-2">
+                <span class="badge text-bg-light text-uppercase">{{ b.buildingCode }}</span>
+              </div>
+            </div>
+
+            <ul class="list-group list-group-flush my-2">
+              <li class="list-group-item px-0 py-2">
+                <div class="d-flex align-items-center">
+                  <div class="flex-grow-1 me-2">
+                    <h6 class="mb-1">{{ b.name }}</h6>
+                    <p class="text-muted mb-0">{{ b.street1 }} {{ b.stNumber1 }}, {{ b.city }}</p>
+                  </div>
+                  <div class="flex-shrink-0">
+                    <a href="javascript:" class="avatar avatar-xs btn-link-secondary">
+                      <i class="f-20 d-flex" antIcon type="edit" theme="outline"></i>
+                    </a>
+                  </div>
+                </div>
+              </li>
+
+              <li class="list-group-item px-0 py-2">
+                <div class="d-flex align-items-center">
+                  <div class="flex-grow-1 me-2"><p class="mb-0">Όροφοι</p></div>
+                  <div class="flex-shrink-0">
+                    <p class="text-muted mb-0">{{ b.floors }}</p>
+                  </div>
+                </div>
+              </li>
+
+              <li class="list-group-item px-0 py-2">
+                <div class="d-flex align-items-center">
+                  <div class="flex-grow-1 me-2"><p class="mb-0">Διαμερίσματα</p></div>
+                  <div class="flex-shrink-0">
+                    <p class="text-muted mb-0">{{ b.apartmentsNum }}</p>
+                  </div>
+                </div>
+              </li>
+
+              <li class="list-group-item px-0 py-2" *ngIf="b.company">
+                <div class="d-flex align-items-center">
+                  <div class="flex-grow-1 me-2"><p class="mb-0">Διαχειριστής</p></div>
+                  <div class="flex-shrink-0">
+                    <p class="text-muted mb-0">{{ b.company.managerName }}</p>
+                  </div>
+                </div>
+              </li>
+            </ul>
+            <a class="btn btn-sm btn-outline-primary mb-2" [routerLink]="['/pm/buildings', b.id]">Προβολή</a>
+          </app-card>
+        </div>
+      }
+    </div>
+
+    <ng-template #empty>
+      <div class="py-4 text-muted">Δεν βρέθηκαν πολυκατοικίες για την εταιρία.</div>
+    </ng-template>
+  </ng-container>
+</app-card>

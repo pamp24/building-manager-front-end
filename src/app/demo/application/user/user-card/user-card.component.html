@@ -4,7 +4,7 @@
 </div>
 
 <!-- Κάρτα με στοιχεία πολυκατοικίας -->
-<app-card *ngIf="buildings.length > 0" cardTitle="Πολυκατοικία" [padding]="24">
+<app-card *ngIf="!pmView && buildings.length > 0" cardTitle="Πολυκατοικία" [padding]="24">
   <div class="row">
     <!-- Όνομα Πολυκατοικίας (dropdown) -->
     <div class="col-md-6">
@@ -136,6 +136,9 @@
       </div>
     </div>
   }
+  <div *ngIf="pmView" class="mb-3">
+    <a class="btn btn-outline-primary" [routerLink]="['/pm/buildings']">Πίσω</a>
+  </div>
 </div>
 
 <ng-template #preview let-modal>

@@ -74,6 +74,12 @@ const routes: Routes = [
         }
       },
       {
+        path: 'pm',
+        loadChildren: () =>
+          import('./demo/property-manager-panel/property-manager-panel.module').then((m) => m.PropertyManagerPanelModule),
+        data: { role: [Role.PropertyManager, Role.Admin] }
+      },
+      {
         path: 'widget/statistics',
         loadComponent: () => import('./demo/widget/statistics/statistics.component').then((c) => c.StatisticsComponent),
         data: {
@@ -96,28 +102,28 @@ const routes: Routes = [
       },
       {
         path: 'online-course',
-        loadChildren: () => import('./demo/admin-panel/online-courses/online-courses.module').then((m) => m.OnlineCoursesModule),
+        loadChildren: () => import('./demo/building-manager-panel/online-courses/online-courses.module').then((m) => m.OnlineCoursesModule),
         data: {
           role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'membership',
-        loadChildren: () => import('./demo/admin-panel/membership/membership.module').then((m) => m.MembershipModule),
+        loadChildren: () => import('./demo/building-manager-panel/membership/membership.module').then((m) => m.MembershipModule),
         data: {
           role: [Role.Admin, Role.User]
         }
       },
       {
         path: 'helpdesk',
-        loadChildren: () => import('./demo/admin-panel/helpdesk/helpdesk.module').then((m) => m.HelpdeskModule),
+        loadChildren: () => import('./demo/building-manager-panel/helpdesk/helpdesk.module').then((m) => m.HelpdeskModule),
         data: {
           role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'invoice',
-        loadChildren: () => import('./demo/admin-panel/invoice/invoice.module').then((m) => m.InvoiceModule),
+        loadChildren: () => import('./demo/building-manager-panel/invoice/invoice.module').then((m) => m.InvoiceModule),
         data: {
           role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }

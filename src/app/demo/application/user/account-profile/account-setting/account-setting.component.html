@@ -94,7 +94,9 @@
       }
     </app-card>
   </div>
-
+  <div *ngIf="pmView" class="mb-3">
+    <a class="btn btn-outline-primary" [routerLink]="['/pm/buildings']">Πίσω</a>
+  </div>
   <div class="col-12 text-end btn-page">
     <div class="btn btn-outline-secondary">Άκυρο</div>
     <div class="btn btn-primary">Αποθήκευση</div>

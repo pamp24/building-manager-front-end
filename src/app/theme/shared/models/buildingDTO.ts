@@ -1,3 +1,4 @@
+import { CompanyDTO } from './companyDTO';
 import { ManagerDTO } from './managerDTO';
 export interface BuildingDTO {
   id: number;
@@ -13,8 +14,8 @@ export interface BuildingDTO {
   state: string;
   floors: number;
   apartmentsNum: number;
-  sqMetersTotal: string;
-  sqMetersCommonSpaces: string;
+  sqMetersTotal: number;
+  sqMetersCommonSpaces: number;
   parkingExist: boolean;
   parkingSpacesNum: number;
   buildingCode: string;
@@ -34,8 +35,11 @@ export interface BuildingDTO {
   managerAddress1: string;
   managerCity: string;
   managerProfileImgUrl?: string;
+  managerRole: string;
 
   hasCentralHeating: boolean;
   heatingType?: string;
   heatingCapacityLitres?: number;
+
+  company?: CompanyDTO;
 }

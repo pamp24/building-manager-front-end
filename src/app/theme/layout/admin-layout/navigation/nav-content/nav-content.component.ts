@@ -138,7 +138,7 @@ export class NavContentComponent implements AfterViewInit, OnInit {
 
   ngOnInit() {
     this.layout = MantisConfig.layout;
-    const currentUserRole = this.authenticationService.currentUserValue?.role || Role.Admin;
+    const currentUserRole = this.authenticationService.currentUserValue?.role || Role.User;
     this.navigation = this.filterMenu(NavigationItems, currentUserRole);
   }
 
@@ -157,18 +157,40 @@ export class NavContentComponent implements AfterViewInit, OnInit {
     (e.target as HTMLImageElement).src = 'assets/images/user/avatar-1.jpg';
   }
 
-  filterMenu(NavigationItems: NavigationItem[], userRole: string, parentRole: string[] = [Role.Admin]): NavigationItem[] {
-    return NavigationItems.map((item) => {
-      // If item doesn't have a specific role, inherit roles from parent
-      const itemRole = item.role ? item.role : parentRole;
+  private isNotNull<T>(value: T | null): value is T {
+    return value !== null;
+  }
 
-      // If item has children, recursively filter them, passing current item's roles as parentRoles
-      if (item.children) {
-        item.children = this.filterMenu(item.children, userRole, itemRole);
-      }
+  filterMenu(items: NavigationItem[], userRole: string, parentRoles: string[] = [Role.Admin]): NavigationItem[] {
+    return (items ?? [])
+      .map((item): NavigationItem | null => {
+        const effectiveRoles = item.role && item.role.length > 0 ? item.role : parentRoles;
 
-      return item; // Return the item whether it is visible or disabled
-    });
+        const filteredChildren = item.children ? this.filterMenu(item.children, userRole, effectiveRoles) : undefined;
+
+        const hasAccess = !effectiveRoles || effectiveRoles.includes(userRole);
+        const hasVisibleChildren = !!filteredChildren && filteredChildren.length > 0;
+
+        // κόψτο αν δεν έχει access
+        if (!hasAccess) return null;
+
+        // κόψτο αν είναι group/collapse και δεν έχει παιδιά
+        if ((item.type === 'group' || item.type === 'collapse') && !hasVisibleChildren) {
+          return null;
+        }
+
+        // Επιστρέφεις item αλλά ΔΕΝ πειράζεις το role type
+        return {
+          ...item,
+          children: filteredChildren
+        };
+      })
+      .filter(this.isNotNull);
+  }
+
+  reloadMenu(): void {
+    const role = this.authenticationService.currentUserValue?.role || Role.User;
+    this.navigation = this.filterMenu(NavigationItems, role);
   }
 
   // public method

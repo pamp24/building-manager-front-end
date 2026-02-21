@@ -1,5 +1,5 @@
 // angular import
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // project import
@@ -11,6 +11,7 @@ import { AimOutline, EnvironmentOutline, MailOutline, PhoneOutline } from '@ant-
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
 import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
+import { AuthenticationService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-building',
@@ -19,6 +20,10 @@ import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
   styleUrl: './building.component.scss'
 })
 export class BuildingComponent implements OnInit {
+  @Input() buildingId?: number;
+  @Output() companyPresenceChange = new EventEmitter<boolean>();
+  @Input() pmView = false;
+  
   private readonly apiBase = 'http://localhost:8080/api/v1';
   private iconService = inject(IconService);
   buildingForm!: FormGroup;
@@ -30,10 +35,12 @@ export class BuildingComponent implements OnInit {
   pageSize = 1;
   details: { icon: string; text: string }[] = [];
   isEditing = false;
+  
 
   constructor(
     private fb: FormBuilder,
-    private buildingService: BuildingService
+    private buildingService: BuildingService,
+    private authService: AuthenticationService
   ) {
     this.iconService.addIcon(...[MailOutline, PhoneOutline, AimOutline, EnvironmentOutline]);
   }
@@ -67,21 +74,34 @@ export class BuildingComponent implements OnInit {
       heatingCapacityLitres: ['']
     });
 
+    // ξεκινάει σε read-only mode
+    this.buildingForm.disable();
+
+    //detail mode
+    if (this.buildingId) {
+      this.loadBuildingById(this.buildingId);
+      return;
+    }
+
+    //list mode
     this.buildingService.getMyBuildings().subscribe({
       next: (data: BuildingDTO[]) => {
         this.buildings = data;
         this.total = data.length;
-        if (data.length > 0) {
-          this.loadBuilding(data[0]); // πρώτο building
-        }
+        if (data.length > 0) this.loadBuilding(data[0]);
       },
+      error: (err) => console.error('Σφάλμα φόρτωσης πολυκατοικιών:', err)
+    });
+  }
+
+  private loadBuildingById(id: number): void {
+    this.buildingService.getBuilding(id).subscribe({
+      next: (b) => this.loadBuilding(b),
       error: (err) => {
-        console.error('Σφάλμα φόρτωσης πολυκατοικιών:', err);
+        console.error('Σφάλμα φόρτωσης πολυκατοικίας:', err);
+        this.companyPresenceChange.emit(false);
       }
     });
-
-    // ξεκινάει σε read-only mode
-    this.buildingForm.disable();
   }
 
   submitChanges(): void {
@@ -105,9 +125,11 @@ export class BuildingComponent implements OnInit {
     this.buildingData = building;
     this.buildingForm.patchValue(building);
 
+    this.companyPresenceChange.emit(!!building.company);
+
     if (this.buildingData.managerProfileImgUrl?.startsWith('/uploads/')) {
-    this.buildingData.managerProfileImgUrl = this.apiBase + this.buildingData.managerProfileImgUrl;
-  }
+      this.buildingData.managerProfileImgUrl = this.apiBase + this.buildingData.managerProfileImgUrl;
+    }
 
     this.details = [
       { icon: 'mail', text: building?.managerEmail || 'Δεν έχει οριστεί' },
@@ -164,5 +186,9 @@ export class BuildingComponent implements OnInit {
       this.buildingForm.disable();
       this.buildingForm.patchValue(this.buildingData); // reset
     }
-  } 
+  }
+
+  hasRole(role: string): boolean {
+    return this.authService.currentUserValue?.role === role;
+  }
 }

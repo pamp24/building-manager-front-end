@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
@@ -22,6 +22,7 @@ import { ConfirmDeleteModalComponent } from './confirm-delete-modal/confirm-dele
   styleUrls: ['./role.component.scss']
 })
 export class RoleComponent implements OnInit {
+  @Input() pmView = false;
   members: BuildingMemberDTO[] = [];
 
   emailToInvite = '';

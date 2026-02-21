@@ -26,7 +26,7 @@ export class BasicAuthInterceptor implements HttpInterceptor {
   //   }
   // }
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    const token = localStorage.getItem('token'); // ✅ σωστή πηγή token
+    const token = localStorage.getItem('token'); 
     const isApiUrl = request.url.startsWith(environment.apiUrl);
 
     if (token && isApiUrl) {
