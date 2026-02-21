@@ -4,8 +4,8 @@
   <div class="col-sm-12">
     <div class="card">
       <div class="card-header pb-0">
-        <ul ngbNav aria-busy="true" #nav="ngbNav" class="nav-tabs profile-tabs">
-          <!-- <li *ngIf="hasRole('PropertyManager')" [ngbNavItem]="1">
+        <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs profile-tabs">
+          <li *ngIf="hasCompany" [ngbNavItem]="1">
             <a ngbNavLink>
               <div class="d-flex align-items-center">
                 <i antIcon type="container" theme="outline" class="me-2 f-14"></i>
@@ -15,7 +15,7 @@
             <ng-template ngbNavContent>
               <app-company></app-company>
             </ng-template>
-          </li> -->
+          </li>
           <li [ngbNavItem]="2">
             <a ngbNavLink>
               <div class="d-flex align-items-center">
@@ -24,7 +24,7 @@
               </div>
             </a>
             <ng-template ngbNavContent>
-              <app-building></app-building>
+              <app-building (companyPresenceChange)="onCompanyPresenceChange($event)"></app-building>
             </ng-template>
           </li>
           <li [ngbNavItem]="3">

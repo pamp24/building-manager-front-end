@@ -14,7 +14,6 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { IconService } from '@ant-design/icons-angular';
 import { ContainerOutline, FileTextOutline, LockOutline, SettingOutline, TeamOutline, UserOutline } from '@ant-design/icons-angular/icons';
 import { AuthenticationService } from '../../../../theme/shared/service/authentication.service';
-import { UserService } from '../../../../theme/shared/service/user.service';
 import { UserCardComponent } from '../user-card/user-card.component';
 
 @Component({
@@ -33,17 +32,30 @@ import { UserCardComponent } from '../user-card/user-card.component';
   styleUrl: './account-profile.component.scss'
 })
 export class AccountProfileComponent {
+  hasCompany = false;
+  activeTab = 2;
   private iconService = inject(IconService);
 
   // constructor
-  constructor(
-    private userService: UserService,
-    private authService: AuthenticationService
-  ) {
+  constructor(private authService: AuthenticationService) {
     this.iconService.addIcon(...[UserOutline, FileTextOutline, ContainerOutline, LockOutline, TeamOutline, SettingOutline]);
   }
 
   hasRole(role: string): boolean {
     return this.authService.currentUserValue?.role === role;
+  }
+
+  onCompanyPresenceChange(has: boolean) {
+    this.hasCompany = has;
+
+    // αν μπήκε εταιρία και ήμουν στο Διαμέρισμα, γύρνα σε Πολυκατοικία
+    if (has && this.activeTab === 3) {
+      this.activeTab = 2;
+    }
+
+    // αν δεν έχει εταιρία και ήμουν στο tab εταιρίας, γύρνα σε Πολυκατοικία
+    if (!has && this.activeTab === 1) {
+      this.activeTab = 2;
+    }
   }
 }

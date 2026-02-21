@@ -141,13 +141,17 @@ export class BuildingFormComponent implements OnInit {
       this.form.markAllAsTouched();
       return;
     }
-    const formValue = this.form.value;
-    const currentUserId = this.authenticationService.currentUserValue?.id;
 
-    if (!currentUserId) {
+    const formValue = this.form.value;
+    const user = this.authenticationService.currentUserValue;
+
+    if (!user?.id) {
       console.error('Δεν βρέθηκε ID χρήστη.');
       return;
     }
+
+    const isPropertyManager = user.role === 'PropertyManager';
+
     const building: BuildingRequest = {
       name: formValue.name,
       street1: formValue.street1,
@@ -166,7 +170,6 @@ export class BuildingFormComponent implements OnInit {
       parkingExist: formValue.parkingExist,
       parkingSpacesNum: formValue.parkingExist ? Number(formValue.parkingSpacesNum) : 0,
       buildingDescription: formValue.description,
-      managerId: currentUserId,
       undergroundFloorExist: formValue.undergroundFloorExist,
       halfFloorExist: formValue.halfFloorExist,
       overTopFloorExist: formValue.overTopFloorExist,
@@ -177,30 +180,26 @@ export class BuildingFormComponent implements OnInit {
       heatingType: formValue.hasCentralHeating ? formValue.heatingType : 'NONE',
       heatingCapacityLitres: formValue.hasCentralHeating ? Number(formValue.heatingCapacityLitres) : 0,
       active: true,
-      enable: true
+      enable: true,
+
+      ...(isPropertyManager ? {} : { managerId: user.id })
     };
-    this.buildingService.createBuilding(building).subscribe({
+
+    const req$ = isPropertyManager
+      ? this.buildingService.createCompanyBuilding(building)
+      : this.buildingService.createSelfBuilding(building);
+
+    req$.subscribe({
       next: (buildingId: number) => {
         console.log('Η πολυκατοικία δημιουργήθηκε με επιτυχία', buildingId);
-        const currentUserId = this.authenticationService.currentUserValue?.id;
-        if (currentUserId) {
-          this.userService.assignRole(currentUserId, 'BuildingManager').subscribe({
-            next: () => {
-              console.log('Ο ρόλος BuildingManager δόθηκε');
-              this.formSubmitted.emit({ buildingId, buildingForm: this.form });
-            },
-            error: (err) => {
-              console.warn('Ο χρήστης έχει ήδη τον ρόλο BuildingManager ή υπήρξε άλλο σφάλμα:', err);
-              this.formSubmitted.emit({ buildingId, buildingForm: this.form });
-            }
-          });
-        }
+        this.formSubmitted.emit({ buildingId, buildingForm: this.form });
       },
       error: (err) => {
         console.error('Σφάλμα δημιουργίας κτιρίου', err);
       }
     });
   }
+
   get managerHouseExistSelected(): boolean {
     return this.form?.get('managerHouseExist')?.value;
   }

@@ -4,6 +4,46 @@
       <h5 class="mb-0">{{ buildingData?.buildingCode }}</h5>
       <p class="text-muted mb-0 small">Με τον κωδικό αυτό μπορείτε να προσθέσετε και άλλους χρήστες στην Πολυκατοικία</p>
     </app-card>
+    <app-card *ngIf="buildingData?.company as c" [showHeader]="false" blockClass="position-relative">
+      <div class="text-center mt-3">
+        <div class="chat-avatar d-inline-flex mx-auto">
+          <img class="manager-avatar" [src]="buildingData?.managerProfileImgUrl || 'assets/images/user/avatar-5.jpg'" alt="Manager image" />
+        </div>
+
+        <h5 class="mb-0">{{ c.companyName }}</h5>
+        <p class="text-muted mb-0">Εταιρία Διαχείρισης</p>
+
+        <hr class="my-3" />
+
+        <div class="row g-3">
+          <div class="col-12">
+            <p class="mb-0 text-muted">ΑΦΜ: {{ c.taxNumber || '—' }}</p>
+          </div>
+        </div>
+
+        <hr class="my-3" />
+
+        <div class="d-inline-flex align-items-center justify-content-between w-100 mb-2">
+          <i antIcon type="mail" theme="outline" class="f-14"></i>
+          <p class="mb-0">{{ c.email || '—' }}</p>
+        </div>
+
+        <div class="d-inline-flex align-items-center justify-content-between w-100 mb-2">
+          <i antIcon type="phone" theme="outline" class="f-14"></i>
+          <p class="mb-0">{{ c.phone || '—' }}</p>
+        </div>
+
+        <div class="d-inline-flex align-items-center justify-content-between w-100 mb-2">
+          <i antIcon type="environment" theme="outline" class="f-14"></i>
+          <p class="mb-0">{{ c.city || '—' }}</p>
+        </div>
+
+        <div class="d-inline-flex align-items-center justify-content-between w-100 mb-2">
+          <i antIcon type="aim" theme="outline" class="f-14"></i>
+          <p class="mb-0">{{ c.address || '—' }} {{ c.addressNumber || '' }}</p>
+        </div>
+      </div>
+    </app-card>
     <app-card [showHeader]="false" blockClass="position-relative">
       <div class="position-absolute end-0 top-0 p-3"></div>
       <div class="text-center mt-3">
@@ -11,7 +51,7 @@
           <img class="manager-avatar" [src]="buildingData?.managerProfileImgUrl || 'assets/images/user/avatar-5.jpg'" alt="Manager image" />
         </div>
         <h5 class="mb-0">{{ buildingData?.managerFullName }}</h5>
-        <p class="text-muted mb-0">{{this.buildingData?.managerEmail}}</p>
+        <p class="text-muted mb-0">{{ this.buildingData?.managerRole | translate }}</p>
         <p></p>
         <hr class="my-3" />
         <div class="row g-3">
@@ -26,6 +66,10 @@
           <div class="col-4">
             <h5 class="mb-0">{{ buildingData?.apartmentsNum }}</h5>
             <p class="text-muted">Διαμερίσματα</p>
+          </div>
+          <div class="col-4">
+            <h5 class="mb-0">{{ buildingData?.apartmentsNum }}</h5>
+            <p class="text-muted">Μέλη</p>
           </div>
         </div>
         <hr class="my-3" />
@@ -153,7 +197,7 @@
         </div>
       </div>
     </app-card>
-    <div class="mt-4 text-end">
+    <div *ngIf="hasRole('BuildingManager')" class="mt-4 text-end">
       <!-- Εναλλαγή edit mode -->
       <button type="button" class="btn btn-secondary me-2" (click)="toggleEdit()">
         {{ isEditing ? 'Ακύρωση' : 'Επεξεργασία' }}
@@ -166,7 +210,7 @@
   </div>
 </div>
 <!-- Pagination -->
-<div class="datatable-bottom mt-3" *ngIf="total > 1">
+<div class="datatable-bottom mt-3" *ngIf="!buildingId && total > 1">
   <ngb-pagination
     [collectionSize]="total"
     [(page)]="currentPage"
@@ -174,4 +218,8 @@
     (pageChange)="onPageChange($event)"
     class="table-pagination"
   ></ngb-pagination>
+</div>
+
+<div *ngIf="pmView" class="mb-3">
+  <a class="btn btn-outline-primary" [routerLink]="['/pm/buildings']">Πίσω</a>
 </div>

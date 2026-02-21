@@ -1,5 +1,5 @@
 // angular import
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // project import
@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './account-setting.component.scss'
 })
 export class AccountSettingComponent {
+  @Input() pmView = false;
   apartments = [1];
 
   // public props

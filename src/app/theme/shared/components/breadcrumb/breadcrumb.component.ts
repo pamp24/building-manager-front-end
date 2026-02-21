@@ -1,7 +1,7 @@
 // Angular Import
 import { Component, Input, input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NavigationEnd, Router, RouterModule, Event } from '@angular/router';
+import { NavigationEnd, Router, RouterModule, Event, ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 
 // project import
@@ -45,6 +45,8 @@ export class BreadcrumbComponent {
   navigationList!: titleType[];
   componentList!: titleType[];
 
+  private ar = inject(ActivatedRoute);
+
   // constructor
   constructor() {
     this.navigations = NavigationItems;
@@ -58,19 +60,13 @@ export class BreadcrumbComponent {
   setBreadcrumb() {
     this.route.events.subscribe((router: Event) => {
       if (router instanceof NavigationEnd) {
-        const activeLink = router.url;
-        const activeItem = this.filterNavigation(this.navigations, activeLink);
-        const componentItem = this.filterNavigation(this.ComponentNavigations, activeLink);
+        const crumbs = this.buildRouteBreadcrumbs(this.ar.root);
 
-        if (activeItem) {
-          this.navigationList = [activeItem];
-          this.titleService.setTitle(activeItem.title + ' | Mantis Angular Admin Template');
-        } else if (componentItem) {
-          this.componentList = [componentItem];
-          this.titleService.setTitle(componentItem.title + ' | Mantis Angular Admin Template');
-        } else {
-          this.titleService.setTitle('Welcome | Mantis Angular Admin Template');
-        }
+        // Home + crumbs
+        this.navigationList = crumbs;
+
+        const last = crumbs[crumbs.length - 1];
+        if (last) this.titleService.setTitle('Building Manager | ' + last.title  );
       }
     });
   }
@@ -96,5 +92,31 @@ export class BreadcrumbComponent {
       }
     }
     return null; // Return null if no active item matches
+  }
+
+  private buildRouteBreadcrumbs(route: ActivatedRoute, url: string = '', crumbs: titleType[] = []): titleType[] {
+    const children = route.children;
+
+    if (!children || children.length === 0) return crumbs;
+
+    for (const child of children) {
+      const routeURL = child.snapshot.url.map((s) => s.path).join('/');
+      const nextUrl = routeURL ? `${url}/${routeURL}` : url;
+
+      const label = child.snapshot.data?.['breadcrumb'] as string | undefined;
+
+      if (label) {
+        crumbs.push({
+          url: nextUrl || false,
+          title: label,
+          breadcrumbs: true,
+          type: 'item'
+        });
+      }
+
+      return this.buildRouteBreadcrumbs(child, nextUrl, crumbs);
+    }
+
+    return crumbs;
   }
 }

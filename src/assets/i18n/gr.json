@@ -166,6 +166,9 @@
   "BuildingManager": "Διαχειριστής Πολυκατοικίας",
   "User": "Χρήστης",
   "Owner": "Ιδιοκτήτης",
-  "Resident": "Ενοικιαστής"
-
+  "Resident": "Ενοικιαστής",
+  "Building Manager Panel": "Πίνακας Διαχειριστή Πολυκατοικίας",
+  "Property Manager Panel": "Πίνακας Διαχειριστή Ακινήτων",
+  "Company": "Εταιρεία",
+  "Buildings": "Πολυκατοικίες"
 }

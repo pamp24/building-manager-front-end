@@ -3,8 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CompanyDTO } from '../models/companyDTO';
 
-
-
 @Injectable({ providedIn: 'root' })
 export class CompanyService {
   private baseUrl = 'http://localhost:8080/api/v1/companies';
@@ -17,5 +15,9 @@ export class CompanyService {
 
   getMyCompany(): Observable<CompanyDTO> {
     return this.http.get<CompanyDTO>(`${this.baseUrl}/my/company`);
+  }
+
+  updateCompany(company: CompanyDTO): Observable<CompanyDTO> {
+    return this.http.put<CompanyDTO>(`${this.baseUrl}/my/company`, company);
   }
 }

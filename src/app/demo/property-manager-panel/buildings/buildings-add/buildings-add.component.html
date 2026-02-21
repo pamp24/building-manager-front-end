@@ -1,0 +1,181 @@
+<div class="row">
+  <div class="col-12">
+    <app-card cardTitle="Νέα Πολυκατοικία">
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Όνομα*</label>
+            <input class="form-control" formControlName="name" />
+            <div class="text-danger mt-1" *ngIf="isSubmitted && form.get('name')?.invalid">Υποχρεωτικό.</div>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Οδός 1*</label>
+            <input class="form-control" formControlName="street1" />
+            <div class="text-danger mt-1" *ngIf="isSubmitted && form.get('street1')?.invalid">Υποχρεωτικό.</div>
+          </div>
+
+          <div class="col-md-3 mb-3">
+            <label class="form-label">Αριθμός*</label>
+            <input class="form-control" formControlName="stNumber1" />
+            <div class="text-danger mt-1" *ngIf="isSubmitted && form.get('stNumber1')?.invalid">Υποχρεωτικό.</div>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Οδός 2</label>
+            <input class="form-control" formControlName="street2" />
+          </div>
+
+          <div class="col-md-3 mb-3">
+            <label class="form-label">Αριθμός 2</label>
+            <input class="form-control" formControlName="stNumber2" />
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Χώρα*</label>
+            <select class="form-select" formControlName="country">
+              <option value="">-- Επιλέξτε --</option>
+              <option *ngFor="let c of countries" [value]="c">{{ c }}</option>
+            </select>
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Νομός*</label>
+            <select class="form-select" formControlName="state">
+              <option value="">-- Επιλέξτε --</option>
+              <option *ngFor="let s of states" [value]="s">{{ s }}</option>
+            </select>
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Πόλη*</label>
+            <input class="form-control" formControlName="city" />
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Περιοχή*</label>
+            <input class="form-control" formControlName="region" />
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Τ.Κ.*</label>
+            <input class="form-control" formControlName="postalCode" />
+            <div class="text-danger mt-1" *ngIf="isSubmitted && form.get('postalCode')?.invalid">5 ψηφία.</div>
+          </div>
+
+          <div class="col-md-3 mb-3">
+            <label class="form-label">Όροφοι*</label>
+            <input type="number" class="form-control" formControlName="floors" />
+          </div>
+
+          <div class="col-md-3 mb-3">
+            <label class="form-label">Διαμερίσματα*</label>
+            <input type="number" class="form-control" formControlName="apartmentsNum" />
+          </div>
+
+          <div class="col-md-3 mb-3">
+            <label class="form-label">Συνολικά τ.μ.*</label>
+            <input type="number" class="form-control" formControlName="sqMetersTotal" />
+          </div>
+
+          <div class="col-md-3 mb-3">
+            <label class="form-label">Κοινόχρηστα τ.μ.</label>
+            <input type="number" class="form-control" formControlName="sqMetersCommonSpaces" />
+          </div>
+
+          <div class="col-md-12 mb-3">
+            <label class="form-label">Περιγραφή</label>
+            <textarea class="form-control" rows="3" formControlName="buildingDescription"></textarea>
+          </div>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label class="form-label">
+                <input type="checkbox" formControlName="parkingExist" class="me-2" />
+                Διαθέτει Πάρκινγκ
+              </label>
+            </div>
+
+            <div class="col-md-4 mb-3" *ngIf="form.get('parkingExist')?.value">
+              <label class="form-label">Θέσεις Πάρκινγκ*</label>
+              <input type="number" class="form-control" formControlName="parkingSpacesNum" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label class="form-label">
+                <input type="checkbox" formControlName="storageExist" class="me-2" />
+                Διαθέτει Αποθήκες
+              </label>
+            </div>
+
+            <div class="col-md-4 mb-3" *ngIf="form.get('storageExist')?.value">
+              <label class="form-label">Αριθμός Αποθηκών*</label>
+              <input type="number" class="form-control" formControlName="storageNum" />
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label class="form-label">
+              <input type="checkbox" formControlName="undergroundFloorExist" class="me-2" />
+              Υπόγειο
+            </label>
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <label class="form-label">
+              <input type="checkbox" formControlName="halfFloorExist" class="me-2" />
+              Ημιόροφος
+            </label>
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <label class="form-label">
+              <input type="checkbox" formControlName="overTopFloorExist" class="me-2" />
+              Δώμα
+            </label>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Κεντρική Θέρμανση</label>
+            <select class="form-select" formControlName="hasCentralHeating">
+              <option [ngValue]="true">Ναι</option>
+              <option [ngValue]="false">Όχι</option>
+            </select>
+          </div>
+
+          <div class="col-md-6 mb-3" *ngIf="form.get('hasCentralHeating')?.value">
+            <label class="form-label">Τύπος</label>
+            <select class="form-select" formControlName="heatingType">
+              <option value="OIL">Πετρέλαιο</option>
+              <option value="NATURAL_GAS">Φυσικό Αέριο</option>
+              <option value="ELECTRIC">Ηλεκτρικό</option>
+              <option value="HEAT_PUMP">Αντλία Θερμότητας</option>
+              <option value="NONE">Καθόλου</option>
+            </select>
+          </div>
+
+          <div class="col-md-6 mb-3" *ngIf="form.get('hasCentralHeating')?.value">
+            <label class="form-label">Χωρητικότητα (λίτρα)</label>
+            <input type="number" class="form-control" formControlName="heatingCapacityLitres" />
+          </div>
+
+          <!-- (προαιρετικό) PDF κανονισμού -->
+          <div class="col-md-12 mb-3">
+            <label class="form-label">Κανονισμός Πολυκατοικίας (PDF)</label>
+            <input type="file" class="form-control" accept="application/pdf" (change)="onFileSelected($event)" />
+          </div>
+
+          <div class="col-12">
+            <div class="alert alert-warning" *ngIf="error">{{ error }}</div>
+          </div>
+          <!-- Κουμπιά υποβολής -->
+          <div class="col-12 text-end">
+            <button type="button" class="btn btn-secondary me-2" (click)="back()">Πίσω</button>
+            <button class="btn btn-primary" [disabled]="loading">
+              {{ loading ? 'Αποθήκευση...' : 'Δημιουργία Πολυκατοικίας' }}
+            </button>
+          </div>
+        </div>
+      </form>
+    </app-card>
+  </div>
+</div>

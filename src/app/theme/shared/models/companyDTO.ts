@@ -2,8 +2,8 @@ export interface CompanyDTO {
   companyId?: number;
   companyName: string;
   taxNumber: string;
-  responsiblePerson: string;
-  phoneNumber: string;
+  managerName: string;
+  phone: string;
   email: string;
   address: string;
   addressNumber: string;

@@ -1,0 +1,77 @@
+<div class="row">
+  <div class="col-sm-12">
+    <ng-container *ngIf="loading">
+      <app-card cardTitle="Προβολή Πολυκατοικίας">
+        <div class="py-4">Φόρτωση...</div>
+      </app-card>
+    </ng-container>
+
+    <ng-container *ngIf="!loading && error">
+      <div class="alert alert-warning">{{ error }}</div>
+    </ng-container>
+
+    <ng-container *ngIf="!loading && !error">
+      <div class="card">
+        <div class="card-header pb-0">
+          <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs profile-tabs">
+            <li [ngbNavItem]="1">
+              <a ngbNavLink>
+                <div class="d-flex align-items-center">
+                  <i antIcon type="user" theme="outline" class="me-2 f-14"></i>
+                  <span class="f-w-500">Πολυκατοικία</span>
+                </div>
+              </a>
+              <ng-template ngbNavContent>
+                <app-building
+                  [buildingId]="buildingId"
+                  [pmView]="true"
+                  (companyPresenceChange)="onCompanyPresenceChange($event)"
+                ></app-building>
+              </ng-template>
+            </li>
+
+            <li [ngbNavItem]="2">
+              <a ngbNavLink>
+                <div class="d-flex align-items-center">
+                  <i antIcon type="file-text" theme="outline" class="me-2 f-14"></i>
+                  <span class="f-w-500">Διαμερίσματα</span>
+                </div>
+              </a>
+              <ng-template ngbNavContent>
+                <app-user-card [buildingId]="buildingId" [pmView]="true" ></app-user-card>
+              </ng-template>
+            </li>
+
+            <li [ngbNavItem]="3">
+              <a ngbNavLink>
+                <div class="d-flex align-items-center">
+                  <i antIcon type="team" theme="outline" class="me-2 f-14"></i>
+                  <span class="f-w-500">Ένοικοι</span>
+                </div>
+              </a>
+              <ng-template ngbNavContent>
+                <app-role [buildingId]="buildingId" [pmView]="true" ></app-role>
+              </ng-template>
+            </li>
+
+            <li [ngbNavItem]="4">
+              <a ngbNavLink>
+                <div class="d-flex align-items-center">
+                  <i antIcon type="setting" theme="outline" class="me-2 f-14"></i>
+                  <span class="f-w-500">Ρυθμίσεις</span>
+                </div>
+              </a>
+              <ng-template ngbNavContent>
+                <app-account-setting [buildingId]="buildingId" [pmView]="true" ></app-account-setting>
+              </ng-template>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card-body">
+          <div [ngbNavOutlet]="nav"></div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
