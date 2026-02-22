@@ -39,7 +39,7 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         classes: 'nav-item',
         url: '/pm/buildings',
-      }
+      },
     ]
   },
   {

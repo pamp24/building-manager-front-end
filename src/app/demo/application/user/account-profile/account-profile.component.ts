@@ -48,12 +48,10 @@ export class AccountProfileComponent {
   onCompanyPresenceChange(has: boolean) {
     this.hasCompany = has;
 
-    // αν μπήκε εταιρία και ήμουν στο Διαμέρισμα, γύρνα σε Πολυκατοικία
     if (has && this.activeTab === 3) {
       this.activeTab = 2;
     }
 
-    // αν δεν έχει εταιρία και ήμουν στο tab εταιρίας, γύρνα σε Πολυκατοικία
     if (!has && this.activeTab === 1) {
       this.activeTab = 2;
     }

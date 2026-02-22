@@ -13,11 +13,12 @@ import { ApartmentDTO } from 'src/app/theme/shared/models/apartmentDTO';
 import { NgbDropdownModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MemberEditModalComponent } from './member-edit-modal/member-edit-modal.component';
 import { ConfirmDeleteModalComponent } from './confirm-delete-modal/confirm-delete-modal.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-role',
   standalone: true,
-  imports: [CommonModule, SharedModule, NgbDropdownModule],
+  imports: [CommonModule, SharedModule, NgbDropdownModule, RouterModule],
   templateUrl: './role.component.html',
   styleUrls: ['./role.component.scss']
 })

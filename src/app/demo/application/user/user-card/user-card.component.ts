@@ -23,16 +23,17 @@ import { ApartmentDTO } from 'src/app/theme/shared/models/apartmentDTO';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NewApartmentComponent } from './new-apartment/new-apartment.component';
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-user-card',
-  imports: [CommonModule, SharedModule, CardPreviewComponent],
+  imports: [CommonModule, SharedModule, CardPreviewComponent, RouterModule],
   templateUrl: './user-card.component.html',
   styleUrls: ['./user-card.component.scss']
 })
 export class UserCardComponent implements OnInit {
   @Input() pmView = false;  
-  
+
   private modalService = inject(NgbModal);
   private iconService = inject(IconService);
   selectedApartment: ApartmentDTO | null = null;
