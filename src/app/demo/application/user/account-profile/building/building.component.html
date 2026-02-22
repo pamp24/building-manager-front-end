@@ -197,7 +197,7 @@
         </div>
       </div>
     </app-card>
-    <div *ngIf="hasRole('BuildingManager')" class="mt-4 text-end">
+    <div *ngIf="hasRole('BuildingManager') || hasRole('PropertyManager')" class="mt-4 text-end">
       <!-- Εναλλαγή edit mode -->
       <button type="button" class="btn btn-secondary me-2" (click)="toggleEdit()">
         {{ isEditing ? 'Ακύρωση' : 'Επεξεργασία' }}

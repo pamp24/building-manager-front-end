@@ -5,10 +5,11 @@ import { CommonModule } from '@angular/common';
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-account-setting',
-  imports: [CommonModule, SharedModule,FormsModule],
+  imports: [CommonModule, SharedModule,FormsModule, RouterModule],
   templateUrl: './account-setting.component.html',
   styleUrl: './account-setting.component.scss'
 })

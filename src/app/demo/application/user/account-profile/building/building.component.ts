@@ -12,10 +12,11 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
 import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
 import { AuthenticationService } from 'src/app/theme/shared/service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-building',
-  imports: [CommonModule, SharedModule],
+  imports: [CommonModule, SharedModule, RouterModule],
   templateUrl: './building.component.html',
   styleUrl: './building.component.scss'
 })
@@ -23,7 +24,7 @@ export class BuildingComponent implements OnInit {
   @Input() buildingId?: number;
   @Output() companyPresenceChange = new EventEmitter<boolean>();
   @Input() pmView = false;
-  
+
   private readonly apiBase = 'http://localhost:8080/api/v1';
   private iconService = inject(IconService);
   buildingForm!: FormGroup;

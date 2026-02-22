@@ -68,7 +68,7 @@ const routes: Routes = [
     children: [
       {
         path: 'dashboard',
-        loadChildren: () => import('./demo/dashboard/dashboard.module').then((m) => m.DashboardModule),
+        loadChildren: () => import('./demo/application/dashboard/dashboard.module').then((m) => m.DashboardModule),
         data: {
           role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
@@ -76,7 +76,7 @@ const routes: Routes = [
       {
         path: 'pm',
         loadChildren: () =>
-          import('./demo/property-manager-panel/property-manager-panel.module').then((m) => m.PropertyManagerPanelModule),
+          import('./demo/application/property-manager-panel/property-manager-panel.module').then((m) => m.PropertyManagerPanelModule),
         data: { role: [Role.PropertyManager, Role.Admin] }
       },
       {
@@ -102,28 +102,28 @@ const routes: Routes = [
       },
       {
         path: 'online-course',
-        loadChildren: () => import('./demo/building-manager-panel/online-courses/online-courses.module').then((m) => m.OnlineCoursesModule),
+        loadChildren: () => import('./demo/application/building-manager-panel/online-courses/online-courses.module').then((m) => m.OnlineCoursesModule),
         data: {
           role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
         path: 'membership',
-        loadChildren: () => import('./demo/building-manager-panel/membership/membership.module').then((m) => m.MembershipModule),
+        loadChildren: () => import('./demo/application/building-manager-panel/membership/membership.module').then((m) => m.MembershipModule),
         data: {
           role: [Role.Admin, Role.User]
         }
       },
       {
         path: 'helpdesk',
-        loadChildren: () => import('./demo/building-manager-panel/helpdesk/helpdesk.module').then((m) => m.HelpdeskModule),
+        loadChildren: () => import('./demo/application/helpdesk/helpdesk.module').then((m) => m.HelpdeskModule),
         data: {
           role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
       {
-        path: 'invoice',
-        loadChildren: () => import('./demo/building-manager-panel/invoice/invoice.module').then((m) => m.InvoiceModule),
+        path: 'statement',
+        loadChildren: () => import('./demo/application/building-manager-panel/statement/statement.module').then((m) => m.StatementModule),
         data: {
           role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
