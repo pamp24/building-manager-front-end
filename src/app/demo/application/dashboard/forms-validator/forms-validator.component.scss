@@ -1,4 +1,4 @@
-@import '../../../../scss/settings/color-variables.scss';
+@use '/src/scss/settings/color-variables.scss' as *;
 
 .card {
   .card-body.dashboard-card {

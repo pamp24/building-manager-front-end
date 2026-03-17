@@ -15,13 +15,13 @@
   import { PaymentDTO } from 'src/app/theme/shared/models/paymentDTO';
 
   @Component({
-    selector: 'app-invoice-list-table',
+    selector: 'app-statement-list-table',
     imports: [SharedModule],
-    templateUrl: './invoice-list-table.component.html',
-    styleUrl: './invoice-list-table.component.scss',
+    templateUrl: './statement-list-table.component.html',
+    styleUrl: './statement-list-table.component.scss',
     providers: [DecimalPipe]
   })
-  export class InvoiceListTableComponent implements OnChanges {
+  export class StatementListTableComponent implements OnChanges {
     private iconService = inject(IconService);
 
     @Input() statements: CommonExpenseStatement[] = [];

@@ -1,0 +1,39 @@
+<div class="card">
+  <div class="card-header">
+    <h5 class="mb-0">Πρόσφατη Δραστηριότητα</h5>
+  </div>
+
+  <div class="card-body px-0 py-2">
+    @if (recentActivity.length === 0) {
+      <div class="text-center text-muted py-4">
+        Δεν υπάρχει πρόσφατη δραστηριότητα.
+      </div>
+    } @else {
+      <ul class="list-group list-group-flush">
+        @for (item of recentActivity; track item.title + item.createdAt) {
+          <li class="list-group-item">
+            <div class="d-flex align-items-center">
+              <div class="flex-shrink-0">
+                <div class="activity-icon">
+                  <i class="f-18 d-flex" antIcon type="notification" theme="outline"></i>
+                </div>
+              </div>
+
+              <div class="flex-grow-1 mx-3">
+                <h6 class="mb-1">{{ item.title }}</h6>
+                <p class="mb-1 text-muted">{{ item.description }}</p>
+                <small class="text-muted">{{ formatDate(item.createdAt) }}</small>
+              </div>
+
+              <div class="flex-shrink-0">
+                <a href="javascript:" class="avatar avatar-s btn-link-secondary">
+                  <i class="f-16 d-flex" antIcon type="right" theme="outline"></i>
+                </a>
+              </div>
+            </div>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+</div>

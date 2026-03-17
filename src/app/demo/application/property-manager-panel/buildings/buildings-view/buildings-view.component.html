@@ -14,7 +14,32 @@
       <div class="card">
         <div class="card-header pb-0">
           <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs profile-tabs">
+            <li *ngIf="hasRole('PropertyManager') || hasRole('BuildingManager')" [ngbNavItem]="0">
+              <a ngbNavLink>
+                <div class="d-flex align-items-center">
+                  <i antIcon type="file-text" theme="outline" class="me-2 f-14"></i>
+                  <span class="f-w-500">Πίνακας Ελέγχου</span>
+                </div>
+              </a>
+
+              <ng-template ngbNavContent>
+                <app-statement-dashboard [buildingId]="buildingId"></app-statement-dashboard>
+              </ng-template>
+            </li>
+
             <li [ngbNavItem]="1">
+              <a ngbNavLink>
+                <div class="d-flex align-items-center">
+                  <i antIcon type="file-text" theme="outline" class="me-2 f-14"></i>
+                  <span class="f-w-500">Λίστα Κοινοχρήστων</span>
+                </div>
+              </a>
+              <ng-template ngbNavContent>
+                <app-statement-list [buildingId]="buildingId" [pmView]="true"></app-statement-list>
+              </ng-template>
+            </li>
+
+            <li [ngbNavItem]="2">
               <a ngbNavLink>
                 <div class="d-flex align-items-center">
                   <i antIcon type="user" theme="outline" class="me-2 f-14"></i>
@@ -30,7 +55,7 @@
               </ng-template>
             </li>
 
-            <li [ngbNavItem]="2">
+            <li [ngbNavItem]="3">
               <a ngbNavLink>
                 <div class="d-flex align-items-center">
                   <i antIcon type="file-text" theme="outline" class="me-2 f-14"></i>
@@ -38,11 +63,11 @@
                 </div>
               </a>
               <ng-template ngbNavContent>
-                <app-user-card [buildingId]="buildingId" [pmView]="true" ></app-user-card>
+                <app-user-card [buildingId]="buildingId" [pmView]="true"></app-user-card>
               </ng-template>
             </li>
 
-            <li [ngbNavItem]="3">
+            <li [ngbNavItem]="4">
               <a ngbNavLink>
                 <div class="d-flex align-items-center">
                   <i antIcon type="team" theme="outline" class="me-2 f-14"></i>
@@ -50,11 +75,35 @@
                 </div>
               </a>
               <ng-template ngbNavContent>
-                <app-role [buildingId]="buildingId" [pmView]="true" ></app-role>
+                <app-role [buildingId]="buildingId" [pmView]="true"></app-role>
               </ng-template>
             </li>
 
-            <li [ngbNavItem]="4">
+            <li [ngbNavItem]="5">
+              <a ngbNavLink>
+                <div class="d-flex align-items-center">
+                  <i antIcon type="setting" theme="outline" class="me-2 f-14"></i>
+                  <span class="f-w-500">Ημερολόγιο</span>
+                </div>
+              </a>
+              <ng-template ngbNavContent>
+                <app-account-setting [buildingId]="buildingId" [pmView]="true"></app-account-setting>
+              </ng-template>
+            </li>
+
+            <li [ngbNavItem]="6">
+              <a ngbNavLink>
+                <div class="d-flex align-items-center">
+                  <i antIcon type="setting" theme="outline" class="me-2 f-14"></i>
+                  <span class="f-w-500">Ψηφοφορίες</span>
+                </div>
+              </a>
+              <ng-template ngbNavContent>
+                <app-account-setting [buildingId]="buildingId" [pmView]="true"></app-account-setting>
+              </ng-template>
+            </li>
+
+            <li [ngbNavItem]="7">
               <a ngbNavLink>
                 <div class="d-flex align-items-center">
                   <i antIcon type="setting" theme="outline" class="me-2 f-14"></i>
@@ -62,7 +111,7 @@
                 </div>
               </a>
               <ng-template ngbNavContent>
-                <app-account-setting [buildingId]="buildingId" [pmView]="true" ></app-account-setting>
+                <app-account-setting [buildingId]="buildingId" [pmView]="true"></app-account-setting>
               </ng-template>
             </li>
           </ul>

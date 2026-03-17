@@ -14,24 +14,24 @@ export const NavigationItems: NavigationItem[] = [
     children: [
       {
         id: 'dashboard',
-        title: "Manager's Dashboard",
+        title: "Company's Dashboard",
         type: 'item',
         classes: 'nav-item',
-        url: '/invoice/dashboard'
+        url: '/pm/pm-dashboard'
       },
       {
         id: 'create',
         title: 'Create Expenses Invoice',
         type: 'item',
         classes: 'nav-item',
-        url: '/invoice/create'
+        url: '/statement/create'
       },
       {
         id: 'list',
         title: 'List Expenses Invoices',
         type: 'item',
         classes: 'nav-item',
-        url: '/invoice/list'
+        url: '/statement/list'
       },
       {
         id: 'buildings',
@@ -54,21 +54,21 @@ export const NavigationItems: NavigationItem[] = [
         title: "Manager's Dashboard",
         type: 'item',
         classes: 'nav-item',
-        url: '/invoice/dashboard'
+        url: '/statement/dashboard'
       },
       {
         id: 'create',
         title: 'Create Expenses Invoice',
         type: 'item',
         classes: 'nav-item',
-        url: '/invoice/create'
+        url: '/statement/create'
       },
       {
         id: 'list',
         title: 'List Expenses Invoices',
         type: 'item',
         classes: 'nav-item',
-        url: '/invoice/list'
+        url: '/statement/list'
       }
     ]
   },
@@ -78,7 +78,7 @@ export const NavigationItems: NavigationItem[] = [
     type: 'group',
     classes: 'first-group',
     icon: 'icon-navigation',
-    role: [Role.Admin, Role.BuildingManager, Role.PropertyManager, Role.User, Role.Owner, Role.Resident],
+    role: [Role.Admin, Role.BuildingManager, Role.User, Role.Owner, Role.Resident],
     children: [
       {
         id: 'default',

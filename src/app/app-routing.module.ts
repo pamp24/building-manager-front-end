@@ -125,7 +125,7 @@ const routes: Routes = [
         path: 'statement',
         loadChildren: () => import('./demo/application/building-manager-panel/statement/statement.module').then((m) => m.StatementModule),
         data: {
-          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+          role: [Role.Admin, Role.BuildingManager]
         }
       },
       {

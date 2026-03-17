@@ -1,0 +1,53 @@
+<div class="card">
+  <div class="card-body">
+    <div class="d-flex align-items-center justify-content-between">
+      <h5 class="mb-0">Ποσοστό Είσπραξης Κοινοχρήστων</h5>
+
+      <select class="form-select rounded-3 form-select-sm w-auto" [(ngModel)]="selectedPeriod" (change)="onPeriodChange()">
+        <option value="month">Μηνιαία</option>
+        <option value="quarter">Τριμηνιαία</option>
+        <option value="halfyear">Εξαμηνιαία</option>
+        <option value="year">Ετήσια</option>
+      </select>
+    </div>
+
+    <div id="chart">
+      <apx-chart
+        [series]="chartOptions.series"
+        [chart]="chartOptions.chart"
+        [colors]="chartOptions.colors"
+        [stroke]="chartOptions.stroke"
+        [grid]="chartOptions.grid"
+        [plotOptions]="chartOptions.plotOptions"
+      ></apx-chart>
+    </div>
+
+    <div class="text-center">
+      <span class="badge bg-light-primary rounded-pill f-12 py-2 px-3">{{ collectionRate }}%</span>
+      <p class="text-muted mb-1">Ποσοστό των εκδοθέντων κοινοχρήστων που έχουν πληρωθεί</p>
+
+      <div class="row">
+        <div class="col-4">
+          <div class="text-center d-inline-block px-md-3">
+            <p class="mb-1 text-muted">Εκδοθέντα</p>
+            <h5 class="mb-0">{{ formatCurrency(issuedAmount) }}</h5>
+          </div>
+        </div>
+
+        <div class="col-4">
+          <div class="text-center d-inline-block px-md-3">
+            <p class="mb-1 text-muted">Πληρωμένα</p>
+            <h5 class="mb-0 text-success">{{ formatCurrency(paidAmount) }}</h5>
+          </div>
+        </div>
+
+        <div class="col-4">
+          <div class="text-center d-inline-block px-md-3">
+            <p class="mb-1 text-muted">Ληξιπρόθεσμα</p>
+            <h5 class="mb-0 text-danger">{{ formatCurrency(overdueAmount) }}</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
 import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -10,6 +11,7 @@ import { ScrollbarComponent } from 'src/app/theme/shared/components/scrollbar/sc
 import { IconService } from '@ant-design/icons-angular';
 import { MoreOutline } from '@ant-design/icons-angular/icons';
 import { ApartmentDTO } from 'src/app/theme/shared/models/apartmentDTO';
+import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
 
 @Component({
   selector: 'app-card-preview',
@@ -19,19 +21,19 @@ import { ApartmentDTO } from 'src/app/theme/shared/models/apartmentDTO';
 })
 export class CardPreviewComponent implements OnChanges {
   @Input() apartment!: ApartmentDTO;
+  @Input() building!: BuildingDTO;
   private iconService = inject(IconService);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   apartmentFeatures: any[] = [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   apartmentTripleFeatures: any[] = [];
-  // constructor
+
   constructor() {
     this.iconService.addIcon(...[MoreOutline]);
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['apartment'] && this.apartment) {
-      // μικρή καθυστέρηση => νέο change detection cycle
       setTimeout(() => {
         this.apartmentFeatures = [
           {
@@ -60,19 +62,29 @@ export class CardPreviewComponent implements OnChanges {
           }
         ].filter((f) => f.leftValue || f.rightValue);
         this.apartmentTripleFeatures = [
-        {
-          label1: 'Χιλιοστά Κοινοχρήστων',
-          value1: this.apartment?.commonPercent || '—',
-          label2: 'Χιλιοστά Ανελκυστήρα',
-          value2: this.apartment?.elevatorPercent || '—',
-          label3: 'Χιλιοστά Θέρμανσης',
-          value3: this.apartment?.heatingPercent || '—'
-        }
-      ];
+          {
+            label1: 'Χιλιοστά Κοινοχρήστων',
+            value1: this.apartment?.commonPercent || '—',
+            label2: 'Χιλιοστά Ανελκυστήρα',
+            value2: this.apartment?.elevatorPercent || '—',
+            label3: 'Χιλιοστά Θέρμανσης',
+            value3: this.apartment?.heatingPercent || '—'
+          }
+        ];
+      });
+    }
+
+    if (changes['building'] && this.building) {
+      this.heating = this.buildHeatingItems(this.building);
+    }
+
+    if (changes['apartment'] && this.apartment) {
+      setTimeout(() => {
+        // ... το δικό σου apartmentFeatures / apartmentTripleFeatures
       });
     }
   }
-  // public props
+
   education = [
     {
       title: 'Χιλιοστά Κοινόχρηστων',
@@ -92,22 +104,45 @@ export class CardPreviewComponent implements OnChanges {
       style: 'pb-0'
     }
   ];
-  employment = [
-    {
-      title: 'Τύπος Θέρμανσης',
-      name: 'Senior UI/UX designer (Year)',
-      sub_title: 'Είδος Θέρμανσης',
-      f_name:
-        'Perform task related to project manager with the 100+ team under my observation. Team management is key role in this company',
-      style: 'pt-0'
-    },
-    {
-      title: 'Μέγεθος Δεξαμενής',
-      name: '2017-2019',
-      sub_title: 'Καύσημο',
-      f_name: 'Team management is key role in this company.'
+
+  private buildHeatingItems(b: BuildingDTO) {
+    const typeText = this.translateHeatingType(b.heatingType);
+
+    return [
+      {
+        title: 'Κεντρική Θέρμανση',
+        name: b.hasCentralHeating ? 'Ναι' : 'Όχι',
+        sub_title: 'Τύπος Θέρμανσης',
+        f_name: typeText,
+        style: 'pt-0'
+      },
+      {
+        title: 'Χωρητικότητα Δεξαμενής',
+        name: b.heatingCapacityLitres ? `${b.heatingCapacityLitres} λίτρα` : '—',
+        sub_title: 'Καύσιμο',
+        f_name: typeText
+      }
+    ];
+  }
+
+  heating: { title: string; name: string; sub_title: string; f_name: string; style?: string }[] = [];
+
+  private translateHeatingType(type?: string): string {
+    switch (type) {
+      case 'OIL':
+        return 'Πετρέλαιο';
+      case 'NATURAL_GAS':
+        return 'Φυσικό Αέριο';
+      case 'ELECTRIC':
+        return 'Ηλεκτρικό';
+      case 'HEAT_PUMP':
+        return 'Αντλία Θερμότητας';
+      case 'NONE':
+        return 'Καθόλου';
+      default:
+        return 'Δεν έχει οριστεί';
     }
-  ];
+  }
 
   get ownerInformation() {
     return [

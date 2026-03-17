@@ -17,21 +17,56 @@ import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
 export class StatisticsChartComponent implements OnInit {
   private themeService = inject(ThemeService);
 
-  // public props
   chartOptions!: ApexOptions;
-  selectType: string = 'today';
-  readonly height = input.required<number>();
+  selectType: string = 'month';
 
-  // constructor
+  readonly height = input.required<number>();
+  readonly labels = input<string[]>([]);
+  readonly issuedData = input<number[]>([]);
+  readonly paidData = input<number[]>([]);
+  readonly overdueData = input<number[]>([]);
+
   constructor() {
     effect(() => {
-      this.updateThemeColor(this.themeService.customsTheme());
-      this.isDarkTheme(this.themeService.isDarkMode());
-      this.rerenderChartOnContainerResize(this.themeService.isContainerMode());
+      const currentLabels = this.labels();
+      const currentIssued = this.issuedData();
+      const currentPaid = this.paidData();
+      const currentOverdue = this.overdueData();
+
+      if (this.chartOptions) {
+        this.chartOptions = {
+          ...this.chartOptions,
+          series: [
+            {
+              name: 'Εκδοθέντα',
+              data: currentIssued
+            },
+            {
+              name: 'Πληρωμένα',
+              data: currentPaid
+            },
+            {
+              name: 'Ληξιπρόθεσμα',
+              data: currentOverdue
+            }
+          ],
+          xaxis: {
+            ...this.chartOptions.xaxis,
+            categories: currentLabels
+          }
+        };
+      }
+    });
+
+    effect(() => {
+      if (this.chartOptions) {
+        this.updateThemeColor(this.themeService.customsTheme());
+        this.isDarkTheme(this.themeService.isDarkMode());
+        this.rerenderChartOnContainerResize(this.themeService.isContainerMode());
+      }
     });
   }
 
-  // life cycle hook
   ngOnInit() {
     this.chartOptions = {
       chart: {
@@ -41,7 +76,7 @@ export class StatisticsChartComponent implements OnInit {
           show: false
         }
       },
-      colors: ['#faad14', '#1677ff'],
+      colors: ['#1677ff', '#52c41a', '#ff4d4f'],
       dataLabels: {
         enabled: false
       },
@@ -52,7 +87,7 @@ export class StatisticsChartComponent implements OnInit {
       markers: {
         size: 1,
         colors: ['#fff', '#fff', '#fff'],
-        strokeColors: ['#faad14', '#1677ff'],
+        strokeColors: ['#1677ff', '#52c41a', '#ff4d4f'],
         strokeWidth: 1,
         shape: 'circle',
         hover: {
@@ -79,15 +114,20 @@ export class StatisticsChartComponent implements OnInit {
       },
       series: [
         {
-          name: 'Revenue',
-          data: [200, 320, 320, 275, 275, 400, 400, 300, 440, 320, 320, 275, 275, 400, 300, 440]
+          name: 'Εκδοθέντα',
+          data: this.issuedData()
         },
         {
-          name: 'Sales',
-          data: [200, 250, 240, 300, 340, 320, 320, 400, 350, 250, 240, 300, 340, 320, 400, 350]
+          name: 'Πληρωμένα',
+          data: this.paidData()
+        },
+        {
+          name: 'Ληξιπρόθεσμα',
+          data: this.overdueData()
         }
       ],
       xaxis: {
+        categories: this.labels(),
         tooltip: {
           enabled: false
         },
@@ -104,45 +144,44 @@ export class StatisticsChartComponent implements OnInit {
     };
   }
 
-  // private method
   private updateThemeColor(theme: string) {
     switch (theme) {
       case 'preset-1':
       default:
-        this.chartOptions.colors = ['#faad14', '#1677ff'];
+        this.chartOptions.colors = ['#1677ff', '#52c41a', '#ff4d4f'];
         break;
       case 'preset-2':
-        this.chartOptions.colors = ['#faad14', '#3366FF'];
+        this.chartOptions.colors = ['#3366FF', '#52c41a', '#ff4d4f'];
         break;
       case 'preset-3':
-        this.chartOptions.colors = ['#faad14', '#7265E6'];
+        this.chartOptions.colors = ['#7265E6', '#52c41a', '#ff4d4f'];
         break;
       case 'preset-4':
-        this.chartOptions.colors = ['#faad14', '#068e44'];
+        this.chartOptions.colors = ['#068e44', '#52c41a', '#ff4d4f'];
         break;
       case 'preset-5':
-        this.chartOptions.colors = ['#faad14', '#3c64d0'];
+        this.chartOptions.colors = ['#3c64d0', '#52c41a', '#ff4d4f'];
         break;
       case 'preset-6':
-        this.chartOptions.colors = ['#faad14', '#f27013'];
+        this.chartOptions.colors = ['#f27013', '#52c41a', '#ff4d4f'];
         break;
       case 'preset-7':
-        this.chartOptions.colors = ['#faad14', '#2aa1af'];
+        this.chartOptions.colors = ['#2aa1af', '#52c41a', '#ff4d4f'];
         break;
       case 'preset-8':
-        this.chartOptions.colors = ['#faad14', '#00a854'];
+        this.chartOptions.colors = ['#00a854', '#52c41a', '#ff4d4f'];
         break;
       case 'preset-9':
-        this.chartOptions.colors = ['#faad14', '#009688'];
+        this.chartOptions.colors = ['#009688', '#52c41a', '#ff4d4f'];
         break;
     }
   }
 
   private isDarkTheme(isDark: boolean) {
-    const tooltipTheme = isDark === true ? 'dark' : 'light';
+    const tooltipTheme = isDark ? 'dark' : 'light';
     const tooltip = { theme: tooltipTheme };
     const grid = { ...this.chartOptions.grid };
-    grid.borderColor = isDark === true ? '#fafafa0d' : '#f5f5f5';
+    grid.borderColor = isDark ? '#fafafa0d' : '#f5f5f5';
     this.chartOptions = { ...this.chartOptions, tooltip, grid };
   }
 
@@ -150,47 +189,5 @@ export class StatisticsChartComponent implements OnInit {
     const chart = { ...this.chartOptions.chart };
     chart.redrawOnParentResize = !isContainer;
     this.chartOptions = { ...this.chartOptions, chart } as ApexOptions;
-  }
-
-  // public methods
-  onOptionSelected() {
-    switch (this.selectType) {
-      case 'today':
-        this.chartOptions.series = [
-          {
-            name: 'Revenue',
-            data: [200, 320, 320, 275, 275, 400, 400, 300, 440, 320, 320, 275, 275, 400, 300, 440]
-          },
-          {
-            name: 'Sales',
-            data: [200, 250, 240, 300, 340, 320, 320, 400, 350, 250, 240, 300, 340, 320, 400, 350]
-          }
-        ];
-        break;
-      case 'week':
-        this.chartOptions.series = [
-          {
-            name: 'Revenue',
-            data: [350, 400, 320, 340, 300, 240, 250, 350, 400, 320, 320, 340, 300, 240, 200, 440]
-          },
-          {
-            name: 'Sales',
-            data: [440, 300, 400, 275, 275, 320, 320, 440, 300, 400, 275, 275, 320, 320, 200, 300]
-          }
-        ];
-        break;
-      case 'month':
-        this.chartOptions.series = [
-          {
-            name: 'Revenue',
-            data: [200, 320, 320, 275, 275, 400, 400, 300, 440, 320, 320, 275, 275, 400, 300, 440]
-          },
-          {
-            name: 'Sales',
-            data: [200, 250, 240, 300, 340, 320, 320, 400, 350, 250, 240, 300, 340, 320, 400, 350]
-          }
-        ];
-        break;
-    }
   }
 }

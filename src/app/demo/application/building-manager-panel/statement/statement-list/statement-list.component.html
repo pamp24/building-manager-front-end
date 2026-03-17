@@ -1,5 +1,5 @@
 <div class="row">
-  <app-card cardTitle="Πολυκατοικία" [padding]="24" class="mb-3" *ngIf="managedBuildings?.length > 0">
+  <app-card cardTitle="Πολυκατοικία" [padding]="24" class="mb-3" *ngIf="showBuildingSelector && managedBuildings?.length > 0">
     <div class="col-12 mb-3">
       <app-building-selector-inline
         [buildings]="managedBuildings"
@@ -32,11 +32,11 @@
                   <h5 class="mb-2 mt-3">{{ cards.value }}</h5>
                   <div class="d-flex align-items-center gap-1">
                     <p class="mb-0 text-muted d-flex align-items-center gap-2">Παραστατικά:</p>
-                    <h5 class="mb-0">{{ cards.invoice }}</h5>
+                    <h5 class="mb-0">{{ cards.statement }}</h5>
                   </div>
                 </div>
                 <div class="col-6">
-                  <app-invoice-list-chart [seriesData]="cards.data" [colors]="cards.colors" />
+                  <app-statement-list-chart [seriesData]="cards.data" [colors]="cards.colors" />
                 </div>
               </div>
             </div>
@@ -77,7 +77,7 @@
     </app-card>
   </div>
 
-  <div class="col-12" id="invoice-section">
+  <div class="col-12" id="statement-section">
     <div class="card">
       <div class="card-body pb-0">
         <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs profile-tabs mb-3">
@@ -87,7 +87,7 @@
               <span class="avatar bg-light-primary lh-1">{{ totalCount }}</span>
             </button>
             <ng-template ngbNavContent>
-              <app-invoice-list-table [statements]="statements" (refreshRequested)="reloadStatements()" />
+              <app-statement-list-table [statements]="statements" (refreshRequested)="reloadStatements()" />
             </ng-template>
           </li>
 
@@ -97,7 +97,7 @@
               <span class="avatar bg-light-success lh-1">{{ paidCount }}</span>
             </button>
             <ng-template ngbNavContent>
-              <app-invoice-list-table [statements]="paidStatements" (refreshRequested)="reloadStatements()" />
+              <app-statement-list-table [statements]="paidStatements" (refreshRequested)="reloadStatements()" />
             </ng-template>
           </li>
 
@@ -107,7 +107,7 @@
               <span class="avatar bg-light-warning lh-1">{{ pendingCount }}</span>
             </button>
             <ng-template ngbNavContent>
-              <app-invoice-list-table [statements]="pendingStatements" (refreshRequested)="reloadStatements()" />
+              <app-statement-list-table [statements]="pendingStatements" (refreshRequested)="reloadStatements()" />
             </ng-template>
           </li>
 
@@ -117,7 +117,7 @@
               <span class="avatar bg-light-danger lh-1">{{ expiredCount }}</span>
             </button>
             <ng-template ngbNavContent>
-              <app-invoice-list-table [statements]="expiredStatements" (refreshRequested)="reloadStatements()" />
+              <app-statement-list-table [statements]="expiredStatements" (refreshRequested)="reloadStatements()" />
             </ng-template>
           </li>
 
@@ -127,7 +127,7 @@
               <span class="avatar bg-light-danger lh-1">{{ closedCount }}</span>
             </button>
             <ng-template ngbNavContent>
-              <app-invoice-list-table [statements]="closedStatements" (refreshRequested)="reloadStatements()" />
+              <app-statement-list-table [statements]="closedStatements" (refreshRequested)="reloadStatements()" />
             </ng-template>
           </li>
 
@@ -137,7 +137,7 @@
               <span class="avatar bg-light-primary lh-1">{{ draftCount }}</span>
             </button>
             <ng-template ngbNavContent>
-              <app-invoice-list-table [statements]="draftStatements" (refreshRequested)="reloadStatements()" />
+              <app-statement-list-table [statements]="draftStatements" (refreshRequested)="reloadStatements()" />
             </ng-template>
           </li>
         </ul>

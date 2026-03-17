@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 // icons
 import { IconService } from '@ant-design/icons-angular';
@@ -23,16 +23,20 @@ import { CommonExpenseStatement } from 'src/app/theme/shared/models/commonExpens
 import { CommonStatementSummaryDTO } from 'src/app/theme/shared/models/commonExpenseSummaryDTO';
 import { CommonExpenseStatementService } from 'src/app/theme/shared/service/commonExpensesStatement.service';
 import { PaymentService } from 'src/app/theme/shared/service/payment.service';
+import { StatementListTableComponent } from './statement-list-table/statement-list-table.component';
+import { StatementListChartComponent } from './statement-list-chart/statement-list-chart.component';
 
 @Component({
   selector: 'app-statement-list',
-  imports: [SharedModule, BuildingSelectorInlineComponent],
+  imports: [SharedModule, BuildingSelectorInlineComponent, StatementListTableComponent, StatementListChartComponent],
   templateUrl: './statement-list.component.html',
   styleUrl: './statement-list.component.scss'
 })
-export class StatementListComponent implements OnInit {
+export class StatementListComponent implements OnInit, OnChanges {
   private iconService = inject(IconService);
   @ViewChild('nav', { static: false }) nav?: NgbNav;
+  @Input() buildingId?: number;
+  @Input() pmView = false;
 
   // Λίστες
   statements: CommonExpenseStatement[] = [];
@@ -71,21 +75,33 @@ export class StatementListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Αν έρχεται buildingId από parent (π.χ. PM building view tab)
+    if (this.buildingId) {
+      this.currentBuildingId = this.buildingId;
+      this.showBuildingSelector = false;
+      this.loadStatementsAndSummary(this.buildingId);
+      return;
+    }
+
+    // Αλλιώς παλιά συμπεριφορά
     this.buildingService.getMyManagedBuildings().subscribe({
       next: (buildings) => {
         this.managedBuildings = buildings || [];
-        const storedId = Number(localStorage.getItem('buildingId'));
+        this.showBuildingSelector = this.managedBuildings.length > 1;
 
-        // Αν υπάρχει stored buildingId, βρες το index
+        const storedId = Number(localStorage.getItem('buildingId'));
         const foundIndex = this.managedBuildings.findIndex((b) => b.id === storedId);
         this.currentBuildingIndex = foundIndex >= 0 ? foundIndex : 0;
 
-        // Φόρτωσε την τρέχουσα πολυκατοικία
         const activeId = this.managedBuildings[this.currentBuildingIndex]?.id;
-        if (activeId) this.loadStatementsAndSummary(activeId);
+        if (activeId) {
+          this.currentBuildingId = activeId;
+          this.loadStatementsAndSummary(activeId);
+        }
       },
       error: (err) => console.error('Σφάλμα λήψης πολυκατοικιών:', err)
     });
+
     this.route.queryParamMap.subscribe((params) => {
       const tab = Number(params.get('tab'));
       if (!isNaN(tab) && tab >= 1 && tab <= 6) {
@@ -93,11 +109,19 @@ export class StatementListComponent implements OnInit {
 
         setTimeout(() => {
           this.nav?.select(tab);
-          document.getElementById('invoice-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          document.getElementById('statement-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 0);
       }
     });
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+  if (changes['buildingId'] && this.buildingId) {
+    this.currentBuildingId = this.buildingId;
+    this.showBuildingSelector = false;
+    this.loadStatementsAndSummary(this.buildingId);
+  }
+}
 
   private loadBuildingsAndData(): void {
     this.buildingService.getMyManagedBuildings().subscribe({
@@ -147,12 +171,13 @@ export class StatementListComponent implements OnInit {
   }
 
   onBuildingSelected(buildingId: number): void {
+    this.currentBuildingId = buildingId;
     localStorage.setItem('buildingId', buildingId.toString());
     this.loadStatementsAndSummary(buildingId);
   }
 
   private scrollToInvoices() {
-    const section = document.getElementById('invoice-section');
+    const section = document.getElementById('statement-section');
     if (section) {
       section.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -225,7 +250,7 @@ export class StatementListComponent implements OnInit {
         value: `${totalPaid.toLocaleString('el-GR')} €`,
         percentage: grandTotal ? ((totalPaid / grandTotal) * 100).toFixed(1) : 0,
         color: 'text-success',
-        invoice: this.paidStatements.length,
+        statement: this.paidStatements.length,
         data: [0, 20, 10, 45, 30, 55, 20, 30],
         colors: ['#52c41a']
       },
@@ -235,7 +260,7 @@ export class StatementListComponent implements OnInit {
         value: `${totalPending.toLocaleString('el-GR')} €`,
         percentage: grandTotal ? ((totalPending / grandTotal) * 100).toFixed(1) : 0,
         color: 'text-warning',
-        invoice: this.pendingStatements.length,
+        statement: this.pendingStatements.length,
         data: [30, 20, 55, 30, 45, 10, 20, 0],
         colors: ['#faad14']
       },
@@ -245,7 +270,7 @@ export class StatementListComponent implements OnInit {
         value: `${totalOverdue.toLocaleString('el-GR')} €`,
         percentage: grandTotal ? ((totalOverdue / grandTotal) * 100).toFixed(1) : 0,
         color: 'text-danger',
-        invoice: this.expiredStatements.length,
+        statement: this.expiredStatements.length,
         data: [0, 20, 10, 45, 30, 55, 20, 30],
         colors: ['#ff4d4f']
       }
@@ -303,5 +328,16 @@ export class StatementListComponent implements OnInit {
     this.expiredStatements = [];
     this.closedStatements = [];
     this.draftStatements = [];
+  }
+
+  reloadStatements(): void {
+    const buildingId = this.currentBuildingId || Number(localStorage.getItem('buildingId'));
+
+    if (!buildingId) {
+      console.warn('Δεν υπάρχει buildingId για ανανέωση statements.');
+      return;
+    }
+
+    this.loadStatementsAndSummary(buildingId);
   }
 }

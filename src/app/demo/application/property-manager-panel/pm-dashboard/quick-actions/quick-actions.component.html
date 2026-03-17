@@ -1,0 +1,27 @@
+<div class="card">
+  <div class="card-header">
+    <h5 class="mb-0">Γρήγορες Ενέργειες</h5>
+  </div>
+
+  <div class="card-body">
+    <div class="row g-3">
+      @for (action of actions; track action.title) {
+        <div class="col-12 col-sm-6">
+          <a
+            class="quick-action-card text-decoration-none d-flex align-items-center"
+            [routerLink]="[action.route]"
+          >
+            <div class="quick-action-icon" [ngClass]="action.buttonClass">
+              <i class="f-20 d-flex" antIcon [type]="action.icon" theme="outline"></i>
+            </div>
+
+            <div class="ms-3">
+              <h6 class="mb-1 text-dark">{{ action.title }}</h6>
+              <p class="mb-0 text-muted">{{ action.subtitle }}</p>
+            </div>
+          </a>
+        </div>
+      }
+    </div>
+  </div>
+</div>

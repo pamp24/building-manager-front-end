@@ -8,17 +8,24 @@ import { BuildingComponent } from 'src/app/demo/application/user/account-profile
 import { RoleComponent } from 'src/app/demo/application/user/account-profile/role/role.component';
 import { UserCardComponent } from 'src/app/demo/application/user/user-card/user-card.component';
 import { AccountSettingComponent } from 'src/app/demo/application/user/account-profile/account-setting/account-setting.component';
+import { StatementDashboardComponent } from '../../../building-manager-panel/statement/statement-dashboard/statement-dashboard.component';
+import { AuthenticationService } from 'src/app/theme/shared/service';
+import { StatementListComponent } from '../../../building-manager-panel/statement/statement-list/statement-list.component';
 
 @Component({
   selector: 'app-buildings-view',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     RouterModule,
     SharedModule,
     BuildingComponent,
     RoleComponent,
     UserCardComponent,
-    AccountSettingComponent,],
+    AccountSettingComponent,
+    StatementDashboardComponent,
+    StatementListComponent
+  ],
   templateUrl: './buildings-view.component.html',
   styleUrl: './buildings-view.component.scss'
 })
@@ -26,13 +33,15 @@ export class BuildingsViewComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private buildingService = inject(BuildingService);
 
-  activeTab = 1;
+  activeTab = 0;
   loading = false;
   error?: string;
   buildingId!: number;
   hasCompany = false;
 
   building?: BuildingDTO;
+
+  constructor(private authService: AuthenticationService) {}
 
   ngOnInit(): void {
     this.buildingId = Number(this.route.snapshot.paramMap.get('id'));
@@ -65,6 +74,9 @@ export class BuildingsViewComponent implements OnInit {
   }
 
   onCompanyPresenceChange(v: boolean) {
-  this.hasCompany = v;
-}
+    this.hasCompany = v;
+  }
+  hasRole(role: string): boolean {
+    return this.authService.currentUserValue?.role === role;
+  }
 }

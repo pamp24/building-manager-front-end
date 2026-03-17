@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, OnInit, Inject, Input } from '@angular/core';
+import { Component, OnInit, Inject, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
@@ -22,8 +22,9 @@ import { RouterModule } from '@angular/router';
   templateUrl: './role.component.html',
   styleUrls: ['./role.component.scss']
 })
-export class RoleComponent implements OnInit {
+export class RoleComponent implements OnInit, OnChanges {
   @Input() pmView = false;
+  @Input() buildingId?: number;
   members: BuildingMemberDTO[] = [];
 
   emailToInvite = '';
@@ -58,7 +59,39 @@ export class RoleComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    if (this.pmView && this.buildingId) {
+      this.loadSelectedBuildingForPm(this.buildingId);
+      return;
+    }
+
     this.loadMyBuildings();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.pmView && changes['buildingId'] && this.buildingId) {
+      this.loadSelectedBuildingForPm(this.buildingId);
+    }
+  }
+
+  private loadSelectedBuildingForPm(buildingId: number): void {
+    this.buildingService.getBuilding(buildingId).subscribe({
+      next: (building) => {
+        this.buildings = [building];
+        this.selectedBuildingIndex = 0;
+        this.currentBuildingId = building.id;
+        this.buildingName = building.name;
+        this.buildingAddress = `${building.street1} ${building.stNumber1}, ${building.city}`;
+
+        localStorage.setItem('buildingId', building.id.toString());
+
+        this.loadMembers(building.id);
+        this.loadApartments(building.id);
+      },
+      error: (err) => {
+        console.error('Σφάλμα φόρτωσης πολυκατοικίας για PM:', err);
+        this.messageBuildings = 'Αποτυχία φόρτωσης πολυκατοικίας.';
+      }
+    });
   }
 
   private loadMyBuildings(): void {
@@ -187,7 +220,7 @@ export class RoleComponent implements OnInit {
 
   getTranslatedStatus(status: string): string {
     switch (status) {
-      case 'Joined':
+      case 'JOINED':
       case 'ACCEPTED':
         return 'Μέλος';
       case 'PENDING':

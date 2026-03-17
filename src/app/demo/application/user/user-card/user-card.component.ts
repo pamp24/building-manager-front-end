@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // project import
@@ -24,6 +24,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NewApartmentComponent } from './new-apartment/new-apartment.component';
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
 import { RouterModule } from '@angular/router';
+import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
 
 @Component({
   selector: 'app-user-card',
@@ -31,9 +32,9 @@ import { RouterModule } from '@angular/router';
   templateUrl: './user-card.component.html',
   styleUrls: ['./user-card.component.scss']
 })
-export class UserCardComponent implements OnInit {
-  @Input() pmView = false;  
-
+export class UserCardComponent implements OnInit, OnChanges {
+  @Input() pmView = false;
+  @Input() buildingId?: number;
   private modalService = inject(NgbModal);
   private iconService = inject(IconService);
   selectedApartment: ApartmentDTO | null = null;
@@ -41,10 +42,9 @@ export class UserCardComponent implements OnInit {
   buildingName: string = '';
   buildingAddress: string = '';
   selectedBuildingIndex = 0;
-  buildings: any[] = [];
-  sortOption: string = 'default'; // προεπιλογή
+  buildings: BuildingDTO[] = [];
+  sortOption: string = 'default';
 
-  
   card_detail: any[] = [];
   currentUsedParking = 0;
   currentUsedStorages = 0;
@@ -54,6 +54,7 @@ export class UserCardComponent implements OnInit {
   pageSize = 1;
   total = 0;
   messageApartments = '';
+
   // Constructor
   constructor(
     apartmentService: ApartmentService,
@@ -64,34 +65,57 @@ export class UserCardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Λήψη ρόλου χρήστη
     const currentUser = localStorage.getItem('currentUser');
     if (currentUser) {
       const parsed = JSON.parse(currentUser);
       this.userRole = parsed.role;
     }
 
-    // 🔹 Βήμα 1: φέρνουμε τις πολυκατοικίες του χρήστη
+    if (this.pmView && this.buildingId) {
+      this.loadSelectedBuildingForPm(this.buildingId);
+      return;
+    }
+
     this.buildingService.getMyBuildings().subscribe({
       next: (buildings) => {
         this.buildings = buildings;
 
         if (buildings.length > 0) {
-          this.selectedBuildingIndex = 0; // ✅ πρώτη πολυκατοικία
-          this.onBuildingChange(); // ✅ φόρτωσε data
+          this.selectedBuildingIndex = 0;
+          this.onBuildingChange();
         }
       },
       error: (err) => console.error('Σφάλμα φόρτωσης πολυκατοικιών', err)
     });
   }
-  //Βήμα 2: φόρτωση στοιχείων μίας πολυκατοικίας
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.pmView && changes['buildingId'] && this.buildingId) {
+      this.loadSelectedBuildingForPm(this.buildingId);
+    }
+  }
+
+  private loadSelectedBuildingForPm(buildingId: number): void {
+    this.buildingService.getBuilding(buildingId).subscribe({
+      next: (building) => {
+        this.buildings = [building];
+        this.selectedBuildingIndex = 0;
+        localStorage.setItem('buildingId', String(building.id));
+        this.loadBuildingData(building.id);
+      },
+      error: (err) => {
+        console.error('Σφάλμα φόρτωσης πολυκατοικίας για PM:', err);
+        this.messageApartments = 'Αποτυχία φόρτωσης πολυκατοικίας.';
+      }
+    });
+  }
+
   private loadBuildingData(buildingId: number) {
     this.buildingService.getBuilding(buildingId).subscribe({
       next: (building) => {
         this.buildingName = building.name;
         this.buildingAddress = `${building.street1} ${building.stNumber1}, ${building.city}`;
 
-        // Φέρε τα διαμερίσματα του συγκεκριμένου building
         this.apartmentService.getApartmentsByBuilding(buildingId).subscribe({
           next: (data) => {
             this.card_detail = data.map((ap) => ({
@@ -117,7 +141,6 @@ export class UserCardComponent implements OnInit {
               ]
             }));
 
-            //Αν δεν υπάρχουν καθόλου διαμερίσματα → εμφάνισε μήνυμα
             if (data.length === 0) {
               this.messageApartments = 'Δεν υπάρχουν ακόμα καταχωρημένα διαμερίσματα σε αυτήν την πολυκατοικία.';
             } else {
@@ -137,17 +160,14 @@ export class UserCardComponent implements OnInit {
   }
 
   onBuildingChange() {
-  const selectedBuilding = this.buildings[this.selectedBuildingIndex];
-  if (!selectedBuilding) return;
+    const selectedBuilding = this.buildings[this.selectedBuildingIndex];
+    if (!selectedBuilding) return;
 
-  // αποθήκευση αν τη χρειάζεσαι αλλού
-  localStorage.setItem('buildingId', selectedBuilding.id);
+    localStorage.setItem('buildingId', String(selectedBuilding.id));
 
-  // αν θες να φορτώνεις και διαμερίσματα κ.λπ.
-  this.loadBuildingData(selectedBuilding.id);
-}
+    this.loadBuildingData(selectedBuilding.id);
+  }
 
-  // public method
   open(preview: any, card: any) {
     this.selectedApartment = card?.apartment ?? null;
     this.modalService.open(preview, { size: 'xl' });
@@ -179,7 +199,6 @@ export class UserCardComponent implements OnInit {
         return;
       }
 
-      // ανοίγει modal μόνο αν υπάρχει χώρος
       this.modalService.open(NewApartmentComponent, { size: 'lg' });
     });
   }
@@ -193,5 +212,9 @@ export class UserCardComponent implements OnInit {
         localStorage.setItem('buildingId', selected.id.toString());
       }
     });
+  }
+
+  get currentBuilding(): BuildingDTO | null {
+    return this.buildings[this.selectedBuildingIndex] ?? null;
   }
 }

@@ -36,7 +36,6 @@ export class AccountProfileComponent {
   activeTab = 2;
   private iconService = inject(IconService);
 
-  // constructor
   constructor(private authService: AuthenticationService) {
     this.iconService.addIcon(...[UserOutline, FileTextOutline, ContainerOutline, LockOutline, TeamOutline, SettingOutline]);
   }
