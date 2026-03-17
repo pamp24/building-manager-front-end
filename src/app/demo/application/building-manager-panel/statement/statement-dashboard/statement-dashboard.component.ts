@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, Input, OnInit, ViewChild } from '@angular/core';
 
 // icons
 import { IconService } from '@ant-design/icons-angular';
@@ -57,6 +57,8 @@ import { CommonExpenseStatement } from 'src/app/theme/shared/models/commonExpens
 import { CommonExpenseStatementService } from 'src/app/theme/shared/service/commonExpensesStatement.service';
 import { CalendarService } from 'src/app/theme/shared/service/calendarService.service';
 import { PollService } from 'src/app/theme/shared/service/poll.service';
+import { StatementChartComponent } from './statement-chart/statement-chart.component';
+import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
 
 @Component({
   selector: 'app-statement-dashboard',
@@ -67,7 +69,8 @@ import { PollService } from 'src/app/theme/shared/service/poll.service';
     StatusCardsComponent,
     RecentPaymentsComponent,
     UserPaymentsTableComponent,
-    NgbNavModule
+    NgbNavModule,
+    StatementChartComponent
   ],
   templateUrl: './statement-dashboard.component.html',
   styleUrl: './statement-dashboard.component.scss'
@@ -80,10 +83,12 @@ export class StatementDashboardComponent implements OnInit {
   private buildingService = inject(BuildingService);
   private paymentService = inject(PaymentService);
   @ViewChild('nav', { static: false }) nav?: NgbNav;
+  @Input() buildingId!: number;
   backgroundColor!: string;
+  building?: BuildingDTO;
 
   dashboardData?: ManagerDashboardDTO;
-  buildingId: number = Number(localStorage.getItem('buildingId'));
+  
   currentBuildingIndex: number = 0;
   activeTab = 1;
 
@@ -154,8 +159,7 @@ export class StatementDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadBuildingsAndManagerDashboard();
-    this.loadRecentAnnouncements();
-    this.loadPolls();
+
   }
 
   private isDarkTheme(isDark: boolean) {
@@ -249,44 +253,41 @@ export class StatementDashboardComponent implements OnInit {
   }
 
   loadBuildingsAndManagerDashboard() {
-    this.buildingService.getMyManagedBuildings().subscribe({
-      next: (buildings) => {
-        console.log('Buildings received:', buildings);
+  this.buildingService.getMyManagedBuildings().subscribe({
+    next: (buildings) => {
+      this.managedBuildings = buildings ?? [];
+      this.showBuildingSelector = this.managedBuildings.length > 1;
 
-        //Ελέγχουμε ότι είναι array και όχι άδειο
-        if (Array.isArray(buildings) && buildings.length > 0) {
-          this.managedBuildings = buildings;
-          this.showBuildingSelector = buildings.length > 1;
+      // ✅ αν το buildingId ήρθε από parent, κράτα το
+      if (this.buildingId) {
+        this.currentBuilding =
+          this.managedBuildings.find(b => b.id === this.buildingId) || this.managedBuildings[0];
 
-          console.log('Managed buildings count:', buildings.length);
-          console.log('ShowBuildingSelector:', this.showBuildingSelector);
-
-          // Αν υπάρχει μόνο μία πολυκατοικία → επιλέγεται αυτόματα
-          if (buildings.length === 1) {
-            this.buildingId = buildings[0].id;
-            localStorage.setItem('buildingId', this.buildingId.toString());
-            this.loadAll();
-          }
-          // Αν υπάρχουν πολλές → επιλέγεται η πρώτη προεπιλεγμένα αλλά φαίνεται ο selector
-          else if (buildings.length > 1) {
-            this.buildingId = this.buildingId || buildings[0].id;
-            this.currentBuilding = this.managedBuildings.find((b) => b.id === this.buildingId) || this.managedBuildings[0];
-            localStorage.setItem('buildingId', this.buildingId.toString());
-            this.loadAll();
-          }
-        } else {
-          console.warn('Δεν βρέθηκαν πολυκατοικίες για τον διαχειριστή');
-          this.managedBuildings = [];
-          this.showBuildingSelector = false;
-        }
-      },
-      error: (err) => {
-        console.error('Σφάλμα κατά τη λήψη πολυκατοικιών', err);
-        this.showBuildingSelector = false;
-        this.managedBuildings = [];
+        // φόρτωσε ΟΛΑ τώρα που ξέρεις buildingId
+        this.loadAll();
+        this.loadRecentAnnouncements();
+        this.loadPolls();
+        return;
       }
-    });
-  }
+
+      // αλλιώς, fallback στην παλιά συμπεριφορά
+      if (this.managedBuildings.length > 0) {
+        this.buildingId = this.managedBuildings[0].id;
+        this.currentBuilding = this.managedBuildings[0];
+
+        localStorage.setItem('buildingId', this.buildingId.toString());
+        this.loadAll();
+        this.loadRecentAnnouncements();
+        this.loadPolls();
+      }
+    },
+    error: (err) => {
+      console.error('Σφάλμα κατά τη λήψη πολυκατοικιών', err);
+      this.showBuildingSelector = false;
+      this.managedBuildings = [];
+    }
+  });
+}
 
   goToTab(tabId: number): void {
   this.router.navigate(['/invoice/list'], { queryParams: { tab: tabId } });

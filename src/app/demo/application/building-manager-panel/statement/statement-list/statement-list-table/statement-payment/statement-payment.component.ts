@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
-import { PaymentDTO } from '../../../../../../theme/shared/models/paymentDTO';
+import { PaymentDTO } from 'src/app/theme/shared/models/paymentDTO';
 
 @Component({
   selector: 'app-statement-payment',
@@ -16,7 +16,7 @@ export class StatementPaymentComponent implements OnInit {
   @Output() paymentSaved = new EventEmitter<PaymentDTO>();
 
   form!: FormGroup;
-  fullAmountChecked = true; // ✅ αρχικά επιλεγμένο
+  fullAmountChecked = true; //αρχικά επιλεγμένο
   remainingAmount = 0;
 
   constructor(

@@ -1,0 +1,49 @@
+<div class="card">
+  <div class="card-header">
+    <h5 class="mb-0">Πολυκατοικίες που Χρειάζονται Προσοχή</h5>
+  </div>
+
+  <div class="card-body p-0">
+    @if (attentionBuildings.length === 0) {
+      <div class="p-4 text-center text-muted">
+        Δεν υπάρχουν πολυκατοικίες που να απαιτούν άμεση προσοχή.
+      </div>
+    } @else {
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead>
+            <tr>
+              <th>Πολυκατοικία</th>
+              <th>Πόλη</th>
+              <th>Πρόβλημα</th>
+              <th class="text-center">Σοβαρότητα</th>
+              <th class="text-center">Ενέργεια</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (building of attentionBuildings; track building.buildingId) {
+              <tr>
+                <td>{{ building.name }}</td>
+                <td>{{ building.city }}</td>
+                <td>{{ building.issue }}</td>
+                <td class="text-center">
+                  <span class="badge rounded-pill px-3 py-2" [ngClass]="getSeverityBadgeClass(building.severity)">
+                    {{ getSeverityLabel(building.severity) }}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <a
+                    class="btn btn-sm btn-outline-primary"
+                    [routerLink]="['/pm/buildings', building.buildingId]"
+                  >
+                    Προβολή
+                  </a>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>

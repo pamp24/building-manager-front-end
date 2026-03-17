@@ -1,4 +1,7 @@
-<app-card *ngIf="apartments.length > 1">
+<div *ngIf="messageBuilding" class="alert alert-primary text-center my-3">
+  {{ messageBuilding }}
+</div>
+<app-card *ngIf="building" cardTitle="Πολυκατοικία" [padding]="24" class="mb-3">
   <div class="row">
     <div class="col-md-6">
       <label>Όνομα Πολυκατοικίας</label>
@@ -98,7 +101,11 @@
     <a class="btn btn-outline-primary" [routerLink]="['/pm/buildings']">Πίσω</a>
   </div>
   <div class="col-12 text-end btn-page">
-    <div class="btn btn-outline-secondary">Άκυρο</div>
-    <div class="btn btn-primary">Αποθήκευση</div>
+    <button type="button" class="btn btn-outline-secondary" [disabled]="loading || saving || !hasChanges" (click)="resetSettings()">
+      Άκυρο
+    </button>
+    <button type="button" class="btn btn-primary" [disabled]="saving || loading || !hasChanges" (click)="saveSettings()">
+      {{ saving ? 'Αποθήκευση...' : 'Αποθήκευση' }}
+    </button>
   </div>
 </div>

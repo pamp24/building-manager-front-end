@@ -142,7 +142,7 @@
 </div>
 
 <ng-template #preview let-modal>
-  <app-card-preview [apartment]="selectedApartment"></app-card-preview>
+  <app-card-preview [apartment]="selectedApartment" [building]="currentBuilding"></app-card-preview>
   <div class="modal-footer">
     <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="modal.close('Close click')">Κλείσιμο</button>
   </div>

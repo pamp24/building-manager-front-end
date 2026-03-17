@@ -2,8 +2,8 @@ import { Component, effect, inject, OnInit, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { ThemeService } from 'src/app/theme/shared/service/customs-theme.service';
-import { BuildingService } from '../../../../../theme/shared/service/building.service';
-import { ManagedBuildingDTO } from '../../../../../theme/shared/models/managedBuildingDTO';
+import { ManagedBuildingDTO } from '../../statement-list/building-selector-inline/building-selector-inline.component';
+import { BuildingService } from 'src/app/theme/shared/service/building.service';
 
 @Component({
   selector: 'app-manager-modal',
@@ -19,7 +19,8 @@ export class ManagerModalComponent implements OnInit {
   addressList: ManagedBuildingDTO[] = [];
   selectedBuilding: ManagedBuildingDTO | null = null;
   isRtlMode!: boolean;
-
+  userRole: string | null = null;
+  
   constructor(private buildingService: BuildingService) {
     effect(() => {
       this.isRtlTheme(this.themeService.isRTLMode());
@@ -27,11 +28,32 @@ export class ManagerModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  const currentUser = localStorage.getItem('currentUser');
+  if (currentUser) {
+    const parsed = JSON.parse(currentUser);
+    this.userRole = parsed.role;
+  }
+
+  if (this.userRole === 'PropertyManager') {
+    this.buildingService.getMyCompanyBuildings().subscribe({
+      next: (data) => {
+        this.addressList = data as unknown as ManagedBuildingDTO[];
+      },
+      error: (err: unknown) => {
+        console.error('Σφάλμα φόρτωσης πολυκατοικιών', err);
+      }
+    });
+  } else {
     this.buildingService.getMyManagedBuildings().subscribe({
-      next: (data) => (this.addressList = data),
-      error: (err) => console.error('Σφάλμα φόρτωσης πολυκατοικιών', err)
+      next: (data: ManagedBuildingDTO[]) => {
+        this.addressList = data;
+      },
+      error: (err: unknown) => {
+        console.error('Σφάλμα φόρτωσης πολυκατοικιών', err);
+      }
     });
   }
+}
 
   saveSelection() {
     if (!this.selectedBuilding || !this.selectedBuilding.id) {

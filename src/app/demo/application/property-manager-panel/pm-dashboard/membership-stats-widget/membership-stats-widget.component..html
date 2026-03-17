@@ -1,0 +1,24 @@
+<div class="card">
+  <div class="card-header">
+    <h5 class="mb-0">Στατιστικά Μελών & Προσκλήσεων</h5>
+  </div>
+
+  <div class="card-body">
+    <div class="row g-3">
+      @for (item of statCards; track item.title) {
+        <div class="col-lg-3 col-sm-6 col-12">
+          <div class="stat-box" [ngClass]="item.className">
+            <div class="stat-icon">
+              <i antIcon [type]="item.icon" theme="outline"></i>
+            </div>
+
+            <div class="stat-content">
+              <h4 class="mb-1">{{ item.value }}</h4>
+              <p class="mb-0">{{ item.title }}</p>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

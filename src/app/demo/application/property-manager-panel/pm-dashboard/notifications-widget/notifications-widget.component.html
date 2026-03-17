@@ -1,0 +1,57 @@
+<div class="card">
+  <div class="card-header d-flex align-items-center justify-content-between">
+    <div>
+      <h5 class="mb-0">Ειδοποιήσεις</h5>
+      <small class="text-muted">Τελευταίες ενημερώσεις για εσάς</small>
+    </div>
+  </div>
+
+  <div class="card-body px-0 py-2">
+    @if (notifications.length === 0) {
+      <div class="text-center text-muted py-4">
+        Δεν υπάρχουν ειδοποιήσεις.
+      </div>
+    } @else {
+      <ul class="list-group list-group-flush">
+        @for (item of notifications; track item.id) {
+          <li class="list-group-item" [ngClass]="{ 'notification-unread': !item.read }">
+            <div class="d-flex align-items-center">
+              <div class="flex-shrink-0">
+                <div class="notification-icon" [ngClass]="{ 'notification-icon-unread': !item.read }">
+                  <i class="f-18 d-flex" antIcon type="bell" theme="outline"></i>
+                </div>
+              </div>
+
+              <div class="flex-grow-1 mx-3">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <h6 class="mb-0">{{ item.title }}</h6>
+
+                  @if (!item.read) {
+                    <span class="badge bg-light-primary text-primary rounded-pill px-2 py-1 small-badge">
+                      Νέα
+                    </span>
+                  }
+                </div>
+
+                <p class="mb-1 text-muted">{{ item.message }}</p>
+                <small class="text-muted">{{ formatDate(item.createdAt) }}</small>
+              </div>
+
+              <div class="flex-shrink-0">
+                <a href="javascript:" class="avatar avatar-s btn-link-secondary">
+                  <i class="f-16 d-flex" antIcon type="right" theme="outline"></i>
+                </a>
+              </div>
+            </div>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+
+  <div class="card-footer text-center">
+    <a class="btn btn-sm btn-outline-primary" [routerLink]="['/notifications']">
+      Προβολή όλων
+    </a>
+  </div>
+</div>

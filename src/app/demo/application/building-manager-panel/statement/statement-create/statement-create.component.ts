@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -21,7 +22,7 @@ import { ApartmentDTO } from 'src/app/theme/shared/models/apartmentDTO';
 import { CommonExpenseStatementService } from 'src/app/theme/shared/service/commonExpensesStatement.service';
 import { CommonExpenseStatement } from 'src/app/theme/shared/models/commonExpenseStatement';
 import { ApartmentService } from '../../../../../theme/shared/service/apartment.service';
-
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-statement-create',
@@ -29,7 +30,9 @@ import { ApartmentService } from '../../../../../theme/shared/service/apartment.
   templateUrl: './statement-create.component.html',
   styleUrl: './statement-create.component.scss'
 })
-export class StatementCreateComponent implements OnInit {
+export class StatementCreateComponent implements OnInit, OnChanges {
+  @Input() buildingId?: number;
+  @Input() pmView = false;
   // public props
   private fb = inject(FormBuilder);
   private iconService = inject(IconService);
@@ -42,8 +45,8 @@ export class StatementCreateComponent implements OnInit {
   previewCode: string = '';
   selectedApartments: ApartmentDTO[] = [];
   currentBuildingIndex: number = 0;
-  buildingId: number = 0;
   currentBuilding: ManagedBuildingDTO | null = null;
+  userRole: string | null = null;
 
   expenseCategories = [
     { label: 'ΚΟΙΝΟΧΡΗΣΤΑ', value: 'COMMON' },
@@ -67,20 +70,42 @@ export class StatementCreateComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.buildingService.getMyManagedBuildings().subscribe({
-      next: (data) => {
-        this.managedBuildings = data;
+    const currentUser = localStorage.getItem('currentUser');
+    if (currentUser) {
+      const parsed = JSON.parse(currentUser);
+      this.userRole = parsed.role;
+    }
+
+    const buildings$: Observable<any[]> =
+      this.userRole === 'PropertyManager' ? this.buildingService.getMyCompanyBuildings() : this.buildingService.getMyManagedBuildings();
+
+    buildings$.subscribe({
+      next: (data: any[]) => {
+        this.managedBuildings = data as ManagedBuildingDTO[];
         if (data.length > 0) {
-          this.selectBuilding(data[0]);
+          this.selectBuilding(this.managedBuildings[0]);
         }
       },
-      error: (err) => console.error('Σφάλμα φόρτωσης πολυκατοικιών', err)
+      error: (err: unknown) => console.error('Σφάλμα φόρτωσης πολυκατοικιών', err)
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['buildingId'] && this.buildingId && this.managedBuildings.length > 0) {
+      const found = this.managedBuildings.find((b) => b.id === this.buildingId);
+      if (found) {
+        this.selectBuilding(found);
+        this.setCurrentBuildingById(found.id);
+      }
+    }
   }
 
   // public methods
   openManagerModal() {
     const modalRef = this.modalService.open(ManagerModalComponent, { size: 'lg', scrollable: true });
+    modalRef.componentInstance.buildings = this.managedBuildings;
+    modalRef.componentInstance.selectedBuilding = this.selectedBuilding;
+
     modalRef.result.then(
       (result) => {
         if (result && result.id) {
@@ -95,20 +120,40 @@ export class StatementCreateComponent implements OnInit {
 
   selectBuilding(building: ManagedBuildingDTO) {
     this.selectedBuilding = building;
+    this.currentBuilding = building;
+    this.currentBuildingIndex = this.managedBuildings.findIndex((b) => b.id === building.id);
+    this.buildingId = building.id;
+
     localStorage.setItem('buildingId', String(building.id));
 
-    // Φέρνουμε τον manager
-    this.buildingService.getBuildingManager(building.id).subscribe({
-      next: (data) => (this.manager = data)
+    this.buildingService.getBuilding(building.id).subscribe({
+      next: (data) => {
+        if (data.managerId || data.managerFullName) {
+          this.manager = {
+            id: data.managerId,
+            fullName: data.managerFullName,
+            email: data.managerEmail,
+            phoneNumber: data.managerPhone
+          } as ManagerDTO;
+        } else if (data.company) {
+          this.manager = {
+            id: data.company.companyId,
+            fullName: data.company.managerName,
+            email: data.company.email,
+            phoneNumber: data.company.phone
+          } as ManagerDTO;
+        } else {
+          this.manager = null;
+        }
+      },
+      error: (err) => console.error('Σφάλμα φόρτωσης στοιχείων κτιρίου', err)
     });
 
-    // Φέρνουμε τον επόμενο κωδικό
     this.commonExpenseStatementService.getNextCode(building.id).subscribe({
       next: (code) => this.form.patchValue({ code }),
       error: (err) => console.error('Σφάλμα φόρτωσης κωδικού', err)
     });
 
-    //Φόρτωσε αυτόματα όλα τα διαμερίσματα της πολυκατοικίας
     this.ApartmentService.getApartmentsByBuilding(building.id).subscribe({
       next: (apartments) => {
         this.selectedApartments = apartments;
@@ -116,6 +161,15 @@ export class StatementCreateComponent implements OnInit {
       },
       error: (err) => console.error('Σφάλμα φόρτωσης διαμερισμάτων', err)
     });
+  }
+
+  setCurrentBuildingById(buildingId: number) {
+    const index = this.managedBuildings.findIndex((b) => b.id === buildingId);
+    if (index >= 0) {
+      this.currentBuildingIndex = index;
+      this.currentBuilding = this.managedBuildings[index];
+      this.buildingId = this.currentBuilding.id;
+    }
   }
 
   form: FormGroup = this.fb.group({

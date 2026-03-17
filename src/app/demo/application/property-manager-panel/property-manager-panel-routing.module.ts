@@ -10,6 +10,11 @@ const routes: Routes = [
     path: '',
     children: [
       {
+        path: 'pm-dashboard',
+        loadComponent: () => import('./pm-dashboard/pm-dashboard.component').then((c) => c.PmDashboardComponent),
+        data: { role: [Role.Admin, Role.PropertyManager] }
+      },
+      {
         path: 'buildings',
         loadComponent: () => import('./buildings/buildings.component').then((c) => c.BuildingsViewComponent),
         data: { role: [Role.Admin, Role.PropertyManager] }

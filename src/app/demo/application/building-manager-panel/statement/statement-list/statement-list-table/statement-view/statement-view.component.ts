@@ -10,7 +10,7 @@ import { ApartmentService } from 'src/app/theme/shared/service/apartment.service
 import { OnInit } from '@angular/core';
 import { ApartmentDTO } from 'src/app/theme/shared/models/apartmentDTO';
 import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
-import { ManagerDTO } from '../../../../../../theme/shared/models/managerDTO';
+import { ManagerDTO } from 'src/app/theme/shared/models/managerDTO';
 
 @Component({
   selector: 'app-statement-view',
