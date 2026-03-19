@@ -42,4 +42,7 @@ export interface BuildingDTO {
   heatingCapacityLitres?: number;
 
   company?: CompanyDTO;
+
+  myRole?: string;
+  hasPropertyManager?: boolean;
 }

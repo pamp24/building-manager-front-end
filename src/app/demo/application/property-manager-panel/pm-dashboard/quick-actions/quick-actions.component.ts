@@ -1,14 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { ApartmentOutline, FileAddOutline, TeamOutline, HomeOutline } from '@ant-design/icons-angular/icons';
 import { IconService } from '@ant-design/icons-angular';
-import {
-  ApartmentOutline,
-  FileAddOutline,
-  TeamOutline,
-  HomeOutline
-} from '@ant-design/icons-angular/icons';
-
+import { SharedModule } from '../../../../../theme/shared/shared.module';
 
 interface QuickActionItem {
   title: string;
@@ -21,12 +16,16 @@ interface QuickActionItem {
 @Component({
   selector: 'app-quick-actions',
   standalone: true,
-  imports: [CommonModule, RouterModule, RouterModule,],
+  imports: [CommonModule, SharedModule, RouterModule, RouterModule],
   templateUrl: './quick-actions.component.html',
   styleUrl: './quick-actions.component.scss'
 })
 export class QuickActionsComponent {
   private iconService = inject(IconService);
+
+  constructor() {
+    this.iconService.addIcon(...[ApartmentOutline, FileAddOutline, TeamOutline, HomeOutline]);
+  }
 
   actions: QuickActionItem[] = [
     {
@@ -58,10 +57,4 @@ export class QuickActionsComponent {
       buttonClass: 'action-info'
     }
   ];
-
-  constructor() {
-    this.iconService.addIcon(
-      ...[ApartmentOutline, FileAddOutline, TeamOutline, HomeOutline]
-    );
-  }
 }

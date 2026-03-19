@@ -27,13 +27,6 @@ export const NavigationItems: NavigationItem[] = [
         url: '/statement/create'
       },
       {
-        id: 'list',
-        title: 'List Expenses Invoices',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/statement/list'
-      },
-      {
         id: 'buildings',
         title: 'Buildings',
         type: 'item',
@@ -179,12 +172,6 @@ export const NavigationItems: NavigationItem[] = [
                 type: 'item',
                 url: '/helpdesk/ticket/list'
               },
-              {
-                id: 'details',
-                title: 'Details',
-                type: 'item',
-                url: '/helpdesk/ticket/details'
-              }
             ]
           },
           {

@@ -1,7 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PmDashboardDTO, PmExpenseCollectionRateDTO, PmFinancialChartDTO, PmMembershipStatsDTO } from '../models/pmDashboardDTO';
+import {
+  PmBuildingManagerRowDTO,
+  PmDashboardDTO,
+  PmExpenseCollectionRateDTO,
+  PmFinancialChartDTO,
+  PmMembershipStatsDTO
+} from '../models/pmDashboardDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -27,5 +33,9 @@ export class PmDashboardService {
 
   getMembershipStats() {
     return this.http.get<PmMembershipStatsDTO>(`${this.api}/membership-stats`);
+  }
+
+  getBuildingManagers() {
+    return this.http.get<PmBuildingManagerRowDTO[]>(`${this.api}/building-managers`);
   }
 }

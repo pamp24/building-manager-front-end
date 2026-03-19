@@ -29,13 +29,13 @@ import { StudentStatesChartComponent } from './student-states-chart/student-stat
 import { ActivityLineChartComponent } from './activity-line-chart/activity-line-chart.component';
 import { VisitorsBarChartComponent } from './visitors-bar-chart/visitors-bar-chart.component';
 import { EarningCoursesLineChartComponent } from './earning-courses-line-chart/earning-courses-line-chart.component';
-import { StatisticsChartComponent } from 'src/app/theme/shared/apexchart/statistics-chart/statistics-chart.component';
+import { PmStatisticsChartComponent } from 'src/app/theme/shared/apexchart/pm-statistics-chart/pm-statistics-chart.component';
 
 @Component({
   selector: 'app-online-dashboard',
   imports: [
     SharedModule,
-    StatisticsChartComponent,
+    PmStatisticsChartComponent,
     InvitesGoalChartComponent,
     CourseReportBarChartComponent,
     TotalRevenueLineChartComponent,

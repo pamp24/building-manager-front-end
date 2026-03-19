@@ -9,12 +9,12 @@ import { ThemeService } from 'src/app/theme/shared/service/customs-theme.service
 import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
 
 @Component({
-  selector: 'app-statistics-chart',
+  selector: 'app-pm-statistics-chart',
   imports: [SharedModule, NgApexchartsModule],
-  templateUrl: './statistics-chart.component.html',
-  styleUrl: './statistics-chart.component.scss'
+  templateUrl: './pm-statistics-chart.component.html',
+  styleUrl: './pm-statistics-chart.component.scss'
 })
-export class StatisticsChartComponent implements OnInit {
+export class PmStatisticsChartComponent implements OnInit {
   private themeService = inject(ThemeService);
 
   chartOptions!: ApexOptions;

@@ -1,240 +1,284 @@
-<div class="row">
-  <div class="col-lg-8">
-    <div class="card">
-      <div class="card-header">
-        <h5>
-          <i class="text-primary f-20 wid-20" antIcon type="lock" theme="outline"></i>
-          <span class="p-l-5">Private Ticket #1831786</span>
-        </h5>
-      </div>
-      <div class="card-body border-bottom py-2">
-        <div class="row align-items-center">
-          <div class="col-md-8">
-            <h4 class="d-inline-block mb-0">Theme customization issue</h4>
-          </div>
-          <div class="col-md-4 text-md-end">
-            <div class="btn-star">
-              <a href="javascript:" class="btn btn-light-success btn-sm">Mark as unread</a>
-              <a href="javascript:"><i antIcon type="star" theme="outline" class="text-warning f-20 ms-2 wid-20"></i></a>
+<div class="card-header d-flex justify-content-between align-items-center">
+  <button class="btn btn-sm btn-light-primary" (click)="goBack()">
+    <i class="me-2" antIcon type="arrow-left" theme="outline"></i>
+    Πίσω στη λίστα
+  </button>
+</div>
+
+@if (loading) {
+  <div class="card">
+    <div class="card-body">Φόρτωση ticket...</div>
+  </div>
+}
+
+@if (errorMessage) {
+  <div class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+}
+
+@if (ticket) {
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-header">
+          <h5>
+            <i class="text-primary f-20 wid-20" antIcon type="lock" theme="outline"></i>
+            <span class="p-l-5">Ticket {{ ticket.ticketNumber }}</span>
+          </h5>
+        </div>
+
+        <div class="card-body border-bottom py-2">
+          <div class="row align-items-center">
+            <div class="col-md-8">
+              <h4 class="d-inline-block mb-0">{{ ticket.title }}</h4>
+            </div>
+            <div class="col-md-4 text-md-end">
+              <span class="badge" [ngClass]="getStatusBadgeClass(ticket.status)">
+                {{ getStatusLabel(ticket.status) }}
+              </span>
             </div>
           </div>
         </div>
-      </div>
-      <div class="border-bottom card-body py-2">
-        <div class="row align-items-center">
-          <div class="col-md-12">
-            <button type="button" class="btn btn-sm my-2 me-2 btn-light-success">
-              <i class="me-2" antIcon type="message" theme="outline"></i>
-              Post a reply
-            </button>
-            <button type="button" class="btn btn-sm my-2 me-2 btn-light-warning">
-              <i class="me-2" antIcon type="edit" theme="outline"></i>
-              Post a Note
-            </button>
-            <button type="button" class="btn btn-sm my-2 btn-light-danger">
-              <i class="me-2" antIcon type="user" theme="outline"></i>
-              Customer Notes
-            </button>
-          </div>
-        </div>
-      </div>
-      @for (list of profiles; track list) {
+
         <div class="border-bottom card-body">
           <div class="row">
             <div class="col-sm-auto mb-3 mb-sm-0">
               <div class="d-sm-inline-block d-flex align-items-center">
-                <img class="wid-60 img-radius mb-2" src="{{ list.src }}" alt="Generic placeholder image " />
-                <div class="ms-3 ms-sm-0 d-flex align-items-center justify-content-sm-center">
-                  <p class="d-flex align-items-center mb-0">
-                    <i class="f-18 text-primary d-flex me-1" antIcon type="like" theme="outline"></i>
-                    4
-                  </p>
-                </div>
+                <img class="wid-60 img-radius mb-2" src="assets/images/user/avatar-1.jpg" alt="avatar" />
               </div>
             </div>
+
             <div class="col">
               <div class="row">
                 <div class="col">
-                  <div class="">
-                    <h4 class="d-inline-block">You</h4>
-                    <span class="badge bg-light-secondary ms-2">replied</span>
-                    <p class="text-muted">1 day ago on Wednesday at 8:18am</p>
+                  <div>
+                    <h4 class="d-inline-block">{{ ticket.createdByName }}</h4>
+                    <span class="badge bg-light-secondary ms-2">Δημιουργός</span>
+                    <p class="text-muted">{{ formatDate(ticket.createdAt) }}</p>
                   </div>
                 </div>
-                <div class="col-auto">
-                  <ul class="list-unstyled mb-0">
-                    <li class="d-inline-block f-20 me-3">
-                      <a href="javascript:" ngbTooltip="Edit">
-                        <i antIcon type="edit" theme="outline" class="text-success f-20 wid-20"></i>
-                      </a>
-                    </li>
-                    <li class="d-inline-block f-20">
-                      <a href="javascript:" ngbTooltip="Delete">
-                        <i antIcon type="delete" theme="outline" class="text-danger f-20 wid-20"></i>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
               </div>
-              <div class="">
-                <p><b>hello john doe,</b></p>
-                <p>
-                  you need to create
-                  <strong>"toolbar-options" div only once</strong>
-                  in a page in your code, this div fill found
-                  <strong>every "td"</strong>
-                  tag in your page, just remove those things.
-                </p>
-                <p>
-                  and also, in option button add
-                  <strong>"p-0" class in "I" tag</strong>
-                  to
-                </p>
-                <p>Thanks...</p>
+
+              <div>
+                <p><b>Περιγραφή:</b></p>
+                <p>{{ ticket.description }}</p>
               </div>
-              @if (list.uploadImage === true) {
-                <div class="row text-center mb-2">
-                  @for (images of img; track images) {
-                    <div class="col-xl-2 col-lg-3 col-sm-4 col-xs-12">
-                      <img src="{{ images.image }}" class="img-fluid m-b-10" />
-                    </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body border-top">
+          <h6 class="mb-3">Σχόλια</h6>
+
+          <div class="mb-3">
+            <textarea class="form-control" rows="3" [(ngModel)]="commentMessage" placeholder="Γράψε σχόλιο..."></textarea>
+          </div>
+
+          <div class="d-flex gap-2 mb-4">
+            <button type="button" class="btn btn-sm btn-light-success" (click)="submitComment('REPLY')" [disabled]="submittingComment">
+              <i class="me-2" antIcon type="message"></i>
+              Απάντηση
+            </button>
+
+            @if (canSeeInternalNote()) {
+              <button
+                type="button"
+                class="btn btn-sm btn-light-warning"
+                (click)="submitComment('INTERNAL_NOTE')"
+                [disabled]="submittingComment"
+              >
+                <i class="me-2" antIcon type="edit"></i>
+                Εσωτερική σημείωση
+              </button>
+            }
+          </div>
+
+          @if (comments.length === 0) {
+            <p class="text-muted">Δεν υπάρχουν σχόλια ακόμα.</p>
+          }
+
+          @for (comment of comments; track comment.id) {
+            <div class="border rounded p-3 mb-3">
+              <div class="d-flex justify-content-between mb-2">
+                <div>
+                  <strong>{{ comment.createdByName }}</strong>
+
+                  @if (comment.type === 'INTERNAL_NOTE') {
+                    <span class="badge bg-light-warning ms-2">Εσωτερική σημείωση</span>
+                  } @else {
+                    <span class="badge bg-light-success ms-2">Απάντηση</span>
                   }
                 </div>
-              }
+
+                <small class="text-muted">
+                  {{ formatDate(comment.createdAt) }}
+                </small>
+              </div>
+
+              <p class="mb-0">{{ comment.message }}</p>
             </div>
-          </div>
-        </div>
-      }
-    </div>
-  </div>
-  <div class="col-lg-4">
-    <div class="card">
-      <div class="card-header">
-        <h5>Ticket Details</h5>
-      </div>
-      <div class="card-body">
-        <div class="alert alert-success d-block text-center text-uppercase">
-          <i class="feather icon-check-circle me-2"></i>
-          Verified Purchase
-        </div>
-        <div class="select-block">
-          <div class="mb-2">
-            <select class="form-control col-sm-12">
-              <option>Open</option>
-              <option>Close</option>
-              <option>CLosed Forever</option>
-            </select>
-          </div>
-          <div class="mb-2">
-            <select class="form-control col-sm-12">
-              <option value="avatar-5">Jack Pall</option>
-              <option value="avatar-4">Liza Mac</option>
-              <option value="avatar-3">Lina Hop</option>
-              <option value="avatar-2">Sam Hunk</option>
-              <option value="avatar-1">Jhon White</option>
-            </select>
-          </div>
-          <div class="mb-2">
-            <select class="form-control col-sm-12">
-              <option value="prod-1">Able Admin</option>
-              <option value="prod-2">Guru Dash</option>
-              <option value="prod-3">Able pro</option>
-              <option value="prod-4">Able Dash</option>
-              <option value="prod-5">Dash Able</option>
-            </select>
-          </div>
+          }
         </div>
       </div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">
-          <div class="d-flex align-items-center">
-            <div class="flex-shrink-0">
-              <label class="mb-0 wid-100">Customer</label>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-header">
+          <h5>Λεπτομέρειες</h5>
+        </div>
+
+        <div class="card-body">
+          @if (canChangeStatus()) {
+            <div class="mb-3">
+              <label class="form-label">Κατάσταση Ticket</label>
+              <select class="form-select" [(ngModel)]="selectedStatus" (change)="onStatusChange()">
+                @for (status of statuses; track status) {
+                  <option [ngValue]="status">
+                    {{ getStatusLabel(status) }}
+                  </option>
+                }
+              </select>
             </div>
-            <div class="flex-grow-1 ms-3">
-              <div class="d-flex align-items-center gap-1">
-                <img src="assets/images/user/avatar-5.jpg" alt="" class="wid-20 rounded me-1 img-fluid" />
-                <a href="javascript:" class="link-secondary">Jack Pall</a>
+          } @else {
+            <div class="mb-3">
+              <label class="form-label">Κατάσταση Ticket</label>
+              <input class="form-control" [value]="getStatusLabel(ticket.status)" readonly />
+            </div>
+          }
+
+          @if (canAssignAgent()) {
+            <div class="mb-3">
+              <label class="form-label">Ανάθεση σε Agent</label>
+              <select class="form-select" [(ngModel)]="selectedAgentId" (change)="onAssignAgent()">
+                <option [ngValue]="null">-- Επιλογή Agent --</option>
+                @for (agent of agents; track agent.id) {
+                  <option [ngValue]="agent.id">
+                    {{ agent.fullName }}
+                  </option>
+                }
+              </select>
+            </div>
+          }
+        </div>
+
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <div class="d-flex align-items-center">
+              <div class="flex-shrink-0">
+                <label class="mb-0 wid-100">Αιτών</label>
+              </div>
+              <div class="flex-grow-1 ms-3">
+                <a href="javascript:" class="link-secondary">{{ ticket.createdByName }}</a>
               </div>
             </div>
-          </div>
-        </li>
-        <li class="list-group-item">
-          <div class="d-flex align-items-center">
-            <div class="flex-shrink-0">
-              <label class="mb-0 wid-100">Contact</label>
-            </div>
-            <div class="flex-grow-1 ms-3">
-              <div class="d-flex align-items-center gap-1">
-                <i class="me-1" antIcon type="mail" theme="outline"></i>
-                <a href="javascript:" class="link-secondary">mail&#64;mail.com</a>
+          </li>
+
+          <li class="list-group-item">
+            <div class="d-flex align-items-center">
+              <div class="flex-shrink-0">
+                <label class="mb-0 wid-100">Κατηγορία</label>
+              </div>
+              <div class="flex-grow-1 ms-3">
+                <a href="javascript:" class="link-secondary">{{ getCategoryLabel(ticket.category) }}</a>
               </div>
             </div>
-          </div>
-        </li>
-        <li class="list-group-item">
-          <div class="d-flex align-items-center">
-            <div class="flex-shrink-0">
-              <label class="mb-0 wid-100">Category</label>
-            </div>
-            <div class="flex-grow-1 ms-3">
-              <div class="d-flex align-items-center gap-1">
-                <img src="assets/images/admin/p1.jpg" class="wid-20 rounded me-1 img-fluid" />
-                <a href="javascript:" class="link-secondary">Alpha pro</a>
+          </li>
+
+          <li class="list-group-item">
+            <div class="d-flex align-items-center">
+              <div class="flex-shrink-0">
+                <label class="mb-0 wid-100">Προτεραιότητα</label>
+              </div>
+              <div class="flex-grow-1 ms-3">
+                <label class="mb-0">{{ getPriorityLabel(ticket.priority) }}</label>
               </div>
             </div>
-          </div>
-        </li>
-        <li class="list-group-item">
-          <div class="d-flex align-items-center">
-            <div class="flex-shrink-0">
-              <label class="mb-0 wid-100">Assigned</label>
-            </div>
-            <div class="flex-grow-1 ms-3">
-              <div class="d-flex align-items-center gap-1">
-                <img src="assets/images/user/avatar-4.jpg" class="wid-20 rounded me-1 img-fluid" />
-                <a href="javascript:" class="link-secondary">Lina Hop</a>
+          </li>
+
+          <li class="list-group-item">
+            <div class="d-flex align-items-center">
+              <div class="flex-shrink-0">
+                <label class="mb-0 wid-100">Αποδέκτης</label>
+              </div>
+              <div class="flex-grow-1 ms-3">
+                <label class="mb-0">{{ getTargetRoleLabel(ticket.targetRole) }}</label>
               </div>
             </div>
-          </div>
-        </li>
-        <li class="list-group-item">
-          <div class="d-flex align-items-center">
-            <div class="flex-shrink-0">
-              <label class="mb-0 wid-100">Created</label>
-            </div>
-            <div class="flex-grow-1 ms-3">
-              <div class="d-flex align-items-center gap-1">
-                <i class="me-1 d-flex" antIcon type="calendar" theme="outline"></i>
-                <label class="mb-0">Date</label>
+          </li>
+
+          <li class="list-group-item">
+            <div class="d-flex align-items-center">
+              <div class="flex-shrink-0">
+                <label class="mb-0 wid-100">Agent</label>
+              </div>
+              <div class="flex-grow-1 ms-3">
+                <label class="mb-0">{{ ticket.assignedAgentName || '-' }}</label>
               </div>
             </div>
-          </div>
-        </li>
-        <li class="list-group-item">
-          <div class="d-flex align-items-center">
-            <div class="flex-shrink-0">
-              <label class="mb-0 wid-100">Response</label>
-            </div>
-            <div class="flex-grow-1 ms-3">
-              <div class="d-flex align-items-center gap-1">
-                <i class="me-1" antIcon type="clock-circle" theme="outline"></i>
-                <label class="mb-0">Time</label>
+          </li>
+
+          <li class="list-group-item">
+            <div class="d-flex align-items-center">
+              <div class="flex-shrink-0">
+                <label class="mb-0 wid-100">Πολυκατοικία</label>
+              </div>
+              <div class="flex-grow-1 ms-3">
+                <label class="mb-0">{{ ticket.buildingName }}</label>
               </div>
             </div>
-          </div>
-        </li>
-        <li class="list-group-item py-3">
-          <button type="button" class="btn btn-sm btn-light-warning me-2">
-            <i class="me-2" antIcon type="like" theme="outline"></i>
-            Make Private
-          </button>
-          <button type="button" class="btn btn-sm btn-light-danger">
-            <i class="me-2" antIcon type="delete" theme="outline"></i>
-            Delete
-          </button>
-        </li>
-      </ul>
+          </li>
+
+          @if (ticket.apartmentLabel) {
+            <li class="list-group-item">
+              <div class="d-flex align-items-center">
+                <div class="flex-shrink-0">
+                  <label class="mb-0 wid-100">Διαμέρισμα</label>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <label class="mb-0">{{ ticket.apartmentLabel }}</label>
+                </div>
+              </div>
+            </li>
+          }
+
+          <li class="list-group-item">
+            <div class="d-flex align-items-center">
+              <div class="flex-shrink-0">
+                <label class="mb-0 wid-100">Δημιουργία</label>
+              </div>
+              <div class="flex-grow-1 ms-3">
+                <div class="d-flex align-items-center gap-1">
+                  <i class="me-1 d-flex" antIcon type="calendar" theme="outline"></i>
+                  <label class="mb-0">{{ formatDate(ticket.createdAt) }}</label>
+                </div>
+              </div>
+            </div>
+          </li>
+
+          <li class="list-group-item">
+            <div class="d-flex align-items-center">
+              <div class="flex-shrink-0">
+                <label class="mb-0 wid-100">Τελευταία ενημέρωση</label>
+              </div>
+              <div class="flex-grow-1 ms-3">
+                <div class="d-flex align-items-center gap-1">
+                  <i class="me-1" antIcon type="clock-circle" theme="outline"></i>
+                  <label class="mb-0">{{ formatDate(ticket.updatedAt) }}</label>
+                </div>
+              </div>
+            </div>
+          </li>
+
+          <li class="list-group-item py-3">
+            <button type="button" class="btn btn-sm btn-light-danger" (click)="onDeleteTicket()" [disabled]="deleting">
+              <i class="me-2" antIcon type="delete" theme="outline"></i>
+              Διαγραφή
+            </button>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
-</div>
+}
