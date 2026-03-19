@@ -15,13 +15,13 @@ import {
 
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { StatisticsChartComponent } from 'src/app/theme/shared/apexchart/statistics-chart/statistics-chart.component';
 import { StateChartComponent } from './state-chart/state-chart.component';
 import { ActivityChartComponent } from './activity-chart/activity-chart.component';
+import { PmStatisticsChartComponent } from 'src/app/theme/shared/apexchart/pm-statistics-chart/pm-statistics-chart.component';
 
 @Component({
   selector: 'app-membership-dashboard',
-  imports: [SharedModule, StatisticsChartComponent, StateChartComponent, ActivityChartComponent],
+  imports: [SharedModule, PmStatisticsChartComponent, StateChartComponent, ActivityChartComponent],
   templateUrl: './membership-dashboard.component.html',
   styleUrl: './membership-dashboard.component.scss'
 })

@@ -72,3 +72,17 @@ export interface PmMembershipStatsDTO {
   joinedMembers: number;
   unassignedApartments: number;
 }
+
+export interface PmBuildingManagerRowDTO {
+  buildingId: number;
+  buildingName: string;
+  buildingCode: string;
+  city: string;
+
+  managerId: number | null;
+  managerFullName: string | null;
+  managerEmail: string | null;
+  managerPhone: string | null;
+
+  managerAssigned: boolean;
+}

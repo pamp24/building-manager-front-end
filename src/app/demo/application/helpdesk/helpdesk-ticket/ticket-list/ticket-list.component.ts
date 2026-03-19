@@ -1,170 +1,278 @@
-// angular import
-import { Component, TemplateRef, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+import { finalize } from 'rxjs';
+import { RouterModule } from '@angular/router';
 
-// project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { ScrollbarComponent } from 'src/app/theme/shared/components/scrollbar/scrollbar.component';
+import { SupportTicketCategory, SupportTicketResponse } from 'src/app/theme/shared/models/supportTicket';
+import { SupportTicketService } from 'src/app/theme/shared/service/supportTicket.service';
 
-// bootstrap import
-import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-
-// third party
-import { QuillModule } from 'ngx-quill';
-
-// icons
 import { IconService } from '@ant-design/icons-angular';
-import {
-  AppstoreOutline,
-  BarsOutline,
-  CalendarOutline,
-  CheckOutline,
-  DeleteOutline,
-  EditOutline,
-  EyeOutline,
-  HeartFill,
-  LinkOutline,
-  LockFill,
-  MenuOutline,
-  MessageOutline
-} from '@ant-design/icons-angular/icons';
+import { AppstoreOutline, BarsOutline, CalendarOutline, EyeOutline, MenuOutline } from '@ant-design/icons-angular/icons';
+
+type TicketCategorySummary = {
+  name: string;
+  number: number;
+  background: string;
+};
+
+type PropertyAgentSummary = {
+  id: number;
+  name: string;
+  src: string;
+  openTickets: number;
+  totalTickets: number;
+  background?: string;
+};
+
 @Component({
   selector: 'app-ticket-list',
-  imports: [SharedModule, QuillModule, ScrollbarComponent],
+  standalone: true,
+  imports: [CommonModule, SharedModule, RouterModule],
   templateUrl: './ticket-list.component.html',
   styleUrl: './ticket-list.component.scss'
 })
-export class TicketListComponent {
+export class TicketListComponent implements OnInit {
   private iconService = inject(IconService);
+  private supportTicketService = inject(SupportTicketService);
 
-  // public props
-  selectedView = 'large-view';
-  offcanvasService = inject(NgbOffcanvas);
+  selectedView = 'md-view';
+  loading = false;
+  errorMessage = '';
 
-  // constructor
+  ticketCards: SupportTicketResponse[] = [];
+  categorySummary: TicketCategorySummary[] = [];
+
+  assignedAgentId?: number | null;
+  assignedAgentName?: string | null;
+
   constructor() {
-    this.iconService.addIcon(
-      ...[
-        AppstoreOutline,
-        BarsOutline,
-        MenuOutline,
-        HeartFill,
-        CalendarOutline,
-        MessageOutline,
-        DeleteOutline,
-        EditOutline,
-        CheckOutline,
-        LinkOutline,
-        EyeOutline,
-        LockFill
-      ]
-    );
+    this.iconService.addIcon(...[AppstoreOutline, BarsOutline, MenuOutline, CalendarOutline, EyeOutline]);
   }
 
-  // public methods
-  addContact(content: TemplateRef<string>) {
-    this.offcanvasService.open(content, { position: 'end', panelClass: 'active-width' });
+  ngOnInit(): void {
+    this.loadInboxTickets();
   }
 
-  ticketCards = [
-    {
-      name: 'John lui'
-    },
-    {
-      type: 'open-ticket',
-      name: 'John pal'
-    },
-    {
-      type: 'close-ticket',
-      name: 'John doe'
+  loadInboxTickets(): void {
+    this.loading = true;
+    this.errorMessage = '';
+
+    this.supportTicketService
+      .getListViewTickets()
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe({
+        next: (response: SupportTicketResponse[]) => {
+          this.ticketCards = response ?? [];
+          this.categorySummary = this.buildCategorySummary(this.ticketCards);
+
+          this.agents = this.buildAgentSummary(this.ticketCards, [
+            { id: 1, name: 'Property Agent 1', src: 'assets/images/user/avatar-1.jpg' },
+            { id: 2, name: 'Property Agent 2', src: 'assets/images/user/avatar-2.jpg' },
+            { id: 3, name: 'Property Agent 3', src: 'assets/images/user/avatar-3.jpg' }
+          ]);
+        },
+        error: (error) => {
+          this.errorMessage = error?.error?.message || 'Αποτυχία φόρτωσης tickets.';
+          this.ticketCards = [];
+          this.categorySummary = [];
+        }
+      });
+  }
+
+  getCardClass(ticket: SupportTicketResponse): string {
+    if (ticket.status === 'CLOSED' || ticket.status === 'RESOLVED') {
+      return 'close-ticket';
     }
+
+    if (ticket.status === 'OPEN' || ticket.status === 'IN_PROGRESS' || ticket.status === 'WAITING_FOR_RESIDENT') {
+      return 'open-ticket';
+    }
+
+    return '';
+  }
+
+  getStatusBadgeClass(status: string): string {
+    switch (status) {
+      case 'OPEN':
+        return 'bg-light-primary';
+      case 'IN_PROGRESS':
+        return 'bg-light-warning';
+      case 'WAITING_FOR_RESIDENT':
+        return 'bg-light-info';
+      case 'RESOLVED':
+        return 'bg-light-success';
+      case 'CLOSED':
+        return 'bg-light-secondary';
+      case 'REJECTED':
+        return 'bg-light-danger';
+      default:
+        return 'bg-light-secondary';
+    }
+  }
+
+  getPriorityBadgeClass(priority: string): string {
+    switch (priority) {
+      case 'LOW':
+        return 'bg-light-secondary';
+      case 'MEDIUM':
+        return 'bg-light-info';
+      case 'HIGH':
+        return 'bg-light-warning';
+      case 'URGENT':
+        return 'bg-light-danger';
+      default:
+        return 'bg-light-secondary';
+    }
+  }
+
+  getStatusLabel(status: string): string {
+    switch (status) {
+      case 'OPEN':
+        return 'Ανοιχτό';
+      case 'IN_PROGRESS':
+        return 'Σε Εξέλιξη';
+      case 'WAITING_FOR_RESIDENT':
+        return 'Αναμονή από κάτοικο';
+      case 'RESOLVED':
+        return 'Επιλύθηκε';
+      case 'CLOSED':
+        return 'Κλειστό';
+      case 'REJECTED':
+        return 'Απορρίφθηκε';
+      default:
+        return status;
+    }
+  }
+
+  getPriorityLabel(priority: string): string {
+    switch (priority) {
+      case 'LOW':
+        return 'Χαμηλή';
+      case 'MEDIUM':
+        return 'Μεσαία';
+      case 'HIGH':
+        return 'Υψηλή';
+      case 'URGENT':
+        return 'Επείγουσα';
+      default:
+        return priority;
+    }
+  }
+
+  getCategoryLabel(category: string): string {
+    switch (category) {
+      case 'MAINTENANCE':
+        return 'Συντήρηση';
+      case 'PAYMENTS':
+        return 'Πληρωμές';
+      case 'DOCUMENTS':
+        return 'Έγγραφα';
+      case 'COMPLAINT':
+        return 'Παράπονο';
+      case 'CLEANING':
+        return 'Καθαρισμός';
+      case 'HEATING':
+        return 'Θέρμανση';
+      case 'ELEVATOR':
+        return 'Ασανσέρ';
+      case 'PLUMBING':
+        return 'Υδραυλικά';
+      case 'ELECTRICAL':
+        return 'Ηλεκτρολογικά';
+      case 'OTHER':
+        return 'Άλλο';
+      default:
+        return category;
+    }
+  }
+
+  private readonly allCategories: SupportTicketCategory[] = [
+    'MAINTENANCE',
+    'PAYMENTS',
+    'DOCUMENTS',
+    'COMPLAINT',
+    'CLEANING',
+    'HEATING',
+    'ELEVATOR',
+    'PLUMBING',
+    'ELECTRICAL',
+    'OTHER'
   ];
 
-  tickets = [
-    {
-      src: 'assets/images/admin/p1.jpg',
-      name: 'Piaf able',
-      background: 'bg-light-danger',
-      number: '1',
-      type: 'border-bottom pb-3'
-    },
-    {
-      src: 'assets/images/admin/p2.jpg',
-      name: 'Pro able',
-      type: 'border-bottom pb-3 pt-3'
-    },
-    {
-      src: 'assets/images/admin/p3.jpg',
-      name: 'CRM admin',
-      background: 'bg-light-danger',
-      number: '1',
-      type: 'border-bottom pb-3 pt-3'
-    },
-    {
-      src: 'assets/images/admin/p4.jpg',
-      name: 'Alpha Pro',
-      type: 'border-bottom pb-3 pt-3'
-    },
-    {
-      src: 'assets/images/admin/p5.jpg',
-      name: 'Carbon able',
-      type: 'pb-3'
+  formatDate(dateString: string | null | undefined): string {
+    if (!dateString) {
+      return '-';
     }
-  ];
 
-  agents = [
+    return new Date(dateString).toLocaleString('el-GR');
+  }
+
+  private buildCategorySummary(items: SupportTicketResponse[]): TicketCategorySummary[] {
+    const openTickets = items.filter((ticket) => ticket.status === 'OPEN');
+
+    const categoryMap = new Map<SupportTicketCategory, number>();
+
+    openTickets.forEach((ticket) => {
+      categoryMap.set(ticket.category, (categoryMap.get(ticket.category) ?? 0) + 1);
+    });
+
+    return this.allCategories.map((category) => {
+      const count = categoryMap.get(category) ?? 0;
+
+      return {
+        name: this.getCategoryLabel(category),
+        number: count,
+        background: count > 0 ? 'bg-light-primary' : 'bg-light-secondary'
+      };
+    });
+  }
+
+  agents: PropertyAgentSummary[] = [
     {
-      src: 'assets/images/user/avatar-5.jpg',
-      name: 'Tom Cook',
-      background: 'bg-light-danger',
-      number: '1'
-    },
-    {
-      src: 'assets/images/user/avatar-4.jpg',
-      name: 'Brad Larry',
-      background: 'bg-light-danger',
-      number: '1'
-    },
-    {
-      src: 'assets/images/user/avatar-3.jpg',
-      name: 'John White'
-    },
-    {
-      src: 'assets/images/user/avatar-2.jpg',
-      name: 'Mark Jobs'
-    },
-    {
+      id: 1,
+      name: 'Property Agent 1',
       src: 'assets/images/user/avatar-1.jpg',
-      name: 'Able Pro'
-    }
-  ];
-
-  profiles = [
-    {
-      src: 'assets/images/user/avatar-5.jpg',
-      uploadImage: false
+      openTickets: 0,
+      totalTickets: 0,
+      background: 'bg-light-primary'
     },
     {
-      src: 'assets/images/user/avatar-4.jpg',
-      uploadImage: true
+      id: 2,
+      name: 'Property Agent 2',
+      src: 'assets/images/user/avatar-2.jpg',
+      openTickets: 0,
+      totalTickets: 0,
+      background: 'bg-light-warning'
     },
     {
+      id: 3,
+      name: 'Property Agent 3',
       src: 'assets/images/user/avatar-3.jpg',
-      uploadImage: false
+      openTickets: 0,
+      totalTickets: 0,
+      background: 'bg-light-success'
     }
   ];
 
-  img = [
-    {
-      image: 'assets/images/light-box/sl2.jpg'
-    },
-    {
-      image: 'assets/images/light-box/sl5.jpg'
-    },
-    {
-      image: 'assets/images/light-box/sl6.jpg'
-    },
-    {
-      image: 'assets/images/light-box/sl1.jpg'
-    }
-  ];
+  private buildAgentSummary(
+    tickets: SupportTicketResponse[],
+    baseAgents: { id: number; name: string; src: string }[]
+  ): PropertyAgentSummary[] {
+    return baseAgents.map((agent) => {
+      const agentTickets = tickets.filter((ticket) => ticket.assignedAgentId === agent.id);
+      const openTickets = agentTickets.filter(
+        (ticket) => ticket.status === 'OPEN' || ticket.status === 'IN_PROGRESS' || ticket.status === 'WAITING_FOR_RESIDENT'
+      ).length;
+
+      return {
+        id: agent.id,
+        name: agent.name,
+        src: agent.src,
+        openTickets,
+        totalTickets: agentTickets.length,
+        background: openTickets > 0 ? 'bg-light-primary' : 'bg-light-secondary'
+      };
+    });
+  }
 }

@@ -8,11 +8,12 @@ import {
   HomeOutline
 } from '@ant-design/icons-angular/icons';
 import { PmMembershipStatsDTO } from 'src/app/theme/shared/models/pmDashboardDTO';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
 
 @Component({
   selector: 'app-membership-stats-widget',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SharedModule],
   templateUrl: './membership-stats-widget.component..html',
   styleUrl: './membership-stats-widget.component.scss'
 })
@@ -51,7 +52,7 @@ export class MembershipStatsWidgetComponent {
         className: 'stat-success'
       },
       {
-        title: 'Χωρίς Ανάθεση',
+        title: 'Διαμέρισμα Χωρίς Ανάθεση',
         value: this.stats?.unassignedApartments ?? 0,
         icon: 'home',
         className: 'stat-danger'

@@ -1,88 +1,98 @@
 <div class="row">
   <div class="col-sm-12">
-    <app-card [showHeader]="false">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-6">
-            <div class="mb-3">
-              <label class="form-label">Customer</label>
-              <select class="mb-3 form-select">
-                <option>Default select</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-sm-6">
-            <div class="mb-3">
-              <label class="form-label">Category</label>
-              <select class="mb-3 form-select">
-                <option>Default select</option>
-              </select>
-            </div>
-          </div>
+    <app-card cardTitle="Δημιουργία Αιτήματος Υποστήριξης">
+      @if (submitSuccess) {
+        <div class="alert alert-success">Το αίτημα υποβλήθηκε με επιτυχία.</div>
+      }
+
+      @if (errorMessage) {
+        <div class="alert alert-danger">
+          {{ errorMessage }}
         </div>
-        <div class="mb-3">
-          <label class="form-label" for="exampleInputPassword1">Subject</label>
-          <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Enter Subject" />
-        </div>
-        <div class="mb-3">
-          <label class="form-label" for="exampleInputPassword1">Description</label>
-          <quill-editor class="w-100">
-            <div quill-editor-toolbar>
-              <span class="ql-formats">
-                <select class="ql-header" [title]="'header'">
-                  <option value="1"></option>
-                  <option value="2"></option>
-                  <option value="3"></option>
-                  <option value="4"></option>
-                  <option value="5"></option>
-                  <option value="6"></option>
-                  <option selected="selected"></option>
-                </select>
-              </span>
-              <span class="ql-formats">
-                <button class="ql-bold" [title]="'Bold'"></button>
-                <button class="ql-underline" [title]="'Italic'"></button>
-                <button class="ql-italic" [title]="'strike'"></button>
-                <button class="ql-link" [title]="'link'"></button>
-              </span>
-              <span class="ql-formats">
-                <button class="ql-list" value="ordered"></button>
-                <button class="ql-list" value="bullet"></button>
-              </span>
-              <span class="ql-formats">
-                <button class="ql-clean"></button>
-              </span>
-            </div>
-          </quill-editor>
-        </div>
-        <file-upload [control]="control" class="p-4">
-          <ng-template let-isFileDragDropAvailable="isFileDragDropAvailable" #placeholder>
-            @if (control.size === 0) {
-              <div class="upload-text">
-                @if (isFileDragDropAvailable) {
-                  <ng-container>Drag File Here To Upload</ng-container>
-                } @else {
-                  <ng-template></ng-template>
-                }
-              </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Αποδέκτης Αιτήματος</label>
+          <select class="form-select" formControlName="targetRole">
+            <option [ngValue]="null">Επιλέξτε αποδέκτη</option>
+            @for (target of availableTargetRoles; track target.value) {
+              <option [value]="target.value">{{ target.label }}</option>
             }
-          </ng-template>
-          <ng-template let-i="index" let-file="file" let-control="control" #item>
-            <div class="overlay">
-              <span class="delete-button" (click)="control.removeFile(file)">
-                <i antIcon type="delete" theme="outline"></i>
-              </span>
-              @if (control.valid) {
-                <img [src]="uploadedFile | async" />
-              }
-            </div>
-          </ng-template>
-        </file-upload>
-        <div class="text-end mt-4">
-          <button type="submit" class="btn btn-outline-secondary me-2">Clear</button>
-          <button type="submit" class="btn btn-primary">Submit</button>
+          </select>
+          @if (targetRole?.invalid && targetRole?.touched) {
+            <small class="text-danger">Ο αποδέκτης είναι υποχρεωτικός.</small>
+          }
         </div>
-      </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Πολυκατοικία</label>
+            <select class="form-select" formControlName="buildingId">
+              <option [ngValue]="null">Επιλέξτε πολυκατοικία</option>
+              @for (building of buildings; track building.id) {
+                <option [ngValue]="building.id">{{ building.name }}</option>
+              }
+            </select>
+            @if (buildingId?.invalid && buildingId?.touched) {
+              <small class="text-danger">Η πολυκατοικία είναι υποχρεωτική.</small>
+            }
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Διαμέρισμα (προαιρετικό)</label>
+            <select class="form-select" formControlName="apartmentId" [disabled]="!form.get('buildingId')?.value || loadingApartments">
+              <option [ngValue]="null">Επιλέξτε διαμέρισμα</option>
+              @for (apartment of apartments; track apartment.id) {
+                <option [ngValue]="apartment.id">{{ apartment.label }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Κατηγορία</label>
+            <select class="form-select" formControlName="category">
+              @for (category of categories; track category.value) {
+                <option [value]="category.value">{{ category.label }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Προτεραιότητα</label>
+            <select class="form-select" formControlName="priority">
+              @for (priority of priorities; track priority.value) {
+                <option [value]="priority.value">{{ priority.label }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Θέμα</label>
+          <input type="text" class="form-control" formControlName="title" placeholder="Εισάγετε θέμα" />
+          @if (title?.invalid && title?.touched) {
+            <small class="text-danger">Το θέμα είναι υποχρεωτικό.</small>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Περιγραφή</label>
+          <textarea rows="6" class="form-control" formControlName="description" placeholder="Περιγράψτε το πρόβλημα"></textarea>
+          @if (description?.invalid && description?.touched) {
+            <small class="text-danger">Η περιγραφή είναι υποχρεωτική.</small>
+          }
+        </div>
+
+        <div class="text-end">
+          <button type="button" class="btn btn-outline-secondary me-2" (click)="clearForm()">Καθαρισμός</button>
+
+          <button type="submit" class="btn btn-primary" [disabled]="submitting">
+            {{ submitting ? 'Υποβολή...' : 'Υποβολή Αιτήματος' }}
+          </button>
+        </div>
+      </form>
     </app-card>
   </div>
 </div>

@@ -17,38 +17,29 @@ import {
 } from '@ant-design/icons-angular/icons';
 import { NgbCalendar, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { IconService } from '@ant-design/icons-angular';
-import { StatisticsChartComponent } from 'src/app/theme/shared/apexchart/statistics-chart/statistics-chart.component';
-import { TotalRevenueLineChartComponent } from './total-revenue-line-chart/total-revenue-line-chart.component';
-import { StudentStatesChartComponent } from './student-states-chart/student-states-chart.component';
-import { ActivityLineChartComponent } from './activity-line-chart/activity-line-chart.component';
-import { VisitorsBarChartComponent } from './visitors-bar-chart/visitors-bar-chart.component';
-import { EarningCoursesLineChartComponent } from './earning-courses-line-chart/earning-courses-line-chart.component';
 import { PmDashboardService } from 'src/app/theme/shared/service/pm-dashboard.service';
-import { PmDashboardDTO, PmFinancialChartDTO, PmMembershipStatsDTO } from 'src/app/theme/shared/models/pmDashboardDTO';
+import { PmBuildingManagerRowDTO, PmDashboardDTO, PmFinancialChartDTO, PmMembershipStatsDTO } from 'src/app/theme/shared/models/pmDashboardDTO';
 import { ExpenseCollectionRateChartComponent } from './expense-collection-rate-chart/expense-collection-rate-chart.component';
 import { AttentionBuildingsTableComponent } from './attention-buildings-table/attention-buildings-table.component';
 import { RecentActivityComponent } from './recent-activity/recent-activity.component';
 import { NotificationsWidgetComponent } from './notifications-widget/notifications-widget.component';
 import { QuickActionsComponent } from './quick-actions/quick-actions.component';
 import { MembershipStatsWidgetComponent } from './membership-stats-widget/membership-stats-widget.component';
+import { PmBuildingManagersTableComponent } from './pm-building-managers-table/pm-building-managers-table.component';
+import { PmStatisticsChartComponent } from 'src/app/theme/shared/apexchart/pm-statistics-chart/pm-statistics-chart.component';
 
 @Component({
   selector: 'app-pm-dashboard',
   imports: [
     SharedModule,
-    StatisticsChartComponent,
+    PmStatisticsChartComponent,
     ExpenseCollectionRateChartComponent,
     AttentionBuildingsTableComponent,
-    TotalRevenueLineChartComponent,
-    StudentStatesChartComponent,
-    ActivityLineChartComponent,
-    VisitorsBarChartComponent,
-    EarningCoursesLineChartComponent,
     RecentActivityComponent,
     NotificationsWidgetComponent,
     QuickActionsComponent,
     MembershipStatsWidgetComponent,
-    
+    PmBuildingManagersTableComponent
   ],
   templateUrl: './pm-dashboard.component.html',
   styleUrl: './pm-dashboard.component.scss'
@@ -74,6 +65,7 @@ export class PmDashboardComponent implements OnInit {
   chartPeriod = 'month';
 
   membershipStats: PmMembershipStatsDTO | null = null;
+  buildingManagers: PmBuildingManagerRowDTO[] = [];
 
   // calender
   model1!: string;
@@ -102,6 +94,7 @@ export class PmDashboardComponent implements OnInit {
   ngOnInit(): void {
     this.loadFinancialChart();
     this.loadMembershipStats();
+    this.loadBuildingManagers();
     this.pmDashboardService.getDashboard().subscribe({
       next: (data) => {
         this.dashboardData = data;
@@ -143,6 +136,17 @@ export class PmDashboardComponent implements OnInit {
       }
     });
   }
+
+  loadBuildingManagers(): void {
+  this.pmDashboardService.getBuildingManagers().subscribe({
+    next: (res) => {
+      this.buildingManagers = res;
+    },
+    error: (err) => {
+      console.error('Failed to load building managers', err);
+    }
+  });
+}
 
   loadMembershipStats(): void {
     this.pmDashboardService.getMembershipStats().subscribe({
