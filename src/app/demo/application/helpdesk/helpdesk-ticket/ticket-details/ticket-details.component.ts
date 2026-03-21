@@ -27,6 +27,7 @@ import {
   UserOutline
 } from '@ant-design/icons-angular/icons';
 import { finalize } from 'rxjs';
+import { AuthenticationService } from 'src/app/theme/shared/service/authentication.service';
 
 @Component({
   selector: 'app-ticket-details',
@@ -71,7 +72,7 @@ export class TicketDetailsComponent implements OnInit {
   assigningAgent = false;
   deleting = false;
 
-  constructor() {
+  constructor(private authenticationService: AuthenticationService) {
     this.iconService.addIcon(
       ...[
         StarOutline,
@@ -349,8 +350,8 @@ export class TicketDetailsComponent implements OnInit {
       return false;
     }
 
-    const currentUserId = Number(localStorage.getItem('userId'));
-    return this.ticket.createdByUserId === currentUserId;
+    const currentUserId = this.getCurrentUserId();
+    return currentUserId != null && this.ticket.createdByUserId === currentUserId;
   }
 
   isManagedByPropertyManager(): boolean {
@@ -362,7 +363,19 @@ export class TicketDetailsComponent implements OnInit {
       return false;
     }
 
-    return !this.isCurrentUserCreator();
+    if (this.isCurrentUserCreator()) {
+      return false;
+    }
+
+    const role = this.getCurrentUserRole();
+    const userId = this.getCurrentUserId();
+
+    return (
+      ((role === 'BuildingManager' || role === 'BUILDING_MANAGER') && this.ticket.targetRole === 'BUILDING_MANAGER') ||
+      ((role === 'PropertyManager' || role === 'PROPERTY_MANAGER') && this.ticket.targetRole === 'PROPERTY_MANAGER') ||
+      (role === 'Admin' && this.ticket.targetRole === 'ADMIN') ||
+      ((role === 'PropertyAgent' || role === 'PROPERTY_AGENT') && this.ticket.assignedAgentId === userId)
+    );
   }
 
   canAssignAgent(): boolean {
@@ -370,7 +383,13 @@ export class TicketDetailsComponent implements OnInit {
       return false;
     }
 
-    return !this.isCurrentUserCreator() && this.isManagedByPropertyManager();
+    if (this.isCurrentUserCreator()) {
+      return false;
+    }
+
+    const role = this.getCurrentUserRole();
+
+    return (role === 'PropertyManager' || role === 'PROPERTY_MANAGER') && this.ticket.targetRole === 'PROPERTY_MANAGER';
   }
 
   canSeeInternalNote(): boolean {
@@ -378,6 +397,22 @@ export class TicketDetailsComponent implements OnInit {
       return false;
     }
 
-    return !this.isCurrentUserCreator() && this.isManagedByPropertyManager();
+    if (this.isCurrentUserCreator()) {
+      return false;
+    }
+
+    const role = this.getCurrentUserRole();
+
+    return (role === 'PropertyManager' || role === 'PROPERTY_MANAGER') && this.ticket.targetRole === 'PROPERTY_MANAGER';
+  }
+
+  getCurrentUserId(): number | null {
+    const currentUser = this.authenticationService.currentUserValue;
+    return currentUser?.id ?? null;
+  }
+
+  getCurrentUserRole(): string | null {
+    const currentUser = this.authenticationService.currentUserValue;
+    return currentUser?.role ?? null;
   }
 }

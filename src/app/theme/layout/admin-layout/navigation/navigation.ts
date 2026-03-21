@@ -1,9 +1,6 @@
 import { Role } from 'src/app/theme/shared/components/_helpers/role';
 import { NavigationItem } from 'src/app/theme/shared/models/navigation';
 
-
-
-
 export const NavigationItems: NavigationItem[] = [
   {
     id: 'property-management',
@@ -31,8 +28,8 @@ export const NavigationItems: NavigationItem[] = [
         title: 'Buildings',
         type: 'item',
         classes: 'nav-item',
-        url: '/pm/buildings',
-      },
+        url: '/pm/buildings'
+      }
     ]
   },
   {
@@ -149,36 +146,24 @@ export const NavigationItems: NavigationItem[] = [
         children: [
           {
             id: 'dashboard',
-            title: 'Dashboard',
+            title: 'Ticket Dashboard',
             type: 'item',
             url: '/helpdesk/dashboard',
+            role: [Role.Admin, Role.PropertyManager, Role.BuildingManager,]
+          },
+          {
+            id: 'create ticket',
+            title: 'Create Ticket',
+            type: 'item',
+            url: '/helpdesk/ticket/create',
             role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
           },
           {
-            id: 'ticket',
-            title: 'Ticket',
-            type: 'collapse',
-            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
-            children: [
-              {
-                id: 'create',
-                title: 'Create',
-                type: 'item',
-                url: '/helpdesk/ticket/create'
-              },
-              {
-                id: 'list',
-                title: 'List',
-                type: 'item',
-                url: '/helpdesk/ticket/list'
-              },
-            ]
-          },
-          {
-            id: 'customer',
-            title: 'Customer',
+            id: 'list',
+            title: 'List Tickets',
             type: 'item',
-            url: '/helpdesk/customer'
+            url: '/helpdesk/ticket/list',
+            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
           }
         ]
       },

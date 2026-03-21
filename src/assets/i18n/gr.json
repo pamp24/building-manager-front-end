@@ -172,5 +172,8 @@
   "Company": "Εταιρεία",
   "Buildings": "Πολυκατοικίες",
   "Property Manager's Dashboard": "Πίνακας Ελέγχου Διαχειριστή Ακινήτων",
-  "Company's Dashboard": "Πίνακας Ελέγχου Εταιρείας"
+  "Company's Dashboard": "Πίνακας Ελέγχου Εταιρείας",
+  "Create Ticket": "Δημιουργία Αιτήματος",
+  "List Tickets": "Λίστα Αιτημάτων",
+  "Ticket Dashboard": "Πίνακας Ελέγχου Αιτημάτων"
 }

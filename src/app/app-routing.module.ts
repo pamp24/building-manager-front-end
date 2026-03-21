@@ -172,13 +172,6 @@ const routes: Routes = [
         }
       },
       {
-        path: 'e-commerce',
-        loadChildren: () => import('./demo/application/e-commerce/e-commerce.module').then((m) => m.ECommerceModule),
-        data: {
-          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
-        }
-      },
-      {
         path: 'form',
         loadChildren: () => import('./demo/forms/forms-elements/forms-elements.module').then((m) => m.FormsElementsModule),
         data: {
