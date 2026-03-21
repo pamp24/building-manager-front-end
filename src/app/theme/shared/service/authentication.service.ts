@@ -99,6 +99,10 @@ export class AuthenticationService {
     this.currentUser = user; // refresh runtime value
   }
 
+  getCurrentUserRole(): string | null {
+    return localStorage.getItem('role');
+  }
+
   refreshCurrentUser(): Observable<User> {
     return this.userService.getCurrentUser().pipe(
       tap((user) => {

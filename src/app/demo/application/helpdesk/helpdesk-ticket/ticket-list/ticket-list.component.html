@@ -21,6 +21,30 @@
       </div>
     </div>
 
+    @if (canSelectBuilding() && buildings.length > 0) {
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="row align-items-end">
+            <div class="col-md-6">
+              <label class="form-label">Πολυκατοικία</label>
+              <select class="form-select" [(ngModel)]="selectedBuildingId" (change)="onBuildingChange()">
+                @for (building of buildings; track building.id) {
+                  <option [ngValue]="building.id">
+                    {{ building.name }}
+                  </option>
+                }
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Διεύθυνση Πολυκατοικίας</label>
+              <input type="text" class="form-control readonly-input" [value]="getSelectedBuildingAddress()" readonly />
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
     @if (loading) {
       <div class="card">
         <div class="card-body">
@@ -161,10 +185,10 @@
                 <a href="javascript:" class="link-secondary">{{ agent.name }}</a>
               </div>
               <div class="float-end">
-                <a href="javascript:" class="badge rounded-circle me-1" [ngClass]="agent.background" title="Ανοιχτά Tickets">
+                <a href="javascript:" class="badge rounded-circle me-1" [ngClass]="agent.background">
                   {{ agent.openTickets }}
                 </a>
-                <a href="javascript:" class="badge bg-light-secondary rounded-circle me-0" title="Σύνολο Tickets">
+                <a href="javascript:" class="badge bg-light-secondary rounded-circle me-0">
                   {{ agent.totalTickets }}
                 </a>
               </div>

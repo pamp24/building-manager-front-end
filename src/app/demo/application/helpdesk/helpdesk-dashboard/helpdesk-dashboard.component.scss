@@ -1,36 +1,49 @@
-::ng-deep.feed-card {
-  .card-body {
-    padding-left: 25px;
-    &.py-0 {
-      padding-left: 12px !important;
+.summary-card {
+  border: 0;
+  box-shadow: 0 2px 12px rgba(16, 24, 40, 0.06);
+  border-radius: 14px;
+}
 
-      ::ng-deep.mantis-rtl & {
-        padding-right: 12px !important;
-        padding-left: 0px !important;
-      }
-    }
-    .border-feed {
-      transition: all 0.3s ease-in-out;
-      position: relative;
-      i {
-        position: absolute;
-        top: calc(50% - 20px);
-        left: 0;
-        right: 0;
-        text-align: center;
-        color: #fff;
-        transition: all 0.3s ease-in-out;
-      }
-    }
-  }
-  &:hover {
-    .border-feed.bg-primary {
-      background-color: rgba(24, 144, 255, 0.3) !important;
-      color: var(--bs-primary);
+.summary-label {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
 
-      i {
-        color: var(--bs-primary);
-      }
-    }
-  }
+.summary-value {
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.table-card :global(.card),
+.table-card {
+  border-radius: 14px;
+}
+
+.quick-stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid #eef2f7;
+}
+
+.quick-stat-title {
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.quick-stat-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.badge {
+  font-weight: 500;
+}
+
+.table > :not(caption) > * > * {
+  vertical-align: middle;
 }

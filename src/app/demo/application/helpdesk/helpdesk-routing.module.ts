@@ -20,13 +20,6 @@ const routes: Routes = [
           roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
         }
       },
-      {
-        path: 'customer',
-        loadComponent: () => import('./helpdesk-customer/helpdesk-customer.component').then((c) => c.HelpdeskCustomerComponent),
-        data: {
-          roles: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
-        }
-      }
     ]
   }
 ];

@@ -1,0 +1,79 @@
+<app-card [cardTitle]="title" cardClass="table-card">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Τίτλος</th>
+          <th>Πολυκατοικία</th>
+          <th>Κατηγορία</th>
+          <th>Προτεραιότητα</th>
+          <th>Status</th>
+          @if (showAgentColumn) {
+            <th>Agent</th>
+          }
+          <th>Ενημέρωση</th>
+          <th>Ενέργειες</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @if (tickets.length === 0) {
+          <tr>
+            <td [attr.colspan]="showAgentColumn ? 9 : 8" class="text-center text-muted py-4">
+              {{ emptyMessage }}
+            </td>
+          </tr>
+        }
+
+        @for (ticket of tickets; track trackByTicketId($index, ticket)) {
+          <tr>
+            <td class="fw-semibold">{{ ticket.ticketNumber }}</td>
+
+            <td>
+              <div class="fw-semibold">{{ ticket.title }}</div>
+              <small class="text-muted">Από {{ ticket.createdByName }}</small>
+            </td>
+
+            <td>{{ ticket.buildingName }}</td>
+
+            <td>{{ getCategoryLabel(ticket.category) }}</td>
+
+            <td>
+              <span class="badge rounded-pill {{ getPriorityBadgeClass(ticket.priority) }}">
+                {{ getPriorityLabel(ticket.priority) }}
+              </span>
+            </td>
+
+            <td>
+              <span class="badge rounded-pill {{ getStatusBadgeClass(ticket.status) }}">
+                {{ getStatusLabel(ticket.status) }}
+              </span>
+            </td>
+
+            @if (showAgentColumn) {
+              <td>
+                @if (ticket.assignedAgentName) {
+                  {{ ticket.assignedAgentName }}
+                } @else {
+                  <span class="text-danger">Μη ανατεθειμένο</span>
+                }
+              </td>
+            }
+
+            <td>{{ formatDate(ticket.updatedAt) }}</td>
+
+            <td>
+              <a
+                class="btn btn-sm btn-outline-primary"
+                [routerLink]="[detailsRoute, ticket.id]"
+              >
+                Προβολή
+              </a>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</app-card>

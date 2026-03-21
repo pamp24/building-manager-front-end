@@ -9,6 +9,9 @@ import { SupportTicketService } from 'src/app/theme/shared/service/supportTicket
 
 import { IconService } from '@ant-design/icons-angular';
 import { AppstoreOutline, BarsOutline, CalendarOutline, EyeOutline, MenuOutline } from '@ant-design/icons-angular/icons';
+import { FormsModule } from '@angular/forms';
+import { BuildingService } from 'src/app/theme/shared/service/building.service';
+import { AuthenticationService } from 'src/app/theme/shared/service';
 
 type TicketCategorySummary = {
   name: string;
@@ -25,10 +28,18 @@ type PropertyAgentSummary = {
   background?: string;
 };
 
+type TicketBuildingOption = {
+  id: number;
+  name: string;
+  street1?: string | null;
+  stNumber1?: string | null;
+  city?: string | null;
+};
+
 @Component({
   selector: 'app-ticket-list',
   standalone: true,
-  imports: [CommonModule, SharedModule, RouterModule],
+  imports: [CommonModule, SharedModule, RouterModule, FormsModule],
   templateUrl: './ticket-list.component.html',
   styleUrl: './ticket-list.component.scss'
 })
@@ -45,16 +56,22 @@ export class TicketListComponent implements OnInit {
 
   assignedAgentId?: number | null;
   assignedAgentName?: string | null;
+  buildings: TicketBuildingOption[] = [];
+  selectedBuildingId: number | null = null;
 
-  constructor() {
+  constructor(private buildingService: BuildingService, private authenticationService: AuthenticationService) {
     this.iconService.addIcon(...[AppstoreOutline, BarsOutline, MenuOutline, CalendarOutline, EyeOutline]);
   }
 
   ngOnInit(): void {
-    this.loadInboxTickets();
+    if (this.canSelectBuilding()) {
+      this.loadBuildings();
+    } else {
+      this.loadListTickets();
+    }
   }
 
-  loadInboxTickets(): void {
+  loadListTickets(): void {
     this.loading = true;
     this.errorMessage = '';
 
@@ -78,6 +95,79 @@ export class TicketListComponent implements OnInit {
           this.categorySummary = [];
         }
       });
+  }
+
+  loadTicketsByBuilding(buildingId: number): void {
+    this.loading = true;
+    this.errorMessage = '';
+
+    this.supportTicketService
+      .getListViewTickets()
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe({
+        next: (response: SupportTicketResponse[]) => {
+          const filtered = (response ?? []).filter((ticket) => ticket.buildingId === buildingId);
+
+          this.ticketCards = filtered;
+          this.categorySummary = this.buildCategorySummary(this.ticketCards);
+
+          this.agents = this.buildAgentSummary(this.ticketCards, [
+            { id: 1, name: 'Property Agent 1', src: 'assets/images/user/avatar-1.jpg' },
+            { id: 2, name: 'Property Agent 2', src: 'assets/images/user/avatar-2.jpg' },
+            { id: 3, name: 'Property Agent 3', src: 'assets/images/user/avatar-3.jpg' }
+          ]);
+        },
+        error: (error) => {
+          this.errorMessage = error?.error?.message || 'Αποτυχία φόρτωσης tickets.';
+          this.ticketCards = [];
+          this.categorySummary = [];
+          this.agents = [];
+        }
+      });
+  }
+  getCurrentUserRole(): string | null {
+  const currentUser = this.authenticationService.currentUserValue;
+  const role = currentUser?.role ?? null;
+  return role ? role.trim().toUpperCase().replace(' ', '_') : null;
+}
+
+  canSelectBuilding(): boolean {
+    const role = this.getCurrentUserRole();
+    return role === 'PROPERTYMANAGER' || role === 'PROPERTY_MANAGER' || role === 'ADMIN';
+  }
+
+  getSelectedBuildingAddress(): string {
+    const building = this.buildings.find((b) => b.id === this.selectedBuildingId);
+
+    if (!building) {
+      return '-';
+    }
+
+    return `${building.street1 || ''} ${building.stNumber1 || ''}, ${building.city || ''}`.trim();
+  }
+
+  onBuildingChange(): void {
+    if (this.selectedBuildingId == null) {
+      return;
+    }
+
+    this.loadTicketsByBuilding(this.selectedBuildingId);
+  }
+
+  loadBuildings(): void {
+    this.buildingService.getMyCompanyBuildings().subscribe({
+      next: (response) => {
+        this.buildings = response ?? [];
+
+        if (this.buildings.length > 0) {
+          this.selectedBuildingId = this.buildings[0].id;
+          this.loadTicketsByBuilding(this.selectedBuildingId);
+        }
+      },
+      error: () => {
+        this.buildings = [];
+      }
+    });
   }
 
   getCardClass(ticket: SupportTicketResponse): string {

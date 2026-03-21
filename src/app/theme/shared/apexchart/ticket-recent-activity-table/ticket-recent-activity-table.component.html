@@ -1,0 +1,50 @@
+<app-card [cardTitle]="title" cardClass="table-card">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Ticket</th>
+          <th>Κτίριο</th>
+          <th>Status</th>
+          <th>Κατηγορία</th>
+          <th>Τελευταία ενημέρωση</th>
+          <th>Ενέργειες</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (tickets.length === 0) {
+          <tr>
+            <td colspan="6" class="text-center text-muted py-4">
+              {{ emptyMessage }}
+            </td>
+          </tr>
+        }
+
+        @for (ticket of tickets; track trackByTicketId($index, ticket)) {
+          <tr>
+            <td>
+              <div class="fw-semibold">{{ ticket.title }}</div>
+              <small class="text-muted">{{ ticket.ticketNumber }}</small>
+            </td>
+            <td>{{ ticket.buildingName }}</td>
+            <td>
+              <span class="badge rounded-pill {{ getStatusBadgeClass(ticket.status) }}">
+                {{ getStatusLabel(ticket.status) }}
+              </span>
+            </td>
+            <td>{{ getCategoryLabel(ticket.category) }}</td>
+            <td>{{ formatDate(ticket.updatedAt) }}</td>
+            <td>
+              <a
+                class="btn btn-sm btn-link text-primary p-0"
+                [routerLink]="[detailsRoute, ticket.id]"
+              >
+                Άνοιγμα
+              </a>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</app-card>

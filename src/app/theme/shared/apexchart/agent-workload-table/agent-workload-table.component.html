@@ -1,0 +1,40 @@
+<app-card [cardTitle]="title" cardClass="table-card">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Agent</th>
+          <th>Ενεργά</th>
+          <th>Ολοκληρωμένα</th>
+          <th>Σύνολο</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (rows.length === 0) {
+          <tr>
+            <td colspan="4" class="text-center text-muted py-4">
+              {{ emptyMessage }}
+            </td>
+          </tr>
+        }
+
+        @for (agent of rows; track trackByAgentId($index, agent)) {
+          <tr>
+            <td class="fw-semibold">{{ agent.agentName }}</td>
+            <td>
+              <span class="badge bg-light-warning text-warning rounded-pill">
+                {{ agent.activeTickets }}
+              </span>
+            </td>
+            <td>
+              <span class="badge bg-light-success text-success rounded-pill">
+                {{ agent.completedTickets }}
+              </span>
+            </td>
+            <td>{{ agent.totalTickets }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</app-card>

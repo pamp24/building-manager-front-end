@@ -27,6 +27,7 @@ import { QuickActionsComponent } from './quick-actions/quick-actions.component';
 import { MembershipStatsWidgetComponent } from './membership-stats-widget/membership-stats-widget.component';
 import { PmBuildingManagersTableComponent } from './pm-building-managers-table/pm-building-managers-table.component';
 import { PmStatisticsChartComponent } from 'src/app/theme/shared/apexchart/pm-statistics-chart/pm-statistics-chart.component';
+import { TicketRecentActivityTableComponent } from 'src/app/theme/shared/apexchart/ticket-recent-activity-table/ticket-recent-activity-table.component';
 
 @Component({
   selector: 'app-pm-dashboard',
@@ -39,7 +40,8 @@ import { PmStatisticsChartComponent } from 'src/app/theme/shared/apexchart/pm-st
     NotificationsWidgetComponent,
     QuickActionsComponent,
     MembershipStatsWidgetComponent,
-    PmBuildingManagersTableComponent
+    PmBuildingManagersTableComponent,
+    TicketRecentActivityTableComponent
   ],
   templateUrl: './pm-dashboard.component.html',
   styleUrl: './pm-dashboard.component.scss'
