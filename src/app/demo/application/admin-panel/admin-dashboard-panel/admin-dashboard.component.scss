@@ -1,0 +1,262 @@
+.building-health-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.health-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #eef2f7;
+}
+
+.health-label {
+  font-weight: 600;
+}
+
+.health-subtext {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-top: 2px;
+}
+
+.health-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.apartment-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.apartment-summary-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.apartment-summary-item.total {
+  padding-top: 8px;
+  border-top: 1px solid #eef2f7;
+}
+
+.summary-title {
+  font-size: 0.88rem;
+  color: #6c757d;
+}
+
+.summary-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.dot-success {
+  background: #52c41a;
+}
+
+.dot-secondary {
+  background: #d9d9d9;
+}
+.issue-alert-card {
+  height: 100%;
+  padding: 18px;
+  border-radius: 14px;
+  border: 1px solid #eef2f7;
+  transition: all 0.2s ease;
+}
+
+.issue-alert-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+}
+
+.issue-alert-card.danger {
+  border-left: 4px solid #ff4d4f;
+}
+
+.issue-alert-card.warning {
+  border-left: 4px solid #faad14;
+}
+
+.issue-alert-card.primary {
+  border-left: 4px solid #1677ff;
+}
+
+.issue-alert-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.issue-alert-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.issue-status {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #6c757d;
+}
+
+.issue-alert-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.issue-alert-value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.issue-alert-desc {
+  font-size: 0.88rem;
+  color: #6c757d;
+  line-height: 1.4;
+}
+
+.engagement-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.engagement-box {
+  display: flex;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid #eef2f7;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.engagement-box.full-width {
+  grid-column: 1 / -1;
+}
+
+.engagement-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.engagement-title {
+  font-size: 0.92rem;
+  color: #6c757d;
+  margin-bottom: 6px;
+}
+
+.engagement-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.engagement-value.small {
+  font-size: 1.3rem;
+  margin-bottom: 0;
+}
+
+.engagement-desc {
+  font-size: 0.85rem;
+  color: #8c8c8c;
+  line-height: 1.35;
+}
+
+.invite-summary-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.invite-total-box {
+  padding: 18px;
+  border-radius: 14px;
+  background: #f8f9fa;
+  border: 1px solid #eef2f7;
+  margin-bottom: 18px;
+}
+
+.invite-total-label {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin-bottom: 8px;
+}
+
+.invite-total-value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.invite-metric-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #eef2f7;
+}
+
+.invite-metric-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #495057;
+}
+
+.invite-metric-value {
+  font-weight: 700;
+}
+
+.growth-box {
+  height: 100%;
+  padding: 18px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid #eef2f7;
+}
+
+.growth-label {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin-bottom: 8px;
+}
+
+.growth-value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.growth-desc {
+  font-size: 0.85rem;
+  color: #8c8c8c;
+}

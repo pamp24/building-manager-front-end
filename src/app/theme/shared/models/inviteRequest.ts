@@ -1,6 +1,5 @@
 export interface inviteRequest {
   email: string;
-  role: 'Resident' | 'Owner';
-  apartmentId: number;
-
+  role: string;
+  apartmentId?: number | null;
 }

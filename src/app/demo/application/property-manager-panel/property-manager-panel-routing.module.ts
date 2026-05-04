@@ -31,6 +31,11 @@ const routes: Routes = [
           role: [Role.Admin, Role.PropertyManager],
           breadcrumb: 'Δημιουργία Νέας Πολυκατοικίας'
         }
+      },
+      {
+        path: 'support-agents',
+        loadComponent: () => import('./property-agent-management/support-agents-management.component').then((c) => c.SupportAgentsManagementComponent),
+        data: { role: [Role.Admin, Role.PropertyManager] }
       }
     ]
   }
