@@ -2,12 +2,37 @@ import { Role } from 'src/app/theme/shared/components/_helpers/role';
 import { NavigationItem } from 'src/app/theme/shared/models/navigation';
 
 export const NavigationItems: NavigationItem[] = [
+    {
+    id: 'Admin',
+    title: 'Admin\'s Dashboard',
+    type: 'group',
+    icon: 'icon-navigation',
+    role: [Role.Admin],
+    children: [
+      {
+        id: 'dashboard',
+        title: "Admin's Dashboard",
+        type: 'item',
+        classes: 'nav-item',
+        url: '/admin'
+      },
+      {
+        id: 'finance',
+        title: 'Finance',
+        type: 'item',
+        classes: 'nav-item',
+        icon: 'dollar',
+        url: '/dashboard/finance'
+      },
+
+    ]
+  },
   {
     id: 'property-management',
     title: 'Property Manager Panel',
     type: 'group',
     icon: 'icon-navigation',
-    role: [Role.Admin, Role.PropertyManager],
+    role: [Role.PropertyManager],
     children: [
       {
         id: 'dashboard',
@@ -29,15 +54,22 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         classes: 'nav-item',
         url: '/pm/buildings'
+      },
+      {
+        id: 'support-agents',
+        title: 'Support Agents',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/pm/support-agents'
       }
     ]
   },
   {
-    id: 'admin',
+    id: 'Building Manager',
     title: 'Building Manager Panel',
     type: 'group',
     icon: 'icon-navigation',
-    role: [Role.Admin, Role.BuildingManager],
+    role: [Role.BuildingManager, Role.PropertyAgent],
     children: [
       {
         id: 'dashboard',
@@ -68,7 +100,7 @@ export const NavigationItems: NavigationItem[] = [
     type: 'group',
     classes: 'first-group',
     icon: 'icon-navigation',
-    role: [Role.Admin, Role.BuildingManager, Role.User, Role.Owner, Role.Resident],
+    role: [Role.BuildingManager, Role.User, Role.Owner, Role.Resident, Role.PropertyAgent],
     children: [
       {
         id: 'default',
@@ -78,7 +110,7 @@ export const NavigationItems: NavigationItem[] = [
         icon: 'dashboard',
         url: '/dashboard/default',
         breadcrumbs: false,
-        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident, Role.PropertyAgent]
       },
       {
         id: 'finance',
@@ -87,7 +119,7 @@ export const NavigationItems: NavigationItem[] = [
         classes: 'nav-item',
         icon: 'dollar',
         url: '/dashboard/finance',
-        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident, Role.PropertyAgent]
       },
       {
         id: 'Data-Input',
@@ -106,7 +138,7 @@ export const NavigationItems: NavigationItem[] = [
         classes: 'nav-item',
         icon: 'database',
         url: '/user/account-profile',
-        role: [Role.Admin, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+        role: [Role.Admin, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident, Role.PropertyAgent]
       },
       {
         id: 'calendar',
@@ -115,7 +147,7 @@ export const NavigationItems: NavigationItem[] = [
         classes: 'nav-item',
         url: '/calendar',
         icon: 'calendar',
-        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident, Role.PropertyAgent]
       },
       {
         id: 'polls',
@@ -124,7 +156,7 @@ export const NavigationItems: NavigationItem[] = [
         classes: 'nav-item',
         url: '/polls',
         icon: 'line-chart',
-        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident, Role.PropertyAgent]
       }
     ]
   },
@@ -134,7 +166,7 @@ export const NavigationItems: NavigationItem[] = [
     title: 'Other',
     type: 'group',
     icon: 'icon-navigation',
-    role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+    role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident, Role.PropertyAgent],
     children: [
       {
         id: 'helpdesk',
@@ -142,28 +174,28 @@ export const NavigationItems: NavigationItem[] = [
         type: 'collapse',
         icon: 'question-circle',
         isMainParent: true,
-        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident],
+        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident, Role.PropertyAgent],
         children: [
           {
             id: 'dashboard',
             title: 'Ticket Dashboard',
             type: 'item',
             url: '/helpdesk/dashboard',
-            role: [Role.Admin, Role.PropertyManager, Role.BuildingManager,]
+            role: [Role.Admin, Role.PropertyManager, Role.BuildingManager, Role.PropertyAgent]
           },
           {
             id: 'create ticket',
             title: 'Create Ticket',
             type: 'item',
             url: '/helpdesk/ticket/create',
-            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident, Role.PropertyAgent]
           },
           {
             id: 'list',
             title: 'List Tickets',
             type: 'item',
             url: '/helpdesk/ticket/list',
-            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident, Role.PropertyAgent]
           }
         ]
       },

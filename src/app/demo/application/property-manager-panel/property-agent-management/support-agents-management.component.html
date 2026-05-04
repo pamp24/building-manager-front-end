@@ -1,0 +1,166 @@
+@if (loading) {
+  <div class="card">
+    <div class="card-body">Φόρτωση υπαλλήλων...</div>
+  </div>
+}
+
+@if (errorMessage) {
+  <div class="alert alert-danger">{{ errorMessage }}</div>
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4>Υπάλληλοι Υποστήριξης</h4>
+
+  <button class="btn btn-primary" (click)="openInviteModal()">
+  Πρόσκληση Υπαλληλού Υποστήριξης
+</button>
+</div>
+
+<app-card cardTitle="Υπάλληλοι" cardClass="table-card">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead>
+        <tr>
+          <th>Όνομα</th>
+          <th>Email</th>
+          <th>Πολυκατοικίες</th>
+          <th>Πλήθος</th>
+          <th class="text-end">Ενέργειες</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (agent of agents; track trackByAgentId($index, agent)) {
+          <tr>
+            <td class="fw-semibold">{{ agent.fullName }}</td>
+            <td>{{ agent.email }}</td>
+            <td>{{ getBuildingsLabel(agent) }}</td>
+            <td>{{ agent.assignedBuildings.length }}</td>
+
+            <td class="text-end">
+              <button
+                class="btn btn-sm btn-outline-primary me-2"
+                (click)="openAssignModal(agent)">
+                Ανάθεση
+              </button>
+
+              <button
+                class="btn btn-sm btn-outline-danger"
+                (click)="removeAgent(agent.id)">
+                Αφαίρεση
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</app-card>
+
+<!-- MODAL -->
+@if (showModal && selectedAgent) {
+  <div class="modal-backdrop-custom">
+    <div class="modal-card">
+
+      <h5 class="mb-3">
+        Ανάθεση Πολυκατοικιών
+        <br />
+        <small class="text-muted">{{ selectedAgent.fullName }}</small>
+      </h5>
+
+      <div class="building-list">
+        @for (b of buildings; track b.id) {
+          <div class="form-check mb-2">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              [checked]="isSelected(b.id)"
+              (change)="toggleBuilding(b.id)"
+            />
+            <label class="form-check-label">
+              {{ b.name || ('Building #' + b.id) }}
+            </label>
+          </div>
+        }
+      </div>
+
+      <div class="d-flex justify-content-end mt-3">
+        <button class="btn btn-light me-2" (click)="closeAssignModal()">Ακύρωση</button>
+        <button class="btn btn-primary" (click)="saveAssignments()">Αποθήκευση</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showModal && selectedAgent) {
+  <div class="modal-backdrop-custom">
+    <div class="modal-card">
+      <h5 class="mb-3">
+        Ανάθεση Πολυκατοικιών
+        <br />
+        <small class="text-muted">{{ selectedAgent.fullName }}</small>
+      </h5>
+
+      <div class="building-list">
+        @for (b of buildings; track b.id) {
+          <div class="form-check mb-2">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              [checked]="isSelected(b.id)"
+              (change)="toggleBuilding(b.id)"
+            />
+            <label class="form-check-label">
+              {{ b.name || ('Building #' + b.id) }}
+            </label>
+          </div>
+        }
+      </div>
+
+      <div class="d-flex justify-content-end mt-3">
+        <button class="btn btn-light me-2" (click)="closeAssignModal()">Ακύρωση</button>
+        <button class="btn btn-primary" (click)="saveAssignments()">Αποθήκευση</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showInviteModal) {
+  <div class="modal-backdrop-custom">
+    <div class="modal-card">
+      <h5 class="mb-3">Πρόσκληση Υπαλληλού Υποστήριξης</h5>
+
+      @if (inviteErrorMessage) {
+        <div class="alert alert-danger py-2">
+          {{ inviteErrorMessage }}
+        </div>
+      }
+
+      @if (inviteSuccessMessage) {
+        <div class="alert alert-success py-2">
+          {{ inviteSuccessMessage }}
+        </div>
+      }
+
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input
+          type="email"
+          class="form-control"
+          [(ngModel)]="inviteEmail"
+          placeholder="agent@example.com"
+        />
+      </div>
+
+      <div class="d-flex justify-content-end mt-3">
+        <button class="btn btn-light me-2" (click)="closeInviteModal()">
+          Ακύρωση
+        </button>
+
+        <button class="btn btn-primary" (click)="sendInvite()" [disabled]="inviteLoading">
+          {{ inviteLoading ? 'Αποστολή...' : 'Αποστολή Πρόσκλησης' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
