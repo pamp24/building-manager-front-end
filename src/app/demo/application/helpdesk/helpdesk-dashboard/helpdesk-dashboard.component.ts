@@ -19,7 +19,6 @@ import { SupportTicketService } from 'src/app/theme/shared/service/supportTicket
 import { AuthenticationService } from 'src/app/theme/shared/service';
 import { TicketRecentActivityTableComponent } from 'src/app/theme/shared/apexchart/ticket-recent-activity-table/ticket-recent-activity-table.component';
 import { TicketActionTableComponent } from 'src/app/theme/shared/apexchart/ticket-action-table/ticket-action-table.component';
-import { AgentWorkloadTableComponent } from 'src/app/theme/shared/apexchart/agent-workload-table/agent-workload-table.component';
 
 interface DashboardSummary {
   total: number;
@@ -46,7 +45,6 @@ interface AgentWorkloadRow {
     RouterModule,
     TicketRecentActivityTableComponent,
     TicketActionTableComponent,
-    AgentWorkloadTableComponent
   ],
   templateUrl: './helpdesk-dashboard.component.html',
   styleUrl: './helpdesk-dashboard.component.scss'

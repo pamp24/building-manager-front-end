@@ -172,100 +172,76 @@
           }
         </ul>
       </div>
-
-      <div class="card">
-        <div class="card-header pt-4 pb-4">
-          <h5>Support Agents</h5>
-        </div>
-        <ul class="list-group list-group-flush pb-2">
-          @for (agent of agents; track agent.id) {
-            <li class="list-group-item">
-              <div class="d-inline-block">
-                <img [src]="agent.src" alt="agent-img" class="wid-20 rounded me-1 img-fluid" />
-                <a href="javascript:" class="link-secondary">{{ agent.name }}</a>
-              </div>
-              <div class="float-end">
-                <a href="javascript:" class="badge rounded-circle me-1" [ngClass]="agent.background">
-                  {{ agent.openTickets }}
-                </a>
-                <a href="javascript:" class="badge bg-light-secondary rounded-circle me-0">
-                  {{ agent.totalTickets }}
-                </a>
-              </div>
-            </li>
-          }
-        </ul>
-      </div>
     </div>
   </div>
-</div>
 
-<ng-template #content let-offcanvas>
-  <div class="offcanvas-header border-bottom">
-    <h5 class="modal-title">
-      {{ selectedTicket?.title }}
-      @if (selectedTicket) {
-        <span class="badge ms-2" [ngClass]="getStatusBadgeClass(selectedTicket.status)">
-          {{ getStatusLabel(selectedTicket.status) }}
-        </span>
-      }
-    </h5>
-    <button type="button" class="btn-close" aria-label="Close" (click)="offcanvas.dismiss('Cross click')"></button>
-  </div>
-
-  <app-scrollbar [customStyle]="'calc(100vh - 90px)'">
-    <div class="offcanvas-body border-bottom px-4">
-      <div class="row">
-        <div class="col-md-7">
-          @if (selectedTicket) {
-            <span class="badge me-1" [ngClass]="getPriorityBadgeClass(selectedTicket.priority)">
-              {{ getPriorityLabel(selectedTicket.priority) }}
-            </span>
-            <span class="badge me-1 bg-light-secondary">
-              {{ getCategoryLabel(selectedTicket.category) }}
-            </span>
-          }
-        </div>
-        <div class="col-md-5 text-end">
-          <p class="d-inline-block mb-0">
-            <i class="wid-20 text-center f-16 me-2" antIcon type="calendar" theme="outline"></i>
-            <label class="mb-0">{{ formatDate(selectedTicket?.createdAt) }}</label>
-          </p>
-        </div>
-      </div>
+  <ng-template #content let-offcanvas>
+    <div class="offcanvas-header border-bottom">
+      <h5 class="modal-title">
+        {{ selectedTicket?.title }}
+        @if (selectedTicket) {
+          <span class="badge ms-2" [ngClass]="getStatusBadgeClass(selectedTicket.status)">
+            {{ getStatusLabel(selectedTicket.status) }}
+          </span>
+        }
+      </h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="offcanvas.dismiss('Cross click')"></button>
     </div>
 
-    <div class="offcanvas-body border-bottom px-4">
-      <div class="row">
-        <div class="col">
-          <div class="mb-3">
-            <h6>Αριθμός Αιτήματος</h6>
-            <p class="mb-0">{{ selectedTicket?.ticketNumber }}</p>
+    <app-scrollbar [customStyle]="'calc(100vh - 90px)'">
+      <div class="offcanvas-body border-bottom px-4">
+        <div class="row">
+          <div class="col-md-7">
+            @if (selectedTicket) {
+              <span class="badge me-1" [ngClass]="getPriorityBadgeClass(selectedTicket.priority)">
+                {{ getPriorityLabel(selectedTicket.priority) }}
+              </span>
+              <span class="badge me-1 bg-light-secondary">
+                {{ getCategoryLabel(selectedTicket.category) }}
+              </span>
+            }
           </div>
-
-          <div class="mb-3">
-            <h6>Δημιουργός</h6>
-            <p class="mb-0">{{ selectedTicket?.createdByName }}</p>
+          <div class="col-md-5 text-end">
+            <p class="d-inline-block mb-0">
+              <i class="wid-20 text-center f-16 me-2" antIcon type="calendar" theme="outline"></i>
+              <label class="mb-0">{{ formatDate(selectedTicket?.createdAt) }}</label>
+            </p>
           </div>
+        </div>
+      </div>
 
-          <div class="mb-3">
-            <h6>Κτήριο</h6>
-            <p class="mb-0">{{ selectedTicket?.buildingName }}</p>
-          </div>
-
-          @if (selectedTicket?.apartmentLabel) {
+      <div class="offcanvas-body border-bottom px-4">
+        <div class="row">
+          <div class="col">
             <div class="mb-3">
-              <h6>Διαμέρισμα</h6>
-              <p class="mb-0">{{ selectedTicket?.apartmentLabel }}</p>
+              <h6>Αριθμός Αιτήματος</h6>
+              <p class="mb-0">{{ selectedTicket?.ticketNumber }}</p>
             </div>
-          }
 
-          <div class="mb-3">
-            <h6>Περιγραφή</h6>
-            <p class="mb-0">{{ selectedTicket?.description }}</p>
+            <div class="mb-3">
+              <h6>Δημιουργός</h6>
+              <p class="mb-0">{{ selectedTicket?.createdByName }}</p>
+            </div>
+
+            <div class="mb-3">
+              <h6>Κτήριο</h6>
+              <p class="mb-0">{{ selectedTicket?.buildingName }}</p>
+            </div>
+
+            @if (selectedTicket?.apartmentLabel) {
+              <div class="mb-3">
+                <h6>Διαμέρισμα</h6>
+                <p class="mb-0">{{ selectedTicket?.apartmentLabel }}</p>
+              </div>
+            }
+
+            <div class="mb-3">
+              <h6>Περιγραφή</h6>
+              <p class="mb-0">{{ selectedTicket?.description }}</p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </app-scrollbar>
-</ng-template>
+    </app-scrollbar>
+  </ng-template>
+</div>

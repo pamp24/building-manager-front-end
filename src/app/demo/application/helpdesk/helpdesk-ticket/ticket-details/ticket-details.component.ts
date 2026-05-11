@@ -359,24 +359,25 @@ export class TicketDetailsComponent implements OnInit {
   }
 
   canChangeStatus(): boolean {
-    if (!this.ticket) {
-      return false;
-    }
-
-    if (this.isCurrentUserCreator()) {
-      return false;
-    }
-
-    const role = this.getCurrentUserRole();
-    const userId = this.getCurrentUserId();
-
-    return (
-      ((role === 'BuildingManager' || role === 'BUILDING_MANAGER') && this.ticket.targetRole === 'BUILDING_MANAGER') ||
-      ((role === 'PropertyManager' || role === 'PROPERTY_MANAGER') && this.ticket.targetRole === 'PROPERTY_MANAGER') ||
-      (role === 'Admin' && this.ticket.targetRole === 'ADMIN') ||
-      ((role === 'PropertyAgent' || role === 'PROPERTY_AGENT') && this.ticket.assignedAgentId === userId)
-    );
+  if (!this.ticket) {
+    return false;
   }
+
+  if (this.isCurrentUserCreator()) {
+    return false;
+  }
+
+  const role = this.getCurrentUserRole();
+  const userId = this.getCurrentUserId();
+
+  return (
+    ((role === 'BuildingManager' || role === 'BUILDING_MANAGER') && this.ticket.targetRole === 'BUILDING_MANAGER') ||
+    ((role === 'PropertyManager' || role === 'PROPERTY_MANAGER') && this.ticket.targetRole === 'PROPERTY_MANAGER') ||
+    ((role === 'PropertyAgent' || role === 'PROPERTY_AGENT') && this.ticket.targetRole === 'PROPERTY_MANAGER') ||
+    (role === 'Admin' && this.ticket.targetRole === 'ADMIN') ||
+    ((role === 'PropertyAgent' || role === 'PROPERTY_AGENT') && this.ticket.assignedAgentId === userId)
+  );
+}
 
   canAssignAgent(): boolean {
     if (!this.ticket) {

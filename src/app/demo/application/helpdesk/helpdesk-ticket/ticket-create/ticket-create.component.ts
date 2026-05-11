@@ -84,6 +84,8 @@ export class TicketCreateComponent implements OnInit {
 
     if (normalizedRole === 'PROPERTYMANAGER' || normalizedRole === 'PROPERTY_MANAGER') {
       this.availableTargetRoles = [{ value: 'ADMIN', label: 'Admin' }];
+    } else if (normalizedRole === 'PROPERTYAGENT' || normalizedRole === 'PROPERTY_AGENT') {
+      this.availableTargetRoles = [{ value: 'PROPERTY_MANAGER', label: 'Property Manager' }];
     } else if (normalizedRole === 'BUILDINGMANAGER' || normalizedRole === 'BUILDING_MANAGER') {
       this.availableTargetRoles = [
         { value: 'PROPERTY_MANAGER', label: 'Property Manager' },

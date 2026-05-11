@@ -4,7 +4,6 @@ import { finalize } from 'rxjs';
 import { RouterModule } from '@angular/router';
 
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { SupportTicketCategory, SupportTicketResponse } from 'src/app/theme/shared/models/supportTicket';
 import { SupportTicketService } from 'src/app/theme/shared/service/supportTicket.service';
 
 import { IconService } from '@ant-design/icons-angular';
@@ -12,6 +11,7 @@ import { AppstoreOutline, BarsOutline, CalendarOutline, EyeOutline, MenuOutline 
 import { FormsModule } from '@angular/forms';
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
 import { AuthenticationService } from 'src/app/theme/shared/service';
+import { SupportTicketCategory, SupportTicketResponse } from 'src/app/theme/shared/models/supportTicket';
 
 type TicketCategorySummary = {
   name: string;
@@ -19,14 +19,6 @@ type TicketCategorySummary = {
   background: string;
 };
 
-type PropertyAgentSummary = {
-  id: number;
-  name: string;
-  src: string;
-  openTickets: number;
-  totalTickets: number;
-  background?: string;
-};
 
 type TicketBuildingOption = {
   id: number;
@@ -59,6 +51,7 @@ export class TicketListComponent implements OnInit {
   buildings: TicketBuildingOption[] = [];
   selectedBuildingId: number | null = null;
 
+
   constructor(
     private buildingService: BuildingService,
     private authenticationService: AuthenticationService
@@ -67,19 +60,20 @@ export class TicketListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  const role = this.getCurrentUserRole();
 
-  if (role === 'ADMIN') {
-    this.loadListTickets();
-    return;
-  }
+    const role = this.getCurrentUserRole();
 
-  if (this.canSelectBuilding()) {
-    this.loadBuildings();
-  } else {
-    this.loadListTickets();
+    if (role === 'ADMIN') {
+      this.loadListTickets();
+      return;
+    }
+
+    if (this.canSelectBuilding()) {
+      this.loadBuildings();
+    } else {
+      this.loadListTickets();
+    }
   }
-}
 
   loadListTickets(): void {
     this.loading = true;
@@ -92,12 +86,6 @@ export class TicketListComponent implements OnInit {
         next: (response: SupportTicketResponse[]) => {
           this.ticketCards = response ?? [];
           this.categorySummary = this.buildCategorySummary(this.ticketCards);
-
-          this.agents = this.buildAgentSummary(this.ticketCards, [
-            { id: 1, name: 'Property Agent 1', src: 'assets/images/user/avatar-1.jpg' },
-            { id: 2, name: 'Property Agent 2', src: 'assets/images/user/avatar-2.jpg' },
-            { id: 3, name: 'Property Agent 3', src: 'assets/images/user/avatar-3.jpg' }
-          ]);
         },
         error: (error) => {
           this.errorMessage = error?.error?.message || 'Αποτυχία φόρτωσης tickets.';
@@ -120,18 +108,12 @@ export class TicketListComponent implements OnInit {
 
           this.ticketCards = filtered;
           this.categorySummary = this.buildCategorySummary(this.ticketCards);
-
-          this.agents = this.buildAgentSummary(this.ticketCards, [
-            { id: 1, name: 'Property Agent 1', src: 'assets/images/user/avatar-1.jpg' },
-            { id: 2, name: 'Property Agent 2', src: 'assets/images/user/avatar-2.jpg' },
-            { id: 3, name: 'Property Agent 3', src: 'assets/images/user/avatar-3.jpg' }
-          ]);
         },
         error: (error) => {
           this.errorMessage = error?.error?.message || 'Αποτυχία φόρτωσης tickets.';
           this.ticketCards = [];
           this.categorySummary = [];
-          this.agents = [];
+
         }
       });
   }
@@ -142,9 +124,9 @@ export class TicketListComponent implements OnInit {
   }
 
   canSelectBuilding(): boolean {
-  const role = this.getCurrentUserRole();
-  return role === 'PROPERTYMANAGER' || role === 'PROPERTY_MANAGER';
-}
+    const role = this.getCurrentUserRole();
+    return role === 'PROPERTYMANAGER' || role === 'PROPERTY_MANAGER';
+  }
 
   getSelectedBuildingAddress(): string {
     const building = this.buildings.find((b) => b.id === this.selectedBuildingId);
@@ -328,51 +310,9 @@ export class TicketListComponent implements OnInit {
     });
   }
 
-  agents: PropertyAgentSummary[] = [
-    {
-      id: 1,
-      name: 'Property Agent 1',
-      src: 'assets/images/user/avatar-1.jpg',
-      openTickets: 0,
-      totalTickets: 0,
-      background: 'bg-light-primary'
-    },
-    {
-      id: 2,
-      name: 'Property Agent 2',
-      src: 'assets/images/user/avatar-2.jpg',
-      openTickets: 0,
-      totalTickets: 0,
-      background: 'bg-light-warning'
-    },
-    {
-      id: 3,
-      name: 'Property Agent 3',
-      src: 'assets/images/user/avatar-3.jpg',
-      openTickets: 0,
-      totalTickets: 0,
-      background: 'bg-light-success'
-    }
-  ];
-
-  private buildAgentSummary(
-    tickets: SupportTicketResponse[],
-    baseAgents: { id: number; name: string; src: string }[]
-  ): PropertyAgentSummary[] {
-    return baseAgents.map((agent) => {
-      const agentTickets = tickets.filter((ticket) => ticket.assignedAgentId === agent.id);
-      const openTickets = agentTickets.filter(
-        (ticket) => ticket.status === 'OPEN' || ticket.status === 'IN_PROGRESS' || ticket.status === 'WAITING_FOR_RESIDENT'
-      ).length;
-
-      return {
-        id: agent.id,
-        name: agent.name,
-        src: agent.src,
-        openTickets,
-        totalTickets: agentTickets.length,
-        background: openTickets > 0 ? 'bg-light-primary' : 'bg-light-secondary'
-      };
-    });
+  canSeeAgentsCard(): boolean {
+    const role = this.getCurrentUserRole();
+    return role === 'PROPERTYMANAGER' || role === 'PROPERTY_MANAGER' || role === 'ADMIN';
   }
+
 }
