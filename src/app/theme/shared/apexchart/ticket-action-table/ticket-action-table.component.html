@@ -9,9 +9,6 @@
           <th>Κατηγορία</th>
           <th>Προτεραιότητα</th>
           <th>Status</th>
-          @if (showAgentColumn) {
-            <th>Agent</th>
-          }
           <th>Ενημέρωση</th>
           <th>Ενέργειες</th>
         </tr>
@@ -51,25 +48,10 @@
               </span>
             </td>
 
-            @if (showAgentColumn) {
-              <td>
-                @if (ticket.assignedAgentName) {
-                  {{ ticket.assignedAgentName }}
-                } @else {
-                  <span class="text-danger">Μη ανατεθειμένο</span>
-                }
-              </td>
-            }
-
             <td>{{ formatDate(ticket.updatedAt) }}</td>
 
             <td>
-              <a
-                class="btn btn-sm btn-outline-primary"
-                [routerLink]="[detailsRoute, ticket.id]"
-              >
-                Προβολή
-              </a>
+              <a class="btn btn-sm btn-outline-primary" [routerLink]="[detailsRoute, ticket.id]">Προβολή</a>
             </td>
           </tr>
         }

@@ -65,4 +65,6 @@ export class SupportTicketService {
   getListViewTickets(): Observable<SupportTicketResponse[]> {
     return this.http.get<SupportTicketResponse[]>(`${this.baseUrl}/list-view`);
   }
+
+
 }
