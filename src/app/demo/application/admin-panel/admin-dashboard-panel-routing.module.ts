@@ -4,9 +4,15 @@ import { Role } from 'src/app/theme/shared/components/_helpers/role';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'dashboard',
     loadComponent: () =>
       import('./admin-dashboard-panel/admin-dashboard.component').then((c) => c.AdminDashboardComponent),
+    data: { role: [Role.Admin] }
+  },
+  {
+    path: 'finance',
+    loadComponent: () =>
+      import('./admin-finance-panel/admin-finance-panel.component').then((c) => c.AdminFinancePanelComponent),
     data: { role: [Role.Admin] }
   }
 ];

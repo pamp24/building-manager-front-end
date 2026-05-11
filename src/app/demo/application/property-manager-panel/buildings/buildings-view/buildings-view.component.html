@@ -14,7 +14,7 @@
       <div class="card">
         <div class="card-header pb-0">
           <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs profile-tabs">
-            <li *ngIf="hasRole('PropertyManager') || hasRole('BuildingManager')" [ngbNavItem]="0">
+            <li *ngIf="hasRole('PropertyManager') || hasRole('BuildingManager') || hasRole('PropertyAgent') || hasRole('AdminAgent')" [ngbNavItem]="0">
               <a ngbNavLink>
                 <div class="d-flex align-items-center">
                   <i antIcon type="file-text" theme="outline" class="me-2 f-14"></i>
@@ -87,7 +87,7 @@
                 </div>
               </a>
               <ng-template ngbNavContent>
-                <app-account-setting [buildingId]="buildingId" [pmView]="true"></app-account-setting>
+                <app-calendar [buildingId]="buildingId" [pmView]="true"></app-calendar>
               </ng-template>
             </li>
 
@@ -99,7 +99,7 @@
                 </div>
               </a>
               <ng-template ngbNavContent>
-                <app-account-setting [buildingId]="buildingId" [pmView]="true"></app-account-setting>
+                <app-polls [buildingId]="buildingId" [pmView]="true"></app-polls>
               </ng-template>
             </li>
 

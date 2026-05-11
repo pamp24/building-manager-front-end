@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -11,6 +11,9 @@ import { AccountSettingComponent } from 'src/app/demo/application/user/account-p
 import { StatementDashboardComponent } from '../../../building-manager-panel/statement/statement-dashboard/statement-dashboard.component';
 import { AuthenticationService } from 'src/app/theme/shared/service';
 import { StatementListComponent } from '../../../building-manager-panel/statement/statement-list/statement-list.component';
+import { PollsComponent } from '../../../polls/polls.component';
+import { CalenderComponent } from '../../../calender/calendar.component';
+import { CalenderModule } from '../../../calender/calendar.module';
 
 @Component({
   selector: 'app-buildings-view',
@@ -24,7 +27,10 @@ import { StatementListComponent } from '../../../building-manager-panel/statemen
     UserCardComponent,
     AccountSettingComponent,
     StatementDashboardComponent,
-    StatementListComponent
+    StatementListComponent,
+    PollsComponent,
+    CalenderComponent,
+    CalenderModule,
   ],
   templateUrl: './buildings-view.component.html',
   styleUrl: './buildings-view.component.scss'
@@ -32,6 +38,7 @@ import { StatementListComponent } from '../../../building-manager-panel/statemen
 export class BuildingsViewComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private buildingService = inject(BuildingService);
+  @Input() pmView = false;
 
   activeTab = 0;
   loading = false;

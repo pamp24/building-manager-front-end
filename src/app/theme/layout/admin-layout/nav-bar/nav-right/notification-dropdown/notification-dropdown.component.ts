@@ -59,8 +59,6 @@ export class NotificationDropdownComponent implements OnInit {
       next: () => {
         this.unreadCount = 0;
         this.unreadCountChange.emit(0);
-        // αν θες να αδειάζει το badge αλλά να μένουν items:
-        // κράτα τα ίδια notifications απλά χωρίς "unread" state
       },
       error: (err) => console.error('Mark all read failed', err)
     });
@@ -144,6 +142,42 @@ export class NotificationDropdownComponent implements OnInit {
           payloadObj: p
         };
       }
+      case 'POLL_CREATED': {
+        return {
+          id: n.id,
+          type: n.type,
+          avatarClass: 'user-avatar bg-light-info',
+          iconClass: 'notification',
+          time,
+          message: n.message ?? 'Δημιουργήθηκε νέα ψηφοφορία.',
+          date,
+          payloadObj: p
+        };
+      }
+      case 'POLL_EXPIRED': {
+        return {
+          id: n.id,
+          type: n.type,
+          avatarClass: 'user-avatar bg-light-danger',
+          iconClass: 'clock-circle',
+          time,
+          message: n.message ?? 'Η ψηφοφορία έληξε.',
+          date,
+          payloadObj: p
+        };
+      }
+      case 'CALENDAR_EVENT_CREATED': {
+        return {
+          id: n.id,
+          type: n.type,
+          avatarClass: 'user-avatar bg-light-info',
+          iconClass: 'calendar',
+          time,
+          message: n.message ?? 'Νέο γεγονός στο ημερολόγιο.',
+          date,
+          payloadObj: p
+        };
+      }
 
       default:
         return {
@@ -162,7 +196,20 @@ export class NotificationDropdownComponent implements OnInit {
   openNotification(item: UiNotification): void {
     const p: any = item.payloadObj || null;
 
-    //Αν είναι νέο παραστατικό → πήγαινε στα invoices
+    // Νέα ψηφοφορία
+    if (item.type === 'POLL_CREATED' && p?.pollId) {
+      this.router.navigate(['/polls'], {
+        queryParams: {
+          buildingId: p.buildingId,
+          pollId: p.pollId
+        }
+      });
+
+      this.close();
+      return;
+    }
+
+    //παραστατικό
     if (item.type === 'NEW_STATEMENT' && p?.statementId) {
       this.router.navigate(['/dashboard/default'], {
         queryParams: {
@@ -170,14 +217,39 @@ export class NotificationDropdownComponent implements OnInit {
           statementId: p.statementId
         }
       });
+
       this.close();
       return;
     }
 
-    //Αν είναι ανάθεση διαμερίσματος → πήγαινε στο προφίλ με το σωστό tab
+    if (item.type === 'POLL_EXPIRED' && p?.pollId) {
+      this.router.navigate(['/polls'], {
+        queryParams: {
+          buildingId: p.buildingId,
+          pollId: p.pollId
+        }
+      });
+
+      this.close();
+      return;
+    }
+
+    if (item.type === 'CALENDAR_EVENT_CREATED' && p?.calendarEventId) {
+      this.router.navigate(['/calendar'], {
+        queryParams: {
+          buildingId: p.buildingId,
+          eventId: p.calendarEventId
+        }
+      });
+
+      this.close();
+      return;
+    }
+
     const tab = p?.tab ?? (item.type === 'APARTMENT_ASSIGNED' ? 'my-apartment' : item.type === 'MEMBER_JOIN_REQUEST' ? 'members' : null);
 
     const queryParams: any = {};
+
     if (tab) queryParams.tab = tab;
     if (p?.buildingId) queryParams.buildingId = p.buildingId;
     if (p?.apartmentId) queryParams.apartmentId = p.apartmentId;

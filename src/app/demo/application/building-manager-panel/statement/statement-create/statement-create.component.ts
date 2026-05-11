@@ -52,7 +52,7 @@ export class StatementCreateComponent implements OnInit, OnChanges {
     { label: 'ΚΟΙΝΟΧΡΗΣΤΑ', value: 'COMMON' },
     { label: 'ΘΕΡΜΑΝΣΗ', value: 'HEATING' },
     { label: 'ΑΣΑΝΣΕΡ', value: 'ELEVATOR' },
-    { label: 'ΑΥΤΟΝΟΜΙΑ', value: 'EQUAL' }, // αν θες ξεχωριστό κάνουμε άλλο enum
+    { label: 'ΑΥΤΟΝΟΜΙΑ', value: 'EQUAL' },
     { label: 'BOILER', value: 'EQUAL' },
     { label: 'ΕΙΔΙΚΕΣ ΔΑΠΑΝΕΣ', value: 'EQUAL' },
     { label: 'ΙΔΙΟΚΤΗΤΩΝ', value: 'EQUAL' },
@@ -77,7 +77,11 @@ export class StatementCreateComponent implements OnInit, OnChanges {
     }
 
     const buildings$: Observable<any[]> =
-      this.userRole === 'PropertyManager' ? this.buildingService.getMyCompanyBuildings() : this.buildingService.getMyManagedBuildings();
+      this.userRole === 'PropertyManager'
+        ? this.buildingService.getMyCompanyBuildings()
+        : this.userRole === 'PropertyAgent'
+          ? this.buildingService.getMyBuildings()
+          : this.buildingService.getMyManagedBuildings();
 
     buildings$.subscribe({
       next: (data: any[]) => {
@@ -237,7 +241,7 @@ export class StatementCreateComponent implements OnInit, OnChanges {
 
     const payload = {
       ...this.form.value,
-      status: 'DRAFT', // <--- το ορίζουμε εδώ
+      status: 'DRAFT',
       subTotal: this.subTotal,
       total: this.total
     };

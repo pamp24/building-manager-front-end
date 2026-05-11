@@ -7,18 +7,19 @@ import { DeleteOutline, EditOutline, EyeOutline, MoreOutline, PlusOutline } from
 
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { TransactionsChartComponent } from '../../../../theme/shared/apexchart/transactions-chart/transactions-chart.component';
-import { CashFlowChartComponent } from '../../../../theme/shared/apexchart/cash-flow-chart/cash-flow-chart.component';
-import { CategoryChartComponent } from '../../../../theme/shared/apexchart/category-chart/category-chart.component';
+
 import { ThemeService } from 'src/app/theme/shared/service/customs-theme.service';
+import { TransactionsChartComponent } from 'src/app/theme/shared/apexchart/transactions-chart/transactions-chart.component';
+import { CashFlowChartComponent } from 'src/app/theme/shared/apexchart/cash-flow-chart/cash-flow-chart.component';
+import { CategoryChartComponent } from 'src/app/theme/shared/apexchart/category-chart/category-chart.component';
 
 @Component({
-  selector: 'app-finance',
+  selector: 'app-admin-finance-panel',
   imports: [SharedModule, TransactionsChartComponent, CashFlowChartComponent, CategoryChartComponent],
-  templateUrl: './finance.component.html',
-  styleUrl: './finance.component.scss'
+  templateUrl: './admin-finance-panel.component.html',
+  styleUrl: './admin-finance-panel.component.scss'
 })
-export class FinanceComponent {
+export class AdminFinancePanelComponent {
   private iconService = inject(IconService);
   private themeService = inject(ThemeService);
 

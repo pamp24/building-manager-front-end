@@ -6,7 +6,7 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 
 import { PropertyAgentManagementService } from 'src/app/theme/shared/service/property-agent-management.service';
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
-import { UserService } from 'src/app/theme/shared/service';
+import { AuthenticationService, UserService } from 'src/app/theme/shared/service';
 import { PropertyAgentManagementResponse } from 'src/app/theme/shared/models/property-agent-management';
 import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
 
@@ -21,7 +21,7 @@ export class SupportAgentsManagementComponent implements OnInit {
   private agentService = inject(PropertyAgentManagementService);
   private buildingService = inject(BuildingService);
   private userService = inject(UserService);
-
+  private authenticationService = inject(AuthenticationService);
   loading = false;
   errorMessage = '';
 
@@ -50,7 +50,7 @@ export class SupportAgentsManagementComponent implements OnInit {
     this.loading = true;
 
     this.agentService
-      .getMyCompanyAgents()
+      .getAgents()
       .pipe(finalize(() => (this.loading = false)))
       .subscribe({
         next: (res) => {
@@ -64,10 +64,26 @@ export class SupportAgentsManagementComponent implements OnInit {
   }
 
   loadBuildings(): void {
+    const role = this.getCurrentRole();
+
+    if (role === 'ADMIN') {
+      this.buildingService.getAllBuildingsForAdmin().subscribe({
+        next: (res) => (this.buildings = res ?? []),
+        error: () => (this.buildings = [])
+      });
+      return;
+    }
+
     this.buildingService.getMyCompanyBuildings().subscribe({
       next: (res) => (this.buildings = res ?? []),
       error: () => (this.buildings = [])
     });
+  }
+
+  private getCurrentRole(): string | null {
+    const currentUser = this.authenticationService.currentUserValue;
+    const role = currentUser?.role ?? null;
+    return role ? role.trim().toUpperCase().replace(/\s+/g, '_') : null;
   }
 
   openAssignModal(agent: PropertyAgentManagementResponse): void {
@@ -141,7 +157,7 @@ export class SupportAgentsManagementComponent implements OnInit {
     this.userService
       .inviteUserToBuilding({
         email,
-        role: 'PropertyAgent',
+        role: this.getInviteRole(),
         apartmentId: null
       })
       .pipe(finalize(() => (this.inviteLoading = false)))
@@ -181,5 +197,12 @@ export class SupportAgentsManagementComponent implements OnInit {
 
   trackByAgentId(_: number, agent: PropertyAgentManagementResponse): number {
     return agent.id;
+  }
+
+  private getInviteRole(): 'AdminAgent' | 'PropertyAgent' {
+    const currentUser = this.authenticationService.currentUserValue;
+    const role = currentUser?.role?.trim().toUpperCase().replace(/\s+/g, '_');
+
+    return role === 'ADMIN' ? 'AdminAgent' : 'PropertyAgent';
   }
 }

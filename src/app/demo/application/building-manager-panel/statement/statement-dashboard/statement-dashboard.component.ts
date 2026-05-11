@@ -253,12 +253,12 @@ export class StatementDashboardComponent implements OnInit {
   }
 
   loadBuildingsAndManagerDashboard() {
-  this.buildingService.getMyManagedBuildings().subscribe({
+  this.buildingService.getMyBuildings().subscribe({
     next: (buildings) => {
       this.managedBuildings = buildings ?? [];
       this.showBuildingSelector = this.managedBuildings.length > 1;
 
-      // ✅ αν το buildingId ήρθε από parent, κράτα το
+      //αν το buildingId ήρθε από parent, κράτα το
       if (this.buildingId) {
         this.currentBuilding =
           this.managedBuildings.find(b => b.id === this.buildingId) || this.managedBuildings[0];
@@ -372,10 +372,10 @@ export class StatementDashboardComponent implements OnInit {
 
   onSort(field: string) {
     if (this.sortField === field) {
-      this.sortAsc = !this.sortAsc; // Αν πατήσεις την ίδια στήλη, αντιστρέφει τη σειρά
+      this.sortAsc = !this.sortAsc; 
     } else {
       this.sortField = field;
-      this.sortAsc = true; // Ξεκινάει πάντα με αύξουσα
+      this.sortAsc = true; 
     }
 
     this.polls.sort((a, b) => {
@@ -390,7 +390,7 @@ export class StatementDashboardComponent implements OnInit {
   }
 
   getSortIcon(field: string) {
-    if (this.sortField !== field) return ''; // δεν έχει επιλεγεί
+    if (this.sortField !== field) return ''; 
     return this.sortAsc ? '▲' : '▼';
   }
 }

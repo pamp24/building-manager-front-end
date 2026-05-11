@@ -20,7 +20,7 @@ export class ManagerModalComponent implements OnInit {
   selectedBuilding: ManagedBuildingDTO | null = null;
   isRtlMode!: boolean;
   userRole: string | null = null;
-  
+
   constructor(private buildingService: BuildingService) {
     effect(() => {
       this.isRtlTheme(this.themeService.isRTLMode());
@@ -28,22 +28,39 @@ export class ManagerModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  const currentUser = localStorage.getItem('currentUser');
-  if (currentUser) {
-    const parsed = JSON.parse(currentUser);
-    this.userRole = parsed.role;
-  }
+    const currentUser = localStorage.getItem('currentUser');
 
-  if (this.userRole === 'PropertyManager') {
-    this.buildingService.getMyCompanyBuildings().subscribe({
-      next: (data) => {
-        this.addressList = data as unknown as ManagedBuildingDTO[];
-      },
-      error: (err: unknown) => {
-        console.error('Σφάλμα φόρτωσης πολυκατοικιών', err);
-      }
-    });
-  } else {
+    if (currentUser) {
+      const parsed = JSON.parse(currentUser);
+      this.userRole = parsed.role;
+    }
+
+    if (this.userRole === 'PropertyManager') {
+      this.buildingService.getMyCompanyBuildings().subscribe({
+        next: (data) => {
+          this.addressList = data as unknown as ManagedBuildingDTO[];
+        },
+        error: (err: unknown) => {
+          console.error('Σφάλμα φόρτωσης πολυκατοικιών', err);
+        }
+      });
+
+      return;
+    }
+
+    if (this.userRole === 'PropertyAgent') {
+      this.buildingService.getMyBuildings().subscribe({
+        next: (data) => {
+          this.addressList = data as unknown as ManagedBuildingDTO[];
+        },
+        error: (err: unknown) => {
+          console.error('Σφάλμα φόρτωσης ανατεθειμένων πολυκατοικιών', err);
+        }
+      });
+
+      return;
+    }
+
     this.buildingService.getMyManagedBuildings().subscribe({
       next: (data: ManagedBuildingDTO[]) => {
         this.addressList = data;
@@ -53,7 +70,6 @@ export class ManagerModalComponent implements OnInit {
       }
     });
   }
-}
 
   saveSelection() {
     if (!this.selectedBuilding || !this.selectedBuilding.id) {
