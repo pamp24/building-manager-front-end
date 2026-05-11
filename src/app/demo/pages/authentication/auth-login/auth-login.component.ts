@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Angular import
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -31,7 +32,7 @@ export class AuthLoginComponent implements OnInit {
   private errorMsg: string[] = [];
   // public method
   showPassword: boolean = false;
-
+  rememberMe = true;
   loginForm!: FormGroup;
   loading = false;
   submitted = false;
@@ -41,15 +42,15 @@ export class AuthLoginComponent implements OnInit {
 
   // constructor
   constructor(private userService: UserService) {
-    
     this.iconService.addIcon(...[EyeOutline, EyeInvisibleOutline]);
   }
 
   // life cycle hook
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-      email: ['', Validators.required],
-      password: ['', Validators.required]
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required],
+      rememberMe: [true]
     });
 
     if (window.location.pathname !== '/auth/login') {
@@ -77,23 +78,33 @@ export class AuthLoginComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
-    if (this.loginForm.invalid) return;
-    const { email, password } = this.loginForm.value;
-    this.authenticationService.login(email, password).subscribe({
+    this.error = '';
+    this.errorMsg = [];
+
+    if (this.loginForm.invalid) {
+      this.error = 'Παρακαλώ συμπληρώστε email και κωδικό πρόσβασης.';
+      return;
+    }
+
+    const { email, password, rememberMe } = this.loginForm.value;
+    this.loading = true;
+
+    this.authenticationService.login(email, password, rememberMe).subscribe({
       next: (response: AuthenticationResponse) => {
-        console.log('User role from backend:', response.user.role);
+        this.loading = false;
+
         localStorage.setItem('currentUser', JSON.stringify(response.user));
 
         const inviteCode = localStorage.getItem('inviteCode');
+
         if (inviteCode) {
           this.userService.acceptInvite(inviteCode).subscribe({
             next: () => {
-              console.log('Η πρόσκληση αποδέχτηκε επιτυχώς');
-              localStorage.removeItem('inviteCode'); // καθάρισμα
+              localStorage.removeItem('inviteCode');
               this.router.navigate(['/dashboard/default']);
             },
-            error: (err) => {
-              console.error('Σφάλμα αποδοχής πρόσκλησης:', err);
+            error: () => {
+              localStorage.removeItem('inviteCode');
               this.router.navigate(['/dashboard/default']);
             }
           });
@@ -102,14 +113,23 @@ export class AuthLoginComponent implements OnInit {
         }
       },
       error: (err) => {
-        console.log(err);
-        if (err.error.validationErrors) {
-          this.errorMsg = err.error.validationErrors;
-        } else {
-          this.errorMsg.push(err.error.errorMsg);
-        }
+        this.loading = false;
+        this.error = this.getLoginErrorMessage(err);
       }
     });
+  }
+
+  private getLoginErrorMessage(err: any): string {
+    if (typeof err === 'string') {
+      try {
+        const parsed = JSON.parse(err);
+        return parsed.businessErrorDescription || parsed.error || 'Παρουσιάστηκε σφάλμα κατά τη σύνδεση.';
+      } catch {
+        return err;
+      }
+    }
+
+    return err?.businessErrorDescription || err?.error || err?.message || 'Παρουσιάστηκε σφάλμα κατά τη σύνδεση. Παρακαλώ δοκιμάστε ξανά.';
   }
 
   socialMedia = [

@@ -17,7 +17,8 @@ export class AuthenticationService {
   private currentUser: User | null = null;
 
   constructor(private userService: UserService) {
-    const storedUser = localStorage.getItem('currentUser');
+    const storedUser = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
+
     if (storedUser) {
       this.currentUser = JSON.parse(storedUser) as User;
     }
@@ -27,11 +28,12 @@ export class AuthenticationService {
     return this.currentUser;
   }
 
-  login(email: string, password: string): Observable<AuthenticationResponse> {
+  login(email: string, password: string, rememberMe: boolean): Observable<AuthenticationResponse> {
     return this.http
       .post<AuthenticationResponse>('http://localhost:8080/api/v1/auth/authenticate', {
         email,
-        password
+        password,
+        rememberMe
       })
       .pipe(
         map((response: AuthenticationResponse) => {
@@ -40,20 +42,26 @@ export class AuthenticationService {
             role: response.user.role
           };
 
-          localStorage.setItem('currentUser', JSON.stringify(user));
-          localStorage.setItem('token', response.token);
+          if (rememberMe) {
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            localStorage.setItem('token', response.token);
+          } else {
+            sessionStorage.setItem('currentUser', JSON.stringify(user));
+            sessionStorage.setItem('token', response.token);
+          }
+
           this.currentUser = user;
 
           return {
             token: response.token,
-            user: user
+            user
           };
         })
       );
   }
 
   isLoggedIn(): boolean {
-    return !!localStorage.getItem('token');
+    return !!localStorage.getItem('token') || !!sessionStorage.getItem('token');
   }
 
   register(request: RegistrationRequest): Observable<AuthenticationResponse> {
@@ -63,7 +71,12 @@ export class AuthenticationService {
   logout() {
     localStorage.removeItem('currentUser');
     localStorage.removeItem('token');
+
+    sessionStorage.removeItem('currentUser');
+    sessionStorage.removeItem('token');
+
     this.currentUser = null;
+
     this.router.navigate(['/login']);
   }
 
@@ -84,7 +97,8 @@ export class AuthenticationService {
   }
 
   getUser() {
-    const userJson = localStorage.getItem('currentUser');
+    const userJson = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
+
     return userJson ? JSON.parse(userJson) : null;
   }
 
