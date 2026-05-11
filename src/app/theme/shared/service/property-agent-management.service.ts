@@ -8,7 +8,7 @@ import { PropertyAgentManagementResponse, UpdatePropertyAgentBuildingsRequest } 
   providedIn: 'root'
 })
 export class PropertyAgentManagementService {
-  private readonly baseUrl = 'http://localhost:8080/api/v1/property-agents';
+  private readonly baseUrl = 'http://localhost:8080/api/v1/agents';
 
   constructor(private http: HttpClient) {}
 
@@ -26,4 +26,8 @@ export class PropertyAgentManagementService {
   removeAgent(agentId: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${agentId}`);
   }
+
+  getAgents(): Observable<PropertyAgentManagementResponse[]> {
+  return this.http.get<PropertyAgentManagementResponse[]>(this.baseUrl);
+}
 }

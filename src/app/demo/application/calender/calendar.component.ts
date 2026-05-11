@@ -76,7 +76,16 @@ export class CalenderComponent implements OnInit, OnChanges {
     this.buildingService.getMyBuildings().subscribe({
       next: (buildings) => {
         if (buildings.length > 0) {
-          this.buildingId = buildings[0].id; // παίρνουμε το πρώτο id
+          this.myBuildings = buildings ?? [];
+
+          const firstBuilding = this.myBuildings[0];
+
+          this.buildingId = Number(firstBuilding?.id ?? firstBuilding?.buildingId);
+
+          console.log('BUILDINGS:', buildings);
+          console.log('INIT buildingId:', this.buildingId);
+
+          this.loadEvents();
           console.log('selectedBuildingId:', this.buildingId);
           this.loadEvents();
         } else {
@@ -150,11 +159,23 @@ export class CalenderComponent implements OnInit, OnChanges {
   }
 
   openAddModal() {
+    if (!this.buildingId) {
+      console.error('Δεν υπάρχει buildingId για δημιουργία event');
+      return;
+    }
+
     const modalRef = this.modal.open(CalendarEventModalComponent, { size: 'lg' });
     modalRef.componentInstance.buildingId = this.buildingId;
 
     modalRef.componentInstance.save.subscribe((newEvent: any) => {
-      this.calendarService.create(newEvent).subscribe({
+      const payload = {
+        ...newEvent,
+        buildingId: Number(this.buildingId)
+      };
+
+      console.log('CALENDAR PAYLOAD:', payload);
+
+      this.calendarService.create(payload).subscribe({
         next: () => this.loadEvents(),
         error: (err) => console.error('Σφάλμα προσθήκης event:', err)
       });

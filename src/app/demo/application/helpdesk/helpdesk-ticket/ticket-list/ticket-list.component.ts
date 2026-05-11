@@ -59,17 +59,27 @@ export class TicketListComponent implements OnInit {
   buildings: TicketBuildingOption[] = [];
   selectedBuildingId: number | null = null;
 
-  constructor(private buildingService: BuildingService, private authenticationService: AuthenticationService) {
+  constructor(
+    private buildingService: BuildingService,
+    private authenticationService: AuthenticationService
+  ) {
     this.iconService.addIcon(...[AppstoreOutline, BarsOutline, MenuOutline, CalendarOutline, EyeOutline]);
   }
 
   ngOnInit(): void {
-    if (this.canSelectBuilding()) {
-      this.loadBuildings();
-    } else {
-      this.loadListTickets();
-    }
+  const role = this.getCurrentUserRole();
+
+  if (role === 'ADMIN') {
+    this.loadListTickets();
+    return;
   }
+
+  if (this.canSelectBuilding()) {
+    this.loadBuildings();
+  } else {
+    this.loadListTickets();
+  }
+}
 
   loadListTickets(): void {
     this.loading = true;
@@ -126,15 +136,15 @@ export class TicketListComponent implements OnInit {
       });
   }
   getCurrentUserRole(): string | null {
-  const currentUser = this.authenticationService.currentUserValue;
-  const role = currentUser?.role ?? null;
-  return role ? role.trim().toUpperCase().replace(' ', '_') : null;
-}
+    const currentUser = this.authenticationService.currentUserValue;
+    const role = currentUser?.role ?? null;
+    return role ? role.trim().toUpperCase().replace(' ', '_') : null;
+  }
 
   canSelectBuilding(): boolean {
-    const role = this.getCurrentUserRole();
-    return role === 'PROPERTYMANAGER' || role === 'PROPERTY_MANAGER' || role === 'ADMIN';
-  }
+  const role = this.getCurrentUserRole();
+  return role === 'PROPERTYMANAGER' || role === 'PROPERTY_MANAGER';
+}
 
   getSelectedBuildingAddress(): string {
     const building = this.buildings.find((b) => b.id === this.selectedBuildingId);

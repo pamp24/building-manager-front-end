@@ -4,7 +4,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PollService } from 'src/app/theme/shared/service/poll.service';
-import { BuildingMemberService } from '../../../theme/shared/service/buildingMember.service';
 import { CreatePollComponent } from './create-poll/create-poll.component';
 import { CardComponent } from 'src/app/theme/shared/components/card/card.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -12,6 +11,7 @@ import { IconService } from '@ant-design/icons-angular';
 import { inject } from '@angular/core';
 import { CaretDownOutline, CaretUpOutline, DeleteOutline, EditOutline } from '@ant-design/icons-angular/icons';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { BuildingService } from 'src/app/theme/shared/service/building.service';
 declare var bootstrap: any;
 
 @Component({
@@ -37,6 +37,10 @@ export class PollsComponent implements OnInit {
   votesLoading = false;
   activePolls: any[] = [];
 
+  buildings: any[] = [];
+  manageableBuildings: any[] = [];
+  selectedBuildingId: number | null = null;
+
   newPoll = {
     title: '',
     description: '',
@@ -48,31 +52,38 @@ export class PollsComponent implements OnInit {
 
   constructor(
     private pollService: PollService,
-    private buildingMemberService: BuildingMemberService,
+    private buildingService: BuildingService,
     private modal: NgbModal
   ) {
     this.iconService.addIcon(...[EditOutline, DeleteOutline, CaretDownOutline, CaretUpOutline]);
   }
 
   ngOnInit() {
-    this.buildingId = Number(localStorage.getItem('buildingId'));
-    this.checkIfManager();
+    this.loadMyBuildings();
     this.loadPolls();
   }
 
-  /** Έλεγχος αν ο συνδεδεμένος χρήστης είναι διαχειριστής */
-  checkIfManager() {
-    const userData = localStorage.getItem('currentUser');
-    if (!userData) {
-      console.warn('Δεν βρέθηκε currentUser στο localStorage');
+  loadMyBuildings() {
+  this.buildingService.getMyBuildings().subscribe({
+    next: (buildings: any[]) => {
+      console.log('MY BUILDINGS = ', buildings);
+
+      this.buildings = buildings || [];
+      this.manageableBuildings = this.buildings;
+
+      this.isManager = this.manageableBuildings.length > 0;
+      this.notMember = !this.isManager && this.buildings.length === 0;
+
+      console.log('IS MANAGER = ', this.isManager);
+      console.log('NOT MEMBER = ', this.notMember);
+    },
+    error: (err) => {
+      console.error(err);
+      this.notMember = true;
       this.isManager = false;
-      return;
     }
-
-    const currentUser = JSON.parse(userData);
-
-    this.isManager = currentUser.role === 'BuildingManager';
-  }
+  });
+}
 
   loadPolls() {
     this.pollService.getMy().subscribe({
@@ -80,15 +91,16 @@ export class PollsComponent implements OnInit {
         this.polls = data || [];
         this.activePolls = this.polls.filter((p) => p.active);
       },
-      error: (err) => console.error(err)
+      error: (err) => {
+        console.error(err);
+        this.voteError = 'Σφάλμα φόρτωσης ψηφοφοριών.';
+      }
     });
   }
 
-  // === Δημιουργία νέας ψηφοφορίας ===
   refreshPolls() {
     this.loadPolls();
 
-    // κλείσιμο modal
     const modalEl = document.getElementById('pollModal');
     const modal = bootstrap.Modal.getInstance(modalEl!);
     modal.hide();
@@ -179,9 +191,22 @@ export class PollsComponent implements OnInit {
   }
 
   openAddModal() {
+    if (!this.manageableBuildings.length) {
+      this.voteError = 'Δεν έχετε δικαίωμα δημιουργίας ψηφοφορίας σε κάποια πολυκατοικία.';
+      return;
+    }
+
+    const buildingId = this.selectedBuildingId || this.manageableBuildings[0]?.id;
+
+    if (!buildingId) {
+      this.voteError = 'Δεν βρέθηκε πολυκατοικία για δημιουργία ψηφοφορίας.';
+      return;
+    }
+
     const modalRef = this.modal.open(CreatePollComponent, { size: 'lg' });
 
-    modalRef.componentInstance.buildingId = this.buildingId;
+    modalRef.componentInstance.buildingId = buildingId;
+    modalRef.componentInstance.buildings = this.manageableBuildings;
 
     modalRef.componentInstance.pollCreated.subscribe(() => {
       this.loadPolls();

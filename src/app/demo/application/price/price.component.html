@@ -1,0 +1,84 @@
+<div class="d-flex justify-content-center mb-4">
+  <div class="btn-group">
+    <button
+      class="btn"
+      [ngClass]="selectedType === 'individual' ? 'btn-primary' : 'btn-outline-primary'"
+      (click)="selectedType = 'individual'"
+    >
+      Μεμονωμένοι Διαχειριστές
+    </button>
+
+    <button class="btn" [ngClass]="selectedType === 'company' ? 'btn-primary' : 'btn-outline-primary'" (click)="selectedType = 'company'">
+      Εταιρίες Διαχείρισης
+    </button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-sm-12 col-md-9 col-lg-7">
+        <div class="d-flex flex-column">
+          <div class="d-flex mb-3 align-items-center">
+            <h6 class="mb-0" [ngClass]="isChecked === true ? 'text-muted' : ''">Ετήσια χρέωση</h6>
+            <div class="form-check form-switch p-0 mx-2">
+              <input class="form-check-input h5 m-0 p-0" type="checkbox" role="switch" id="price-switch" [(ngModel)]="isChecked" />
+            </div>
+            <h6 class="mb-0" [ngClass]="isChecked === false ? 'text-muted' : ''">Μηνιαία χρέωση</h6>
+          </div>
+        </div>
+
+        <p class="mb-0 text-muted">
+          Επιλέξτε το κατάλληλο πακέτο ανάλογα με το αν διαχειρίζεστε μία πολυκατοικία ως ιδιώτης ή αν εκπροσωπείτε εταιρία διαχείρισης. Οι
+          χρεώσεις προσαρμόζονται με βάση τον αριθμό πολυκατοικιών, διαμερισμάτων και τις λειτουργίες που χρειάζεστε.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  @for (price of selectedType === 'individual' ? individualPlans : companyPlans; track price) {
+    <div class="col-md-6 col-lg-4">
+      <div class="card price-card">
+        <div class="card-body">
+          <div class="price-icon">
+            <img src="{{ price.image }}" alt="img" class="img-fluid" />
+            <h4 class="mb-0">{{ price.price_type }}</h4>
+          </div>
+
+          <p class="mt-4 text-muted">
+            {{ price.subtitle }}
+          </p>
+
+          <div class="price-price my-4">
+            €{{ isChecked === true ? price.monthly : price.yearly }}
+            <span class="text-muted">/ {{ isChecked === true ? 'μήνα' : 'έτος' }}</span>
+          </div>
+
+          <div class="d-grid">
+            <a class="btn {{ price.btn_type }} mb-4" href="javascript:" role="button">Παραγγελία τώρα</a>
+          </div>
+
+          <ul class="list-group list-group-flush product-list">
+            @for (list of price.includeItems; track list) {
+              <li class="list-group-item" [ngClass]="list.available === true ? 'enable' : ''">
+                {{ list.title }}
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+<div class="alert-price-menu border rounded py-2 px-3 border-info d-flex mb-4">
+  <i class="text-info f-16" antIcon theme="outline" type="info-circle"></i>
+  <div class="ms-3">
+    <div class="f-w-500 text-info mb-1">Σημείωση</div>
+    <p class="mb-0">
+      Οι τιμές είναι ενδεικτικές και μπορούν να προσαρμοστούν ανάλογα με τον αριθμό πολυκατοικιών και διαμερισμάτων. Για περισσότερες
+      πληροφορίες, παρακαλούμε επικοινωνήστε μαζί μας.
+    </p>
+  </div>
+</div>

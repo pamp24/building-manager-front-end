@@ -252,7 +252,7 @@ const routes: Routes = [
       },
       {
         path: 'price',
-        loadComponent: () => import('./demo/pages/price/price.component').then((c) => c.PriceComponent),
+        loadComponent: () => import('./demo/application/price/price.component').then((c) => c.PriceComponent),
         data: {
           role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident, Role.PropertyAgent]
         }

@@ -64,5 +64,8 @@ export class BuildingService {
     return this.http.post<{ buildingId: number }>(`${this.apiUrl}/join-by-code?code=${encodeURIComponent(code)}`, {});
   }
 
+  getAllBuildingsForAdmin(): Observable<BuildingDTO[]> {
+  return this.http.get<BuildingDTO[]>(`${this.apiUrl}/admin/all`);
+}
   
 }

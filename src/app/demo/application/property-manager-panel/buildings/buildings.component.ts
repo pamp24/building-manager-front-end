@@ -36,7 +36,7 @@ export class BuildingsViewComponent implements OnInit {
     this.loading = true;
     this.error = undefined;
 
-    this.buildingService.getMyCompanyBuildings().subscribe({
+    this.buildingService.getMyBuildings().subscribe({
       next: (data) => {
         this.buildings = data ?? [];
         this.loading = false;
