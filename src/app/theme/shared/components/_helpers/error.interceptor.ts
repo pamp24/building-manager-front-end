@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable, inject } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -9,17 +10,18 @@ import { AuthenticationService } from '../../service/authentication.service';
 export class ErrorInterceptor implements HttpInterceptor {
   private authenticationService = inject(AuthenticationService);
 
-  // eslint-disable-next-line
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
-      catchError((err) => {
+      catchError((err: HttpErrorResponse) => {
         if ([401, 403].includes(err.status)) {
-          // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
-          this.authenticationService.logout();
+          const isLoginRequest = request.url.includes('/auth/authenticate');
+
+          if (!isLoginRequest) {
+            this.authenticationService.logout();
+          }
         }
 
-        const error = err.error.message || err.statusText;
-        return throwError(() => error);
+        return throwError(() => err.error ?? err);
       })
     );
   }
