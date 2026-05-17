@@ -9,7 +9,7 @@ import { environment } from './environments/environment';
 import { AppComponent } from './app/app.component';
 import { AppRoutingModule } from './app/app-routing.module';
 import { BasicAuthInterceptor } from 'src/app/theme/shared/components/_helpers/basic-auth.interceptor';
-import { ErrorInterceptor } from 'src/app/theme/shared/components/_helpers/error.interceptor';
+import { JwtInterceptor } from 'src/app/theme/shared/components/_helpers/error.interceptor';
 import { SharedModule } from './app/theme/shared/shared.module';
 
 // third party
@@ -24,7 +24,7 @@ bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(BrowserModule, AppRoutingModule, SharedModule, ToastrModule.forRoot(), SweetAlert2Module.forRoot()),
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     [provideHttpClient(withInterceptorsFromDi())],
     provideAnimations()
   ]

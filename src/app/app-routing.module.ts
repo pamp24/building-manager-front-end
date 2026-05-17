@@ -74,14 +74,12 @@ const routes: Routes = [
         }
       },
       {
-  path: 'admin',
-  loadChildren: () =>
-    import('./demo/application/admin-panel/admin-dashboard-panel.module')
-      .then((m) => m.AdminDashboardPanelModule),
-  data: {
-    role: [Role.Admin]
-  }
-},
+        path: 'admin',
+        loadChildren: () => import('./demo/application/admin-panel/admin-dashboard-panel.module').then((m) => m.AdminDashboardPanelModule),
+        data: {
+          role: [Role.Admin]
+        }
+      },
       {
         path: 'pm',
         loadChildren: () =>
@@ -111,14 +109,16 @@ const routes: Routes = [
       },
       {
         path: 'online-course',
-        loadChildren: () => import('./demo/application/building-manager-panel/online-courses/online-courses.module').then((m) => m.OnlineCoursesModule),
+        loadChildren: () =>
+          import('./demo/application/building-manager-panel/online-courses/online-courses.module').then((m) => m.OnlineCoursesModule),
         data: {
           role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident, Role.PropertyAgent]
         }
       },
       {
         path: 'membership',
-        loadChildren: () => import('./demo/application/building-manager-panel/membership/membership.module').then((m) => m.MembershipModule),
+        loadChildren: () =>
+          import('./demo/application/building-manager-panel/membership/membership.module').then((m) => m.MembershipModule),
         data: {
           role: [Role.Admin, Role.User]
         }
@@ -128,6 +128,22 @@ const routes: Routes = [
         loadChildren: () => import('./demo/application/helpdesk/helpdesk.module').then((m) => m.HelpdeskModule),
         data: {
           role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident, Role.PropertyAgent]
+        }
+      },
+      {
+        path: 'professionals',
+        loadChildren: () => import('./demo/application/professionals/professionals.module').then((m) => m.ProfessionalsModule),
+        data: {
+          role: [
+            Role.Admin,
+            Role.User,
+            Role.PropertyManager,
+            Role.BuildingManager,
+            Role.Owner,
+            Role.Resident,
+            Role.PropertyAgent,
+            Role.AdminAgent
+          ]
         }
       },
       {

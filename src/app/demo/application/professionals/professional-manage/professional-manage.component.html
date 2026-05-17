@@ -1,0 +1,138 @@
+<div class="row">
+  <div class="col-12">
+    <app-card cardTitle="Διαχείριση Επιχείρησης">
+      @if (loading) {
+        <div class="py-4 text-center">Φόρτωση...</div>
+      }
+
+      @if (error) {
+        <div class="alert alert-danger">{{ error }}</div>
+      }
+
+      @if (success) {
+        <div class="alert alert-success">{{ success }}</div>
+      }
+
+      @if (professional) {
+        <div class="row">
+          <div class="col-lg-7">
+            <h5 class="mb-3">Στοιχεία Επιχείρησης</h5>
+
+            <div class="mb-3">
+              <label class="form-label">Όνομα Επιχείρησης</label>
+              <input class="form-control" [(ngModel)]="professional.businessName" />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Υπεύθυνος</label>
+              <input class="form-control" [(ngModel)]="professional.ownerFullName" />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Περιγραφή</label>
+              <textarea class="form-control" rows="4" [(ngModel)]="professional.description"></textarea>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Τηλέφωνο</label>
+                <input class="form-control" [(ngModel)]="professional.phone" />
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Email</label>
+                <input class="form-control" [(ngModel)]="professional.email" />
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Website</label>
+              <input class="form-control" [(ngModel)]="professional.website" />
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Πόλη</label>
+                <input class="form-control" [(ngModel)]="professional.city" />
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Περιοχή</label>
+                <input class="form-control" [(ngModel)]="professional.region" />
+              </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-3">
+              <button class="btn btn-outline-secondary" (click)="goBack()">← Πίσω</button>
+
+              @if (!editMode) {
+                <button class="btn btn-outline-primary" (click)="toggleEdit()">Επεξεργασία</button>
+              }
+
+              @if (editMode) {
+                <button class="btn btn-outline-danger" (click)="cancelEdit()">Ακύρωση</button>
+
+                <button class="btn btn-primary" [disabled]="saving" (click)="saveBusiness()">
+                  {{ saving ? 'Αποθήκευση...' : 'Αποθήκευση' }}
+                </button>
+              }
+            </div>
+          </div>
+
+          <div class="col-lg-5">
+            <h5 class="mb-3">Φωτογραφίες</h5>
+
+            <div class="border rounded p-3 mb-4">
+              <div class="mb-3">
+                <label class="form-label">Νέα Φωτογραφία</label>
+                <input type="file" class="form-control" accept="image/*" (change)="onImageSelected($event)" />
+              </div>
+
+              <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="makePrimary" [(ngModel)]="makePrimary" />
+                <label class="form-check-label" for="makePrimary">Ορισμός ως βασική</label>
+              </div>
+
+              <button class="btn btn-success" [disabled]="!selectedImageFile || uploading" (click)="uploadSelectedImage()">
+                {{ uploading ? 'Ανέβασμα...' : 'Ανέβασμα Φωτογραφίας' }}
+              </button>
+            </div>
+
+            @if (images.length === 0) {
+              <div class="alert alert-info">Δεν έχουν ανέβει ακόμα φωτογραφίες.</div>
+            }
+
+            <div class="row">
+              @for (image of images; track image.id) {
+                <div class="col-md-6 mb-3">
+                  <div class="card border h-100">
+                    <img
+                      [src]="getFullImageUrl(image.imageUrl)"
+                      class="card-img-top"
+                      style="height: 140px; object-fit: cover"
+                      alt="professional image"
+                    />
+
+                    <div class="card-body p-2">
+                      @if (image.primaryImage) {
+                        <span class="badge bg-success mb-2">Primary</span>
+                      }
+
+                      <div class="d-flex gap-2">
+                        @if (!image.primaryImage) {
+                          <button class="btn btn-sm btn-outline-primary" (click)="setPrimary(image.id)">Primary</button>
+                        }
+
+                        <button class="btn btn-sm btn-outline-danger" (click)="deleteImage(image.id)">Διαγραφή</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </app-card>
+  </div>
+</div>

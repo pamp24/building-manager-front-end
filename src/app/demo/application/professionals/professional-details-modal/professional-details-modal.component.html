@@ -1,0 +1,145 @@
+<div class="modal-header">
+  <h4 class="modal-title">
+    {{ professional.businessName }}
+  </h4>
+
+  <button type="button" class="btn-close" (click)="activeModal.dismiss()"></button>
+</div>
+
+<div class="modal-body">
+  <img [src]="getPrimaryImageUrl()" class="img-fluid rounded mb-4 w-100" alt="professional" />
+
+  <div class="d-flex gap-2 mb-3">
+    @if (professional.verified) {
+      <span class="badge bg-success">Verified</span>
+    }
+
+    <span class="badge bg-dark">
+      {{ getCategoryLabel(professional.category) }}
+    </span>
+  </div>
+
+  <p class="text-muted">
+    {{ professional.description || 'Δεν υπάρχει περιγραφή.' }}
+  </p>
+
+  <hr />
+
+  <div class="mb-3">
+    <strong>Υπεύθυνος:</strong>
+    {{ professional.ownerFullName || '-' }}
+  </div>
+
+  <div class="mb-3">
+    <strong>Πόλη:</strong>
+    {{ professional.city || '-' }}
+  </div>
+
+  <div class="mb-3">
+    <strong>Τηλέφωνο:</strong>
+
+    <a [href]="'tel:' + professional.phone">
+      {{ professional.phone }}
+    </a>
+  </div>
+
+  @if (professional.email) {
+    <div class="mb-3">
+      <strong>Email:</strong>
+
+      <a [href]="'mailto:' + professional.email">
+        {{ professional.email }}
+      </a>
+    </div>
+  }
+
+  @if (professional.website) {
+    <div class="mb-3">
+      <strong>Website:</strong>
+
+      <a [href]="professional.website" target="_blank">Άνοιγμα Website</a>
+    </div>
+  }
+
+  <div class="mb-3">
+    <strong>Αξιολόγηση:</strong>
+
+    ⭐ {{ professional.ratingAverage || 0 }} ({{ professional.reviewCount || 0 }} αξιολογήσεις)
+  </div>
+  <hr />
+
+  <h5 class="mb-3">Αξιολογήσεις</h5>
+
+  <div class="border rounded p-3 mb-4">
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label class="form-label">Βαθμολογία</label>
+
+        <select class="form-select" [(ngModel)]="rating">
+          <option [ngValue]="5">5 ⭐</option>
+          <option [ngValue]="4">4 ⭐</option>
+          <option [ngValue]="3">3 ⭐</option>
+          <option [ngValue]="2">2 ⭐</option>
+          <option [ngValue]="1">1 ⭐</option>
+        </select>
+      </div>
+
+      <div class="col-md-8 mb-3">
+        <label class="form-label">Σχόλιο</label>
+
+        <textarea class="form-control" rows="3" [(ngModel)]="comment" placeholder="Γράψτε την αξιολόγησή σας..."></textarea>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" [disabled]="submittingReview" (click)="submitReview()">
+      {{ submittingReview ? 'Υποβολή...' : 'Υποβολή Αξιολόγησης' }}
+    </button>
+  </div>
+
+  @if (loadingReviews) {
+    <div class="text-center py-3">Φόρτωση αξιολογήσεων...</div>
+  }
+
+  @if (!loadingReviews && reviews.length === 0) {
+    <div class="alert alert-info">Δεν υπάρχουν ακόμα αξιολογήσεις.</div>
+  }
+
+  @for (review of reviews; track review.id) {
+    <div class="card border mb-3">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div>
+            <strong>{{ review.reviewerName }}</strong>
+
+            <div class="text-warning">
+              @for (star of getStars(review.rating); track $index) {
+                ⭐
+              }
+            </div>
+          </div>
+
+          <small class="text-muted">
+            {{ review.createdAt | date: 'short' }}
+          </small>
+        </div>
+
+        @if (review.comment) {
+          <p class="mt-3 mb-0">
+            {{ review.comment }}
+          </p>
+        }
+      </div>
+    </div>
+  }
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-outline-secondary" (click)="activeModal.close()">Κλείσιμο</button>
+
+  @if (professional.phone) {
+    <a class="btn btn-success" [href]="'tel:' + professional.phone">Κλήση</a>
+  }
+  @if (canManageBusiness()) {
+    <button class="btn btn-primary" (click)="goToManage()">Διαχείριση Επιχείρησης</button>
+  }
+</div>

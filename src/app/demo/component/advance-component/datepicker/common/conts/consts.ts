@@ -1,4 +1,4 @@
-import { IDatePickerConfig } from 'ng2-date-picker/lib/date-picker/date-picker-config.model';
+import { IDatePickerConfig } from 'ng2-date-picker';
 import { ECalendarValue } from '../type/calendar-value-enum';
 
 export const DEF_CONF: IDatePickerConfig = {

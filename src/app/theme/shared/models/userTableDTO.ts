@@ -4,4 +4,6 @@ export interface UserTableDto {
   role: string;
   status: string;
   id?: number;
+
+  professionalsFavoritesOnly?: boolean;
 }

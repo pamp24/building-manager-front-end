@@ -67,7 +67,7 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         classes: 'nav-item',
         url: '/pm/support-agents',
-        role: [Role.PropertyManager] 
+        role: [Role.PropertyManager]
       }
     ]
   },
@@ -107,7 +107,7 @@ export const NavigationItems: NavigationItem[] = [
     type: 'group',
     classes: 'first-group',
     icon: 'icon-navigation',
-    role: [Role.BuildingManager, Role.User, Role.Owner, Role.Resident, ],
+    role: [Role.BuildingManager, Role.User, Role.Owner, Role.Resident],
     children: [
       {
         id: 'default',
@@ -117,7 +117,16 @@ export const NavigationItems: NavigationItem[] = [
         icon: 'dashboard',
         url: '/dashboard/default',
         breadcrumbs: false,
-        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident, Role.PropertyAgent, Role.AdminAgent]
+        role: [
+          Role.Admin,
+          Role.User,
+          Role.PropertyManager,
+          Role.BuildingManager,
+          Role.Owner,
+          Role.Resident,
+          Role.PropertyAgent,
+          Role.AdminAgent
+        ]
       },
       {
         id: 'finance',
@@ -167,13 +176,55 @@ export const NavigationItems: NavigationItem[] = [
       }
     ]
   },
-
+  {
+    id: 'Professionals',
+    title: 'Professionals',
+    type: 'group',
+    icon: 'icon-navigation',
+    role: [
+      Role.Admin,
+      Role.User,
+      Role.PropertyManager,
+      Role.BuildingManager,
+      Role.Owner,
+      Role.Resident,
+      Role.PropertyAgent,
+      Role.AdminAgent
+    ],
+    children: [
+      {
+        id: 'professional-buisnesses-management',
+        title: 'Professional Businesses Management',
+        type: 'item',
+        classes: 'item',
+        icon: 'audit',
+        url: '/professionals/approval',
+        role: [Role.Admin]
+      },
+      {
+        id: 'professionals',  
+        title: 'Επαγγελματίες',
+        type: 'item',
+        icon: 'tool',
+        url: '/professionals'
+      }
+    ]
+  },
   {
     id: 'other',
     title: 'Other',
     type: 'group',
     icon: 'icon-navigation',
-    role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident, Role.PropertyAgent, Role.AdminAgent],
+    role: [
+      Role.Admin,
+      Role.User,
+      Role.PropertyManager,
+      Role.BuildingManager,
+      Role.Owner,
+      Role.Resident,
+      Role.PropertyAgent,
+      Role.AdminAgent
+    ],
     children: [
       {
         id: 'helpdesk',
@@ -181,7 +232,16 @@ export const NavigationItems: NavigationItem[] = [
         type: 'collapse',
         icon: 'question-circle',
         isMainParent: true,
-        role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident, Role.PropertyAgent, Role.AdminAgent],
+        role: [
+          Role.Admin,
+          Role.User,
+          Role.PropertyManager,
+          Role.BuildingManager,
+          Role.Owner,
+          Role.Resident,
+          Role.PropertyAgent,
+          Role.AdminAgent
+        ],
         children: [
           {
             id: 'dashboard',
@@ -195,14 +255,32 @@ export const NavigationItems: NavigationItem[] = [
             title: 'Create Ticket',
             type: 'item',
             url: '/helpdesk/ticket/create',
-            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident, Role.PropertyAgent, Role.AdminAgent]
+            role: [
+              Role.Admin,
+              Role.User,
+              Role.PropertyManager,
+              Role.BuildingManager,
+              Role.Owner,
+              Role.Resident,
+              Role.PropertyAgent,
+              Role.AdminAgent
+            ]
           },
           {
             id: 'list',
             title: 'List Tickets',
             type: 'item',
             url: '/helpdesk/ticket/list',
-            role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident, Role.PropertyAgent, Role.AdminAgent]
+            role: [
+              Role.Admin,
+              Role.User,
+              Role.PropertyManager,
+              Role.BuildingManager,
+              Role.Owner,
+              Role.Resident,
+              Role.PropertyAgent,
+              Role.AdminAgent
+            ]
           }
         ]
       },

@@ -29,8 +29,6 @@ export class AuthRegisterComponent {
     this.errorMsg = [];
     this.authService.register(this.registerRequest).subscribe({
       next: () => {
-        // ✅ Μετά την εγγραφή πάντα redirect στο code-verify
-        // Εκεί θα ελέγξουμε αν υπάρχει inviteCode
         this.router.navigate(['code-verify']);
       },
       error: (err) => {

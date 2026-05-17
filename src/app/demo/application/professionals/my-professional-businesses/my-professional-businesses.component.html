@@ -1,0 +1,72 @@
+<div class="row">
+  <div class="col-12">
+    <app-card cardTitle="Οι Επιχειρήσεις Μου">
+      @if (loading) {
+        <div class="text-center py-5">Φόρτωση...</div>
+      }
+
+      @if (error) {
+        <div class="alert alert-danger">{{ error }}</div>
+      }
+
+      @if (!loading && businesses.length === 0) {
+        <div class="alert alert-info">
+          Δεν έχετε καταχωρίσει ακόμα επιχείρηση.
+        </div>
+      }
+
+      <div class="row">
+        @for (business of businesses; track business.id) {
+          <div class="col-xl-4 col-md-6 mb-4">
+            <app-card [showHeader]="false" cardClass="border shadow-sm h-100" blockClass="p-2">
+              <div class="position-relative mb-3">
+                <img
+                  [src]="getImageUrl(business)"
+                  class="img-fluid w-100 rounded"
+                  style="height: 180px; object-fit: cover;"
+                  alt="business"
+                />
+
+                <div class="position-absolute top-0 end-0 p-2">
+                  <span class="badge" [ngClass]="getStatusClass(business)">
+                    {{ getStatusLabel(business) }}
+                  </span>
+                </div>
+              </div>
+
+              <h5 class="mb-1">{{ business.businessName }}</h5>
+
+              <p class="text-muted mb-2">
+                {{ business.city || '-' }}
+                @if (business.region) {
+                  , {{ business.region }}
+                }
+              </p>
+
+              <p class="text-muted small">
+                {{ business.description || 'Δεν υπάρχει περιγραφή.' }}
+              </p>
+
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="badge bg-light-primary text-primary">
+                  ⭐ {{ business.ratingAverage || 0 }}
+                </span>
+
+                <span class="text-muted small">
+                  {{ business.reviewCount || 0 }} αξιολογήσεις
+                </span>
+              </div>
+
+              <a
+                class="btn btn-primary w-100"
+                [routerLink]="['/professionals/manage', business.id]"
+              >
+                Διαχείριση
+              </a>
+            </app-card>
+          </div>
+        }
+      </div>
+    </app-card>
+  </div>
+</div>

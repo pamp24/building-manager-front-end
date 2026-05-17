@@ -50,9 +50,11 @@ import {
   ChromeOutline,
   RightOutline,
   ReadOutline,
-  LockOutline
+  LockOutline,
+  ToolOutline
 } from '@ant-design/icons-angular/icons';
 import { NavigationItem } from 'src/app/theme/shared/models/navigation';
+import { ProfessionalService } from 'src/app/theme/shared/service/professional.service';
 
 @Component({
   selector: 'app-nav-content',
@@ -91,7 +93,10 @@ export class NavContentComponent implements AfterViewInit, OnInit {
   readonly navbarWrapper = viewChild.required<ElementRef>('navbarWrapper');
 
   // Constructor
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private professionalService: ProfessionalService
+  ) {
     this.windowWidth = window.innerWidth;
     this.iconService.addIcon(
       ...[
@@ -127,7 +132,8 @@ export class NavContentComponent implements AfterViewInit, OnInit {
         ChromeOutline,
         RightOutline,
         ReadOutline,
-        LockOutline
+        LockOutline,
+        ToolOutline
       ]
     );
     this.prevDisabled = 'disabled';
@@ -138,8 +144,49 @@ export class NavContentComponent implements AfterViewInit, OnInit {
 
   ngOnInit() {
     this.layout = MantisConfig.layout;
+
     const currentUserRole = this.authenticationService.currentUserValue?.role || Role.User;
+
     this.navigation = this.filterMenu(NavigationItems, currentUserRole);
+
+    this.professionalService.getMyBusinesses().subscribe({
+      next: (businesses) => {
+        if (!businesses.length) {
+          return;
+        }
+
+        const professionalsGroup = this.navigation.find((item) => item.id === 'Professionals');
+
+        if (!professionalsGroup || !professionalsGroup.children) {
+          return;
+        }
+
+        const alreadyExists = professionalsGroup.children.some((child) => child.id === 'professional-manage');
+
+        if (alreadyExists) {
+          return;
+        }
+
+        professionalsGroup.children.push({
+          id: 'professional-my-businesses',
+          title: 'Οι Επιχειρήσεις Μου',
+          type: 'item',
+          classes: 'item',
+          icon: 'edit',
+          url: '/professionals/my-businesses',
+          role: [
+            Role.Admin,
+            Role.User,
+            Role.PropertyManager,
+            Role.BuildingManager,
+            Role.Owner,
+            Role.Resident,
+            Role.PropertyAgent,
+            Role.AdminAgent
+          ]
+        });
+      }
+    });
   }
 
   getUserAvatar(): string {

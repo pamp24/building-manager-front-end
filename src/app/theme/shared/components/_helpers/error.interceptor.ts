@@ -1,28 +1,21 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Injectable, inject } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Injectable,  } from '@angular/core';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor,  } from '@angular/common/http';
+import { Observable,  } from 'rxjs';
 
-import { AuthenticationService } from '../../service/authentication.service';
 
 @Injectable()
-export class ErrorInterceptor implements HttpInterceptor {
-  private authenticationService = inject(AuthenticationService);
+export class JwtInterceptor implements HttpInterceptor {
+  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
 
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return next.handle(request).pipe(
-      catchError((err: HttpErrorResponse) => {
-        if ([401, 403].includes(err.status)) {
-          const isLoginRequest = request.url.includes('/auth/authenticate');
-
-          if (!isLoginRequest) {
-            this.authenticationService.logout();
-          }
+    if (token) {
+      request = request.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`
         }
+      });
+    }
 
-        return throwError(() => err.error ?? err);
-      })
-    );
+    return next.handle(request);
   }
 }

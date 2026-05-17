@@ -1,8 +1,9 @@
 import { TDrops, TOpens } from '../common/type/poistions.type';
 import { ElementRef } from '@angular/core';
 import { IDayCalendarConfig } from 'ng2-date-picker';
-import { IDayCalendarConfigInternal } from 'ng2-date-picker/lib/day-calendar/day-calendar-config.model';
-import { ITimeSelectConfig, ITimeSelectConfigInternal } from 'ng2-date-picker/lib/time-select/time-select-config.model';
+import { IDayCalendarConfigInternal } from 'node_modules/ng2-date-picker/lib/day-calendar/day-calendar-config.model';
+import { ITimeSelectConfig, ITimeSelectConfigInternal } from 'node_modules/ng2-date-picker/lib/time-select/time-select-config.model';
+
 
 export interface IConfig {
   closeOnSelect?: boolean;

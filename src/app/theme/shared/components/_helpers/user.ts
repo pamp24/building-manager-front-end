@@ -17,4 +17,6 @@ export interface User {
   region?: string;
   postalCode?: string;
   role?: string;
+
+  professionalsFavoritesOnly?: boolean;
 }
