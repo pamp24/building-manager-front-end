@@ -178,6 +178,20 @@ export class NotificationDropdownComponent implements OnInit {
           payloadObj: p
         };
       }
+      case 'PROFESSIONAL_PENDING_APPROVAL': {
+        const businessName = (p as any)?.businessName ?? 'Νέα επιχείρηση';
+
+        return {
+          id: n.id,
+          type: n.type,
+          avatarClass: 'user-avatar bg-light-info',
+          iconClass: 'shop',
+          time,
+          message: `Νέος επαγγελματίας <b>${businessName}</b> περιμένει έγκριση.`,
+          date,
+          payloadObj: p
+        };
+      }
 
       default:
         return {
@@ -230,6 +244,12 @@ export class NotificationDropdownComponent implements OnInit {
         }
       });
 
+      this.close();
+      return;
+    }
+    
+    if (item.type === 'PROFESSIONAL_PENDING_APPROVAL') {
+      this.router.navigate(['/professionals/approval']);
       this.close();
       return;
     }

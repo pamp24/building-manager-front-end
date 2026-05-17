@@ -68,17 +68,18 @@ export class AuthenticationService {
     return this.http.post<AuthenticationResponse>('http://localhost:8080/api/v1/auth/register', request);
   }
 
-  logout() {
-    localStorage.removeItem('currentUser');
-    localStorage.removeItem('token');
+  logout(message?: string) {
+  localStorage.removeItem('currentUser');
+  localStorage.removeItem('token');
+  sessionStorage.removeItem('currentUser');
+  sessionStorage.removeItem('token');
 
-    sessionStorage.removeItem('currentUser');
-    sessionStorage.removeItem('token');
+  this.currentUser = null;
 
-    this.currentUser = null;
-
-    this.router.navigate(['/login']);
-  }
+  this.router.navigate(['/login'], {
+    queryParams: message ? { reason: message } : {}
+  });
+}
 
   confirm(token: string) {
     return this.http.post('http://localhost:8080/api/v1/auth/activate-account', { token });

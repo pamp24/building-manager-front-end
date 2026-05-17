@@ -29,7 +29,7 @@ import { StudentStatesChartComponent } from './student-states-chart/student-stat
 import { ActivityLineChartComponent } from './activity-line-chart/activity-line-chart.component';
 import { VisitorsBarChartComponent } from './visitors-bar-chart/visitors-bar-chart.component';
 import { EarningCoursesLineChartComponent } from './earning-courses-line-chart/earning-courses-line-chart.component';
-import { PmStatisticsChartComponent } from 'src/app/theme/shared/apexchart/pm-statistics-chart/pm-statistics-chart.component';
+import { PmStatisticsChartComponent } from 'src/app/theme/shared/apexchart/pm-statistics-chart/pm-statistics-chart.component.ts';
 
 @Component({
   selector: 'app-online-dashboard',

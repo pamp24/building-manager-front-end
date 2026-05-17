@@ -50,4 +50,8 @@ export class UserService {
 
     return this.http.post<{ imageUrl: string }>(`${this.apiUrl}/users/me/profile-image`, formData);
   }
+
+  updateProfessionalsFavoritesOnly(enabled: boolean): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/users/preferences/professionals-favorites-only?enabled=${enabled}`, {});
+  }
 }

@@ -1,0 +1,202 @@
+<div class="row">
+  <div class="col-12">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h4>Επαγγελματίες</h4>
+
+      <button class="btn btn-success" (click)="openRegisterModal()">Καταχώριση Επιχείρησης</button>
+    </div>
+    <app-card cardTitle="Επαγγελματίες">
+      <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+          <label class="form-label">Κατηγορία</label>
+
+          <select class="form-select" [(ngModel)]="selectedCategory">
+            <option value="">Όλες οι κατηγορίες</option>
+
+            @for (category of categories; track category.value) {
+              <option [value]="category.value">
+                {{ category.label }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div class="col-md-3 mb-3">
+          <label class="form-label">Νομός</label>
+
+          <select class="form-select" [(ngModel)]="selectedRegion" (change)="onRegionChange()">
+            <option value="">Όλοι οι νομοί</option>
+
+            @for (item of greekRegions; track item.region) {
+              <option [value]="item.region">
+                {{ item.region }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div class="col-md-3 mb-3">
+          <label class="form-label">Πόλη</label>
+
+          <select class="form-select" [(ngModel)]="city" [disabled]="availableCities.length === 0">
+            <option value="">Όλες οι πόλεις</option>
+
+            @for (cityOption of availableCities; track cityOption) {
+              <option [value]="cityOption">
+                {{ cityOption }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div class="col-md-3 d-flex align-items-end gap-2 mb-3">
+          <button class="btn btn-primary" (click)="loadProfessionals()">Αναζήτηση</button>
+
+          <button class="btn btn-outline-secondary" (click)="clearFilters()">Καθαρισμός</button>
+        </div>
+        <div>
+          <button class="btn" [ngClass]="showOnlyFavorites ? 'btn-danger' : 'btn-outline-danger'" (click)="toggleFavoriteFilter()">
+            {{ showOnlyFavorites ? 'Εμφάνιση όλων' : 'Μόνο Αγαπημένοι' }}
+          </button>
+        </div>
+      </div>
+
+      @if (loading) {
+        <div class="text-center p-5">Φόρτωση...</div>
+      }
+
+      @if (!loading && visibleProfessionals.length === 0) {
+        <div class="alert alert-info">
+          {{ showOnlyFavorites ? 'Δεν έχετε αγαπημένους επαγγελματίες.' : 'Δεν βρέθηκαν επαγγελματίες.' }}
+        </div>
+      }
+
+      <div class="row">
+        @for (professional of visibleProfessionals; track professional.id) {
+          <div class="col-xl-4 col-md-6 mb-4">
+            <app-card [showHeader]="false" cardClass="border shadow-sm h-100" blockClass="p-2">
+              <div class="position-relative mb-3">
+                <img
+                  [src]="getProfessionalImageUrl(professional)"
+                  alt="professional"
+                  class="img-fluid w-100 rounded"
+                  style="height: 180px; object-fit: cover"
+                />
+                <div class="position-absolute top-0 end-0 p-2 d-flex gap-2">
+                  @if (professional.verified) {
+                    <span class="badge bg-success">Verified</span>
+                  }
+                  <span class="badge bg-dark">
+                    {{ getCategoryLabel(professional.category) }}
+                  </span>
+                </div>
+              </div>
+              <ul class="list-group list-group-flush my-2">
+                <li class="list-group-item px-0 py-2">
+                  <div class="d-flex align-items-start">
+                    <div class="flex-grow-1 me-2">
+                      <h5 class="mb-1">
+                        {{ professional.businessName }}
+                      </h5>
+                      <p class="text-muted mb-0">
+                        {{ professional.city || '-' }}
+                        @if (professional.region) {
+                          , {{ professional.region }}
+                        }
+                      </p>
+                    </div>
+                    <div class="flex-shrink-0">
+                      <span class="badge bg-light-primary text-primary">⭐ {{ professional.ratingAverage || 0 }}</span>
+                    </div>
+                  </div>
+                </li>
+                <li class="list-group-item px-0 py-2">
+                  <p class="text-muted small mb-0">
+                    {{ professional.description || 'Δεν υπάρχει περιγραφή για αυτή την επιχείρηση.' }}
+                  </p>
+                </li>
+                <li class="list-group-item px-0 py-2">
+                  <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 me-2">
+                      <p class="mb-0">Υπεύθυνος</p>
+                    </div>
+
+                    <div class="flex-shrink-0 text-end">
+                      <p class="text-muted mb-0">
+                        {{ professional.ownerFullName || '-' }}
+                      </p>
+                    </div>
+                  </div>
+                </li>
+                <li class="list-group-item px-0 py-2">
+                  <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 me-2">
+                      <p class="mb-0">Τηλέφωνο</p>
+                    </div>
+                    <div class="flex-shrink-0 text-end">
+                      <a class="text-muted" [href]="'tel:' + professional.phone">
+                        {{ professional.phone || '-' }}
+                      </a>
+                    </div>
+                  </div>
+                </li>
+                @if (professional.email) {
+                  <li class="list-group-item px-0 py-2">
+                    <div class="d-flex align-items-center">
+                      <div class="flex-grow-1 me-2">
+                        <p class="mb-0">Email</p>
+                      </div>
+                      <div class="flex-shrink-0 text-end">
+                        <a class="text-muted" [href]="'mailto:' + professional.email">
+                          {{ professional.email }}
+                        </a>
+                      </div>
+                    </div>
+                  </li>
+                }
+                @if (professional.website) {
+                  <li class="list-group-item px-0 py-2">
+                    <div class="d-flex align-items-center">
+                      <div class="flex-grow-1 me-2">
+                        <p class="mb-0">Website</p>
+                      </div>
+                      <div class="flex-shrink-0 text-end">
+                        <a class="text-primary" [href]="professional.website" target="_blank" rel="noopener noreferrer">Άνοιγμα</a>
+                      </div>
+                    </div>
+                  </li>
+                }
+                <li class="list-group-item px-0 py-2">
+                  <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 me-2">
+                      <p class="mb-0">Αξιολογήσεις</p>
+                    </div>
+
+                    <div class="flex-shrink-0">
+                      <p class="text-muted mb-0">
+                        {{ professional.reviewCount || 0 }}
+                      </p>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+              <div class="d-flex gap-2 mt-3">
+                <button class="btn btn-sm btn-primary flex-grow-1" (click)="openDetailsModal(professional)">Προβολή</button>
+                @if (professional.phone) {
+                  <a class="btn btn-sm btn-outline-success" [href]="'tel:' + professional.phone">Κλήση</a>
+                }
+                <button
+                  class="btn btn-sm"
+                  [ngClass]="isFavorite(professional.id) ? 'btn-danger' : 'btn-outline-danger'"
+                  (click)="toggleFavorite(professional.id)"
+                >
+                  ♥
+                </button>
+              </div>
+            </app-card>
+          </div>
+        }
+      </div>
+    </app-card>
+  </div>
+</div>
