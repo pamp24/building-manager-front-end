@@ -44,6 +44,7 @@ export interface ProfessionalBusinessDTO {
   updatedAt?: string;
 
   primaryImageUrl?: string | null;
+  workingHours?: string | null;
 }
 
 export interface ProfessionalBusinessRequest {
@@ -63,6 +64,7 @@ export interface ProfessionalBusinessRequest {
   address?: string;
 
   taxNumber?: string;
+  workingHours?: string | null;
 }
 
 export interface ProfessionalAdminStatsDTO {
