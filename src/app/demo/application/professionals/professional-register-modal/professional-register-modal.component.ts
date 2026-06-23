@@ -22,6 +22,7 @@ export class ProfessionalRegisterModalComponent {
   countries = ['Ελλάδα'];
   availableCities: string[] = [];
 
+
   categories: { value: ProfessionalCategory; label: string }[] = [
     { value: 'ELECTRICIAN', label: 'Ηλεκτρολόγος' },
     { value: 'PLUMBER', label: 'Υδραυλικός' },
@@ -83,7 +84,8 @@ export class ProfessionalRegisterModalComponent {
     region: ['', Validators.required],
     city: ['', Validators.required],
     address: [''],
-    taxNumber: ['']
+    taxNumber: [''],
+    workingHours: ['']
   });
 
   constructor(

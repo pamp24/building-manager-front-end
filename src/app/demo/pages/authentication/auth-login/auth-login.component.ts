@@ -120,17 +120,49 @@ export class AuthLoginComponent implements OnInit {
   }
 
   private getLoginErrorMessage(err: any): string {
-    if (typeof err === 'string') {
+  if (typeof err === 'string') {
+    try {
+      const parsed = JSON.parse(err);
+      return (
+        parsed.businessErrorDescription ||
+        parsed.error ||
+        parsed.message ||
+        'Παρουσιάστηκε σφάλμα κατά τη σύνδεση.'
+      );
+    } catch {
+      return err;
+    }
+  }
+
+  if (err?.error) {
+    if (typeof err.error === 'string') {
       try {
-        const parsed = JSON.parse(err);
-        return parsed.businessErrorDescription || parsed.error || 'Παρουσιάστηκε σφάλμα κατά τη σύνδεση.';
+        const parsed = JSON.parse(err.error);
+        return (
+          parsed.businessErrorDescription ||
+          parsed.error ||
+          parsed.message ||
+          err.error
+        );
       } catch {
-        return err;
+        return err.error;
       }
     }
 
-    return err?.businessErrorDescription || err?.error || err?.message || 'Παρουσιάστηκε σφάλμα κατά τη σύνδεση. Παρακαλώ δοκιμάστε ξανά.';
+    return (
+      err.error.businessErrorDescription ||
+      err.error.error ||
+      err.error.message ||
+      'Παρουσιάστηκε σφάλμα κατά τη σύνδεση.'
+    );
   }
+
+  return (
+    err?.businessErrorDescription ||
+    err?.message ||
+    'Παρουσιάστηκε σφάλμα κατά τη σύνδεση. Παρακαλώ δοκιμάστε ξανά.'
+  );
+}
 
   socialMedia = [
     { name: 'Google', logo: 'google.svg' },

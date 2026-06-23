@@ -84,7 +84,8 @@ export class ProfessionalManageComponent implements OnInit {
       city: this.professional.city,
       region: this.professional.region,
       address: this.professional.address,
-      taxNumber: this.professional.taxNumber
+      taxNumber: this.professional.taxNumber,
+      workingHours: this.professional.workingHours,
     };
 
     this.professionalService.update(this.professionalId, payload).subscribe({
