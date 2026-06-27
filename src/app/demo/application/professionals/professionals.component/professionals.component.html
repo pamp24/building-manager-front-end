@@ -54,21 +54,30 @@
 
           <button class="btn btn-outline-secondary" (click)="clearFilters()">Καθαρισμός</button>
         </div>
-        <div>
+        <div class="d-flex flex-wrap gap-2 mb-4">
           <button class="btn" [ngClass]="showOnlyFavorites ? 'btn-danger' : 'btn-outline-danger'" (click)="toggleFavoriteFilter()">
             {{ showOnlyFavorites ? 'Εμφάνιση όλων' : 'Μόνο Αγαπημένοι' }}
+          </button>
+          
+          <button class="btn" [ngClass]="showOnlyPartners ? 'btn-warning' : 'btn-outline-warning'" (click)="togglePartnerFilter()">
+            {{ showOnlyPartners ? 'Εμφάνιση όλων' : 'Συνεργαζόμενοι Πολυκατοικίας' }}
           </button>
         </div>
       </div>
 
+      <div class="col-md-3 mb-3">
+        <label class="form-label">Ταξινόμηση</label>
+
+        <select class="form-select" [(ngModel)]="sortBy">
+          <option value="default">Προτεινόμενη σειρά</option>
+          <option value="rating">Υψηλότερη αξιολόγηση</option>
+          <option value="reviews">Περισσότερες αξιολογήσεις</option>
+          <option value="newest">Νεότεροι</option>
+        </select>
+      </div>
+
       @if (loading) {
         <div class="text-center p-5">Φόρτωση...</div>
-      }
-
-      @if (!loading && visibleProfessionals.length === 0) {
-        <div class="alert alert-info">
-          {{ showOnlyFavorites ? 'Δεν έχετε αγαπημένους επαγγελματίες.' : 'Δεν βρέθηκαν επαγγελματίες.' }}
-        </div>
       }
 
       <div class="row">
@@ -192,6 +201,15 @@
                 >
                   ♥
                 </button>
+                @if (canManageBuildingPartners) {
+                  <button
+                    class="btn btn-sm"
+                    [ngClass]="isPartner(professional.id) ? 'btn-warning' : 'btn-outline-warning'"
+                    (click)="togglePartner(professional.id)"
+                  >
+                    {{ isPartner(professional.id) ? 'Συνεργάτης' : 'Ορισμός Συνεργάτη' }}
+                  </button>
+                }
               </div>
             </app-card>
           </div>

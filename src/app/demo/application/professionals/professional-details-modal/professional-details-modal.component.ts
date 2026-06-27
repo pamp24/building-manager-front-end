@@ -31,6 +31,7 @@ export class ProfessionalDetailsModalComponent implements OnInit {
   uploadingImage = false;
   selectedImageFile: File | null = null;
   makePrimary = false;
+  currentImageIndex = 0;
 
   readonly backendUrl = 'http://localhost:8080/api/v1';
 
@@ -51,7 +52,8 @@ export class ProfessionalDetailsModalComponent implements OnInit {
     this.professionalService.getReviews(this.professional.id).subscribe({
       next: (res) => {
         this.reviews = res ?? [];
-        this.loadingReviews = false;
+        this.currentImageIndex = 0;
+        this.loadingImages = false;
       },
       error: () => {
         this.reviews = [];
@@ -215,5 +217,27 @@ export class ProfessionalDetailsModalComponent implements OnInit {
   goToManage(): void {
     this.activeModal.close();
     this.router.navigate(['/professionals/manage', this.professional.id]);
+  }
+
+  getCurrentImageUrl(): string {
+    if (!this.images.length) {
+      return 'assets/images/admin/img-course-1.png';
+    }
+
+    const currentImage = this.images[this.currentImageIndex];
+
+    return this.getFullImageUrl(currentImage?.imageUrl);
+  }
+
+  previousImage(): void {
+    if (!this.images.length) return;
+
+    this.currentImageIndex = this.currentImageIndex === 0 ? this.images.length - 1 : this.currentImageIndex - 1;
+  }
+
+  nextImage(): void {
+    if (!this.images.length) return;
+
+    this.currentImageIndex = this.currentImageIndex === this.images.length - 1 ? 0 : this.currentImageIndex + 1;
   }
 }
