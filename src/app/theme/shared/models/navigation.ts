@@ -19,4 +19,5 @@ export interface NavigationItem {
   role?: string[];
   disabled?: boolean;
   isMainParent?: boolean;
+  exact?: boolean;
 }
