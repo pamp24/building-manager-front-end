@@ -11,6 +11,9 @@ import { ProfessionalBusinessDTO, ProfessionalCategory } from 'src/app/theme/sha
 import { ProfessionalDetailsModalComponent } from '../professional-details-modal/professional-details-modal.component';
 import { ProfessionalFavoriteService } from 'src/app/theme/shared/service/professional-favorite.service';
 import { UserService } from '../../../../theme/shared/service/user.service';
+import { ProfessionalPartnerService } from 'src/app/theme/shared/service/professional-partner.service';
+import { AuthenticationService } from 'src/app/theme/shared/service';
+import { Role } from 'src/app/theme/shared/models/role.model';
 
 @Component({
   selector: 'app-professionals',
@@ -27,6 +30,11 @@ export class ProfessionalsComponent implements OnInit {
   selectedCategory: ProfessionalCategory | '' = '';
   city = '';
   favoriteProfessionalIds: number[] = [];
+  sortBy = 'default';
+  partnerProfessionalIds: number[] = [];
+  showOnlyPartners = false;
+  canManageBuildingPartners = false;
+  buildingId?: number;
 
   readonly backendUrl = 'http://localhost:8080/api/v1';
 
@@ -92,8 +100,10 @@ export class ProfessionalsComponent implements OnInit {
   constructor(
     private professionalService: ProfessionalService,
     private favoriteService: ProfessionalFavoriteService,
+    private partnerService: ProfessionalPartnerService,
     private modal: NgbModal,
-    private userService: UserService
+    private userService: UserService,
+    private authenticationService: AuthenticationService
   ) {}
 
   ngOnInit(): void {
@@ -108,6 +118,17 @@ export class ProfessionalsComponent implements OnInit {
         this.showOnlyFavorites = false;
       }
     });
+    const currentUser = this.authenticationService.currentUserValue;
+
+    this.canManageBuildingPartners =
+      currentUser?.role === Role.Admin || currentUser?.role === Role.BuildingManager || currentUser?.role === Role.PropertyManager;
+
+    const rawBuildingId = localStorage.getItem('buildingId');
+
+    if (rawBuildingId) {
+      this.buildingId = Number(rawBuildingId);
+      this.loadPartners();
+    }
   }
 
   loadProfessionals(): void {
@@ -212,10 +233,68 @@ export class ProfessionalsComponent implements OnInit {
   }
 
   get visibleProfessionals(): ProfessionalBusinessDTO[] {
-    if (!this.showOnlyFavorites) {
-      return this.professionals;
+    let list = [...this.professionals];
+
+    if (this.showOnlyFavorites) {
+      list = list.filter((p) => this.favoriteProfessionalIds.includes(p.id));
     }
 
-    return this.professionals.filter((p) => this.favoriteProfessionalIds.includes(p.id));
+    if (this.showOnlyPartners) {
+      list = list.filter((p) => this.partnerProfessionalIds.includes(p.id));
+    }
+
+    switch (this.sortBy) {
+      case 'rating':
+        return list.sort((a, b) => (b.ratingAverage || 0) - (a.ratingAverage || 0));
+
+      case 'reviews':
+        return list.sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0));
+
+      case 'newest':
+        return list.sort((a, b) => (b.id || 0) - (a.id || 0));
+
+      default:
+        return list;
+    }
+  }
+
+  loadPartners(): void {
+    if (!this.buildingId) return;
+
+    this.partnerService.getPartners(this.buildingId).subscribe({
+      next: (partners) => {
+        this.partnerProfessionalIds = partners.map((p) => p.id);
+      }
+    });
+  }
+
+  isPartner(professionalId: number): boolean {
+    return this.partnerProfessionalIds.includes(professionalId);
+  }
+
+  togglePartnerFilter(): void {
+    this.showOnlyPartners = !this.showOnlyPartners;
+  }
+
+  togglePartner(professionalId: number): void {
+    if (!this.buildingId) {
+      return;
+    }
+
+    if (this.isPartner(professionalId)) {
+      this.partnerService.removePartner(this.buildingId, professionalId).subscribe({
+        next: () => {
+          this.partnerProfessionalIds = this.partnerProfessionalIds.filter((id) => id !== professionalId);
+        }
+      });
+
+      return;
+    }
+
+    this.partnerService.addPartner(this.buildingId, professionalId).subscribe({
+      next: () => {
+        this.partnerProfessionalIds.push(professionalId);
+      }
+    });
   }
 }

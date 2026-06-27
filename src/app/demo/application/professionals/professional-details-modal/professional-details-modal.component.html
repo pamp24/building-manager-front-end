@@ -7,7 +7,34 @@
 </div>
 
 <div class="modal-body">
-  <img [src]="getPrimaryImageUrl()" class="img-fluid rounded mb-4 w-100" alt="professional" />
+  <div class="position-relative mb-4">
+    <img [src]="getCurrentImageUrl()" class="img-fluid rounded w-100" style="height: 320px; object-fit: cover" alt="professional" />
+
+    @if (images.length > 1) {
+      <button type="button" class="btn btn-light position-absolute top-50 start-0 translate-middle-y ms-2" (click)="previousImage()">
+        ‹
+      </button>
+
+      <button type="button" class="btn btn-light position-absolute top-50 end-0 translate-middle-y me-2" (click)="nextImage()">›</button>
+
+      <span class="badge bg-dark position-absolute bottom-0 end-0 m-2">{{ currentImageIndex + 1 }} / {{ images.length }}</span>
+    }
+  </div>
+
+  @if (images.length > 1) {
+  <div class="d-flex gap-2 mb-4 overflow-auto">
+    @for (image of images; track image.id; let i = $index) {
+      <img
+        [src]="getFullImageUrl(image.imageUrl)"
+        class="rounded border"
+        [class.border-primary]="i === currentImageIndex"
+        style="width: 64px; height: 48px; object-fit: cover; cursor: pointer"
+        (click)="currentImageIndex = i"
+        alt="thumbnail"
+      />
+    }
+  </div>
+}
 
   <div class="d-flex gap-2 mb-3">
     @if (professional.verified) {
