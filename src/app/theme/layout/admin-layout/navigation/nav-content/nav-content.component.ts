@@ -51,7 +51,8 @@ import {
   RightOutline,
   ReadOutline,
   LockOutline,
-  ToolOutline
+  ToolOutline,
+  ShopOutline
 } from '@ant-design/icons-angular/icons';
 import { NavigationItem } from 'src/app/theme/shared/models/navigation';
 import { ProfessionalService } from 'src/app/theme/shared/service/professional.service';
@@ -133,7 +134,8 @@ export class NavContentComponent implements AfterViewInit, OnInit {
         RightOutline,
         ReadOutline,
         LockOutline,
-        ToolOutline
+        ToolOutline,
+        ShopOutline
       ]
     );
     this.prevDisabled = 'disabled';
@@ -148,45 +150,6 @@ export class NavContentComponent implements AfterViewInit, OnInit {
     const currentUserRole = this.authenticationService.currentUserValue?.role || Role.User;
 
     this.navigation = this.filterMenu(NavigationItems, currentUserRole);
-
-    this.professionalService.getMyBusinesses().subscribe({
-      next: (businesses) => {
-        if (!businesses.length) {
-          return;
-        }
-
-        const professionalsGroup = this.navigation.find((item) => item.id === 'Professionals');
-
-        if (!professionalsGroup || !professionalsGroup.children) {
-          return;
-        }
-
-        const alreadyExists = professionalsGroup.children.some((child) => child.id === 'professional-manage');
-
-        if (alreadyExists) {
-          return;
-        }
-
-        professionalsGroup.children.push({
-          id: 'professional-my-businesses',
-          title: 'Οι Επιχειρήσεις Μου',
-          type: 'item',
-          classes: 'item',
-          icon: 'edit',
-          url: '/professionals/my-businesses',
-          role: [
-            Role.Admin,
-            Role.User,
-            Role.PropertyManager,
-            Role.BuildingManager,
-            Role.Owner,
-            Role.Resident,
-            Role.PropertyAgent,
-            Role.AdminAgent
-          ]
-        });
-      }
-    });
   }
 
   getUserAvatar(): string {

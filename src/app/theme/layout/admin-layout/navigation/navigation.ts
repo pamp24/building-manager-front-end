@@ -14,6 +14,7 @@ export const NavigationItems: NavigationItem[] = [
         title: "Admin's Dashboard",
         type: 'item',
         classes: 'nav-item',
+        icon: 'dashboard',
         url: '/admin/dashboard'
       },
       {
@@ -29,6 +30,7 @@ export const NavigationItems: NavigationItem[] = [
         title: 'Support Agents',
         type: 'item',
         classes: 'nav-item',
+        icon: 'customer-service',
         url: '/pm/support-agents'
       }
     ]
@@ -45,6 +47,7 @@ export const NavigationItems: NavigationItem[] = [
         title: "Company's Dashboard",
         type: 'item',
         classes: 'nav-item',
+        icon: 'dashboard',
         url: '/pm/pm-dashboard'
       },
       {
@@ -52,6 +55,7 @@ export const NavigationItems: NavigationItem[] = [
         title: 'Create Expenses Invoice',
         type: 'item',
         classes: 'nav-item',
+        icon: 'file-add',
         url: '/statement/create'
       },
       {
@@ -59,6 +63,7 @@ export const NavigationItems: NavigationItem[] = [
         title: 'Buildings',
         type: 'item',
         classes: 'nav-item',
+        icon: 'home',
         url: '/pm/buildings'
       },
       {
@@ -66,6 +71,7 @@ export const NavigationItems: NavigationItem[] = [
         title: 'Support Agents',
         type: 'item',
         classes: 'nav-item',
+        icon: 'customer-service',
         url: '/pm/support-agents',
         role: [Role.PropertyManager]
       }
@@ -83,6 +89,7 @@ export const NavigationItems: NavigationItem[] = [
         title: "Manager's Dashboard",
         type: 'item',
         classes: 'nav-item',
+        icon: 'dashboard',
         url: '/statement/dashboard'
       },
       {
@@ -90,6 +97,7 @@ export const NavigationItems: NavigationItem[] = [
         title: 'Create Expenses Invoice',
         type: 'item',
         classes: 'nav-item',
+        icon: 'audit',
         url: '/statement/create'
       },
       {
@@ -97,6 +105,7 @@ export const NavigationItems: NavigationItem[] = [
         title: 'List Expenses Invoices',
         type: 'item',
         classes: 'nav-item',
+        icon: 'unordered-list',
         url: '/statement/list'
       }
     ]
@@ -167,7 +176,7 @@ export const NavigationItems: NavigationItem[] = [
       },
       {
         id: 'polls',
-        title: 'Ψηφοφορίες',
+        title: 'Polls',
         type: 'item',
         classes: 'nav-item',
         url: '/polls',
@@ -180,7 +189,7 @@ export const NavigationItems: NavigationItem[] = [
     id: 'Professionals',
     title: 'Professionals',
     type: 'group',
-    icon: 'icon-navigation',
+    icon: 'team',
     role: [
       Role.Admin,
       Role.User,
@@ -196,17 +205,28 @@ export const NavigationItems: NavigationItem[] = [
         id: 'professional-buisnesses-management',
         title: 'Professional Businesses Management',
         type: 'item',
-        classes: 'item',
+        classes: 'nav-item',
         icon: 'audit',
         url: '/professionals/approval',
         role: [Role.Admin]
       },
       {
-        id: 'professionals',  
-        title: 'Επαγγελματίες',
+        id: 'professionals',
+        title: 'Professionals',
         type: 'item',
+        classes: 'nav-item',
         icon: 'tool',
-        url: '/professionals'
+        url: '/professionals',
+        exact: true
+      },
+      {
+        id: 'my-professional-businesses',
+        title: 'My Businesses',
+        type: 'item',
+        classes: 'nav-item',
+        icon: 'shop',
+        url: '/professionals/my-businesses',
+        exact: true
       }
     ]
   },
