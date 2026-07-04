@@ -129,4 +129,8 @@
   "Menu Level 4.2": "Nivel de meniu 4.2",
   "Sample Page": "Pagina Exemplu",
   "Document": "Document"
+,
+  "ADMIN": "Admin",
+  "BUILDING_MANAGER": "Administrator clădire",
+  "PROPERTY_MANAGER": "Administrator proprietăți"
 }

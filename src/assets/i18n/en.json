@@ -131,4 +131,8 @@
   "Document": "Document",
   "Home": "Home"
   
+,
+  "ADMIN": "Admin",
+  "BUILDING_MANAGER": "Building Manager",
+  "PROPERTY_MANAGER": "Property Manager"
 }

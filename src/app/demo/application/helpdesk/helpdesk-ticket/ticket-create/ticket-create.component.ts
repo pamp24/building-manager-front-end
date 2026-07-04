@@ -13,6 +13,7 @@ import {
   SupportTicketTargetRole
 } from 'src/app/theme/shared/models/supportTicket';
 import { ApartmentService } from 'src/app/theme/shared/service/apartment.service';
+import { AuthenticationService } from 'src/app/theme/shared/service/authentication.service';
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
 import { SupportTicketService } from 'src/app/theme/shared/service/supportTicket.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -44,6 +45,7 @@ export class TicketCreateComponent implements OnInit {
     category: ['OTHER' as SupportTicketCategory, Validators.required]
   });
 
+  allBuildings: BuildingDTO[] = [];
   buildings: BuildingDTO[] = [];
   apartments: ApartmentSelectDTO[] = [];
   availableTargetRoles: SelectOption<SupportTicketTargetRole>[] = [];
@@ -52,6 +54,11 @@ export class TicketCreateComponent implements OnInit {
   ngOnInit(): void {
     this.loadCurrentUserRole();
     this.loadBuildings();
+    this.syncBuildingControlState();
+
+    this.form.get('targetRole')?.valueChanges.subscribe((targetRole) => {
+      this.onTargetRoleChange(targetRole);
+    });
 
     this.form.get('buildingId')?.valueChanges.subscribe((buildingId) => {
       this.onBuildingChange(buildingId);
@@ -80,29 +87,38 @@ export class TicketCreateComponent implements OnInit {
   }
 
   private initializeTargetRolesFromUserRole(): void {
-    const normalizedRole = (this.currentUserRole ?? '').toUpperCase().replace(/\s+/g, '_');
+    const normalizedRole = this.getNormalizedCurrentUserRole();
 
-    if (normalizedRole === 'PROPERTYMANAGER' || normalizedRole === 'PROPERTY_MANAGER') {
-      this.availableTargetRoles = [{ value: 'ADMIN', label: 'Admin' }];
+    if (normalizedRole === 'ADMIN') {
+      this.availableTargetRoles = [
+        { value: 'BUILDING_MANAGER', label: 'BUILDING_MANAGER' },
+        { value: 'PROPERTY_MANAGER', label: 'PROPERTY_MANAGER' }
+      ];
+    } else if (normalizedRole === 'PROPERTYMANAGER' || normalizedRole === 'PROPERTY_MANAGER') {
+      this.availableTargetRoles = [{ value: 'ADMIN', label: 'ADMIN' }];
     } else if (normalizedRole === 'PROPERTYAGENT' || normalizedRole === 'PROPERTY_AGENT') {
-      this.availableTargetRoles = [{ value: 'PROPERTY_MANAGER', label: 'Property Manager' }];
+      this.availableTargetRoles = [{ value: 'PROPERTY_MANAGER', label: 'PROPERTY_MANAGER' }];
     } else if (normalizedRole === 'BUILDINGMANAGER' || normalizedRole === 'BUILDING_MANAGER') {
       this.availableTargetRoles = [
-        { value: 'PROPERTY_MANAGER', label: 'Property Manager' },
-        { value: 'ADMIN', label: 'Admin' }
+        { value: 'PROPERTY_MANAGER', label: 'PROPERTY_MANAGER' },
+        { value: 'ADMIN', label: 'ADMIN' }
       ];
     } else if (normalizedRole === 'OWNER' || normalizedRole === 'RESIDENT') {
       this.availableTargetRoles = [
-        { value: 'BUILDING_MANAGER', label: 'Building Manager' },
-        { value: 'PROPERTY_MANAGER', label: 'Property Manager' }
+        { value: 'BUILDING_MANAGER', label: 'BUILDING_MANAGER' },
+        { value: 'PROPERTY_MANAGER', label: 'PROPERTY_MANAGER' }
       ];
     } else {
       this.availableTargetRoles = [];
     }
 
     this.form.patchValue({
-      targetRole: this.availableTargetRoles[0]?.value ?? null
+      targetRole: null
     });
+  }
+
+  private getNormalizedCurrentUserRole(): string {
+    return (this.currentUserRole ?? '').toUpperCase().replace(/\s+/g, '_');
   }
 
   priorities: SelectOption<SupportTicketPriority>[] = [
@@ -138,25 +154,25 @@ export class TicketCreateComponent implements OnInit {
     private fb: FormBuilder,
     private supportTicketService: SupportTicketService,
     private buildingService: BuildingService,
-    private apartmentService: ApartmentService
+    private apartmentService: ApartmentService,
+    private authenticationService: AuthenticationService
   ) {}
 
   loadBuildings(): void {
     this.loadingBuildings = true;
     this.errorMessage = '';
 
-    this.buildingService
-      .getMyBuildings()
+    const buildingsRequest =
+      this.getNormalizedCurrentUserRole() === 'ADMIN'
+        ? this.buildingService.getAllBuildingsForAdmin()
+        : this.buildingService.getMyBuildings();
+
+    buildingsRequest
       .pipe(finalize(() => (this.loadingBuildings = false)))
       .subscribe({
         next: (buildings: BuildingDTO[]) => {
-          this.buildings = buildings ?? [];
-
-          if (this.buildings.length === 1) {
-            this.form.patchValue({
-              buildingId: this.buildings[0].id
-            });
-          }
+          this.allBuildings = buildings ?? [];
+          this.applyBuildingFilter();
         },
         error: (error) => {
           this.errorMessage = error?.error?.message || 'Αποτυχία φόρτωσης πολυκατοικιών.';
@@ -164,17 +180,18 @@ export class TicketCreateComponent implements OnInit {
       });
   }
 
+  onTargetRoleChange(targetRole: SupportTicketTargetRole | null): void {
+    this.syncBuildingControlState(targetRole);
+    this.applyBuildingFilter(targetRole);
+  }
+
   onBuildingChange(buildingId: number | null): void {
     this.apartments = [];
     this.form.patchValue({ apartmentId: null });
 
     if (!buildingId) {
-      this.initializeTargetRolesFromUserRole();
       return;
     }
-
-    const selectedBuilding = this.buildings.find((b) => b.id === buildingId) ?? null;
-    this.refineTargetRolesByBuilding(selectedBuilding);
 
     this.loadingApartments = true;
     this.errorMessage = '';
@@ -195,26 +212,63 @@ export class TicketCreateComponent implements OnInit {
       });
   }
 
-  private refineTargetRolesByBuilding(building: BuildingDTO | null): void {
-    this.initializeTargetRolesFromUserRole();
+  private applyBuildingFilter(targetRole = this.form.get('targetRole')?.value ?? null): void {
+    this.buildings = this.allBuildings.filter((building) => this.supportsTargetRole(building, targetRole));
 
-    if (!building) {
+    const selectedBuildingId = this.form.get('buildingId')?.value ?? null;
+    const selectedBuildingStillAvailable = this.buildings.some((building) => building.id === selectedBuildingId);
+
+    if (!selectedBuildingStillAvailable) {
+      const nextBuildingId = this.buildings.length === 1 ? this.buildings[0].id : null;
+
+      this.form.patchValue(
+        {
+          buildingId: nextBuildingId,
+          apartmentId: null
+        },
+        { emitEvent: false }
+      );
+      this.apartments = [];
+
+      if (nextBuildingId != null) {
+        this.onBuildingChange(nextBuildingId);
+      }
+    }
+  }
+
+  private syncBuildingControlState(targetRole = this.form.get('targetRole')?.value ?? null): void {
+    const buildingControl = this.form.get('buildingId');
+
+    if (!buildingControl) {
       return;
     }
 
-    const hasPropertyManager = !!building.company;
-
-    if (!hasPropertyManager) {
-      this.availableTargetRoles = this.availableTargetRoles.filter((option) => option.value !== 'PROPERTY_MANAGER');
+    if (targetRole) {
+      buildingControl.enable({ emitEvent: false });
+      return;
     }
 
-    const currentTargetRole = this.form.get('targetRole')?.value;
+    buildingControl.disable({ emitEvent: false });
+  }
 
-    if (!currentTargetRole || !this.availableTargetRoles.some((option) => option.value === currentTargetRole)) {
-      this.form.patchValue({
-        targetRole: this.availableTargetRoles[0]?.value ?? null
-      });
+  private supportsTargetRole(building: BuildingDTO, targetRole: SupportTicketTargetRole | null): boolean {
+    if (!targetRole) {
+      return false;
     }
+
+    if (targetRole === 'PROPERTY_MANAGER') {
+      return !!building.company;
+    }
+
+    if (targetRole === 'BUILDING_MANAGER') {
+      return !!building.managerFullName || !!building.manager?.fullName;
+    }
+
+    if (targetRole === 'ADMIN') {
+      return true;
+    }
+
+    return false;
   }
 
   submit(): void {
@@ -288,12 +342,10 @@ export class TicketCreateComponent implements OnInit {
     });
 
     if (selectedBuildingId) {
-      const selectedBuilding = this.buildings.find((b) => b.id === selectedBuildingId) ?? null;
-      this.refineTargetRolesByBuilding(selectedBuilding);
       this.onBuildingChange(selectedBuildingId);
     } else {
       this.apartments = [];
-      this.initializeTargetRolesFromUserRole();
+      this.applyBuildingFilter();
     }
   }
 
@@ -308,6 +360,33 @@ export class TicketCreateComponent implements OnInit {
     const floor = apartmentAny.floor;
 
     return floor !== undefined && floor !== null && floor !== '' ? `${number} - Όροφος ${floor}` : `${number}`;
+  }
+
+  getSelectedRecipientName(): string {
+    const targetRole = this.form.get('targetRole')?.value;
+    const buildingId = this.form.get('buildingId')?.value;
+    const selectedBuilding = this.buildings.find((building) => building.id === buildingId) ?? null;
+
+    if (!targetRole || !selectedBuilding) {
+      return '-';
+    }
+
+    if (targetRole === 'BUILDING_MANAGER') {
+      return selectedBuilding.managerFullName || selectedBuilding.manager?.fullName || '-';
+    }
+
+    if (targetRole === 'PROPERTY_MANAGER') {
+      return selectedBuilding.company?.managerName || selectedBuilding.company?.companyName || '-';
+    }
+
+    if (targetRole === 'ADMIN') {
+      const currentUser = this.authenticationService.currentUserValue;
+      const fullName = [currentUser?.firstName, currentUser?.lastName].filter(Boolean).join(' ').trim();
+
+      return fullName || 'Admin';
+    }
+
+    return '-';
   }
 
   get buildingId() {

@@ -130,4 +130,8 @@
   "Sample Page": "示例页面",
   "Document": "文档",
   "Home": "家"
+,
+  "ADMIN": "管理员",
+  "BUILDING_MANAGER": "楼宇管理员",
+  "PROPERTY_MANAGER": "物业经理"
 }

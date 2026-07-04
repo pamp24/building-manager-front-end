@@ -79,7 +79,6 @@ export class HelpdeskDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentRole = this.getCurrentRole();
-    console.log('ROLE DEBUG:', this.currentRole);
     this.loadDashboardTickets();
   }
 
@@ -91,7 +90,7 @@ export class HelpdeskDashboardComponent implements OnInit {
   }
 
   isPmOrAdmin(): boolean {
-    return this.currentRole === 'PROPERTYMANAGER' || this.currentRole === 'ADMIN';
+    return this.currentRole === 'PROPERTYMANAGER' || this.currentRole === 'PROPERTY_MANAGER' || this.currentRole === 'ADMIN';
   }
 
   loadDashboardTickets(): void {
