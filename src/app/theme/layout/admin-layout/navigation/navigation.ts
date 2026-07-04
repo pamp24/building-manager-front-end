@@ -26,6 +26,14 @@ export const NavigationItems: NavigationItem[] = [
         url: '/admin/finance'
       },
       {
+        id: 'admin-buildings',
+        title: 'Buildings',
+        type: 'item',
+        classes: 'nav-item',
+        icon: 'home',
+        url: '/admin/buildings'
+      },
+      {
         id: 'support-agents',
         title: 'Support Agents',
         type: 'item',
