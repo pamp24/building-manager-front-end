@@ -120,7 +120,8 @@ export class TicketListComponent implements OnInit {
   getCurrentUserRole(): string | null {
     const currentUser = this.authenticationService.currentUserValue;
     const role = currentUser?.role ?? null;
-    return role ? role.trim().toUpperCase().replace(' ', '_') : null;
+
+    return role ? role.trim().toUpperCase().replace(/\s+/g, '_') : null;
   }
 
   canSelectBuilding(): boolean {
@@ -312,6 +313,7 @@ export class TicketListComponent implements OnInit {
 
   canSeeAgentsCard(): boolean {
     const role = this.getCurrentUserRole();
+
     return role === 'PROPERTYMANAGER' || role === 'PROPERTY_MANAGER' || role === 'ADMIN';
   }
 

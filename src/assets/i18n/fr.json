@@ -130,4 +130,8 @@
   "Menu Level 4.2": "Niveau de menu 4.2",
   "Sample Page": "Page d'exemple",
   "Document": "Document"
+,
+  "ADMIN": "Admin",
+  "BUILDING_MANAGER": "Gestionnaire d'immeuble",
+  "PROPERTY_MANAGER": "Gestionnaire immobilier"
 }
