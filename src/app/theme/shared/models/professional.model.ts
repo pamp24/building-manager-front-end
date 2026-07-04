@@ -27,6 +27,8 @@ export interface ProfessionalBusinessDTO {
 
   city?: string;
   region?: string;
+  country?: string;
+  area?: string;
   address?: string;
 
   taxNumber?: string;
@@ -61,6 +63,8 @@ export interface ProfessionalBusinessRequest {
 
   city: string;
   region?: string;
+  country?: string;
+  area?: string;
   address?: string;
 
   taxNumber?: string;

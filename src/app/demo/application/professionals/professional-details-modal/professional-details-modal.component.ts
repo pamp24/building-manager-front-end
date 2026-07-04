@@ -52,8 +52,7 @@ export class ProfessionalDetailsModalComponent implements OnInit {
     this.professionalService.getReviews(this.professional.id).subscribe({
       next: (res) => {
         this.reviews = res ?? [];
-        this.currentImageIndex = 0;
-        this.loadingImages = false;
+        this.loadingReviews = false;
       },
       error: () => {
         this.reviews = [];
@@ -122,6 +121,7 @@ export class ProfessionalDetailsModalComponent implements OnInit {
     this.professionalService.getImages(this.professional.id).subscribe({
       next: (res) => {
         this.images = res ?? [];
+        this.currentImageIndex = this.images.length ? Math.min(this.currentImageIndex, this.images.length - 1) : 0;
         this.loadingImages = false;
       },
       error: () => {

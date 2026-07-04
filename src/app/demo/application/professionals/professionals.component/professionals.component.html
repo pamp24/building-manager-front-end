@@ -5,12 +5,21 @@
 
       <button class="btn btn-success" (click)="openRegisterModal()">Καταχώριση Επιχείρησης</button>
     </div>
-    <app-card cardTitle="Επαγγελματίες">
-      <div class="row mb-4">
-        <div class="col-md-3 mb-3">
-          <label class="form-label">Κατηγορία</label>
 
-          <select class="form-select" [(ngModel)]="selectedCategory">
+    <app-card cardTitle="Επαγγελματίες">
+      <div class="row g-3 mb-4 align-items-end">
+        <div class="col-lg-5">
+          <label class="form-label">Αναζήτηση</label>
+          <input
+            class="form-control"
+            [(ngModel)]="searchTerm"
+            placeholder="Αναζήτηση με όνομα, επάγγελμα, περιοχή ή λέξη-κλειδί"
+          />
+        </div>
+
+        <div class="col-lg-3">
+          <label class="form-label">Κατηγορία</label>
+          <select class="form-select" [(ngModel)]="selectedCategory" (change)="loadProfessionals()">
             <option value="">Όλες οι κατηγορίες</option>
 
             @for (category of categories; track category.value) {
@@ -21,63 +30,120 @@
           </select>
         </div>
 
-        <div class="col-md-3 mb-3">
-          <label class="form-label">Νομός</label>
-
-          <select class="form-select" [(ngModel)]="selectedRegion" (change)="onRegionChange()">
-            <option value="">Όλοι οι νομοί</option>
-
-            @for (item of greekRegions; track item.region) {
-              <option [value]="item.region">
-                {{ item.region }}
-              </option>
-            }
+        <div class="col-lg-2">
+          <label class="form-label">Κριτικές</label>
+          <select class="form-select" [(ngModel)]="minimumReviews">
+            <option value="">Όλα</option>
+            <option [ngValue]="1">1+</option>
+            <option [ngValue]="3">3+</option>
+            <option [ngValue]="5">5+</option>
+            <option [ngValue]="10">10+</option>
           </select>
         </div>
 
-        <div class="col-md-3 mb-3">
-          <label class="form-label">Πόλη</label>
-
-          <select class="form-select" [(ngModel)]="city" [disabled]="availableCities.length === 0">
-            <option value="">Όλες οι πόλεις</option>
-
-            @for (cityOption of availableCities; track cityOption) {
-              <option [value]="cityOption">
-                {{ cityOption }}
-              </option>
-            }
-          </select>
-        </div>
-
-        <div class="col-md-3 d-flex align-items-end gap-2 mb-3">
-          <button class="btn btn-primary" (click)="loadProfessionals()">Αναζήτηση</button>
+        <div class="col-lg-2 d-flex gap-2">
+          <button class="btn btn-outline-primary flex-grow-1" (click)="toggleFiltersPanel()">
+            {{ showFiltersPanel ? 'Απόκρυψη' : 'Φίλτρα' }}
+          </button>
 
           <button class="btn btn-outline-secondary" (click)="clearFilters()">Καθαρισμός</button>
         </div>
-        <div class="d-flex flex-wrap gap-2 mb-4">
+      </div>
+
+      @if (showFiltersPanel) {
+        <div class="row g-3 mb-4">
+          <div class="col-lg-3">
+            <label class="form-label">Χώρα</label>
+            <select class="form-select" [(ngModel)]="selectedCountry" (change)="onCountryChange(); loadProfessionals()">
+              <option value="">Όλες οι χώρες</option>
+              @for (country of countries; track country.code) {
+                <option [value]="country.code">
+                  {{ country.name }}
+                </option>
+              }
+            </select>
+          </div>
+
+          <div class="col-lg-3">
+            <label class="form-label">Νομός</label>
+            <select
+              class="form-select"
+              [(ngModel)]="selectedRegion"
+              [disabled]="availableRegions.length === 0"
+              (change)="onRegionChange(); loadProfessionals()"
+            >
+              <option value="">Όλοι οι νομοί</option>
+
+              @for (item of availableRegions; track item.region) {
+                <option [value]="item.region">
+                  {{ item.region }}
+                </option>
+              }
+            </select>
+          </div>
+
+          <div class="col-lg-3">
+            <label class="form-label">Πόλη</label>
+            <select
+              class="form-select"
+              [(ngModel)]="selectedCity"
+              [disabled]="availableCities.length === 0"
+              (change)="onCityChange(); loadProfessionals()"
+            >
+              <option value="">Όλες οι πόλεις</option>
+
+              @for (cityOption of availableCities; track cityOption.city) {
+                <option [value]="cityOption.city">
+                  {{ cityOption.city }}
+                </option>
+              }
+            </select>
+          </div>
+
+          <div class="col-lg-3">
+            <label class="form-label">Περιοχή</label>
+            <select class="form-select" [(ngModel)]="selectedArea" [disabled]="availableAreas.length === 0" (change)="loadProfessionals()">
+              <option value="">Όλες οι περιοχές</option>
+
+              @for (area of availableAreas; track area) {
+                <option [value]="area">
+                  {{ area }}
+                </option>
+              }
+            </select>
+          </div>
+        </div>
+      }
+
+      <div class="row align-items-end mb-4">
+        <div class="col-md-3 mb-3">
+          <label class="form-label">Ταξινόμηση</label>
+
+          <select class="form-select" [(ngModel)]="sortBy">
+            <option value="default">Προτεινόμενη σειρά</option>
+            <option value="rating">Υψηλότερη αξιολόγηση</option>
+            <option value="reviews">Περισσότερα reviews</option>
+            <option value="newest">Νεότεροι</option>
+          </select>
+        </div>
+
+        <div class="col-md-9 mb-3 d-flex flex-wrap gap-2">
           <button class="btn" [ngClass]="showOnlyFavorites ? 'btn-danger' : 'btn-outline-danger'" (click)="toggleFavoriteFilter()">
             {{ showOnlyFavorites ? 'Εμφάνιση όλων' : 'Μόνο Αγαπημένοι' }}
           </button>
-          
+
           <button class="btn" [ngClass]="showOnlyPartners ? 'btn-warning' : 'btn-outline-warning'" (click)="togglePartnerFilter()">
             {{ showOnlyPartners ? 'Εμφάνιση όλων' : 'Συνεργαζόμενοι Πολυκατοικίας' }}
           </button>
         </div>
       </div>
 
-      <div class="col-md-3 mb-3">
-        <label class="form-label">Ταξινόμηση</label>
-
-        <select class="form-select" [(ngModel)]="sortBy">
-          <option value="default">Προτεινόμενη σειρά</option>
-          <option value="rating">Υψηλότερη αξιολόγηση</option>
-          <option value="reviews">Περισσότερες αξιολογήσεις</option>
-          <option value="newest">Νεότεροι</option>
-        </select>
-      </div>
-
       @if (loading) {
         <div class="text-center p-5">Φόρτωση...</div>
+      }
+
+      @if (!loading && visibleProfessionals.length === 0) {
+        <div class="alert alert-info">Δεν βρέθηκαν επαγγελματίες με τα τρέχοντα κριτήρια.</div>
       }
 
       <div class="row">
@@ -100,6 +166,7 @@
                   </span>
                 </div>
               </div>
+
               <ul class="list-group list-group-flush my-2">
                 <li class="list-group-item px-0 py-2">
                   <div class="d-flex align-items-start">
@@ -115,15 +182,17 @@
                       </p>
                     </div>
                     <div class="flex-shrink-0">
-                      <span class="badge bg-light-primary text-primary">⭐ {{ professional.ratingAverage || 0 }}</span>
+                      <span class="badge bg-light-primary text-primary">★ {{ professional.ratingAverage || 0 }}</span>
                     </div>
                   </div>
                 </li>
+
                 <li class="list-group-item px-0 py-2">
                   <p class="text-muted small mb-0">
                     {{ professional.description || 'Δεν υπάρχει περιγραφή για αυτή την επιχείρηση.' }}
                   </p>
                 </li>
+
                 <li class="list-group-item px-0 py-2">
                   <div class="d-flex align-items-center">
                     <div class="flex-grow-1 me-2">
@@ -137,18 +206,24 @@
                     </div>
                   </div>
                 </li>
+
                 <li class="list-group-item px-0 py-2">
                   <div class="d-flex align-items-center">
                     <div class="flex-grow-1 me-2">
                       <p class="mb-0">Τηλέφωνο</p>
                     </div>
                     <div class="flex-shrink-0 text-end">
-                      <a class="text-muted" [href]="'tel:' + professional.phone">
-                        {{ professional.phone || '-' }}
-                      </a>
+                      @if (professional.phone) {
+                        <a class="text-muted" [href]="'tel:' + professional.phone">
+                          {{ professional.phone }}
+                        </a>
+                      } @else {
+                        <span class="text-muted">-</span>
+                      }
                     </div>
                   </div>
                 </li>
+
                 @if (professional.email) {
                   <li class="list-group-item px-0 py-2">
                     <div class="d-flex align-items-center">
@@ -163,6 +238,7 @@
                     </div>
                   </li>
                 }
+
                 @if (professional.website) {
                   <li class="list-group-item px-0 py-2">
                     <div class="d-flex align-items-center">
@@ -175,10 +251,11 @@
                     </div>
                   </li>
                 }
+
                 <li class="list-group-item px-0 py-2">
                   <div class="d-flex align-items-center">
                     <div class="flex-grow-1 me-2">
-                      <p class="mb-0">Αξιολογήσεις</p>
+                      <p class="mb-0">Reviews</p>
                     </div>
 
                     <div class="flex-shrink-0">
@@ -189,6 +266,7 @@
                   </div>
                 </li>
               </ul>
+
               <div class="d-flex gap-2 mt-3">
                 <button class="btn btn-sm btn-primary flex-grow-1" (click)="openDetailsModal(professional)">Προβολή</button>
                 @if (professional.phone) {

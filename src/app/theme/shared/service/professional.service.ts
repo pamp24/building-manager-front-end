@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+
 import {
+  ProfessionalAdminStatsDTO,
   ProfessionalBusinessDTO,
   ProfessionalBusinessRequest,
-  ProfessionalCategory,
-  ProfessionalAdminStatsDTO
+  ProfessionalCategory
 } from '../models/professional.model';
 import { ProfessionalReviewDTO, ProfessionalReviewRequest } from '../models/professional-review.model';
 import { ProfessionalImageDTO } from '../models/professional-image.model';
@@ -20,18 +21,32 @@ export class ProfessionalService {
 
   constructor(private http: HttpClient) {}
 
-  search(category?: ProfessionalCategory, city?: string): Observable<ProfessionalBusinessDTO[]> {
+  search(category?: ProfessionalCategory, country?: string, region?: string, city?: string, area?: string) {
     let params = new HttpParams();
 
     if (category) {
       params = params.set('category', category);
     }
 
+    if (country) {
+      params = params.set('country', country);
+    }
+
+    if (region) {
+      params = params.set('region', region);
+    }
+
     if (city) {
       params = params.set('city', city);
     }
 
-    return this.http.get<ProfessionalBusinessDTO[]>(this.apiUrl, { params });
+    if (area) {
+      params = params.set('area', area);
+    }
+
+    return this.http.get<ProfessionalBusinessDTO[]>(this.apiUrl, {
+      params
+    });
   }
 
   register(request: ProfessionalBusinessRequest): Observable<ProfessionalBusinessDTO> {
@@ -103,12 +118,10 @@ export class ProfessionalService {
   }
 
   getAdminBusinesses(page: number, size: number) {
-  return this.http.get<PageResponse<ProfessionalBusinessDTO>>(
-    `${this.apiUrl}/admin/businesses?page=${page}&size=${size}`
-  );
-}
+    return this.http.get<PageResponse<ProfessionalBusinessDTO>>(`${this.apiUrl}/admin/businesses?page=${page}&size=${size}`);
+  }
 
-deleteBusiness(id: number) {
-  return this.http.delete<void>(`${this.apiUrl}/admin/${id}`);
-}
+  deleteBusiness(id: number) {
+    return this.http.delete<void>(`${this.apiUrl}/admin/${id}`);
+  }
 }

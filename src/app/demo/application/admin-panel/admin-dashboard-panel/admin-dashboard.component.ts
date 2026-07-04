@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { finalize } from 'rxjs';
+import { catchError, finalize, forkJoin, of } from 'rxjs';
 
 import { AdminDashboardService } from 'src/app/theme/shared/service/admin-dashboard.service';
 import { AdminDashboardResponse } from 'src/app/theme/shared/models/admin-dashboard.model';
+import { ProfessionalAdminStatsDTO } from 'src/app/theme/shared/models/professional.model';
+import { ProfessionalService } from 'src/app/theme/shared/service/professional.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { IconService } from '@ant-design/icons-angular';
 import {
@@ -43,13 +45,16 @@ interface DashboardStatCard {
 export class AdminDashboardComponent implements OnInit {
   private iconService = inject(IconService);
   private dashboardService = inject(AdminDashboardService);
+  private professionalService = inject(ProfessionalService);
 
   loading = false;
   errorMessage = '';
 
   dashboard: AdminDashboardResponse | null = null;
+  professionalStats: ProfessionalAdminStatsDTO | null = null;
 
   overviewCards: DashboardStatCard[] = [];
+  professionalCards: DashboardStatCard[] = [];
   activityCards: DashboardStatCard[] = [];
 
   usersGrowthTotal = 0;
@@ -92,12 +97,15 @@ export class AdminDashboardComponent implements OnInit {
     this.loading = true;
     this.errorMessage = '';
 
-    this.dashboardService
-      .getDashboard()
+    forkJoin({
+      dashboard: this.dashboardService.getDashboard(),
+      professionalStats: this.professionalService.getAdminStats().pipe(catchError(() => of(null)))
+    })
       .pipe(finalize(() => (this.loading = false)))
       .subscribe({
-        next: (res) => {
-          this.dashboard = res;
+        next: ({ dashboard, professionalStats }) => {
+          this.dashboard = dashboard;
+          this.professionalStats = professionalStats;
           this.buildCards();
         },
         error: (err) => {
@@ -109,6 +117,7 @@ export class AdminDashboardComponent implements OnInit {
   private buildCards(): void {
     if (!this.dashboard) {
       this.overviewCards = [];
+      this.professionalCards = [];
       this.activityCards = [];
       return;
     }
@@ -141,6 +150,37 @@ export class AdminDashboardComponent implements OnInit {
         icon: 'user-switch',
         background: 'bg-light-info',
         color: 'text-info'
+      }
+    ];
+
+    this.professionalCards = [
+      {
+        title: 'Συνολικοί Επαγγελματίες',
+        value: this.professionalStats?.totalBusinesses || 0,
+        icon: 'team',
+        background: 'bg-light-primary',
+        color: 'text-primary'
+      },
+      {
+        title: 'Ενεργοί Επαγγελματίες',
+        value: this.professionalStats?.approvedBusinesses || 0,
+        icon: 'check-circle',
+        background: 'bg-light-success',
+        color: 'text-success'
+      },
+      {
+        title: 'Ανενεργοί Επαγγελματίες',
+        value: this.professionalStats?.inactiveBusinesses || 0,
+        icon: 'warning',
+        background: 'bg-light-danger',
+        color: 'text-danger'
+      },
+      {
+        title: 'Εκκρεμείς Εγγραφές',
+        value: this.professionalStats?.pendingBusinesses || 0,
+        icon: 'notification',
+        background: 'bg-light-warning',
+        color: 'text-warning'
       }
     ];
 

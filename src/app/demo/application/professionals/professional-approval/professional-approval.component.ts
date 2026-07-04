@@ -2,9 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { ProfessionalBusinessDTO } from 'src/app/theme/shared/models/professional.model';
+import { ProfessionalAdminStatsDTO, ProfessionalBusinessDTO } from 'src/app/theme/shared/models/professional.model';
 import { ProfessionalService } from 'src/app/theme/shared/service/professional.service';
-import { ProfessionalAdminStatsDTO } from '../../../../theme/shared/models/professional.model';
 
 @Component({
   selector: 'app-professional-approval',
@@ -76,7 +75,9 @@ export class ProfessionalApprovalComponent implements OnInit {
     this.professionalService.approve(id).subscribe({
       next: () => {
         this.success = 'Η επιχείρηση εγκρίθηκε επιτυχώς.';
-        this.pendingBusinesses = this.pendingBusinesses.filter((b) => b.id !== id);
+        this.pendingBusinesses = this.pendingBusinesses.filter((business) => business.id !== id);
+        this.loadStats();
+        this.loadBusinesses();
       },
       error: (err) => {
         this.error = err?.businessErrorDescription || err?.error || err?.message || 'Αποτυχία έγκρισης επιχείρησης.';
@@ -94,7 +95,9 @@ export class ProfessionalApprovalComponent implements OnInit {
     this.professionalService.deactivate(id).subscribe({
       next: () => {
         this.success = 'Η επιχείρηση απορρίφθηκε.';
-        this.pendingBusinesses = this.pendingBusinesses.filter((b) => b.id !== id);
+        this.pendingBusinesses = this.pendingBusinesses.filter((business) => business.id !== id);
+        this.loadStats();
+        this.loadBusinesses();
       },
       error: (err) => {
         this.error = err?.businessErrorDescription || err?.error || err?.message || 'Αποτυχία απόρριψης επιχείρησης.';
@@ -209,6 +212,10 @@ export class ProfessionalApprovalComponent implements OnInit {
           this.success = 'Η επιχείρηση απενεργοποιήθηκε.';
           this.loadBusinesses();
           this.loadStats();
+          this.loadPending();
+        },
+        error: (err) => {
+          this.error = err?.businessErrorDescription || err?.error || err?.message || 'Αποτυχία απενεργοποίησης.';
         }
       });
 
@@ -220,6 +227,10 @@ export class ProfessionalApprovalComponent implements OnInit {
         this.success = 'Η επιχείρηση ενεργοποιήθηκε.';
         this.loadBusinesses();
         this.loadStats();
+        this.loadPending();
+      },
+      error: (err) => {
+        this.error = err?.businessErrorDescription || err?.error || err?.message || 'Αποτυχία ενεργοποίησης.';
       }
     });
   }

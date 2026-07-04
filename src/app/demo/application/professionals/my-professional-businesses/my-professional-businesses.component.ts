@@ -33,7 +33,7 @@ export class MyProfessionalBusinessesComponent implements OnInit {
 
     this.professionalService.getMyBusinesses().subscribe({
       next: (res) => {
-        this.businesses = res;
+        this.businesses = res ?? [];
         this.loading = false;
       },
       error: () => {

@@ -42,6 +42,26 @@
           }
         </div>
 
+        <div class="row g-3 mb-4">
+          @for (card of professionalCards; track card.title) {
+            <div class="col-xl-3 col-md-6">
+              <app-card [showHeader]="false" cardClass="dashboard-stat-card h-100">
+                <div class="d-flex align-items-center">
+                  <div class="flex-shrink-0">
+                    <div class="avatar stat-avatar {{ card.background }}">
+                      <i class="f-24 {{ card.color }}" antIcon [type]="card.icon" theme="outline"></i>
+                    </div>
+                  </div>
+                  <div class="flex-grow-1 ms-3">
+                    <p class="mb-1 text-muted">{{ card.title }}</p>
+                    <h4 class="mb-0">{{ card.value }}</h4>
+                  </div>
+                </div>
+              </app-card>
+            </div>
+          }
+        </div>
+
         <!-- USER ACTIVITY CARDS -->
         <div class="row g-3 mb-4">
           @for (card of activityCards; track card.title) {

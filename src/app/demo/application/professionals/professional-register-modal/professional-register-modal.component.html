@@ -52,7 +52,12 @@
         <input class="form-control" formControlName="phone" />
 
         @if (submitted && f.phone.errors) {
-          <small class="text-danger">Το τηλέφωνο είναι υποχρεωτικό.</small>
+          @if (f.phone.errors['required']) {
+            <small class="text-danger">Το τηλέφωνο είναι υποχρεωτικό.</small>
+          }
+          @if (f.phone.errors['pattern']) {
+            <small class="text-danger">Παρακαλώ εισάγετε έγκυρο τηλέφωνο.</small>
+          }
         }
       </div>
 
@@ -68,23 +73,28 @@
       <div class="col-md-6 mb-3">
         <label class="form-label">Website</label>
         <input class="form-control" formControlName="website" />
+
+        @if (submitted && f.website.errors) {
+          <small class="text-danger">Παρακαλώ εισάγετε έγκυρο website.</small>
+        }
       </div>
 
       <div class="col-md-4 mb-3">
         <label class="form-label">Χώρα*</label>
-        <select class="form-select" formControlName="country">
-          @for (country of countries; track country) {
-            <option [value]="country">{{ country }}</option>
+        <select class="form-select" formControlName="country" (change)="onCountryChange()">
+          <option value="">Επιλέξτε Χώρα</option>
+          @for (country of countries; track country.code) {
+            <option [value]="country.code">{{ country.name }}</option>
           }
         </select>
       </div>
 
       <div class="col-md-4 mb-3">
         <label class="form-label">Νομός*</label>
-        <select class="form-select" formControlName="region" (change)="onRegionChange()">
+        <select class="form-select" formControlName="region" [disabled]="availableRegions.length === 0" (change)="onRegionChange()">
           <option value="">Επιλέξτε νομό</option>
 
-          @for (item of greekRegions; track item.region) {
+          @for (item of availableRegions; track item.region) {
             <option [value]="item.region">{{ item.region }}</option>
           }
         </select>
@@ -96,17 +106,29 @@
 
       <div class="col-md-4 mb-3">
         <label class="form-label">Πόλη*</label>
-        <select class="form-select" formControlName="city" [disabled]="availableCities.length === 0">
+        <select class="form-select" formControlName="city" [disabled]="availableCities.length === 0" (change)="onCityChange()">
           <option value="">Επιλέξτε πόλη</option>
 
-          @for (city of availableCities; track city) {
-            <option [value]="city">{{ city }}</option>
+          @for (city of availableCities; track city.city) {
+            <option [value]="city.city">{{ city.city }}</option>
           }
         </select>
 
         @if (submitted && f.city.errors) {
           <small class="text-danger">Η πόλη είναι υποχρεωτική.</small>
         }
+      </div>
+
+      <div class="col-md-4 mb-3">
+        <label class="form-label">Περιοχή</label>
+
+        <select class="form-select" formControlName="area" [disabled]="availableAreas.length === 0">
+          <option value="">Επιλέξτε περιοχή</option>
+
+          @for (area of availableAreas; track area) {
+            <option [value]="area">{{ area }}</option>
+          }
+        </select>
       </div>
 
       <div class="col-md-8 mb-3">
@@ -117,8 +139,12 @@
       <div class="col-md-4 mb-3">
         <label class="form-label">ΑΦΜ</label>
         <input class="form-control" formControlName="taxNumber" />
+
+        @if (submitted && f.taxNumber.errors) {
+          <small class="text-danger">Παρακαλώ εισάγετε έγκυρο ΑΦΜ.</small>
+        }
       </div>
-      
+
       <div class="col-12 mb-3">
         <label class="form-label">Ωράριο Λειτουργίας</label>
         <textarea
