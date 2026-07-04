@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -14,6 +14,9 @@ import { UserService } from '../../../../theme/shared/service/user.service';
 import { ProfessionalPartnerService } from 'src/app/theme/shared/service/professional-partner.service';
 import { AuthenticationService } from 'src/app/theme/shared/service';
 import { Role } from 'src/app/theme/shared/models/role.model';
+import { COUNTRIES } from 'src/app/theme/shared/data/countries.data';
+import { GREECE_LOCATIONS, GreeceRegion } from 'src/app/theme/shared/data/greece-locations.data';
+import { CYPRUS_LOCATIONS, CyprusRegion } from 'src/app/theme/shared/data/cyprus-locations.data';
 
 @Component({
   selector: 'app-professionals',
@@ -23,6 +26,11 @@ import { Role } from 'src/app/theme/shared/models/role.model';
   styleUrls: ['./professionals.component.scss']
 })
 export class ProfessionalsComponent implements OnInit {
+  private readonly countryLocations: Record<string, GreeceRegion[] | CyprusRegion[]> = {
+    GR: GREECE_LOCATIONS,
+    CY: CYPRUS_LOCATIONS
+  };
+
   professionals: ProfessionalBusinessDTO[] = [];
 
   loading = false;
@@ -31,10 +39,23 @@ export class ProfessionalsComponent implements OnInit {
   city = '';
   favoriteProfessionalIds: number[] = [];
   sortBy = 'default';
+  searchTerm = '';
+  minimumReviews: number | '' = '';
+  showFiltersPanel = false;
   partnerProfessionalIds: number[] = [];
   showOnlyPartners = false;
   canManageBuildingPartners = false;
   buildingId?: number;
+  countries = COUNTRIES;
+
+  selectedCountry = '';
+  selectedRegion = '';
+  selectedCity = '';
+  selectedArea = '';
+
+  availableRegions: Array<GreeceRegion | CyprusRegion> = [];
+  availableCities: { city: string; areas: string[] }[] = [];
+  availableAreas: string[] = [];
 
   readonly backendUrl = 'http://localhost:8080/api/v1';
 
@@ -52,49 +73,31 @@ export class ProfessionalsComponent implements OnInit {
     { value: 'OTHER', label: 'Άλλο' }
   ];
 
-  selectedRegion = '';
-  availableCities: string[] = [];
-
-  greekRegions = [
-    { region: 'Αττική', cities: ['Αθήνα'] },
-    { region: 'Θεσσαλονίκη', cities: ['Θεσσαλονίκη'] },
-    { region: 'Αχαΐα', cities: ['Πάτρα'] },
-    { region: 'Ηράκλειο', cities: ['Ηράκλειο'] },
-    { region: 'Λάρισα', cities: ['Λάρισα'] },
-    { region: 'Μαγνησία', cities: ['Βόλος'] },
-    { region: 'Ιωάννινα', cities: ['Ιωάννινα'] },
-    { region: 'Έβρος', cities: ['Αλεξανδρούπολη'] },
-    { region: 'Καβάλα', cities: ['Καβάλα'] },
-    { region: 'Σέρρες', cities: ['Σέρρες'] },
-    { region: 'Κοζάνη', cities: ['Κοζάνη'] },
-    { region: 'Τρίκαλα', cities: ['Τρίκαλα'] },
-    { region: 'Καρδίτσα', cities: ['Καρδίτσα'] },
-    { region: 'Φθιώτιδα', cities: ['Λαμία'] },
-    { region: 'Εύβοια', cities: ['Χαλκίδα'] },
-    { region: 'Βοιωτία', cities: ['Λιβαδειά'] },
-    { region: 'Κορινθία', cities: ['Κόρινθος'] },
-    { region: 'Αργολίδα', cities: ['Ναύπλιο'] },
-    { region: 'Αρκαδία', cities: ['Τρίπολη'] },
-    { region: 'Μεσσηνία', cities: ['Καλαμάτα'] },
-    { region: 'Λακωνία', cities: ['Σπάρτη'] },
-    { region: 'Χανιά', cities: ['Χανιά'] },
-    { region: 'Ρέθυμνο', cities: ['Ρέθυμνο'] },
-    { region: 'Λασίθι', cities: ['Άγιος Νικόλαος'] },
-    { region: 'Δωδεκάνησα', cities: ['Ρόδος'] },
-    { region: 'Κυκλάδες', cities: ['Ερμούπολη'] },
-    { region: 'Λέσβος', cities: ['Μυτιλήνη'] },
-    { region: 'Χίος', cities: ['Χίος'] },
-    { region: 'Σάμος', cities: ['Σάμος'] },
-    { region: 'Κέρκυρα', cities: ['Κέρκυρα'] },
-    { region: 'Ζάκυνθος', cities: ['Ζάκυνθος'] },
-    { region: 'Κεφαλονιά', cities: ['Αργοστόλι'] }
-  ];
-
   onRegionChange(): void {
-    const match = this.greekRegions.find((r) => r.region === this.selectedRegion);
+    const match = this.availableRegions.find((r) => r.region === this.selectedRegion);
 
     this.availableCities = match?.cities ?? [];
+    this.selectedCity = '';
+    this.selectedArea = '';
     this.city = '';
+  }
+
+  onCityChange(): void {
+    const match = this.availableCities.find((c) => c.city === this.selectedCity);
+
+    this.availableAreas = match?.areas ?? [];
+    this.city = this.selectedCity;
+    this.selectedArea = '';
+  }
+
+  onCountryChange(): void {
+    this.selectedRegion = '';
+    this.selectedCity = '';
+    this.selectedArea = '';
+    this.city = '';
+    this.availableCities = [];
+    this.availableAreas = [];
+    this.availableRegions = this.countryLocations[this.selectedCountry] ?? [];
   }
 
   constructor(
@@ -118,6 +121,7 @@ export class ProfessionalsComponent implements OnInit {
         this.showOnlyFavorites = false;
       }
     });
+
     const currentUser = this.authenticationService.currentUserValue;
 
     this.canManageBuildingPartners =
@@ -134,23 +138,43 @@ export class ProfessionalsComponent implements OnInit {
   loadProfessionals(): void {
     this.loading = true;
 
-    this.professionalService.search(this.selectedCategory || undefined, this.city || undefined).subscribe({
-      next: (response) => {
-        this.professionals = response;
-        this.loading = false;
-      },
-      error: () => {
-        this.loading = false;
-      }
-    });
+    this.professionalService
+      .search(
+        this.selectedCategory || undefined,
+        this.selectedCountry || undefined,
+        this.selectedRegion || undefined,
+        this.selectedCity || undefined,
+        this.selectedArea || undefined
+      )
+      .subscribe({
+        next: (response) => {
+          this.professionals = response;
+          this.loading = false;
+        },
+        error: () => {
+          this.loading = false;
+        }
+      });
   }
 
   clearFilters(): void {
+    this.searchTerm = '';
+    this.minimumReviews = '';
     this.selectedCategory = '';
-    this.city = '';
+    this.selectedCountry = '';
     this.selectedRegion = '';
+    this.selectedCity = '';
+    this.selectedArea = '';
+    this.city = '';
+    this.availableRegions = [];
     this.availableCities = [];
+    this.availableAreas = [];
+    this.showFiltersPanel = false;
     this.loadProfessionals();
+  }
+
+  toggleFiltersPanel(): void {
+    this.showFiltersPanel = !this.showFiltersPanel;
   }
 
   getCategoryLabel(category: string): string {
@@ -189,9 +213,11 @@ export class ProfessionalsComponent implements OnInit {
       }
     });
   }
+
   isFavorite(professionalId: number): boolean {
     return this.favoriteProfessionalIds.includes(professionalId);
   }
+
   toggleFavorite(professionalId: number): void {
     if (this.isFavorite(professionalId)) {
       this.favoriteService.removeFavorite(professionalId).subscribe(() => {
@@ -234,6 +260,15 @@ export class ProfessionalsComponent implements OnInit {
 
   get visibleProfessionals(): ProfessionalBusinessDTO[] {
     let list = [...this.professionals];
+
+    if (this.searchTerm.trim()) {
+      const normalizedSearch = this.normalizeText(this.searchTerm);
+      list = list.filter((professional) => this.matchesSearch(professional, normalizedSearch));
+    }
+
+    if (this.minimumReviews !== '') {
+      list = list.filter((professional) => (professional.reviewCount || 0) >= Number(this.minimumReviews));
+    }
 
     if (this.showOnlyFavorites) {
       list = list.filter((p) => this.favoriteProfessionalIds.includes(p.id));
@@ -296,5 +331,28 @@ export class ProfessionalsComponent implements OnInit {
         this.partnerProfessionalIds.push(professionalId);
       }
     });
+  }
+
+  private matchesSearch(professional: ProfessionalBusinessDTO, normalizedSearch: string): boolean {
+    const searchFields = [
+      professional.businessName,
+      professional.ownerFullName,
+      professional.description,
+      professional.city,
+      professional.region,
+      professional.area,
+      professional.address,
+      professional.website,
+      this.getCategoryLabel(professional.category)
+    ];
+
+    return searchFields.some((value) => this.normalizeText(value).includes(normalizedSearch));
+  }
+
+  private normalizeText(value: string | null | undefined): string {
+    return (value ?? '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase();
   }
 }

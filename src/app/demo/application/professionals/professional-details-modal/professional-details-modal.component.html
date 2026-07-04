@@ -65,9 +65,13 @@
   <div class="mb-3">
     <strong>Τηλέφωνο:</strong>
 
-    <a [href]="'tel:' + professional.phone">
-      {{ professional.phone }}
-    </a>
+    @if (professional.phone) {
+      <a [href]="'tel:' + professional.phone">
+        {{ professional.phone }}
+      </a>
+    } @else {
+      <span>-</span>
+    }
   </div>
 
   @if (professional.email) {

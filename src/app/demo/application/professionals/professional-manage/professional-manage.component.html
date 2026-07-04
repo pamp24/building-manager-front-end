@@ -20,46 +20,56 @@
 
             <div class="mb-3">
               <label class="form-label">Όνομα Επιχείρησης</label>
-              <input class="form-control" [(ngModel)]="professional.businessName" />
+              <input class="form-control" [(ngModel)]="professional.businessName" [readonly]="!editMode" />
             </div>
 
             <div class="mb-3">
               <label class="form-label">Υπεύθυνος</label>
-              <input class="form-control" [(ngModel)]="professional.ownerFullName" />
+              <input class="form-control" [(ngModel)]="professional.ownerFullName" [readonly]="!editMode" />
             </div>
 
             <div class="mb-3">
               <label class="form-label">Περιγραφή</label>
-              <textarea class="form-control" rows="4" [(ngModel)]="professional.description"></textarea>
+              <textarea class="form-control" rows="4" [(ngModel)]="professional.description" [readonly]="!editMode"></textarea>
             </div>
 
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label class="form-label">Τηλέφωνο</label>
-                <input class="form-control" [(ngModel)]="professional.phone" />
+                <input class="form-control" [(ngModel)]="professional.phone" [readonly]="!editMode" />
               </div>
 
               <div class="col-md-6 mb-3">
                 <label class="form-label">Email</label>
-                <input class="form-control" [(ngModel)]="professional.email" />
+                <input class="form-control" [(ngModel)]="professional.email" [readonly]="!editMode" />
               </div>
             </div>
 
             <div class="mb-3">
               <label class="form-label">Website</label>
-              <input class="form-control" [(ngModel)]="professional.website" />
+              <input class="form-control" [(ngModel)]="professional.website" [readonly]="!editMode" />
             </div>
 
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label class="form-label">Πόλη</label>
-                <input class="form-control" [(ngModel)]="professional.city" />
+                <input class="form-control" [(ngModel)]="professional.city" [readonly]="!editMode" />
               </div>
 
               <div class="col-md-6 mb-3">
                 <label class="form-label">Περιοχή</label>
-                <input class="form-control" [(ngModel)]="professional.region" />
+                <input class="form-control" [(ngModel)]="professional.region" [readonly]="!editMode" />
               </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Διεύθυνση</label>
+              <input class="form-control" [(ngModel)]="professional.address" [readonly]="!editMode" />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">ΑΦΜ</label>
+              <input class="form-control" [(ngModel)]="professional.taxNumber" [readonly]="!editMode" />
             </div>
 
             <div class="mb-3">

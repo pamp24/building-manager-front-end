@@ -16,6 +16,9 @@ import { ProfessionalService } from 'src/app/theme/shared/service/professional.s
   styleUrls: ['./professional-manage.component.scss']
 })
 export class ProfessionalManageComponent implements OnInit {
+  private readonly phonePattern = /^\+?[0-9()\-\s]{8,20}$/;
+  private readonly websitePattern = /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[^\s]*)?$/i;
+  private readonly taxNumberPattern = /^[A-Za-z0-9-]{8,15}$/;
   private route = inject(ActivatedRoute);
   private professionalService = inject(ProfessionalService);
   private location = inject(Location);
@@ -69,6 +72,14 @@ export class ProfessionalManageComponent implements OnInit {
   saveBusiness(): void {
     if (!this.professional) return;
 
+    const validationError = this.validateBusiness();
+
+    if (validationError) {
+      this.error = validationError;
+      this.success = '';
+      return;
+    }
+
     this.saving = true;
     this.error = '';
     this.success = '';
@@ -81,11 +92,13 @@ export class ProfessionalManageComponent implements OnInit {
       phone: this.professional.phone,
       email: this.professional.email,
       website: this.professional.website,
+      country: this.professional.country,
       city: this.professional.city,
       region: this.professional.region,
+      area: this.professional.area,
       address: this.professional.address,
       taxNumber: this.professional.taxNumber,
-      workingHours: this.professional.workingHours,
+      workingHours: this.professional.workingHours
     };
 
     this.professionalService.update(this.professionalId, payload).subscribe({
@@ -176,5 +189,25 @@ export class ProfessionalManageComponent implements OnInit {
   cancelEdit(): void {
     this.editMode = false;
     this.loadBusiness();
+  }
+
+  private validateBusiness(): string {
+    const phone = this.professional?.phone?.trim() ?? '';
+    const website = this.professional?.website?.trim() ?? '';
+    const taxNumber = this.professional?.taxNumber?.trim() ?? '';
+
+    if (!phone || !this.phonePattern.test(phone)) {
+      return 'Παρακαλώ εισάγετε έγκυρο τηλέφωνο.';
+    }
+
+    if (website && !this.websitePattern.test(website)) {
+      return 'Παρακαλώ εισάγετε έγκυρο website.';
+    }
+
+    if (taxNumber && !this.taxNumberPattern.test(taxNumber)) {
+      return 'Παρακαλώ εισάγετε έγκυρο ΑΦΜ.';
+    }
+
+    return '';
   }
 }
