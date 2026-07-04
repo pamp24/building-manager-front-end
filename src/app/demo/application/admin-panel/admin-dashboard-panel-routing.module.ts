@@ -14,6 +14,18 @@ const routes: Routes = [
     loadComponent: () =>
       import('./admin-finance-panel/admin-finance-panel.component').then((c) => c.AdminFinancePanelComponent),
     data: { role: [Role.Admin] }
+  },
+  {
+    path: 'buildings',
+    loadComponent: () =>
+      import('./admin-buildings-panel/admin-buildings.component').then((c) => c.AdminBuildingsComponent),
+    data: { role: [Role.Admin] }
+  },
+  {
+    path: 'buildings/:id',
+    loadComponent: () =>
+      import('../property-manager-panel/buildings/buildings-view/buildings-view.component').then((c) => c.BuildingsViewComponent),
+    data: { role: [Role.Admin] }
   }
 ];
 

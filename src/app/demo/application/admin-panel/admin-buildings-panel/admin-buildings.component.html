@@ -1,0 +1,171 @@
+<app-card cardTitle="Ολες οι Πολυκατοικίες" [padding]="0">
+  <ng-container *ngIf="loading">
+    <div class="py-4 px-3">Φόρτωση...</div>
+  </ng-container>
+
+  <ng-container *ngIf="!loading && error">
+    <div class="alert alert-warning mb-0">{{ error }}</div>
+  </ng-container>
+
+  <ng-container *ngIf="!loading && !error">
+    <div class="p-3 border-bottom">
+      <div class="row g-2 align-items-center">
+        <div class="col-lg-8">
+          <div class="input-group">
+            <span class="input-group-text">Αναζήτηση</span>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Ονομα, κωδικός, πόλη, διαχειριστής ή εταιρεία"
+              [(ngModel)]="searchTerm"
+            />
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="d-grid d-sm-flex gap-2 justify-content-lg-end">
+            <button type="button" class="btn btn-outline-primary" (click)="toggleFilters()">
+              Φίλτρα
+            </button>
+
+            <button
+              *ngIf="searchTerm || selectedCountry || selectedRegion || selectedCity || selectedAssignment"
+              type="button"
+              class="btn btn-outline-secondary"
+              (click)="clearFilters()"
+            >
+              Καθαρισμός
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="collapse mt-3" [class.show]="showFilters">
+        <div class="card card-body bg-light border-0">
+          <div class="row g-3">
+            <div class="col-md-6 col-xl-3">
+              <label class="form-label">Χώρα</label>
+              <select class="form-select" [(ngModel)]="selectedCountry" (ngModelChange)="onCountryChange()">
+                <option value="">Όλες</option>
+                @for (country of availableCountries; track country) {
+                  <option [value]="country">{{ country }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+              <label class="form-label">Νομός / Περιφέρεια</label>
+              <select class="form-select" [(ngModel)]="selectedRegion" (ngModelChange)="onRegionChange()">
+                <option value="">Όλοι</option>
+                @for (region of availableRegions; track region) {
+                  <option [value]="region">{{ region }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+              <label class="form-label">Πόλη</label>
+              <select class="form-select" [(ngModel)]="selectedCity">
+                <option value="">Όλες</option>
+                @for (city of availableCities; track city) {
+                  <option [value]="city">{{ city }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+              <label class="form-label">Ανάθεση</label>
+              <select class="form-select" [(ngModel)]="selectedAssignment">
+                <option value="">Όλες</option>
+                <option value="with-manager">Με διαχειριστή κτιρίου</option>
+                <option value="without-manager">Χωρίς διαχειριστή κτιρίου</option>
+                <option value="with-company">Με εταιρεία PM</option>
+                <option value="without-company">Χωρίς εταιρεία PM</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="px-3 pb-1 pt-2 text-muted small" *ngIf="buildings.length">
+      Εμφανίζονται {{ filteredBuildings.length }} από {{ buildings.length }} πολυκατοικίες
+    </div>
+
+    <div class="row px-3 pb-3" *ngIf="filteredBuildings.length; else empty">
+      @for (building of filteredBuildings; track trackById($index, building)) {
+        <div class="col-sm-6 col-lg-4 col-xxl-3">
+          <app-card [showHeader]="false" cardClass="border h-100" blockClass="p-2">
+            <div class="position-relative">
+              <img src="assets/images/admin/img-course-1.png" alt="building" class="img-fluid w-100" />
+              <div class="position-absolute top-0 end-0 p-2">
+                <span class="badge text-bg-light text-uppercase">{{ building.buildingCode }}</span>
+              </div>
+            </div>
+
+            <ul class="list-group list-group-flush my-2">
+              <li class="list-group-item px-0 py-2">
+                <div class="d-flex align-items-center">
+                  <div class="flex-grow-1 me-2">
+                    <h6 class="mb-1">{{ building.name }}</h6>
+                    <p class="text-muted mb-0">{{ building.street1 }} {{ building.stNumber1 }}, {{ building.city }}</p>
+                    <p class="text-muted mb-0">{{ building.region }}, {{ building.country }}</p>
+                  </div>
+                  <div class="flex-shrink-0">
+                    <a [routerLink]="['/admin/buildings', building.id]" class="avatar avatar-xs btn-link-secondary">
+                      <i class="f-20 d-flex" antIcon type="eye" theme="outline"></i>
+                    </a>
+                  </div>
+                </div>
+              </li>
+
+              <li class="list-group-item px-0 py-2">
+                <div class="d-flex align-items-center">
+                  <div class="flex-grow-1 me-2"><p class="mb-0">Οροφοι</p></div>
+                  <div class="flex-shrink-0">
+                    <p class="text-muted mb-0">{{ building.floors }}</p>
+                  </div>
+                </div>
+              </li>
+
+              <li class="list-group-item px-0 py-2">
+                <div class="d-flex align-items-center">
+                  <div class="flex-grow-1 me-2"><p class="mb-0">Διαμερίσματα</p></div>
+                  <div class="flex-shrink-0">
+                    <p class="text-muted mb-0">{{ building.apartmentsNum }}</p>
+                  </div>
+                </div>
+              </li>
+
+              <li class="list-group-item px-0 py-2">
+                <div class="d-flex align-items-center">
+                  <div class="flex-grow-1 me-2"><p class="mb-0">Διαχειριστής Κτιρίου</p></div>
+                  <div class="flex-shrink-0">
+                    <p class="text-muted mb-0">{{ building.managerFullName || '-' }}</p>
+                  </div>
+                </div>
+              </li>
+
+              <li class="list-group-item px-0 py-2">
+                <div class="d-flex align-items-center">
+                  <div class="flex-grow-1 me-2"><p class="mb-0">Εταιρεία / PM</p></div>
+                  <div class="flex-shrink-0">
+                    <p class="text-muted mb-0">{{ building.company?.companyName || '-' }}</p>
+                  </div>
+                </div>
+              </li>
+            </ul>
+
+            <a class="btn btn-sm btn-outline-primary mb-2" [routerLink]="['/admin/buildings', building.id]">Προβολή</a>
+          </app-card>
+        </div>
+      }
+    </div>
+
+    <ng-template #empty>
+      <div class="py-4 px-3 text-muted">
+        {{ buildings.length ? 'Δεν βρέθηκαν πολυκατοικίες με τα συγκεκριμένα φίλτρα.' : 'Δεν βρέθηκαν πολυκατοικίες στη βάση δεδομένων.' }}
+      </div>
+    </ng-template>
+  </ng-container>
+</app-card>
