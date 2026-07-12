@@ -39,6 +39,8 @@ export class AuthLoginComponent implements OnInit {
   error = '';
   returnUrl!: string;
   classList!: { toggle: (arg0: string) => void };
+  currentBuildingId?: number | null;
+  buildingMember?: boolean;
 
   // constructor
   constructor(private userService: UserService) {
@@ -93,7 +95,13 @@ export class AuthLoginComponent implements OnInit {
       next: (response: AuthenticationResponse) => {
         this.loading = false;
 
-        localStorage.setItem('currentUser', JSON.stringify(response.user));
+        const buildingId = response.user?.currentBuildingId;
+
+        if (buildingId) {
+          localStorage.setItem('buildingId', String(buildingId));
+        } else {
+          localStorage.removeItem('buildingId');
+        }
 
         const inviteCode = localStorage.getItem('inviteCode');
 
@@ -101,16 +109,20 @@ export class AuthLoginComponent implements OnInit {
           this.userService.acceptInvite(inviteCode).subscribe({
             next: () => {
               localStorage.removeItem('inviteCode');
-              this.router.navigate(['/dashboard/default']);
+              localStorage.removeItem('redirectAfterLogin');
+              this.authenticationService.refreshCurrentUserAndReload();
             },
             error: () => {
               localStorage.removeItem('inviteCode');
-              this.router.navigate(['/dashboard/default']);
+              localStorage.removeItem('redirectAfterLogin');
+              this.authenticationService.refreshCurrentUserAndReload();
             }
           });
-        } else {
-          this.router.navigate(['/dashboard/default']);
+
+          return;
         }
+
+        this.router.navigate(['/dashboard/default']);
       },
       error: (err) => {
         this.loading = false;
@@ -120,49 +132,30 @@ export class AuthLoginComponent implements OnInit {
   }
 
   private getLoginErrorMessage(err: any): string {
-  if (typeof err === 'string') {
-    try {
-      const parsed = JSON.parse(err);
-      return (
-        parsed.businessErrorDescription ||
-        parsed.error ||
-        parsed.message ||
-        'Παρουσιάστηκε σφάλμα κατά τη σύνδεση.'
-      );
-    } catch {
-      return err;
-    }
-  }
-
-  if (err?.error) {
-    if (typeof err.error === 'string') {
+    if (typeof err === 'string') {
       try {
-        const parsed = JSON.parse(err.error);
-        return (
-          parsed.businessErrorDescription ||
-          parsed.error ||
-          parsed.message ||
-          err.error
-        );
+        const parsed = JSON.parse(err);
+        return parsed.businessErrorDescription || parsed.error || parsed.message || 'Παρουσιάστηκε σφάλμα κατά τη σύνδεση.';
       } catch {
-        return err.error;
+        return err;
       }
     }
 
-    return (
-      err.error.businessErrorDescription ||
-      err.error.error ||
-      err.error.message ||
-      'Παρουσιάστηκε σφάλμα κατά τη σύνδεση.'
-    );
-  }
+    if (err?.error) {
+      if (typeof err.error === 'string') {
+        try {
+          const parsed = JSON.parse(err.error);
+          return parsed.businessErrorDescription || parsed.error || parsed.message || err.error;
+        } catch {
+          return err.error;
+        }
+      }
 
-  return (
-    err?.businessErrorDescription ||
-    err?.message ||
-    'Παρουσιάστηκε σφάλμα κατά τη σύνδεση. Παρακαλώ δοκιμάστε ξανά.'
-  );
-}
+      return err.error.businessErrorDescription || err.error.error || err.error.message || 'Παρουσιάστηκε σφάλμα κατά τη σύνδεση.';
+    }
+
+    return err?.businessErrorDescription || err?.message || 'Παρουσιάστηκε σφάλμα κατά τη σύνδεση. Παρακαλώ δοκιμάστε ξανά.';
+  }
 
   socialMedia = [
     { name: 'Google', logo: 'google.svg' },

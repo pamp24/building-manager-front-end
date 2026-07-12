@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+
 import { CompanyDTO } from 'src/app/theme/shared/models/companyDTO';
 import { AuthenticationService } from 'src/app/theme/shared/service';
 import { CompanyService } from 'src/app/theme/shared/service/company.service';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
+
+import { LOCATION_COUNTRIES, SupportedLocationRegion, resolveCountryLocations } from '../location-form.utils';
 
 @Component({
   selector: 'app-multiple-building-form',
@@ -24,6 +26,11 @@ export class MultipleBuildingFormComponent {
   loading = false;
   apiError?: string;
 
+  countries = LOCATION_COUNTRIES;
+  availableStates: SupportedLocationRegion[] = [];
+  availableCities: { city: string; areas: string[] }[] = [];
+  availableAreas: string[] = [];
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthenticationService,
@@ -31,24 +38,61 @@ export class MultipleBuildingFormComponent {
   ) {
     this.form = this.fb.group({
       companyName: ['', [Validators.required, Validators.minLength(2)]],
-
-      // UI field: "afm" (9 digits) -> θα γίνει mapping σε taxNumber στο submit
       afm: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
-
       responsiblePerson: ['', [Validators.required, Validators.minLength(3)]],
       phoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9+\s()-]{8,20}$/)]],
       email: ['', [Validators.required, Validators.email]],
-
       address: ['', [Validators.required, Validators.minLength(2)]],
       addressNumber: ['', [Validators.required]],
       postalCode: ['', [Validators.required, Validators.pattern(/^\d{5}$/)]],
+      country: ['', [Validators.required]],
+      state: ['', [Validators.required]],
       city: ['', [Validators.required]],
-      region: ['']
+      region: ['', [Validators.required]]
     });
   }
 
   get f() {
     return this.form.controls;
+  }
+
+  onCountryChange(): void {
+    this.availableStates = resolveCountryLocations(this.f['country'].value);
+    this.availableCities = [];
+    this.availableAreas = [];
+
+    this.form.patchValue(
+      {
+        state: '',
+        city: '',
+        region: ''
+      },
+      { emitEvent: false }
+    );
+  }
+
+  onStateChange(): void {
+    const selectedState = this.f['state'].value;
+    const match = this.availableStates.find((state) => state.region === selectedState);
+
+    this.availableCities = match?.cities ?? [];
+    this.availableAreas = [];
+
+    this.form.patchValue(
+      {
+        city: '',
+        region: ''
+      },
+      { emitEvent: false }
+    );
+  }
+
+  onCityChange(): void {
+    const selectedCity = this.f['city'].value;
+    const match = this.availableCities.find((city) => city.city === selectedCity);
+
+    this.availableAreas = match?.areas ?? [];
+    this.form.patchValue({ region: '' }, { emitEvent: false });
   }
 
   submit(): void {
@@ -70,7 +114,8 @@ export class MultipleBuildingFormComponent {
       addressNumber: String(this.f['addressNumber'].value).trim(),
       postalCode: String(this.f['postalCode'].value).trim(),
       city: String(this.f['city'].value).trim(),
-      region: String(this.f['region'].value || '').trim() || undefined
+      // Backend only exposes a single region field for companies for now.
+      region: [this.f['state'].value, this.f['region'].value].filter(Boolean).join(' / ')
     };
 
     this.loading = true;
@@ -78,20 +123,28 @@ export class MultipleBuildingFormComponent {
     this.companyService.createCompany(payload).subscribe({
       next: (company: any) => {
         const id = company?.companyId ?? company?.id;
+
         if (!id) {
-          this.apiError = 'Η εταιρία δημιουργήθηκε αλλά δεν επιστράφηκε id.';
+          this.loading = false;
+          this.apiError = 'Η εταιρεία δημιουργήθηκε αλλά δεν επιστράφηκε id.';
           return;
         }
 
         this.authService.refreshCurrentUser().subscribe({
-          next: () => this.companyCreated.emit(Number(id)),
-          error: () => this.companyCreated.emit(Number(id))
+          next: () => {
+            this.loading = false;
+            this.companyCreated.emit(Number(id));
+          },
+          error: () => {
+            this.loading = false;
+            this.companyCreated.emit(Number(id));
+          }
         });
       },
       error: (err) => {
         this.loading = false;
-        console.error('Σφάλμα δημιουργίας εταιρίας:', err);
-        this.apiError = err?.error?.message || 'Αποτυχία δημιουργίας εταιρίας. Δοκιμάστε ξανά.';
+        console.error('Σφάλμα δημιουργίας εταιρείας:', err);
+        this.apiError = err?.error?.message || 'Αποτυχία δημιουργίας εταιρείας. Δοκιμάστε ξανά.';
       }
     });
   }

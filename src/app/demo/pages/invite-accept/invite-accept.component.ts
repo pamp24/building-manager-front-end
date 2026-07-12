@@ -1,7 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UserService } from 'src/app/theme/shared/service';
+
 import { AuthenticationService } from 'src/app/theme/shared/service/authentication.service';
+import { UserService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-invite-accept',
@@ -30,19 +31,17 @@ export class InviteAcceptComponent implements OnInit {
     const currentUser = this.authService.currentUserValue;
 
     if (!currentUser) {
-      // Αν δεν είναι logged in -> σώσε τον κωδικό και πήγαινε login
       localStorage.setItem('inviteCode', this.inviteCode);
       localStorage.setItem('redirectAfterLogin', `/invite/accept?code=${this.inviteCode}`);
       this.router.navigate(['/login']);
       return;
     }
 
-    // Αν είναι logged in -> κάλεσε acceptInvite
     this.userService.acceptInvite(this.inviteCode).subscribe({
       next: () => {
         this.message = 'Η πρόσκληση έγινε αποδεκτή με επιτυχία!';
         this.loading = false;
-        this.router.navigate(['/dashboard/default']);
+        this.authService.refreshCurrentUserAndReload();
       },
       error: (err) => {
         this.message = err.error?.message || 'Σφάλμα κατά την αποδοχή της πρόσκλησης.';

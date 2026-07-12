@@ -1,17 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, computed, effect, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { NarikCustomValidatorsModule } from '@narik/custom-validators';
+import { Component, OnInit, computed, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { NarikCustomValidatorsModule } from '@narik/custom-validators';
 
-import { RoleFormComponent } from './role-form/role-form.component';
 import { ApartmentFormComponent } from './apartment-form/apartment-form.component';
 import { BuildingSetupComponent } from './building-setup/building-setup.component';
-import { WizardStateService } from 'src/app/theme/shared/service/wizard-state.service';
+import { RoleFormComponent } from './role-form/role-form.component';
+
 import { BuildingMeta } from 'src/app/theme/shared/models/buildingMeta';
 import { BuildingSetupResult } from 'src/app/theme/shared/models/building-setup-result';
+import { AuthenticationService } from 'src/app/theme/shared/service/authentication.service';
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
+import { WizardStateService } from 'src/app/theme/shared/service/wizard-state.service';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
 
 export type ActionType = 'new' | 'many' | 'existing';
 export type WizardStep = 1 | 2 | 3;
@@ -40,48 +42,32 @@ export class FormsValidatorComponent implements OnInit {
 
   constructor(
     private wizard: WizardStateService,
-    private buildingService: BuildingService
+    private buildingService: BuildingService,
+    private authenticationService: AuthenticationService
   ) {
     effect(() => {
-      console.log('GUARD CHECK:', {
-        step: this.currentStep(),
-        action: this.selectedAction(),
-        buildingId: this.buildingId,
-        hasMeta: !!this.buildingMeta
-      });
       const step = this.currentStep();
       const action = this.selectedAction();
 
-      // Step 2 χωρίς action -> reset στο Step 1
       if (step === 2 && !action) {
         this.wizard.setStep(1);
         return;
       }
 
-      // Step 3 χωρίς building data -> γύρνα πίσω
-      if (step === 3) {
-        const hasBuildingId = !!this.buildingId;
-        const hasMeta = !!this.buildingMeta;
-
-        if (!hasBuildingId || !hasMeta) {
-          // αν έχει action, πάμε step2, αλλιώς step1
-          this.wizard.setStep(action ? 2 : 1);
-        }
+      if (step === 3 && (!this.buildingId || !this.buildingMeta)) {
+        this.wizard.setStep(action ? 2 : 1);
       }
     });
   }
-  ngOnInit() {
+
+  ngOnInit(): void {
     this.wizard.reset();
   }
 
-  onActionSelected(action: ActionType) {
-    console.log('ACTION SELECTED:', action);
+  onActionSelected(action: ActionType): void {
+    this.buildingId = undefined;
+    this.buildingMeta = undefined as any;
     this.wizard.setAction(action);
-    console.log('STATE AFTER setAction:', {
-      step: this.wizard.currentStep(),
-      action: this.wizard.selectedAction(),
-      buildingId: this.wizard.buildingId()
-    });
   }
 
   onBuildingSetupCompleted(event: BuildingSetupResult): void {
@@ -93,35 +79,34 @@ export class FormsValidatorComponent implements OnInit {
   previousStep(): void {
     const action = this.selectedAction();
 
-    // Στο "new" αν πατήσει πίσω από step3, σβήσε draft
     if (action === 'new' && this.currentStep() === 3 && this.buildingId) {
       this.deleteDraftBuildingAndBack();
       return;
     }
 
-    // Στο "many" και "existing" απλά back
     this.wizard.back();
+  }
+
+  onWizardFinished(): void {
+    this.buildingId = undefined;
+    this.buildingMeta = undefined as any;
+    this.wizard.reset();
+    this.authenticationService.refreshCurrentUserAndReload();
   }
 
   private deleteDraftBuildingAndBack(): void {
     const id = this.buildingId!;
+
     this.buildingService.deleteBuilding(id).subscribe({
       next: () => {
-        console.log('Draft building deleted');
         this.buildingId = undefined;
         this.buildingMeta = undefined as any;
-
-        this.wizard.back(); // πήγαινε πίσω στο step 2
+        this.wizard.back();
       },
       error: (err) => {
         console.error('Failed to delete draft building', err);
         alert('Δεν ήταν δυνατή η ακύρωση. Η πολυκατοικία δεν διαγράφηκε. Δοκιμάστε ξανά.');
-        // εδώ ΔΕΝ κάνεις back
       }
     });
-  }
-
-  onWizardFinished(): void {
-    this.wizard.reset();
   }
 }

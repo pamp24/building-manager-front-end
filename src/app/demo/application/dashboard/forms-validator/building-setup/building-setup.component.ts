@@ -1,33 +1,26 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-
-import { ExistingBuildingFormComponent } from '../existing-building-form/existing-building-form.component';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MultipleBuildingFormComponent } from '../multiple-building-form/multiple-building-form.component';
-import { BuildingSetupResult } from 'src/app/theme/shared/models/building-setup-result';
+
 import { BuildingMeta } from 'src/app/theme/shared/models/buildingMeta';
+import { BuildingSetupResult } from 'src/app/theme/shared/models/building-setup-result';
+
+import { BuildingFormComponent } from '../building-form/building-form.component';
+import { ExistingBuildingFormComponent } from '../existing-building-form/existing-building-form.component';
+import { MultipleBuildingFormComponent } from '../multiple-building-form/multiple-building-form.component';
 
 @Component({
   selector: 'app-building-setup',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    ExistingBuildingFormComponent,
-    MultipleBuildingFormComponent
-  ],
+  imports: [CommonModule, ReactiveFormsModule, BuildingFormComponent, ExistingBuildingFormComponent, MultipleBuildingFormComponent],
   templateUrl: './building-setup.component.html',
   styleUrls: ['./building-setup.component.scss']
 })
 export class BuildingSetupComponent implements OnInit {
   @Input() action!: 'many' | 'new' | 'existing';
-
   @Output() completed = new EventEmitter<BuildingSetupResult>();
-
   @Output() back = new EventEmitter<void>();
 
-  // internal state
   companyCompleted = false;
   buildingForm: FormGroup;
   companyId: number | null = null;
@@ -62,18 +55,13 @@ export class BuildingSetupComponent implements OnInit {
       heatingCapacityLitres: [0]
     });
   }
-  ngOnInit() {
-    console.log('BuildingSetup action:', this.action);
-    console.log('BuildingSetup buildingForm instance:', this.buildingForm);
-    console.log('is FormGroup?', this.buildingForm instanceof FormGroup);
-  }
 
-  onBuildingCreated(event: { buildingId: number; buildingForm: FormGroup }) {
-    const meta = this.toMeta(event.buildingForm);
+  ngOnInit(): void {}
 
+  onBuildingCreated(event: { buildingId: number; buildingForm: FormGroup }): void {
     this.completed.emit({
       buildingId: event.buildingId,
-      buildingMeta: meta
+      buildingMeta: this.toMeta(event.buildingForm)
     });
   }
 
@@ -81,11 +69,10 @@ export class BuildingSetupComponent implements OnInit {
     this.back.emit();
   }
 
-  onCompanyCreated(companyId: number) {
+  onCompanyCreated(companyId: number): void {
     this.companyId = companyId;
     this.companyCompleted = true;
 
-    // reset building form για να ξεκινήσει “καθαρή” η πρώτη πολυκατοικία
     this.buildingForm.reset({
       name: '',
       street1: '',
@@ -121,23 +108,16 @@ export class BuildingSetupComponent implements OnInit {
     this.companyId = null;
   }
 
-  // MANY path: όταν δημιουργηθεί building, προχώρα όπως στο new
-  onManyBuildingCreated(event: { buildingId: number; buildingForm: FormGroup }) {
-    // εδώ (προαιρετικά) μπορείς να κρατήσεις companyId σε state/localStorage,
-    // αλλά για το flow αρκεί να περάσεις στο parent το buildingId/meta:
-
-    const meta = this.toMeta(event.buildingForm);
-
+  onManyBuildingCreated(event: { buildingId: number; buildingForm: FormGroup }): void {
     this.completed.emit({
       buildingId: event.buildingId,
-      buildingMeta: meta
+      buildingMeta: this.toMeta(event.buildingForm)
     });
   }
 
-  
-
   private toMeta(form: FormGroup): BuildingMeta {
     const v = form.value;
+
     return {
       apartmentsNum: Number(v.apartmentsNum || 0),
       floors: Number(v.floors || 0),
