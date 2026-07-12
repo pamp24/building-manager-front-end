@@ -19,4 +19,7 @@ export interface User {
   role?: string;
 
   professionalsFavoritesOnly?: boolean;
+
+  currentBuildingId?: number | null;
+  buildingMember?: boolean;
 }

@@ -42,15 +42,10 @@ export class AuthenticationService {
             role: response.user.role
           };
 
-          if (rememberMe) {
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            localStorage.setItem('token', response.token);
-          } else {
-            sessionStorage.setItem('currentUser', JSON.stringify(user));
-            sessionStorage.setItem('token', response.token);
-          }
+          const storage = rememberMe ? localStorage : sessionStorage;
 
-          this.currentUser = user;
+          storage.setItem('token', response.token);
+          this.persistCurrentUser(user, storage);
 
           return {
             token: response.token,
@@ -69,17 +64,19 @@ export class AuthenticationService {
   }
 
   logout(message?: string) {
-  localStorage.removeItem('currentUser');
-  localStorage.removeItem('token');
-  sessionStorage.removeItem('currentUser');
-  sessionStorage.removeItem('token');
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('token');
+    sessionStorage.removeItem('currentUser');
+    sessionStorage.removeItem('token');
+    localStorage.removeItem('buildingId');
+    sessionStorage.removeItem('buildingId');
 
-  this.currentUser = null;
+    this.currentUser = null;
 
-  this.router.navigate(['/login'], {
-    queryParams: message ? { reason: message } : {}
-  });
-}
+    this.router.navigate(['/login'], {
+      queryParams: message ? { reason: message } : {}
+    });
+  }
 
   confirm(token: string) {
     return this.http.post('http://localhost:8080/api/v1/auth/activate-account', { token });
@@ -121,9 +118,62 @@ export class AuthenticationService {
   refreshCurrentUser(): Observable<User> {
     return this.userService.getCurrentUser().pipe(
       tap((user) => {
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        this.currentUser = user;
+        this.persistCurrentUser(user);
       })
     );
+  }
+
+  refreshCurrentUserAndReload(targetUrl?: string): void {
+    this.refreshCurrentUser().subscribe({
+      next: (user) => {
+        window.location.href = targetUrl ?? this.getDefaultRouteForRole(user.role);
+      },
+      error: () => {
+        window.location.href = targetUrl ?? this.getDefaultRouteForRole(this.currentUserValue?.role);
+      }
+    });
+  }
+
+  private persistCurrentUser(user: User, storage: Storage = this.getActiveStorage()): void {
+    storage.setItem('currentUser', JSON.stringify(user));
+
+    if (storage === localStorage) {
+      sessionStorage.removeItem('currentUser');
+    } else {
+      localStorage.removeItem('currentUser');
+    }
+
+    if (user.currentBuildingId) {
+      localStorage.setItem('buildingId', String(user.currentBuildingId));
+      sessionStorage.setItem('buildingId', String(user.currentBuildingId));
+    } else {
+      localStorage.removeItem('buildingId');
+      sessionStorage.removeItem('buildingId');
+    }
+
+    this.currentUser = user;
+  }
+
+  private getActiveStorage(): Storage {
+    if (localStorage.getItem('token') || localStorage.getItem('currentUser')) {
+      return localStorage;
+    }
+
+    return sessionStorage;
+  }
+
+  private getDefaultRouteForRole(role: string | undefined): string {
+    switch (role) {
+      case 'Admin':
+        return '/admin/dashboard';
+      case 'PropertyManager':
+      case 'PropertyAgent':
+      case 'AdminAgent':
+        return '/pm/pm-dashboard';
+      case 'BuildingManager':
+        return '/statement/dashboard';
+      default:
+        return '/dashboard/default';
+    }
   }
 }

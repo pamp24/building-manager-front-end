@@ -1,8 +1,7 @@
 <form *ngIf="form" [formGroup]="form" class="editForm" novalidate>
-  <h5 class="mb-3">Βήμα 2: Επιπλέον Στοιχεία Κτιρίου (Η Εισαγωγή πρέπει να γίνει από τον Διαχειριστή)</h5>
+  <h5 class="mb-3">Βήμα 2: Επιπλέον Στοιχεία Κτιρίου</h5>
 
   <div class="row">
-    <!-- Όνομα Κτιρίου -->
     <div class="col-md-6 form-group">
       <label>Όνομα Κτιρίου*</label>
       <input
@@ -11,12 +10,9 @@
         formControlName="name"
         [ngClass]="{ 'is-invalid': form.get('name')?.invalid && form.get('name')?.touched }"
       />
-      <div class="invalid-feedback" *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
-        Το πεδίο είναι υποχρεωτικό.
-      </div>
+      <div class="invalid-feedback" *ngIf="form.get('name')?.invalid && form.get('name')?.touched">Το πεδίο είναι υποχρεωτικό.</div>
     </div>
 
-    <!-- Οδός 1 -->
     <div class="col-md-6 form-group">
       <label>Οδός 1*</label>
       <input
@@ -25,12 +21,9 @@
         formControlName="street1"
         [ngClass]="{ 'is-invalid': form.get('street1')?.invalid && form.get('street1')?.touched }"
       />
-      <div class="invalid-feedback" *ngIf="form.get('street1')?.invalid && form.get('street1')?.touched">
-        Το πεδίο είναι υποχρεωτικό.
-      </div>
+      <div class="invalid-feedback" *ngIf="form.get('street1')?.invalid && form.get('street1')?.touched">Το πεδίο είναι υποχρεωτικό.</div>
     </div>
 
-    <!-- Αριθμός Οδού 1 -->
     <div class="col-md-6 form-group">
       <label>Αριθμός Οδού 1*</label>
       <input
@@ -39,52 +32,74 @@
         formControlName="stNumber1"
         [ngClass]="{ 'is-invalid': form.get('stNumber1')?.invalid && form.get('stNumber1')?.touched }"
       />
-      <div class="invalid-feedback" *ngIf="form.get('stNumber1')?.invalid && form.get('stNumber1')?.touched">
-        Το πεδίο είναι υποχρεωτικό.
-      </div>
+      <div class="invalid-feedback" *ngIf="form.get('stNumber1')?.invalid && form.get('stNumber1')?.touched">Το πεδίο είναι υποχρεωτικό.</div>
     </div>
 
-    <!-- Οδός 2 -->
     <div class="col-md-6 form-group">
       <label>Οδός 2</label>
       <input type="text" class="form-control" formControlName="street2" />
     </div>
 
-    <!-- Αριθμός Οδού 2 -->
     <div class="col-md-6 form-group">
       <label>Αριθμός Οδού 2</label>
       <input type="text" class="form-control" formControlName="stNumber2" />
     </div>
 
-    <!-- Πόλη -->
+    <div class="col-md-6 form-group">
+      <label>Χώρα*</label>
+      <select
+        class="form-select"
+        formControlName="country"
+        (change)="onCountryChange()"
+        [ngClass]="{ 'is-invalid': form.get('country')?.invalid && form.get('country')?.touched }"
+      >
+        <option value="">-- Επιλέξτε Χώρα --</option>
+        <option *ngFor="let country of countries" [value]="country.code">{{ country.name }}</option>
+      </select>
+      <div class="invalid-feedback" *ngIf="form.get('country')?.invalid && form.get('country')?.touched">Η επιλογή είναι υποχρεωτική.</div>
+    </div>
+
+    <div class="col-md-6 form-group">
+      <label>Νομός / Επαρχία*</label>
+      <select
+        class="form-select"
+        formControlName="state"
+        (change)="onStateChange()"
+        [ngClass]="{ 'is-invalid': form.get('state')?.invalid && form.get('state')?.touched }"
+      >
+        <option value="">-- Επιλέξτε Νομό / Επαρχία --</option>
+        <option *ngFor="let state of availableStates" [value]="state.region">{{ state.region }}</option>
+      </select>
+      <div class="invalid-feedback" *ngIf="form.get('state')?.invalid && form.get('state')?.touched">Η επιλογή είναι υποχρεωτική.</div>
+    </div>
+
     <div class="col-md-6 form-group">
       <label>Πόλη*</label>
-      <input
-        type="text"
-        class="form-control"
+      <select
+        class="form-select"
         formControlName="city"
+        (change)="onCityChange()"
         [ngClass]="{ 'is-invalid': form.get('city')?.invalid && form.get('city')?.touched }"
-      />
-      <div class="invalid-feedback" *ngIf="form.get('city')?.invalid && form.get('city')?.touched">
-        Το πεδίο είναι υποχρεωτικό.
-      </div>
+      >
+        <option value="">-- Επιλέξτε Πόλη --</option>
+        <option *ngFor="let city of availableCities" [value]="city.city">{{ city.city }}</option>
+      </select>
+      <div class="invalid-feedback" *ngIf="form.get('city')?.invalid && form.get('city')?.touched">Το πεδίο είναι υποχρεωτικό.</div>
     </div>
 
-    <!-- Περιοχή -->
     <div class="col-md-6 form-group">
       <label>Περιοχή*</label>
-      <input
-        type="text"
-        class="form-control"
+      <select
+        class="form-select"
         formControlName="region"
         [ngClass]="{ 'is-invalid': form.get('region')?.invalid && form.get('region')?.touched }"
-      />
-      <div class="invalid-feedback" *ngIf="form.get('region')?.invalid && form.get('region')?.touched">
-        Το πεδίο είναι υποχρεωτικό.
-      </div>
+      >
+        <option value="">-- Επιλέξτε Περιοχή --</option>
+        <option *ngFor="let area of availableAreas" [value]="area">{{ area }}</option>
+      </select>
+      <div class="invalid-feedback" *ngIf="form.get('region')?.invalid && form.get('region')?.touched">Το πεδίο είναι υποχρεωτικό.</div>
     </div>
 
-    <!-- Ταχυδρομικός Κώδικας -->
     <div class="col-md-6 form-group">
       <label>Ταχυδρομικός Κώδικας*</label>
       <input
@@ -98,39 +113,6 @@
       </div>
     </div>
 
-    <!-- Χώρα -->
-    <div class="col-md-6 form-group">
-      <label>Χώρα*</label>
-      <select
-        class="form-select"
-        formControlName="country"
-        [ngClass]="{ 'is-invalid': form.get('country')?.invalid && form.get('country')?.touched }"
-      >
-        <option value="">-- Επιλέξτε Χώρα --</option>
-        <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
-      </select>
-      <div class="invalid-feedback" *ngIf="form.get('country')?.invalid && form.get('country')?.touched">
-        Η επιλογή είναι υποχρεωτική.
-      </div>
-    </div>
-
-    <!-- Νομός -->
-    <div class="col-md-6 form-group">
-      <label>Νομός*</label>
-      <select
-        class="form-select"
-        formControlName="state"
-        [ngClass]="{ 'is-invalid': form.get('state')?.invalid && form.get('state')?.touched }"
-      >
-        <option value="">-- Επιλέξτε Νομό --</option>
-        <option *ngFor="let state of states" [value]="state">{{ state }}</option>
-      </select>
-      <div class="invalid-feedback" *ngIf="form.get('state')?.invalid && form.get('state')?.touched">
-        Η επιλογή είναι υποχρεωτική.
-      </div>
-    </div>
-
-    <!-- Αριθμός Ορόφων -->
     <div class="col-md-6 form-group">
       <label>Αριθμός Ορόφων*</label>
       <input
@@ -139,12 +121,9 @@
         formControlName="floors"
         [ngClass]="{ 'is-invalid': form.get('floors')?.invalid && form.get('floors')?.touched }"
       />
-      <div class="invalid-feedback" *ngIf="form.get('floors')?.invalid && form.get('floors')?.touched">
-        Υποχρεωτικό πεδίο.
-      </div>
+      <div class="invalid-feedback" *ngIf="form.get('floors')?.invalid && form.get('floors')?.touched">Υποχρεωτικό πεδίο.</div>
     </div>
 
-    <!-- Σύνολο Διαμερισμάτων -->
     <div class="col-md-6 form-group">
       <label>Σύνολο Διαμερισμάτων*</label>
       <input
@@ -153,12 +132,9 @@
         formControlName="apartmentsNum"
         [ngClass]="{ 'is-invalid': form.get('apartmentsNum')?.invalid && form.get('apartmentsNum')?.touched }"
       />
-      <div class="invalid-feedback" *ngIf="form.get('apartmentsNum')?.invalid && form.get('apartmentsNum')?.touched">
-        Υποχρεωτικό πεδίο.
-      </div>
+      <div class="invalid-feedback" *ngIf="form.get('apartmentsNum')?.invalid && form.get('apartmentsNum')?.touched">Υποχρεωτικό πεδίο.</div>
     </div>
 
-    <!-- Συνολικά τ.μ. -->
     <div class="col-md-6 form-group">
       <label>Συνολικά τ.μ.*</label>
       <input
@@ -167,34 +143,23 @@
         formControlName="sqMetersTotal"
         [ngClass]="{ 'is-invalid': form.get('sqMetersTotal')?.invalid && form.get('sqMetersTotal')?.touched }"
       />
-      <div class="invalid-feedback" *ngIf="form.get('sqMetersTotal')?.invalid && form.get('sqMetersTotal')?.touched">
-        Υποχρεωτικό πεδίο.
-      </div>
+      <div class="invalid-feedback" *ngIf="form.get('sqMetersTotal')?.invalid && form.get('sqMetersTotal')?.touched">Υποχρεωτικό πεδίο.</div>
     </div>
 
-    <!-- Κοινόχρηστα τ.μ. -->
     <div class="col-md-6 form-group">
       <label>Κοινόχρηστα τ.μ.</label>
-      <input
-        type="number"
-        class="form-control"
-        formControlName="sqMetersCommonSpaces"
-        [ngClass]="{ 'is-invalid': form.get('sqMetersCommonSpaces')?.invalid && form.get('sqMetersCommonSpaces')?.touched }"
-      />
+      <input type="number" class="form-control" formControlName="sqMetersCommonSpaces" />
     </div>
-    <!-- Περιγραφή -->
+
     <div class="col-md-12 form-group">
       <label>Περιγραφή</label>
       <textarea class="form-control" rows="3" formControlName="description" placeholder="Προαιρετική περιγραφή για το κτίριο"></textarea>
     </div>
-    <!-- Διαθέτει Πάρκινγκ -->
+
     <div class="col-md-6 form-group">
-      <label>
-        <input type="checkbox" [formControlName]="'parkingExist'" />
-        Διαθέτει Πάρκινγκ
-      </label>
+      <label><input type="checkbox" [formControlName]="'parkingExist'" /> Διαθέτει Πάρκινγκ</label>
     </div>
-    <!-- Θέσεις Πάρκινγκ -->
+
     <div class="col-md-6 form-group" *ngIf="form.get('parkingExist')?.value">
       <label>Αριθμός Θέσεων Πάρκινγκ*</label>
       <input
@@ -203,20 +168,15 @@
         formControlName="parkingSpacesNum"
         [ngClass]="{ 'is-invalid': form.get('parkingSpacesNum')?.invalid && form.get('parkingSpacesNum')?.touched }"
       />
-      <div class="invalid-feedback" *ngIf="form.get('parkingSpacesNum')?.invalid && form.get('parkingSpacesNum')?.touched">
-        Το πεδίο είναι υποχρεωτικό.
-      </div>
+      <div class="invalid-feedback" *ngIf="form.get('parkingSpacesNum')?.invalid && form.get('parkingSpacesNum')?.touched">Το πεδίο είναι υποχρεωτικό.</div>
     </div>
   </div>
+
   <div class="row">
-    <!-- Διαθέτει Αποθήκες -->
     <div class="col-md-6 form-group">
-      <label>
-        <input type="checkbox" [formControlName]="'storageExist'" />
-        Διαθέτει Αποθήκες
-      </label>
+      <label><input type="checkbox" [formControlName]="'storageExist'" /> Διαθέτει Αποθήκες</label>
     </div>
-    <!-- Αριθμός Αποθηκών -->
+
     <div class="col-md-6 form-group" *ngIf="form.get('storageExist')?.value">
       <label>Αριθμός Αποθηκών*</label>
       <input
@@ -225,41 +185,26 @@
         formControlName="storageNum"
         [ngClass]="{ 'is-invalid': form.get('storageNum')?.invalid && form.get('storageNum')?.touched }"
       />
-      <div class="invalid-feedback" *ngIf="form.get('storageNum')?.invalid && form.get('storageNum')?.touched">
-        Το πεδίο είναι υποχρεωτικό.
-      </div>
+      <div class="invalid-feedback" *ngIf="form.get('storageNum')?.invalid && form.get('storageNum')?.touched">Το πεδίο είναι υποχρεωτικό.</div>
     </div>
   </div>
-  <!-- Διαθέτει Υπογειο -->
+
   <div class="col-md-6 form-group">
-    <label>
-      <input type="checkbox" [formControlName]="'undergroundFloorExist'" />
-      Διαθέτει Υπόγειο
-    </label>
-  </div>
-  <!-- Διαθέτει Ημιόροφο -->
-  <div class="col-md-6 form-group">
-    <label>
-      <input type="checkbox" [formControlName]="'halfFloorExist'" />
-      Διαθέτει Ημιόροφο
-    </label>
-  </div>
-  <!-- Διαθέτει Δώμα -->
-  <div class="col-md-6 form-group">
-    <label>
-      <input type="checkbox" [formControlName]="'overTopFloorExist'" />
-      Διαθέτει Δώμα
-    </label>
+    <label><input type="checkbox" [formControlName]="'undergroundFloorExist'" /> Διαθέτει Υπόγειο</label>
   </div>
 
-  <!-- Ο Διαχειριστής κατοικεί στο κτίριο -->
   <div class="col-md-6 form-group">
-    <label>
-      <input type="checkbox" [formControlName]="'managerHouseExist'" />
-      Ο Διαχειριστής κατοικεί στο κτίριο
-    </label>
+    <label><input type="checkbox" [formControlName]="'halfFloorExist'" /> Διαθέτει Ημιόροφο</label>
   </div>
-  <!-- Κεντρική Θέρμανση -->
+
+  <div class="col-md-6 form-group">
+    <label><input type="checkbox" [formControlName]="'overTopFloorExist'" /> Διαθέτει Δώμα</label>
+  </div>
+
+  <div class="col-md-6 form-group">
+    <label><input type="checkbox" [formControlName]="'managerHouseExist'" /> Ο Διαχειριστής κατοικεί στο κτίριο</label>
+  </div>
+
   <div class="col-md-6 form-group">
     <label>Διαθέτει Κεντρική Θέρμανση</label>
     <select class="form-select" formControlName="hasCentralHeating">
@@ -285,24 +230,13 @@
     <input type="number" class="form-control" formControlName="heatingCapacityLitres" />
   </div>
 
-  <!-- Έγγραφα -->
   <div class="col-md-12 form-group">
-    <label>Αρχείο Κανονισμού Πολυκατοικίας(PDF)</label>
+    <label>Αρχείο Κανονισμού Πολυκατοικίας (PDF)</label>
     <input type="file" (change)="onFileSelected($event)" accept="application/pdf" class="form-control" />
   </div>
 
   <div class="form-group text-center mt-3">
     <button type="button" class="btn btn-secondary me-2" (click)="onBack()">Πίσω</button>
     <button type="button" class="btn btn-success" (click)="submitBuildingForm()">Υποβολή</button>
-  </div>
-
-  <div class="datatable-bottom mt-3" *ngIf="buildings.length > 1">
-    <ngb-pagination
-      [collectionSize]="total"
-      [(page)]="currentPage"
-      [pageSize]="pageSize"
-      (pageChange)="onPageChange($event)"
-      class="table-pagination"
-    ></ngb-pagination>
   </div>
 </form>
