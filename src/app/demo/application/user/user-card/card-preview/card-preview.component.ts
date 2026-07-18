@@ -22,6 +22,8 @@ import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
 export class CardPreviewComponent implements OnChanges {
   @Input() apartment!: ApartmentDTO;
   @Input() building!: BuildingDTO;
+  private readonly apiBase = 'http://localhost:8080/api/v1';
+
   private iconService = inject(IconService);
 
   apartmentFeatures: any[] = [];
@@ -76,12 +78,6 @@ export class CardPreviewComponent implements OnChanges {
 
     if (changes['building'] && this.building) {
       this.heating = this.buildHeatingItems(this.building);
-    }
-
-    if (changes['apartment'] && this.apartment) {
-      setTimeout(() => {
-        // ... το δικό σου apartmentFeatures / apartmentTripleFeatures
-      });
     }
   }
 
@@ -159,5 +155,29 @@ export class CardPreviewComponent implements OnChanges {
       { label: 'Email', value: this.apartment.residentEmail || 'Δεν είναι διαθέσιμο' },
       { label: 'Τηλέφωνο', value: this.apartment.residentPhone || 'Δεν είναι διαθέσιμο' }
     ];
+  }
+
+  imgSrc(url?: string | null): string {
+    const fallbackImage = 'assets/images/user/avatar-5.jpg';
+
+    if (!url || url.trim() === '') {
+      return fallbackImage;
+    }
+
+    const cleanUrl = url.trim().replace(/\\/g, '/');
+
+    if (cleanUrl.startsWith('http://') || cleanUrl.startsWith('https://') || cleanUrl.startsWith('data:')) {
+      return cleanUrl;
+    }
+
+    if (cleanUrl.startsWith('/uploads/')) {
+      return `${this.apiBase}${cleanUrl}`;
+    }
+
+    if (cleanUrl.startsWith('uploads/')) {
+      return `${this.apiBase}/${cleanUrl}`;
+    }
+
+    return cleanUrl.startsWith('/') ? cleanUrl : `/${cleanUrl}`;
   }
 }

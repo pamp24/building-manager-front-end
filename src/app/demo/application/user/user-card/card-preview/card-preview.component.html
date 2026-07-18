@@ -1,7 +1,14 @@
 <div class="modal-header justify-content-between">
   <div class="d-flex w-100">
     <div class="flex-shrink-0">
-      <img src="assets/images/user/avatar-1.jpg" alt="εικόνα-χρήστη" class="wid-40 rounded-circle" />
+      <img
+        [src]="imgSrc(apartment?.ownerProfileImageUrl)"
+        [alt]="
+          apartment?.ownerFirstName || apartment?.ownerLastName ? apartment?.ownerFirstName + ' ' + apartment?.ownerLastName : 'Ιδιοκτήτης'
+        "
+        class="wid-40 rounded-circle"
+        style="width: 40px; height: 40px; object-fit: cover"
+      />
     </div>
     <div class="flex-grow-1 mx-3">
       <h6 class="mb-1">
@@ -104,7 +111,6 @@
             </ul>
           </div>
         </div>
-
       </div>
 
       <!-- Πληροφορίες Ιδιοκτήτη -->
@@ -113,7 +119,30 @@
           <div class="card-header">
             <h5>Πληροφορίες Ιδιοκτήτη</h5>
           </div>
+
           <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <img
+                [src]="imgSrc(apartment?.ownerProfileImageUrl)"
+                [alt]="
+                  apartment?.ownerFirstName || apartment?.ownerLastName
+                    ? apartment?.ownerFirstName + ' ' + apartment?.ownerLastName
+                    : 'Ιδιοκτήτης'
+                "
+                class="rounded-circle me-3"
+                style="width: 56px; height: 56px; object-fit: cover"
+              />
+
+              <div>
+                <h6 class="mb-1">
+                  {{ apartment?.ownerFirstName || '' }}
+                  {{ apartment?.ownerLastName || '' }}
+                </h6>
+
+                <span class="badge bg-primary">Ιδιοκτήτης</span>
+              </div>
+            </div>
+
             @for (info of ownerInformation; track $index) {
               <div class="mt-2">
                 <p class="mb-1 text-muted">{{ info.label }}</p>
@@ -123,11 +152,34 @@
           </div>
         </div>
         <!-- Πληροφορίες Ενοικιαστή -->
-        <div class="card" *ngIf="apartment?.residentFirstName || apartment?.residentLastName">
+        <div class="card" *ngIf="apartment?.residentFirstName || apartment?.residentLastName || apartment?.residentEmail">
           <div class="card-header">
             <h5>Πληροφορίες Ενοικιαστή</h5>
           </div>
+
           <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <img
+                [src]="imgSrc(apartment?.residentProfileImageUrl)"
+                [alt]="
+                  apartment?.residentFirstName || apartment?.residentLastName
+                    ? apartment?.residentFirstName + ' ' + apartment?.residentLastName
+                    : 'Ενοικιαστής'
+                "
+                class="rounded-circle me-3"
+                style="width: 56px; height: 56px; object-fit: cover"
+              />
+
+              <div>
+                <h6 class="mb-1">
+                  {{ apartment?.residentFirstName || '' }}
+                  {{ apartment?.residentLastName || '' }}
+                </h6>
+
+                <span class="badge bg-info">Ενοικιαστής</span>
+              </div>
+            </div>
+
             @for (info of residentInformation; track $index) {
               <div class="mt-2">
                 <p class="mb-1 text-muted">{{ info.label }}</p>

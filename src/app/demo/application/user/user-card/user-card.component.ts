@@ -35,6 +35,9 @@ import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
 export class UserCardComponent implements OnInit, OnChanges {
   @Input() pmView = false;
   @Input() buildingId?: number;
+
+  private readonly apiBase = 'http://localhost:8080/api/v1';
+
   private modalService = inject(NgbModal);
   private iconService = inject(IconService);
   selectedApartment: ApartmentDTO | null = null;
@@ -122,7 +125,7 @@ export class UserCardComponent implements OnInit, OnChanges {
               apartment: ap,
               name: ap.ownerLastName && ap.ownerFirstName ? `${ap.ownerLastName} ${ap.ownerFirstName}` : 'Άγνωστο Όνομα',
               position: `Διαμ. ${ap.number}, Όροφος ${ap.floor}`,
-              src: 'assets/images/user/avatar-1.jpg',
+              src: this.imgSrc(ap.ownerProfileImageUrl),
               description: ap.apDescription || 'Δεν υπάρχει περιγραφή',
               email: ap.ownerEmail || 'Δεν είναι διαθέσιμο',
               phone: ap.ownerPhone || 'Δεν είναι διαθέσιμο',
@@ -216,5 +219,29 @@ export class UserCardComponent implements OnInit, OnChanges {
 
   get currentBuilding(): BuildingDTO | null {
     return this.buildings[this.selectedBuildingIndex] ?? null;
+  }
+
+  imgSrc(url?: string | null): string {
+    const fallbackImage = 'assets/images/user/avatar-5.jpg';
+
+    if (!url || url.trim() === '') {
+      return fallbackImage;
+    }
+
+    const cleanUrl = url.trim().replace(/\\/g, '/');
+
+    if (cleanUrl.startsWith('http://') || cleanUrl.startsWith('https://') || cleanUrl.startsWith('data:')) {
+      return cleanUrl;
+    }
+
+    if (cleanUrl.startsWith('/uploads/')) {
+      return `${this.apiBase}${cleanUrl}`;
+    }
+
+    if (cleanUrl.startsWith('uploads/')) {
+      return `${this.apiBase}/${cleanUrl}`;
+    }
+
+    return cleanUrl.startsWith('/') ? cleanUrl : `/${cleanUrl}`;
   }
 }
