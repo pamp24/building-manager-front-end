@@ -112,11 +112,21 @@
             <td>
               <div class="row">
                 <div class="col-auto pe-0">
-                  <img src="assets/images/user/avatar-1.jpg" alt="user-image" class="wid-40 rounded-circle" />
+                  <img
+                    [src]="imgSrc(member.profileImageUrl)"
+                    alt="user-image"
+                    class="wid-40 rounded-circle"
+                    style="width: 40px; height: 40px; object-fit: cover"
+                  />
                 </div>
                 <div class="col">
                   <h6 class="mb-0">{{ member.fullName || '—' }}</h6>
-                  <p class="text-muted f-12 mb-0" [ngClass]="{ 'fst-italic': member.status === 'Invited' }">
+                  <p
+                    class="text-muted f-12 mb-0"
+                    [ngClass]="{
+                      'fst-italic': member.status === 'INVITED' || member.status === 'PENDING'
+                    }"
+                  >
                     {{ member.email }}
                   </p>
                 </div>
@@ -141,12 +151,17 @@
 
             <td class="text-end">
               <span
+                class="badge"
                 [ngClass]="{
-                  'badge bg-success': member.status === 'Joined' || member.status === 'ACCEPTED',
-                  'badge bg-outline-info': member.status === 'PENDING' || member.status === 'Invited',
-                  'badge bg-secondary': member.status === 'EXPIRED',
-                  'badge bg-danger': member.status === 'DECLINED',
-                  'badge bg-warning': member.status === 'PENDING_APARTMENT'
+                  'bg-success': member.status === 'JOINED' || member.status === 'ACCEPTED',
+
+                  'bg-info': member.status === 'INVITED' || member.status === 'PENDING',
+
+                  'bg-warning text-dark': member.status === 'PENDING_APARTMENT',
+
+                  'bg-secondary': member.status === 'EXPIRED',
+
+                  'bg-danger': member.status === 'CANCELLED'
                 }"
               >
                 {{ getTranslatedStatus(member.status) }}
@@ -154,17 +169,25 @@
             </td>
 
             <td class="text-end">
-              <div ngbDropdown container="body" class="d-inline-block">
-                <a href="javascript:" class="avatar avatar-s btn-link-secondary" ngbDropdownToggle aria-label="Actions" title="Ενέργειες">
+              <div *ngIf="canManageMembers()" ngbDropdown container="body" class="d-inline-block">
+                <button
+                  type="button"
+                  class="avatar avatar-s btn-link-secondary border-0 bg-transparent"
+                  ngbDropdownToggle
+                  aria-label="Ενέργειες"
+                  title="Ενέργειες"
+                >
                   <i class="ti ti-dots f-18"></i>
-                </a>
+                </button>
 
                 <div ngbDropdownMenu class="dropdown-menu-end">
                   <button ngbDropdownItem type="button" (click)="openEditModal(member)">Επεξεργασία</button>
+
                   <button ngbDropdownItem type="button" class="text-danger" (click)="openDeleteModal(member)">Διαγραφή</button>
                 </div>
               </div>
             </td>
+            
           </tr>
         </tbody>
       </table>
