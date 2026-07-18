@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
 import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
-import { BuildingMemberDTO } from 'src/app/theme/shared/models/BuildingMemberDTO';
+import { BuildingMemberDTO, MemberDisplayStatus } from 'src/app/theme/shared/models/BuildingMemberDTO';
 import { BuildingMemberService } from 'src/app/theme/shared/service/buildingMember.service';
 import { AuthenticationService } from 'src/app/theme/shared/service/authentication.service';
 import { UserService } from 'src/app/theme/shared/service';
@@ -25,6 +25,8 @@ import { RouterModule } from '@angular/router';
 export class RoleComponent implements OnInit, OnChanges {
   @Input() pmView = false;
   @Input() buildingId?: number;
+  apiBase = 'http://localhost:8080/api/v1';
+  profileImageUrl?: string | null;
   members: BuildingMemberDTO[] = [];
 
   emailToInvite = '';
@@ -129,7 +131,8 @@ export class RoleComponent implements OnInit, OnChanges {
   private loadMembers(buildingId: number): void {
     this.buildingMemberService.getMembersByBuilding(buildingId).subscribe({
       next: (data) => {
-        this.members = data;
+        this.members = data.filter((member) => member.status !== 'REMOVED' && member.status !== 'LEFT');
+
         this.currentBuildingId = buildingId;
 
         if (this.members.length === 0) {
@@ -218,20 +221,25 @@ export class RoleComponent implements OnInit, OnChanges {
     }
   }
 
-  getTranslatedStatus(status: string): string {
+  getTranslatedStatus(status: MemberDisplayStatus): string {
     switch (status) {
       case 'JOINED':
       case 'ACCEPTED':
         return 'Μέλος';
+
+      case 'INVITED':
       case 'PENDING':
-      case 'Invited':
-        return 'Προσκεκλημένος';
-      case 'EXPIRED':
-        return 'Έληξε';
-      case 'DECLINED':
-        return 'Απορρίφθηκε';
+        return 'Σε αναμονή πρόσκλησης';
+
       case 'PENDING_APARTMENT':
         return 'Αναμονή για ανάθεση διαμερίσματος';
+
+      case 'EXPIRED':
+        return 'Η πρόσκληση έληξε';
+
+      case 'CANCELLED':
+        return 'Η πρόσκληση ακυρώθηκε';
+
       default:
         return status;
     }
@@ -307,5 +315,41 @@ export class RoleComponent implements OnInit, OnChanges {
       },
       () => {}
     );
+  }
+
+  imgSrc(url?: string | null): string {
+    const fallbackImage = 'assets/images/user/avatar-5.jpg';
+
+    if (!url || url.trim() === '') {
+      return fallbackImage;
+    }
+
+    const cleanUrl = url.trim().replace(/\\/g, '/');
+
+    if (cleanUrl.startsWith('http://') || cleanUrl.startsWith('https://') || cleanUrl.startsWith('data:')) {
+      return cleanUrl;
+    }
+
+    if (cleanUrl.startsWith('/uploads/')) {
+      return `${this.apiBase}${cleanUrl}`;
+    }
+
+    if (cleanUrl.startsWith('uploads/')) {
+      return `${this.apiBase}/${cleanUrl}`;
+    }
+
+    return cleanUrl.startsWith('/') ? cleanUrl : `/${cleanUrl}`;
+  }
+
+  canManageMembers(): boolean {
+    const currentUser = this.authService.currentUserValue;
+
+    if (!currentUser) {
+      return false;
+    }
+
+    const currentMembership = this.members.find((member) => member.userId === currentUser.id || member.email === currentUser.email);
+
+    return currentMembership?.role === 'BuildingManager' || currentMembership?.role === 'PropertyManager';
   }
 }
