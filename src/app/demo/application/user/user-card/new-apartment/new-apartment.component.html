@@ -103,17 +103,6 @@
             <input class="form-control" formControlName="storageSlot" />
           </div>
 
-          <!-- Διαμέρισμα Διαχειριστή -->
-          <div class="col-md-4 mt-3" *ngIf="managerHouseExist">
-            <label>
-              <input
-                type="checkbox"
-                formControlName="isManagerHouse"
-                [disabled]="!group.get('isManagerHouse')?.value && currentManagerHouseUsed"
-              />
-              Διαμέρισμα Διαχειριστή
-            </label>
-          </div>
         </div>
 
         <!-- Remove -->

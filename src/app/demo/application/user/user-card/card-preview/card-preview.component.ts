@@ -13,6 +13,12 @@ import { MoreOutline } from '@ant-design/icons-angular/icons';
 import { ApartmentDTO } from 'src/app/theme/shared/models/apartmentDTO';
 import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
 
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
+import { EditApartmentComponent } from '../edit-apartment/edit-apartment.component';
+
+import { DeleteApartmentComponent } from '../delete-apartment/delete-apartment.component';
+
 @Component({
   selector: 'app-card-preview',
   imports: [CommonModule, SharedModule, ScrollbarComponent],
@@ -26,6 +32,12 @@ export class CardPreviewComponent implements OnChanges {
 
   private iconService = inject(IconService);
 
+  private readonly modalService = inject(NgbModal);
+
+  public readonly activeModal = inject(NgbActiveModal, {
+    optional: true
+  });
+
   apartmentFeatures: any[] = [];
 
   apartmentTripleFeatures: any[] = [];
@@ -34,46 +46,9 @@ export class CardPreviewComponent implements OnChanges {
     this.iconService.addIcon(...[MoreOutline]);
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void {
     if (changes['apartment'] && this.apartment) {
-      setTimeout(() => {
-        this.apartmentFeatures = [
-          {
-            leftLabel: 'Αριθμός',
-            leftValue: this.apartment?.number || 'Δεν είναι διαθέσιμο',
-            rightLabel: 'Όροφος',
-            rightValue: this.apartment?.floor || 'Δεν είναι διαθέσιμο'
-          },
-          {
-            leftLabel: 'Τετραγωνικά',
-            leftValue: this.apartment?.sqMetersApart || 'Δεν είναι διαθέσιμο',
-            rightLabel: 'Eνοικιασμένο',
-            rightValue: this.apartment?.isRented ? 'Ναι' : 'Όχι'
-          },
-          {
-            leftLabel: 'Parking',
-            leftValue: this.apartment?.parkingSpace ? 'Ναι' : 'Όχι',
-            rightLabel: 'Θέση Parking',
-            rightValue: this.apartment?.parkingSlot || 'Δεν έχει'
-          },
-          {
-            leftLabel: 'Αποθήκη',
-            leftValue: this.apartment?.apStorageExist ? 'Ναι' : 'Δεν έχει',
-            rightLabel: 'Αριθμός Αποθήκης',
-            rightValue: this.apartment?.storageSlot || 'Δεν έχει'
-          }
-        ].filter((f) => f.leftValue || f.rightValue);
-        this.apartmentTripleFeatures = [
-          {
-            label1: 'Χιλιοστά Κοινοχρήστων',
-            value1: this.apartment?.commonPercent || '—',
-            label2: 'Χιλιοστά Ανελκυστήρα',
-            value2: this.apartment?.elevatorPercent || '—',
-            label3: 'Χιλιοστά Θέρμανσης',
-            value3: this.apartment?.heatingPercent || '—'
-          }
-        ];
-      });
+      this.refreshApartmentView();
     }
 
     if (changes['building'] && this.building) {
@@ -180,4 +155,126 @@ export class CardPreviewComponent implements OnChanges {
 
     return cleanUrl.startsWith('/') ? cleanUrl : `/${cleanUrl}`;
   }
+
+  openEdit(): void {
+    if (!this.apartment?.id) {
+      console.error('Δεν υπάρχει έγκυρο διαμέρισμα για επεξεργασία:', this.apartment);
+      return;
+    }
+
+    const modalRef = this.modalService.open(EditApartmentComponent, {
+      size: 'lg',
+      centered: true,
+      backdrop: 'static',
+      keyboard: false
+    });
+
+    modalRef.componentInstance.apartment = {
+      ...this.apartment
+    };
+
+    modalRef.result.then(
+      (result) => {
+        if (!result?.updated) {
+          return;
+        }
+
+        if (result.apartment) {
+          this.apartment = {
+            ...this.apartment,
+            ...result.apartment
+          };
+
+          this.refreshApartmentView();
+        }
+
+        this.activeModal?.close({
+          updated: true,
+          apartment: result.apartment
+        });
+      },
+      () => {
+        // Το edit modal έκλεισε χωρίς αποθήκευση.
+      }
+    );
+  }
+
+  openDelete(): void {
+    if (!this.apartment?.id) {
+      console.error('Δεν υπάρχει έγκυρο διαμέρισμα για διαγραφή:', this.apartment);
+      return;
+    }
+
+    const modalRef = this.modalService.open(DeleteApartmentComponent, {
+      centered: true,
+      backdrop: 'static',
+      keyboard: false
+    });
+
+    modalRef.componentInstance.apartment = this.apartment;
+
+    modalRef.result.then(
+      (result) => {
+        if (!result?.deleted) {
+          return;
+        }
+
+        this.activeModal?.close({
+          deleted: true,
+          apartmentId: this.apartment.id
+        });
+      },
+      () => {
+        // Το delete modal έκλεισε χωρίς διαγραφή.
+      }
+    );
+  }
+
+  private refreshApartmentView(): void {
+    this.apartmentFeatures = [
+      {
+        leftLabel: 'Αριθμός',
+        leftValue: this.apartment?.number || 'Δεν είναι διαθέσιμο',
+
+        rightLabel: 'Όροφος',
+        rightValue: this.apartment?.floor || 'Δεν είναι διαθέσιμο'
+      },
+      {
+        leftLabel: 'Τετραγωνικά',
+        leftValue: this.apartment?.sqMetersApart ?? 'Δεν είναι διαθέσιμο',
+
+        rightLabel: 'Ενοικιασμένο',
+        rightValue: this.apartment?.isRented ? 'Ναι' : 'Όχι'
+      },
+      {
+        leftLabel: 'Parking',
+        leftValue: this.apartment?.parkingSpace ? 'Ναι' : 'Όχι',
+
+        rightLabel: 'Θέση Parking',
+        rightValue: this.apartment?.parkingSlot || 'Δεν έχει'
+      },
+      {
+        leftLabel: 'Αποθήκη',
+        leftValue: this.apartment?.apStorageExist ? 'Ναι' : 'Δεν έχει',
+
+        rightLabel: 'Αριθμός Αποθήκης',
+        rightValue: this.apartment?.storageSlot || 'Δεν έχει'
+      }
+    ];
+
+    this.apartmentTripleFeatures = [
+      {
+        label1: 'Χιλιοστά Κοινοχρήστων',
+        value1: this.apartment?.commonPercent ?? '—',
+
+        label2: 'Χιλιοστά Ανελκυστήρα',
+        value2: this.apartment?.elevatorPercent ?? '—',
+
+        label3: 'Χιλιοστά Θέρμανσης',
+        value3: this.apartment?.heatingPercent ?? '—'
+      }
+    ];
+  }
+
+  
 }

@@ -1,0 +1,73 @@
+<div class="modal-header">
+  <h5 class="modal-title">
+    Διαγραφή Διαμερίσματος
+  </h5>
+
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Κλείσιμο"
+    [disabled]="isDeleting"
+    (click)="cancel()"
+  ></button>
+</div>
+
+<div class="modal-body">
+  <div
+    *ngIf="errorMessage"
+    class="alert alert-danger"
+  >
+    {{ errorMessage }}
+  </div>
+
+  <p class="mb-3">
+  Είστε σίγουρος ότι θέλετε να διαγράψετε το παρακάτω διαμέρισμα;
+</p>
+
+<div class="border rounded p-3 bg-light">
+  <div class="mb-2">
+    <strong>Διαμέρισμα:</strong>
+    {{ apartment?.number }}
+  </div>
+
+  <div class="mb-2" *ngIf="apartment?.floor">
+    <strong>Όροφος:</strong>
+    {{ apartment?.floor }}
+  </div>
+
+  <div *ngIf="apartment?.ownerFirstName || apartment?.ownerLastName">
+    <strong>Ιδιοκτήτης:</strong>
+    {{ apartment?.ownerLastName }} {{ apartment?.ownerFirstName }}
+  </div>
+</div>
+
+  <p class="text-muted mb-0">
+    Το διαμέρισμα δεν θα εμφανίζεται πλέον στη λίστα.
+  </p>
+</div>
+
+<div class="modal-footer">
+  <button
+    type="button"
+    class="btn btn-secondary"
+    [disabled]="isDeleting"
+    (click)="cancel()"
+  >
+    Ακύρωση
+  </button>
+
+  <button
+    type="button"
+    class="btn btn-danger"
+    [disabled]="isDeleting"
+    (click)="confirmDelete()"
+  >
+    <span
+      *ngIf="isDeleting"
+      class="spinner-border spinner-border-sm me-2"
+      aria-hidden="true"
+    ></span>
+
+    {{ isDeleting ? 'Διαγραφή...' : 'Διαγραφή' }}
+  </button>
+</div>

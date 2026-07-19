@@ -28,6 +28,7 @@ export interface ApartmentDTO {
   residentId: number | null;
   residentEmail: string | null;
   residentPhone: string | null;
+  residentFullName?: string | null;
 
   ownerId: number | null;
   ownerFullName: string;
