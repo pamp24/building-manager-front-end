@@ -2,17 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApartmentDTO } from '../models/apartmentDTO';
-
-export interface ApartmentRequest {
-  name: string;
-  number: string;
-  sqMetersApart: string;
-  floor: number;
-  parkingSpace: boolean;
-  active: boolean;
-  enable: boolean;
-  buildingId: number;
-}
+import { ApartmentRequest } from '../models/apartmentRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -48,5 +38,13 @@ export class ApartmentService {
   }
   getAvailableApartments(buildingId: number, role: string): Observable<ApartmentDTO[]> {
     return this.http.get<ApartmentDTO[]>(`http://localhost:8080/api/v1/apartments/${buildingId}/available?role=${role}`);
+  }
+
+  updateApartment(apartmentId: number, apartment: ApartmentDTO): Observable<ApartmentDTO> {
+    return this.http.put<ApartmentDTO>(`http://localhost:8080/api/v1/apartments/update/myApartment/${apartmentId}`, apartment);
+  }
+
+  deleteApartment(apartmentId: number): Observable<void> {
+    return this.http.delete<void>(`http://localhost:8080/api/v1/apartments/delete/${apartmentId}`);
   }
 }

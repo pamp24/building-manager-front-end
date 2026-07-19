@@ -25,6 +25,8 @@ import { NewApartmentComponent } from './new-apartment/new-apartment.component';
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
 import { RouterModule } from '@angular/router';
 import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
+import { DeleteApartmentComponent } from './delete-apartment/delete-apartment.component';
+import { EditApartmentComponent } from './edit-apartment/edit-apartment.component';
 
 @Component({
   selector: 'app-user-card',
@@ -243,5 +245,70 @@ export class UserCardComponent implements OnInit, OnChanges {
     }
 
     return cleanUrl.startsWith('/') ? cleanUrl : `/${cleanUrl}`;
+  }
+
+
+  openDelete(card: any): void {
+    const apartment: ApartmentDTO | null = card?.apartment ?? null;
+
+    if (!apartment) {
+      console.error('Δεν βρέθηκε apartment στο card:', card);
+      return;
+    }
+
+    const modalRef = this.modalService.open(DeleteApartmentComponent, {
+      centered: true,
+      backdrop: 'static',
+      keyboard: false
+    });
+
+    modalRef.componentInstance.apartment = apartment;
+
+    modalRef.result.then(
+      (result) => {
+        if (result?.deleted) {
+          const buildingId = this.currentBuilding?.id;
+
+          if (buildingId) {
+            this.loadBuildingData(buildingId);
+          }
+        }
+      },
+      () => {}
+    );
+  }
+
+  openEdit(card: any): void {
+    const apartment: ApartmentDTO | null = card?.apartment ?? null;
+
+    if (!apartment) {
+      console.error('Δεν βρέθηκε apartment:', card);
+      return;
+    }
+
+    const modalRef = this.modalService.open(EditApartmentComponent, {
+      size: 'lg',
+      backdrop: 'static',
+      keyboard: false
+    });
+
+    modalRef.componentInstance.apartment = apartment;
+
+    modalRef.result.then(
+      (result) => {
+        if (!result?.updated) {
+          return;
+        }
+
+        const buildingId = this.currentBuilding?.id;
+
+        if (buildingId) {
+          this.loadBuildingData(buildingId);
+        }
+      },
+      () => {
+        // Το modal έκλεισε χωρίς αποθήκευση.
+      }
+    );
   }
 }

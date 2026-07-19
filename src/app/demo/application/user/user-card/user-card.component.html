@@ -81,10 +81,9 @@
                 <i antIcon type="more" theme="outline" class="f-16"></i>
               </a>
               <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
-                <a class="dropdown-item" href="javascript:">Προεπισκόπηση</a>
-                <a class="dropdown-item" href="javascript:">Κοινοποίηση</a>
-                <a class="dropdown-item" href="javascript:">Επεξεργασία</a>
-                <a class="dropdown-item" href="javascript:">Διαγραφή</a>
+                <button type="button" class="dropdown-item" (click)="open(preview, card)">Προεπισκόπηση</button>
+                <button type="button" class="dropdown-item" (click)="openEdit(card)">Επεξεργασία</button>
+                <button type="button" class="dropdown-item text-danger" (click)="openDelete(card)">Διαγραφή</button>
               </div>
             </div>
           </div>
