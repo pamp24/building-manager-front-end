@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { map, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
+import { environment } from 'src/environments/environment';
 import { AuthenticationResponse } from '../models/authentication-response.model';
 import { User } from 'src/app/theme/shared/components/_helpers/user';
 import { RegistrationRequest } from '../models/registration-request';
@@ -30,7 +31,7 @@ export class AuthenticationService {
 
   login(email: string, password: string, rememberMe: boolean): Observable<AuthenticationResponse> {
     return this.http
-      .post<AuthenticationResponse>('http://localhost:8080/api/v1/auth/authenticate', {
+      .post<AuthenticationResponse>(`${environment.apiUrl}/api/v1/auth/authenticate`, {
         email,
         password,
         rememberMe
@@ -60,7 +61,7 @@ export class AuthenticationService {
   }
 
   register(request: RegistrationRequest): Observable<AuthenticationResponse> {
-    return this.http.post<AuthenticationResponse>('http://localhost:8080/api/v1/auth/register', request);
+    return this.http.post<AuthenticationResponse>(`${environment.apiUrl}/api/v1/auth/register`, request);
   }
 
   logout(message?: string) {
@@ -79,16 +80,16 @@ export class AuthenticationService {
   }
 
   confirm(token: string) {
-    return this.http.post('http://localhost:8080/api/v1/auth/activate-account', { token });
+    return this.http.post(`${environment.apiUrl}/api/v1/auth/activate-account`, { token });
   }
 
   sendResetPasswordEmail(email: string) {
     console.log('Κλήση API για forgot-password με email:', email);
-    return this.http.post('http://localhost:8080/api/v1/auth/forgot-password', { email });
+    return this.http.post(`${environment.apiUrl}/api/v1/auth/forgot-password`, { email });
   }
 
   resetPassword(token: string, newPassword: string): Observable<AuthenticationResponse> {
-    return this.http.post<AuthenticationResponse>('http://localhost:8080/api/v1/auth/reset-password', {
+    return this.http.post<AuthenticationResponse>(`${environment.apiUrl}/api/v1/auth/reset-password`, {
       token,
       newPassword
     });

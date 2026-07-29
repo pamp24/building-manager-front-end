@@ -134,5 +134,13 @@
 ,
   "ADMIN": "Admin",
   "BUILDING_MANAGER": "Building Manager",
-  "PROPERTY_MANAGER": "Property Manager"
+  "PROPERTY_MANAGER": "Property Manager",
+  "REGULATION": "Regulation",
+  "FLOOR_PLAN": "Floor Plan",
+  "CONTRACT": "Contract",
+  "INSURANCE": "Insurance",
+  "INVOICE": "Invoice",
+  "CERTIFICATE": "Certificate",
+  "TECHNICAL": "Technical",
+  "OTHER": "Other"
 }

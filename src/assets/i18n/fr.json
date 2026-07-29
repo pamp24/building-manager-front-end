@@ -133,5 +133,13 @@
 ,
   "ADMIN": "Admin",
   "BUILDING_MANAGER": "Gestionnaire d'immeuble",
-  "PROPERTY_MANAGER": "Gestionnaire immobilier"
+  "PROPERTY_MANAGER": "Gestionnaire immobilier",
+  "REGULATION": "Règlement",
+  "FLOOR_PLAN": "Plan",
+  "CONTRACT": "Contrat",
+  "INSURANCE": "Assurance",
+  "INVOICE": "Facture",
+  "CERTIFICATE": "Certificat",
+  "TECHNICAL": "Technique",
+  "OTHER": "Autre"
 }

@@ -30,6 +30,7 @@ import {
   UserOutline,
   PlusOutline
 } from '@ant-design/icons-angular/icons';
+import { environment } from 'src/environments/environment';
 import { AuthenticationService } from 'src/app/theme/shared/service/authentication.service';
 import { UserService } from 'src/app/theme/shared/service';
 import { User } from 'src/app/theme/shared/components/_helpers/user';
@@ -47,7 +48,7 @@ import { MantisConfig } from 'src/app/app-config';
   styleUrls: ['./user-profile.component.scss']
 })
 export class UserProfileComponent implements OnInit {
-  apiBase = 'http://localhost:8080/api/v1';
+  apiBase = environment.apiUrl + '/api/v1';
   private translate = inject(TranslateService);
   private dataService = inject(DataService);
   private iconService = inject(IconService);

@@ -1,4 +1,5 @@
 import { CompanyDTO } from './companyDTO';
+import { BuildingDocumentDTO } from './building-document.model';
 import { ManagerDTO } from './managerDTO';
 export interface BuildingDTO {
   id: number;
@@ -42,6 +43,7 @@ export interface BuildingDTO {
   heatingCapacityLitres?: number;
 
   company?: CompanyDTO;
+  documents?: BuildingDocumentDTO[];
 
   myRole?: string;
   hasPropertyManager?: boolean;

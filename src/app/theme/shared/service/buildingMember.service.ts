@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -7,8 +8,8 @@ import { BuildingMemberDTO } from '../models/BuildingMemberDTO';
   providedIn: 'root'
 })
 export class BuildingMemberService {
-  private readonly apiUrl =
-    'http://localhost:8080/api/v1/building-members';
+  private readonly apiUrl: string =
+    `${environment.apiUrl}/api/v1/building-members`;
 
   constructor(private http: HttpClient) {}
 

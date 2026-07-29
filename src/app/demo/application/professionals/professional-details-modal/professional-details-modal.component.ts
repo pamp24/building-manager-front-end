@@ -6,6 +6,7 @@ import { ProfessionalBusinessDTO } from 'src/app/theme/shared/models/professiona
 import { ProfessionalReviewDTO } from 'src/app/theme/shared/models/professional-review.model';
 import { ProfessionalService } from 'src/app/theme/shared/service/professional.service';
 import { ProfessionalImageDTO } from 'src/app/theme/shared/models/professional-image.model';
+import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 
@@ -33,7 +34,7 @@ export class ProfessionalDetailsModalComponent implements OnInit {
   makePrimary = false;
   currentImageIndex = 0;
 
-  readonly backendUrl = 'http://localhost:8080/api/v1';
+  readonly backendUrl = `${environment.apiUrl}/api/v1`;
 
   constructor(
     public activeModal: NgbActiveModal,

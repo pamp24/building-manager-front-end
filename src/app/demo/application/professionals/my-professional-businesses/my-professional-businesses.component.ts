@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { environment } from 'src/environments/environment';
 import { ProfessionalService } from 'src/app/theme/shared/service/professional.service';
 import { ProfessionalBusinessDTO } from 'src/app/theme/shared/models/professional.model';
 
@@ -19,7 +20,7 @@ export class MyProfessionalBusinessesComponent implements OnInit {
   loading = false;
   error = '';
 
-  readonly backendUrl = 'http://localhost:8080/api/v1';
+  readonly backendUrl = `${environment.apiUrl}/api/v1`;
 
   constructor(private professionalService: ProfessionalService) {}
 

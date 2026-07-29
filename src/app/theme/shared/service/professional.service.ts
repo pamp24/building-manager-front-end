@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -17,7 +18,7 @@ import { PageResponse } from '../models/professional-page-response.model';
   providedIn: 'root'
 })
 export class ProfessionalService {
-  private apiUrl = 'http://localhost:8080/api/v1/professionals';
+  private apiUrl = `${environment.apiUrl}/api/v1/professionals`;
 
   constructor(private http: HttpClient) {}
 

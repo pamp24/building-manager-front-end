@@ -132,5 +132,13 @@
 ,
   "ADMIN": "Admin",
   "BUILDING_MANAGER": "Administrator clădire",
-  "PROPERTY_MANAGER": "Administrator proprietăți"
+  "PROPERTY_MANAGER": "Administrator proprietăți",
+  "REGULATION": "Regulament",
+  "FLOOR_PLAN": "Plan etaj",
+  "CONTRACT": "Contract",
+  "INSURANCE": "Asigurare",
+  "INVOICE": "Factură",
+  "CERTIFICATE": "Certificat",
+  "TECHNICAL": "Tehnic",
+  "OTHER": "Altul"
 }

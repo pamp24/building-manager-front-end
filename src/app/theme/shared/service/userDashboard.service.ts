@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
@@ -15,7 +16,7 @@ export interface UserDashboardSummary {
   providedIn: 'root'
 })
 export class UserDashboardService {
-  private baseUrl = 'http://localhost:8080/api/v1/dashboard/user';
+  private baseUrl = `${environment.apiUrl}/api/v1/dashboard/user`;
 
   private refresh$ = new Subject<void>();
   refreshDashboard$ = this.refresh$.asObservable();

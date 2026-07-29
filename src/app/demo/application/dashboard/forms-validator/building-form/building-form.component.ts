@@ -13,6 +13,12 @@ import {
   resolveCountryName
 } from '../location-form.utils';
 
+export interface BuildingFormSubmission {
+  buildingId: number;
+  buildingForm: FormGroup;
+  uploadedFiles: File[];
+}
+
 @Component({
   selector: 'app-building-form',
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
@@ -23,9 +29,13 @@ export class BuildingFormComponent implements OnInit {
   @Input() selectedAction!: 'many' | 'new' | 'existing';
   @Input() form!: FormGroup;
   @Output() backClicked = new EventEmitter<void>();
-  @Output() formSubmitted = new EventEmitter<{ buildingId: number; buildingForm: FormGroup }>();
+  @Output() formSubmitted = new EventEmitter<BuildingFormSubmission>();
 
-  selectedRegulationFile: File | null = null;
+  readonly acceptedFileTypes = '.pdf,.jpg,.jpeg,.png,.webp,.doc,.docx,.xls,.xlsx';
+  readonly maxFiles = 10;
+  readonly maxFileSizeMb = 10;
+
+  selectedBuildingFiles: File[] = [];
   isSubmitted = false;
 
   countries = LOCATION_COUNTRIES;
@@ -146,7 +156,11 @@ export class BuildingFormComponent implements OnInit {
 
     request$.subscribe({
       next: (buildingId: number) => {
-        this.formSubmitted.emit({ buildingId, buildingForm: this.form });
+        this.formSubmitted.emit({
+          buildingId,
+          buildingForm: this.form,
+          uploadedFiles: [...this.selectedBuildingFiles]
+        });
       },
       error: (err) => {
         console.error('Σφάλμα δημιουργίας κτιρίου', err);
@@ -154,33 +168,59 @@ export class BuildingFormComponent implements OnInit {
     });
   }
 
-  onFileSelected(event: Event): void {
+  onFilesSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
 
     if (!input.files?.length) {
-      this.selectedRegulationFile = null;
       return;
     }
 
-    const file = input.files[0];
+    const incomingFiles = Array.from(input.files);
+    const nextFiles = [...this.selectedBuildingFiles];
 
-    if (file.type !== 'application/pdf') {
-      alert('Παρακαλώ επιλέξτε αρχείο PDF.');
-      input.value = '';
-      this.selectedRegulationFile = null;
-      return;
+    for (const file of incomingFiles) {
+      if (nextFiles.some((existing) => this.isSameFile(existing, file))) {
+        continue;
+      }
+
+      if (!this.isAllowedFile(file)) {
+        alert(`Το αρχείο "${file.name}" δεν υποστηρίζεται.`);
+        continue;
+      }
+
+      if (file.size > this.maxFileSizeMb * 1024 * 1024) {
+        alert(`Το αρχείο "${file.name}" ξεπερνά το όριο των ${this.maxFileSizeMb}MB.`);
+        continue;
+      }
+
+      if (nextFiles.length >= this.maxFiles) {
+        alert(`Μπορείτε να επιλέξετε έως ${this.maxFiles} αρχεία.`);
+        break;
+      }
+
+      nextFiles.push(file);
     }
 
-    const maxSizeMb = 10;
+    this.selectedBuildingFiles = nextFiles;
+    input.value = '';
+  }
 
-    if (file.size > maxSizeMb * 1024 * 1024) {
-      alert(`Το αρχείο είναι μεγάλο. Μέγιστο επιτρεπτό: ${maxSizeMb}MB.`);
-      input.value = '';
-      this.selectedRegulationFile = null;
-      return;
-    }
+  removeSelectedFile(index: number): void {
+    this.selectedBuildingFiles = this.selectedBuildingFiles.filter((_, currentIndex) => currentIndex !== index);
+  }
 
-    this.selectedRegulationFile = file;
+  getFileTypeLabel(file: File): string {
+    if (file.type.includes('pdf')) return 'PDF';
+    if (file.type.includes('image')) return 'Εικόνα';
+    if (file.type.includes('sheet') || file.name.match(/\.(xls|xlsx)$/i)) return 'Spreadsheet';
+    if (file.type.includes('word') || file.name.match(/\.(doc|docx)$/i)) return 'Έγγραφο';
+    return 'Αρχείο';
+  }
+
+  formatFileSize(bytes: number): string {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   }
 
   private createForm(): FormGroup {
@@ -223,5 +263,25 @@ export class BuildingFormComponent implements OnInit {
 
     this.availableCities = matchingState?.cities ?? [];
     this.availableAreas = this.availableCities.find((city) => city.city === selectedCity)?.areas ?? [];
+  }
+
+  private isAllowedFile(file: File): boolean {
+    const allowedMimeTypes = new Set([
+      'application/pdf',
+      'image/jpeg',
+      'image/png',
+      'image/webp',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    ]);
+
+    const allowedExtensions = /\.(pdf|jpg|jpeg|png|webp|doc|docx|xls|xlsx)$/i;
+    return allowedMimeTypes.has(file.type) || allowedExtensions.test(file.name);
+  }
+
+  private isSameFile(left: File, right: File): boolean {
+    return left.name === right.name && left.size === right.size && left.lastModified === right.lastModified;
   }
 }

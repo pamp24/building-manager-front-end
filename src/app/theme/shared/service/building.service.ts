@@ -1,15 +1,17 @@
 // building.service.ts
+import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BuildingDTO } from '../models/buildingDTO';
+import { BuildingDocumentDTO } from '../models/building-document.model';
 import { BuildingRequest } from '../models/buildingRequest';
 import { ManagerDTO } from '../models/managerDTO';
 import { ManagedBuildingDTO } from '../models/managedBuildingDTO';
 
 @Injectable({ providedIn: 'root' })
 export class BuildingService {
-  private apiUrl = 'http://localhost:8080/api/v1/buildings';
+  private apiUrl = `${environment.apiUrl}/api/v1/buildings`;
 
   constructor(private http: HttpClient) {}
 
@@ -37,6 +39,22 @@ export class BuildingService {
 
   getMyManagedBuildings(): Observable<ManagedBuildingDTO[]> {
     return this.http.get<ManagedBuildingDTO[]>(`${this.apiUrl}/my-managed-buildings`);
+  }
+
+  getBuildingDocuments(buildingId: number): Observable<BuildingDocumentDTO[]> {
+    return this.http.get<BuildingDocumentDTO[]>(`${this.apiUrl}/${buildingId}/documents`);
+  }
+
+  uploadBuildingDocuments(buildingId: number, files: File[], category?: string): Observable<BuildingDocumentDTO[]> {
+    const formData = new FormData();
+
+    files.forEach((file) => formData.append('files', file));
+
+    if (category) {
+      formData.append('category', category);
+    }
+
+    return this.http.post<BuildingDocumentDTO[]>(`${this.apiUrl}/${buildingId}/documents`, formData);
   }
 
   getByCode(code: string) {

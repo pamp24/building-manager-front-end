@@ -160,7 +160,7 @@ export class NavContentComponent implements AfterViewInit, OnInit {
 
     if (url.startsWith('http')) return url;
 
-    return `http://localhost:8080/api/v1${url}`;
+    return `${environment.apiUrl}/api/v1${url}`;
   }
 
   onAvatarError(e: Event) {

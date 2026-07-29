@@ -13,7 +13,8 @@ import { ProfessionalFavoriteService } from 'src/app/theme/shared/service/profes
 import { UserService } from '../../../../theme/shared/service/user.service';
 import { ProfessionalPartnerService } from 'src/app/theme/shared/service/professional-partner.service';
 import { AuthenticationService } from 'src/app/theme/shared/service';
-import { Role } from 'src/app/theme/shared/models/role.model';
+import { environment } from 'src/environments/environment';
+import { Role } from 'src/app/theme/shared/components/_helpers/role';
 import { COUNTRIES } from 'src/app/theme/shared/data/countries.data';
 import { GREECE_LOCATIONS, GreeceRegion } from 'src/app/theme/shared/data/greece-locations.data';
 import { CYPRUS_LOCATIONS, CyprusRegion } from 'src/app/theme/shared/data/cyprus-locations.data';
@@ -57,7 +58,7 @@ export class ProfessionalsComponent implements OnInit {
   availableCities: { city: string; areas: string[] }[] = [];
   availableAreas: string[] = [];
 
-  readonly backendUrl = 'http://localhost:8080/api/v1';
+  readonly backendUrl = `${environment.apiUrl}/api/v1`;
 
   categories = [
     { value: 'ELECTRICIAN', label: 'Ηλεκτρολόγος' },

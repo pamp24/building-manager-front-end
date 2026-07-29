@@ -17,7 +17,7 @@
       </h6>
       <p class="text-muted text-sm mb-0">Διαμέρισμα {{ apartment?.number }} - Όροφος {{ apartment?.floor }}</p>
     </div>
-    <div class="dropdown" ngbDropdown>
+    <div class="dropdown" ngbDropdown *ngIf="canManageApartment">
       <a class="avatar avatar-s btn-link-secondary dropdown-toggle arrow-none" href="javascript:" ngbDropdownToggle>
         <i antIcon type="more" theme="outline" class="f-18"></i>
       </a>

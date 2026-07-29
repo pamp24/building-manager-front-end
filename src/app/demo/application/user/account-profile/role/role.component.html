@@ -147,7 +147,7 @@
               </span>
             </td>
 
-            <td>{{ member.floor !== null ? member.floor : '—' }}{{ member.apartmentNumber || '—' }}</td>
+            <td>{{ getMemberApartmentLabel(member) }}</td>
 
             <td class="text-end">
               <span

@@ -231,8 +231,21 @@
   </div>
 
   <div class="col-md-12 form-group">
-    <label>Αρχείο Κανονισμού Πολυκατοικίας (PDF)</label>
-    <input type="file" (change)="onFileSelected($event)" accept="application/pdf" class="form-control" />
+    <label>Αρχεία Πολυκατοικίας</label>
+    <input type="file" multiple (change)="onFilesSelected($event)" [accept]="acceptedFileTypes" class="form-control" />
+    <small class="text-muted d-block mt-2">
+      Υποστηρίζονται PDF, εικόνες, Word και Excel. Έως {{ maxFiles }} αρχεία, {{ maxFileSizeMb }}MB το καθένα.
+    </small>
+
+    <div class="selected-files mt-3" *ngIf="selectedBuildingFiles.length > 0">
+      <div class="selected-file-item" *ngFor="let file of selectedBuildingFiles; let i = index">
+        <div>
+          <div class="selected-file-name">{{ file.name }}</div>
+          <div class="selected-file-meta">{{ getFileTypeLabel(file) }} • {{ formatFileSize(file.size) }}</div>
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeSelectedFile(i)">Αφαίρεση</button>
+      </div>
+    </div>
   </div>
 
   <div class="form-group text-center mt-3">

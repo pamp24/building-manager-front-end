@@ -11,7 +11,6 @@
 
       <div class="card-body">
         <div class="row g-3">
-          <!-- Ονομα Ιδιοκτήτη -->
           <div class="col-md-4">
             <label class="form-label">Όνομα Ιδιοκτήτη</label>
             <input class="form-control" formControlName="ownerFirstName" [readonly]="group.get('isManagerHouse')?.value" />
@@ -21,7 +20,6 @@
             <input class="form-control" formControlName="ownerLastName" [readonly]="group.get('isManagerHouse')?.value" />
           </div>
 
-          <!-- Ενοικιάζεται -->
           <div class="col-md-4">
             <label class="form-label">Ενοικιάζεται;</label>
             <select class="form-select" formControlName="isRented">
@@ -31,7 +29,6 @@
             </select>
           </div>
 
-          <!-- Ενοικιαστής -->
           <ng-container *ngIf="group.get('isRented')?.value === true">
             <div class="col-md-4">
               <label class="form-label">Όνομα Ενοικιαστή</label>
@@ -43,7 +40,6 @@
             </div>
           </ng-container>
 
-          <!-- Αριθμός / Όροφος / Τμ -->
           <div class="col-md-4">
             <label class="form-label">Αριθμός Διαμερίσματος</label>
             <input class="form-control" formControlName="apartmentNumber" />
@@ -63,7 +59,6 @@
             <input class="form-control" type="number" formControlName="sqMetersApart" />
           </div>
 
-          <!-- Parking -->
           <div class="col-md-4">
             <label class="form-label">Διαθέτει Parking</label>
             <select class="form-select" formControlName="hasParking">
@@ -79,7 +74,6 @@
             </div>
           </ng-container>
 
-          <!-- Χιλιοστά -->
           <div class="col-md-4">
             <label class="form-label">Χιλιοστά Κοινοχρήστων</label>
             <input type="number" class="form-control" formControlName="commonPercent" />
@@ -94,7 +88,6 @@
           </div>
         </div>
 
-        <!-- Αποθήκη -->
         <div class="row mt-3">
           <div class="col-md-4" *ngIf="storageLimit > 0">
             <div class="form-check">
@@ -118,7 +111,6 @@
           </ng-container>
         </div>
 
-        <!-- Διαμέρισμα Διαχειριστή -->
         <ng-container *ngIf="managerHouseExist">
           <div class="col-md-4 mt-3">
             <div class="form-check">
@@ -131,7 +123,10 @@
     </div>
   </div>
 
-  <!-- Κουμπιά -->
+  <div *ngIf="errorMessage" class="alert alert-danger mt-3 mb-0">
+    {{ errorMessage }}
+  </div>
+
   <div class="d-flex justify-content-end gap-2 mt-4">
     <button type="button" class="btn btn-secondary" (click)="onBack()">Άκυρο</button>
     <button type="button" class="btn btn-outline-primary" (click)="addApartment()">

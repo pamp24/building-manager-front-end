@@ -1,18 +1,16 @@
-// angular import
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-// project import
-import { SharedModule } from 'src/app/theme/shared/shared.module';
-
-// icons
-import { IconService } from '@ant-design/icons-angular';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { AimOutline, EnvironmentOutline, MailOutline, PhoneOutline } from '@ant-design/icons-angular/icons';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { IconService } from '@ant-design/icons-angular';
+
+import { environment } from 'src/environments/environment';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { AuthenticationService } from 'src/app/theme/shared/service';
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
 import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
-import { AuthenticationService } from 'src/app/theme/shared/service';
-import { RouterModule } from '@angular/router';
+import { BuildingDocumentDTO } from 'src/app/theme/shared/models/building-document.model';
 
 @Component({
   selector: 'app-building',
@@ -25,8 +23,9 @@ export class BuildingComponent implements OnInit {
   @Output() companyPresenceChange = new EventEmitter<boolean>();
   @Input() pmView = false;
 
-  private readonly apiBase = 'http://localhost:8080/api/v1';
+  private readonly apiBase = `${environment.apiUrl}/api/v1`;
   private iconService = inject(IconService);
+
   buildingForm!: FormGroup;
   buildingData!: BuildingDTO;
   heating: { title: string; name: string; sub_title: string; f_name: string }[] = [];
@@ -36,7 +35,16 @@ export class BuildingComponent implements OnInit {
   pageSize = 1;
   details: { icon: string; text: string }[] = [];
   isEditing = false;
-  
+
+  isLoadingDocuments = false;
+  isUploadingDocuments = false;
+  selectedUploadFiles: File[] = [];
+  selectedDocumentCategory = 'OTHER';
+
+  readonly acceptedDocumentTypes = '.pdf,.jpg,.jpeg,.png,.webp,.doc,.docx,.xls,.xlsx';
+  readonly maxUploadFiles = 10;
+  readonly maxUploadFileSizeMb = 10;
+  readonly documentCategories = ['REGULATION', 'FLOOR_PLAN', 'CONTRACT', 'INSURANCE', 'INVOICE', 'CERTIFICATE', 'TECHNICAL', 'OTHER'];
 
   constructor(
     private fb: FormBuilder,
@@ -75,29 +83,32 @@ export class BuildingComponent implements OnInit {
       heatingCapacityLitres: ['']
     });
 
-    // ξεκινάει σε read-only mode
     this.buildingForm.disable();
 
-    //detail mode
     if (this.buildingId) {
       this.loadBuildingById(this.buildingId);
       return;
     }
 
-    //list mode
     this.buildingService.getMyBuildings().subscribe({
       next: (data: BuildingDTO[]) => {
         this.buildings = data;
         this.total = data.length;
-        if (data.length > 0) this.loadBuilding(data[0]);
+        if (data.length > 0) {
+          this.loadBuilding(data[0]);
+        }
       },
       error: (err) => console.error('Σφάλμα φόρτωσης πολυκατοικιών:', err)
     });
   }
 
+  get buildingDocuments(): BuildingDocumentDTO[] {
+    return this.buildingData?.documents ?? [];
+  }
+
   private loadBuildingById(id: number): void {
     this.buildingService.getBuilding(id).subscribe({
-      next: (b) => this.loadBuilding(b),
+      next: (building) => this.loadBuilding(building),
       error: (err) => {
         console.error('Σφάλμα φόρτωσης πολυκατοικίας:', err);
         this.companyPresenceChange.emit(false);
@@ -106,23 +117,26 @@ export class BuildingComponent implements OnInit {
   }
 
   submitChanges(): void {
-    if (this.buildingForm.valid && this.buildingData) {
-      const updated = { ...this.buildingData, ...this.buildingForm.value };
-      this.buildingService.updateBuilding(this.buildingData.id, updated).subscribe({
-        next: (data) => {
-          this.buildingData = data;
-          this.toggleEdit();
-          alert('Οι αλλαγές αποθηκεύτηκαν με επιτυχία!');
-        },
-        error: (err) => {
-          console.error('Σφάλμα αποθήκευσης:', err);
-          alert('Αποτυχία αποθήκευσης αλλαγών.');
-        }
-      });
+    if (!this.buildingForm.valid || !this.buildingData) {
+      return;
     }
+
+    const updated = { ...this.buildingData, ...this.buildingForm.value };
+    this.buildingService.updateBuilding(this.buildingData.id, updated).subscribe({
+      next: (data) => {
+        this.buildingData = data;
+        this.toggleEdit();
+        this.loadBuildingDocuments(data.id);
+        alert('Οι αλλαγές αποθηκεύτηκαν με επιτυχία!');
+      },
+      error: (err) => {
+        console.error('Σφάλμα αποθήκευσης:', err);
+        alert('Αποτυχία αποθήκευσης αλλαγών.');
+      }
+    });
   }
 
-  loadBuilding(building: BuildingDTO) {
+  loadBuilding(building: BuildingDTO): void {
     this.buildingData = building;
     this.buildingForm.patchValue(building);
 
@@ -147,20 +161,17 @@ export class BuildingComponent implements OnInit {
         f_name: building?.heatingCapacityLitres ? building.heatingCapacityLitres.toString() : '—'
       }
     ];
+
+    this.loadBuildingDocuments(building.id);
   }
 
-  onPageChange(page: number) {
+  onPageChange(page: number): void {
     this.currentPage = page;
     const building = this.buildings[page - 1];
     if (building) {
       this.loadBuilding(building);
     }
   }
-
-  skills = [
-    { title: 'Πάρκινγκ', value: 30 },
-    { title: 'Αποθήκη', value: 80 }
-  ];
 
   getTranslatedHeatingType(type?: string): string {
     switch (type) {
@@ -179,17 +190,172 @@ export class BuildingComponent implements OnInit {
     }
   }
 
-  toggleEdit() {
+  toggleEdit(): void {
     this.isEditing = !this.isEditing;
     if (this.isEditing) {
       this.buildingForm.enable();
-    } else {
-      this.buildingForm.disable();
-      this.buildingForm.patchValue(this.buildingData); // reset
+      return;
     }
+
+    this.buildingForm.disable();
+    this.buildingForm.patchValue(this.buildingData);
+    this.selectedUploadFiles = [];
+    this.selectedDocumentCategory = 'OTHER';
   }
 
   hasRole(role: string): boolean {
     return this.authService.currentUserValue?.role === role;
+  }
+
+  onDocumentFilesSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) {
+      return;
+    }
+
+    const nextFiles = [...this.selectedUploadFiles];
+
+    for (const file of Array.from(input.files)) {
+      if (nextFiles.some((existing) => this.isSameFile(existing, file))) {
+        continue;
+      }
+
+      if (!this.isAllowedDocument(file)) {
+        alert(`Το αρχείο "${file.name}" δεν υποστηρίζεται.`);
+        continue;
+      }
+
+      if (file.size > this.maxUploadFileSizeMb * 1024 * 1024) {
+        alert(`Το αρχείο "${file.name}" ξεπερνά το όριο των ${this.maxUploadFileSizeMb}MB.`);
+        continue;
+      }
+
+      if (nextFiles.length >= this.maxUploadFiles) {
+        alert(`Μπορείτε να επιλέξετε έως ${this.maxUploadFiles} αρχεία.`);
+        break;
+      }
+
+      nextFiles.push(file);
+    }
+
+    this.selectedUploadFiles = nextFiles;
+    input.value = '';
+  }
+
+  removeSelectedUploadFile(index: number): void {
+    this.selectedUploadFiles = this.selectedUploadFiles.filter((_, currentIndex) => currentIndex !== index);
+  }
+
+  uploadSelectedDocuments(): void {
+    if (!this.buildingData?.id || this.selectedUploadFiles.length === 0 || this.isUploadingDocuments) {
+      return;
+    }
+
+    this.isUploadingDocuments = true;
+
+    this.buildingService
+      .uploadBuildingDocuments(this.buildingData.id, this.selectedUploadFiles, this.selectedDocumentCategory)
+      .subscribe({
+        next: () => {
+          this.selectedUploadFiles = [];
+          this.selectedDocumentCategory = 'OTHER';
+          this.loadBuildingDocuments(this.buildingData.id);
+          this.isUploadingDocuments = false;
+          alert('Τα αρχεία ανέβηκαν με επιτυχία!');
+        },
+        error: (err) => {
+          console.error('Σφάλμα ανεβάσματος αρχείων:', err);
+          this.isUploadingDocuments = false;
+          alert(err?.error?.message || 'Η μεταφόρτωση αρχείων απέτυχε.');
+        }
+      });
+  }
+
+  getDocumentTypeLabel(document: BuildingDocumentDTO): string {
+    const value = `${document.contentType ?? ''} ${document.fileName}`.toLowerCase();
+
+    if (value.includes('pdf')) return 'PDF';
+    if (value.match(/\.(jpg|jpeg|png|webp)\b/) || value.includes('image/')) return 'IMG';
+    if (value.match(/\.(xls|xlsx)\b/) || value.includes('sheet')) return 'XLS';
+    if (value.match(/\.(doc|docx)\b/) || value.includes('word')) return 'DOC';
+    return 'FILE';
+  }
+
+  getDocumentCategoryKey(category?: string | null): string {
+    return category || 'OTHER';
+  }
+
+  getDocumentSizeLabel(sizeBytes?: number | null): string {
+    if (sizeBytes == null) {
+      return 'Άγνωστο μέγεθος';
+    }
+
+    if (sizeBytes < 1024) return `${sizeBytes} B`;
+    if (sizeBytes < 1024 * 1024) return `${(sizeBytes / 1024).toFixed(1)} KB`;
+    return `${(sizeBytes / (1024 * 1024)).toFixed(1)} MB`;
+  }
+
+  getSelectedUploadFileTypeLabel(file: File): string {
+    const value = `${file.type} ${file.name}`.toLowerCase();
+
+    if (value.includes('pdf')) return 'PDF';
+    if (value.match(/\.(jpg|jpeg|png|webp)\b/) || value.includes('image/')) return 'IMG';
+    if (value.match(/\.(xls|xlsx)\b/) || value.includes('sheet')) return 'XLS';
+    if (value.match(/\.(doc|docx)\b/) || value.includes('word')) return 'DOC';
+    return 'FILE';
+  }
+
+  resolveDocumentUrl(fileUrl: string): string {
+    const cleanUrl = fileUrl.trim().replace(/\\/g, '/');
+
+    if (cleanUrl.startsWith('http://') || cleanUrl.startsWith('https://')) {
+      return cleanUrl;
+    }
+
+    if (cleanUrl.startsWith('/uploads/')) {
+      return `${this.apiBase}${cleanUrl}`;
+    }
+
+    if (cleanUrl.startsWith('uploads/')) {
+      return `${this.apiBase}/${cleanUrl}`;
+    }
+
+    return cleanUrl;
+  }
+
+  private loadBuildingDocuments(buildingId: number): void {
+    this.isLoadingDocuments = true;
+
+    this.buildingService.getBuildingDocuments(buildingId).subscribe({
+      next: (documents) => {
+        this.buildingData = { ...this.buildingData, documents };
+        this.isLoadingDocuments = false;
+      },
+      error: (err) => {
+        console.error('Σφάλμα φόρτωσης αρχείων πολυκατοικίας:', err);
+        this.buildingData = { ...this.buildingData, documents: [] };
+        this.isLoadingDocuments = false;
+      }
+    });
+  }
+
+  private isAllowedDocument(file: File): boolean {
+    const allowedMimeTypes = new Set([
+      'application/pdf',
+      'image/jpeg',
+      'image/png',
+      'image/webp',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    ]);
+
+    const allowedExtensions = /\.(pdf|jpg|jpeg|png|webp|doc|docx|xls|xlsx)$/i;
+    return allowedMimeTypes.has(file.type) || allowedExtensions.test(file.name);
+  }
+
+  private isSameFile(left: File, right: File): boolean {
+    return left.name === right.name && left.size === right.size && left.lastModified === right.lastModified;
   }
 }

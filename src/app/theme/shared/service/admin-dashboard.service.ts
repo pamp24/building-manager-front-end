@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -7,7 +8,7 @@ import { AdminDashboardResponse } from '../models/admin-dashboard.model';
   providedIn: 'root'
 })
 export class AdminDashboardService {
-  private baseUrl = 'http://localhost:8080/api/v1/admin/dashboard';
+  private baseUrl = `${environment.apiUrl}/api/v1/admin/dashboard`;
 
   constructor(private http: HttpClient) {}
 

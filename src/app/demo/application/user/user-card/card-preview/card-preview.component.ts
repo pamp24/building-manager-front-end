@@ -18,6 +18,8 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EditApartmentComponent } from '../edit-apartment/edit-apartment.component';
 
 import { DeleteApartmentComponent } from '../delete-apartment/delete-apartment.component';
+import { environment } from 'src/environments/environment';
+import { AuthenticationService } from 'src/app/theme/shared/service/authentication.service';
 
 @Component({
   selector: 'app-card-preview',
@@ -28,7 +30,7 @@ import { DeleteApartmentComponent } from '../delete-apartment/delete-apartment.c
 export class CardPreviewComponent implements OnChanges {
   @Input() apartment!: ApartmentDTO;
   @Input() building!: BuildingDTO;
-  private readonly apiBase = 'http://localhost:8080/api/v1';
+  private readonly apiBase = `${environment.apiUrl}/api/v1`;
 
   private iconService = inject(IconService);
 
@@ -38,8 +40,9 @@ export class CardPreviewComponent implements OnChanges {
     optional: true
   });
 
-  apartmentFeatures: any[] = [];
+  private readonly authenticationService = inject(AuthenticationService);
 
+  apartmentFeatures: any[] = [];
   apartmentTripleFeatures: any[] = [];
 
   constructor() {
@@ -55,26 +58,6 @@ export class CardPreviewComponent implements OnChanges {
       this.heating = this.buildHeatingItems(this.building);
     }
   }
-
-  education = [
-    {
-      title: 'Χιλιοστά Κοινόχρηστων',
-      detail: '2014-2017',
-      sub_detail: '-',
-      style: 'pt-0'
-    },
-    {
-      title: 'Χιλιοστά Ανελκυστήρα',
-      detail: '2011-2013',
-      sub_detail: 'Imperial College London'
-    },
-    {
-      title: 'Χιλιοστά Θέρμανσης',
-      detail: '2009-2011',
-      sub_detail: 'School of London, England',
-      style: 'pb-0'
-    }
-  ];
 
   private buildHeatingItems(b: BuildingDTO) {
     const typeText = this.translateHeatingType(b.heatingType);
@@ -154,6 +137,12 @@ export class CardPreviewComponent implements OnChanges {
     }
 
     return cleanUrl.startsWith('/') ? cleanUrl : `/${cleanUrl}`;
+  }
+
+  get canManageApartment(): boolean {
+    const role = this.authenticationService.currentUserValue?.role ?? '';
+
+    return ['Admin', 'BuildingManager', 'PropertyManager'].includes(role);
   }
 
   openEdit(): void {
@@ -275,6 +264,4 @@ export class CardPreviewComponent implements OnChanges {
       }
     ];
   }
-
-  
 }

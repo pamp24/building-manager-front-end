@@ -2,6 +2,7 @@
 import { Component, OnInit, Inject, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { environment } from 'src/environments/environment';
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
 import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
 import { BuildingMemberDTO, MemberDisplayStatus } from 'src/app/theme/shared/models/BuildingMemberDTO';
@@ -25,7 +26,7 @@ import { RouterModule } from '@angular/router';
 export class RoleComponent implements OnInit, OnChanges {
   @Input() pmView = false;
   @Input() buildingId?: number;
-  apiBase = 'http://localhost:8080/api/v1';
+  apiBase = `${environment.apiUrl}/api/v1`;
   profileImageUrl?: string | null;
   members: BuildingMemberDTO[] = [];
 
@@ -50,6 +51,10 @@ export class RoleComponent implements OnInit, OnChanges {
   messageBuildings = '';
   messageMembers = '';
   messageApartments = '';
+
+  private get currentBuilding(): BuildingDTO | undefined {
+    return this.buildings.find((building) => building.id === this.currentBuildingId);
+  }
 
   constructor(
     private userService: UserService,
@@ -131,7 +136,9 @@ export class RoleComponent implements OnInit, OnChanges {
   private loadMembers(buildingId: number): void {
     this.buildingMemberService.getMembersByBuilding(buildingId).subscribe({
       next: (data) => {
-        this.members = data.filter((member) => member.status !== 'REMOVED' && member.status !== 'LEFT');
+        this.members = data
+          .filter((member) => member.status !== 'REMOVED' && member.status !== 'LEFT')
+          .map((member) => this.withResolvedApartment(member));
 
         this.currentBuildingId = buildingId;
 
@@ -155,6 +162,7 @@ export class RoleComponent implements OnInit, OnChanges {
       next: (data) => {
         this.buildingApartments = data;
         this.filteredApartments = [...data];
+        this.members = this.members.map((member) => this.withResolvedApartment(member));
 
         if (data.length === 0) {
           this.messageApartments = 'Δεν υπάρχουν καταχωρημένα διαμερίσματα.';
@@ -170,6 +178,71 @@ export class RoleComponent implements OnInit, OnChanges {
       }
     });
   }
+
+  private withResolvedApartment(member: BuildingMemberDTO): BuildingMemberDTO {
+    if (member.floor != null && member.apartmentNumber) {
+      return member;
+    }
+
+    const managerApartment = this.findManagerApartment(member);
+    if (!managerApartment) {
+      return member;
+    }
+
+    return {
+      ...member,
+      floor: member.floor ?? managerApartment.floor,
+      apartmentNumber: member.apartmentNumber ?? managerApartment.number
+    };
+  }
+
+  private findManagerApartment(member: BuildingMemberDTO): ApartmentDTO | undefined {
+    if (member.role !== 'BuildingManager') {
+      return undefined;
+    }
+
+    const managerApartmentCandidates = this.buildingApartments.filter((apartment) => apartment.isManagerHouse);
+    const memberFullName = member.fullName?.trim().toLowerCase();
+    const buildingManagerFullName = this.currentBuilding?.managerFullName?.trim().toLowerCase();
+
+    return managerApartmentCandidates.find((apartment) => {
+      if (member.userId != null && apartment.ownerId === member.userId) {
+        return true;
+      }
+
+      if (!apartment.isManagerHouse) {
+        return false;
+      }
+
+      if (member.userId != null && apartment.managerId) {
+        return Number(apartment.managerId) === member.userId;
+      }
+
+      const buildingManagerId = this.currentBuilding?.managerId;
+      if (buildingManagerId != null && apartment.managerId) {
+        return Number(apartment.managerId) === buildingManagerId;
+      }
+
+      if (memberFullName && apartment.managerFullName?.trim().toLowerCase() === memberFullName) {
+        return true;
+      }
+
+      if (buildingManagerFullName && apartment.managerFullName?.trim().toLowerCase() === buildingManagerFullName) {
+        return true;
+      }
+
+      return false;
+    }) ?? (managerApartmentCandidates.length === 1 ? managerApartmentCandidates[0] : undefined);
+  }
+
+  getMemberApartmentLabel(member: BuildingMemberDTO): string {
+  const floor = member.floor?.trim();
+  const number = member.apartmentNumber?.trim();
+
+  return floor || number
+    ? `${floor ?? ''}${number ?? ''}`
+    : '—';
+}
 
   sendInvite(): void {
     if (!this.emailToInvite || !this.roleToInvite || !this.apartmentToInvite) {

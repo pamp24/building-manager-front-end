@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { CommonExpenseStatement } from '../models/commonExpenseStatement';
 import { HttpClient } from '@angular/common/http';
@@ -8,7 +9,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class CommonExpenseStatementService {
-  private baseUrl = 'http://localhost:8080/api/v1/expenses/statements';
+  private baseUrl = `${environment.apiUrl}/api/v1/expenses/statements`;
 
   constructor(private http: HttpClient) {}
 
@@ -50,7 +51,7 @@ export class CommonExpenseStatementService {
 
   getExpenseCategories(buildingId: number, period: 'month' | 'year' | 'all'): Observable<{ category: string; totalAmount: number }[]> {
     return this.http.get<{ category: string; totalAmount: number }[]>(
-      `http://localhost:8080/api/v1/expenses/building/${buildingId}/summary?period=${period}`
+      `${environment.apiUrl}/api/v1/expenses/building/${buildingId}/summary?period=${period}`
     );
   }
 }
