@@ -77,13 +77,20 @@
               <p class="text-muted text-sm mb-0">{{ card.position }}</p>
             </div>
             <div class="dropdown" ngbDropdown>
-              <a class="avatar avatar-s btn-link-secondary dropdown-toggle arrow-none" title="μενού" href="javascript:" ngbDropdownToggle>
+              <button
+                type="button"
+                class="avatar avatar-s btn-link-secondary dropdown-toggle arrow-none border-0 bg-transparent"
+                title="Μενού"
+                ngbDropdownToggle
+              >
                 <i antIcon type="more" theme="outline" class="f-16"></i>
-              </a>
+              </button>
               <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
                 <button type="button" class="dropdown-item" (click)="open(preview, card)">Προεπισκόπηση</button>
-                <button type="button" class="dropdown-item" (click)="openEdit(card)">Επεξεργασία</button>
-                <button type="button" class="dropdown-item text-danger" (click)="openDelete(card)">Διαγραφή</button>
+                <ng-container *ngIf="canManageApartment">
+                  <button type="button" class="dropdown-item" (click)="openEdit(card)">Επεξεργασία</button>
+                  <button type="button" class="dropdown-item text-danger" (click)="openDelete(card)">Διαγραφή</button>
+                </ng-container>
               </div>
             </div>
           </div>

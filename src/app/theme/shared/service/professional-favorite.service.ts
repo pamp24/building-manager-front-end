@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
@@ -10,7 +11,7 @@ import { ProfessionalBusinessDTO } from '../models/professional.model';
 })
 export class ProfessionalFavoriteService {
 
-  private apiUrl = 'http://localhost:8080/api/v1/professionals/favorites';
+  private apiUrl = `${environment.apiUrl}/api/v1/professionals/favorites`;
 
   constructor(private http: HttpClient) {}
 

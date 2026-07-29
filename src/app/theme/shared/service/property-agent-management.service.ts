@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -8,7 +9,7 @@ import { PropertyAgentManagementResponse, UpdatePropertyAgentBuildingsRequest } 
   providedIn: 'root'
 })
 export class PropertyAgentManagementService {
-  private readonly baseUrl = 'http://localhost:8080/api/v1/agents';
+  private readonly baseUrl = `${environment.apiUrl}/api/v1/agents`;
 
   constructor(private http: HttpClient) {}
 

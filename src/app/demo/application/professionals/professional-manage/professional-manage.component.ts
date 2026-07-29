@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { ProfessionalBusinessDTO } from 'src/app/theme/shared/models/professional.model';
 import { ProfessionalImageDTO } from 'src/app/theme/shared/models/professional-image.model';
+import { environment } from 'src/environments/environment';
 import { ProfessionalService } from 'src/app/theme/shared/service/professional.service';
 
 @Component({
@@ -23,7 +24,7 @@ export class ProfessionalManageComponent implements OnInit {
   private professionalService = inject(ProfessionalService);
   private location = inject(Location);
 
-  readonly backendUrl = 'http://localhost:8080/api/v1';
+  readonly backendUrl = `${environment.apiUrl}/api/v1`;
 
   professionalId!: number;
   professional?: ProfessionalBusinessDTO;

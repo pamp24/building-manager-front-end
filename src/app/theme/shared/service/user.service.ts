@@ -1,4 +1,5 @@
-﻿﻿/* eslint-disable @typescript-eslint/no-explicit-any */
+﻿/* eslint-disable @typescript-eslint/no-explicit-any */
+import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
@@ -10,7 +11,7 @@ import { inviteRequest } from '../models/inviteRequest';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private readonly apiUrl = 'http://localhost:8080/api/v1';
+  private readonly apiUrl = `${environment.apiUrl}/api/v1`;
 
   constructor(private http: HttpClient) {}
 

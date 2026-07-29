@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { BuildingMeta } from 'src/app/theme/shared/models/buildingMeta';
 import { BuildingSetupResult } from 'src/app/theme/shared/models/building-setup-result';
 
-import { BuildingFormComponent } from '../building-form/building-form.component';
+import { BuildingFormComponent, BuildingFormSubmission } from '../building-form/building-form.component';
 import { ExistingBuildingFormComponent } from '../existing-building-form/existing-building-form.component';
 import { MultipleBuildingFormComponent } from '../multiple-building-form/multiple-building-form.component';
 
@@ -58,7 +58,7 @@ export class BuildingSetupComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  onBuildingCreated(event: { buildingId: number; buildingForm: FormGroup }): void {
+  onBuildingCreated(event: BuildingFormSubmission): void {
     this.completed.emit({
       buildingId: event.buildingId,
       buildingMeta: this.toMeta(event.buildingForm)
@@ -108,7 +108,7 @@ export class BuildingSetupComponent implements OnInit {
     this.companyId = null;
   }
 
-  onManyBuildingCreated(event: { buildingId: number; buildingForm: FormGroup }): void {
+  onManyBuildingCreated(event: BuildingFormSubmission): void {
     this.completed.emit({
       buildingId: event.buildingId,
       buildingMeta: this.toMeta(event.buildingForm)

@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Building Manager - Project Analysis</title>
+<style>
+  @page { margin: 2cm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 11pt;
+    line-height: 1.6;
+    color: #1a1a1a;
+    background: #fff;
+    padding: 0;
+    margin: 0;
+  }
+  .cover {
+    text-align: center;
+    padding: 120px 40px 80px;
+    background: linear-gradient(135deg, #1a237e, #283593, #3949ab);
+    color: #fff;
+    page-break-after: always;
+  }
+  .cover h1 { font-size: 36pt; margin: 0 0 10px; letter-spacing: 2px; }
+  .cover h2 { font-size: 18pt; font-weight: 400; margin: 0 0 40px; opacity: 0.9; }
+  .cover .meta { font-size: 11pt; opacity: 0.8; line-height: 2; }
+  .cover .divider { width: 80px; height: 4px; background: #ffb300; margin: 30px auto; border-radius: 2px; }
+  .toc { page-break-after: always; padding: 40px; }
+  .toc h2 { font-size: 20pt; color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 8px; }
+  .toc ul { list-style: none; padding: 0; margin-top: 20px; }
+  .toc li { padding: 6px 0; font-size: 12pt; }
+  .toc li a { color: #1a237e; text-decoration: none; }
+  .toc li a:hover { text-decoration: underline; }
+  .toc .num { font-weight: 700; color: #3949ab; margin-right: 8px; }
+
+  .section { padding: 40px; page-break-after: always; }
+  .section h2 { font-size: 20pt; color: #1a237e; border-bottom: 3px solid #3949ab; padding-bottom: 8px; margin-top: 0; }
+  .section h3 { font-size: 14pt; color: #283593; margin: 24px 0 12px; }
+  .section h4 { font-size: 12pt; color: #3949ab; margin: 16px 0 8px; }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 10pt; }
+  th, td { border: 1px solid #bdbdbd; padding: 6px 10px; text-align: left; }
+  th { background: #e8eaf6; color: #1a237e; font-weight: 600; }
+  tr:nth-child(even) { background: #f5f5f5; }
+
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 9pt; font-weight: 600; }
+  .badge-green { background: #c8e6c9; color: #2e7d32; }
+  .badge-blue { background: #bbdefb; color: #1565c0; }
+  .badge-orange { background: #ffe0b2; color: #e65100; }
+  .badge-purple { background: #e1bee7; color: #6a1b9a; }
+  .badge-red { background: #ffcdd2; color: #c62828; }
+  .badge-grey { background: #e0e0e0; color: #424242; }
+
+  .info-box { background: #e8eaf6; border-left: 4px solid #3949ab; padding: 12px 16px; margin: 12px 0; border-radius: 0 4px 4px 0; font-size: 10.5pt; }
+  .info-box.warn { background: #fff3e0; border-left-color: #ff8f00; }
+  .info-box.good { background: #e8f5e9; border-left-color: #43a047; }
+
+  ul, ol { padding-left: 20px; }
+  li { margin-bottom: 4px; }
+
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; }
+  .stat-card { background: #f5f5f5; border-radius: 6px; padding: 14px; border: 1px solid #e0e0e0; }
+  .stat-card .label { font-size: 9pt; color: #757575; text-transform: uppercase; letter-spacing: 1px; }
+  .stat-card .value { font-size: 16pt; font-weight: 700; color: #1a237e; margin-top: 4px; }
+
+  .footer { text-align: center; padding: 20px; font-size: 9pt; color: #9e9e9e; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <h1>BUILDING MANAGER</h1>
+  <h2>Comprehensive Project Analysis</h2>
+  <div class="divider"></div>
+  <div class="meta">
+    <div>Version: 2.2.0</div>
+    <div>Date: July 2026</div>
+    <div>Type: Business &amp; Technical Analysis</div>
+    <div>Prepared: Business Analysis Team</div>
+  </div>
+</div>
+
+<div class="toc">
+  <h2>Table of Contents</h2>
+  <ul>
+    <li><span class="num">1.</span> Executive Summary</li>
+    <li><span class="num">2.</span> Project Overview</li>
+    <li><span class="num">3.</span> Technology Stack Analysis</li>
+    <li><span class="num">4.</span> Application Architecture</li>
+    <li><span class="num">5.</span> User Roles &amp; Access Control</li>
+    <li><span class="num">6.</span> Functional Modules</li>
+    <li><span class="num">7.</span> API Integration &amp; Backend Services</li>
+    <li><span class="num">8.</span> Data Models &amp; State Management</li>
+    <li><span class="num">9.</span> Internationalization &amp; Localization</li>
+    <li><span class="num">10.</span> Build, Deployment &amp; DevOps</li>
+    <li><span class="num">11.</span> Quality Assurance &amp; Testing</li>
+    <li><span class="num">12.</span> Security Analysis</li>
+    <li><span class="num">13.</span> Performance Considerations</li>
+    <li><span class="num">14.</span> Risk Assessment</li>
+    <li><span class="num">15.</span> Recommendations</li>
+  </ul>
+</div>
+
+<!-- SECTION 1 -->
+<div class="section">
+<h2>1. Executive Summary</h2>
+
+<p>The <strong>Building Manager</strong> application is a full-featured Property &amp; Building Management SaaS platform built on top of the Mantis Angular Dashboard Template by CodedThemes. It serves as a comprehensive digital solution for managing residential and commercial buildings, enabling property owners, property managers, building managers, residents, and administrators to collaborate through a unified interface.</p>
+
+<div class="info-box good">
+<strong>Business Domain:</strong> Property Technology (PropTech) &mdash; Building &amp; Community Management<br>
+<strong>Target Market:</strong> Building owners, property management companies, residential communities, commercial property managers<br>
+<strong>Delivery Model:</strong> Single-page application (SPA) served via Docker/Nginx with REST API backend
+</div>
+
+<div class="card-grid">
+  <div class="stat-card"><div class="label">Tech Stack</div><div class="value">Angular 20 + Bootstrap</div></div>
+  <div class="stat-card"><div class="label">Version</div><div class="value">2.2.0</div></div>
+  <div class="stat-card"><div class="label">User Roles</div><div class="value">8 Distinct Roles</div></div>
+  <div class="stat-card"><div class="label">Languages</div><div class="value">5 Languages</div></div>
+  <div class="stat-card"><div class="label">API Services</div><div class="value">27 Backend Services</div></div>
+  <div class="stat-card"><div class="label">Runtime Dependencies</div><div class="value">78 Packages</div></div>
+</div>
+
+<p>The application implements role-based access control with <strong>eight distinct user roles</strong>, supports <strong>five languages</strong> (Greek, English, French, Romanian, Chinese), and integrates <strong>27 backend API services</strong> covering authentication, building management, expense statements, payments, support tickets, professional directories, polls, and more.</p>
+
+<h3>Key Business Capabilities</h3>
+<ul>
+  <li><strong>Building &amp; Apartment Management</strong> &mdash; CRUD operations for buildings, apartments, and members</li>
+  <li><strong>Common Expense Statements</strong> &mdash; Create, allocate, and track shared building expenses</li>
+  <li><strong>Payment Processing</strong> &mdash; Track payments, balances, and collection rates per building</li>
+  <li><strong>Support Ticket System</strong> &mdash; Issue reporting, assignment, and resolution workflow</li>
+  <li><strong>Professional Directory</strong> &mdash; Searchable marketplace for property-related service providers</li>
+  <li><strong>Community Features</strong> &mdash; Polls, calendar events, announcements, chat</li>
+  <li><strong>Role-Specific Dashboards</strong> &mdash; Tailored analytics for admin, PM, building manager, and user</li>
+  <li><strong>Theme Customization</strong> &mdash; White-label ready with extensive UI theming options</li>
+</ul>
+
+<h3>Current Development Stage</h3>
+<p>The application appears to be in <strong>late-stage development or early production</strong>. Core functionality is implemented across all major modules, with unit tests for key authentication and support ticket pages. The project uses a pre-release version of Angular (20.0.0-next.8) and includes both unit testing (Jasmine/Karma) and E2E testing (Playwright) frameworks.</p>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section">
+<h2>2. Project Overview</h2>
+
+<h3>2.1 Identity &amp; Origin</h3>
+<table>
+  <tr><th>Property</th><th>Value</th></tr>
+  <tr><td>Package Name</td><td>mantis-angular-ng-bootstrap</td></tr>
+  <tr><td>Application Title</td><td>Building Manager</td></tr>
+  <tr><td>Version</td><td>2.2.0</td></tr>
+  <tr><td>Template Origin</td><td>Mantis Angular Dashboard Template by CodedThemes</td></tr>
+  <tr><td>Base Framework</td><td>Angular 20.0.0-next.8</td></tr>
+  <tr><td>UI Framework</td><td>Bootstrap 5.3.6 + ng-bootstrap 18.0.0</td></tr>
+  <tr><td>Index Title</td><td>Mantis Angular Dashboard Template</td></tr>
+  <tr><td>Root Selector</td><td>app-root</td></tr>
+</table>
+
+<h3>2.2 Project Size &amp; Scope</h3>
+<table>
+  <tr><th>Metric</th><th>Count</th></tr>
+  <tr><td>Runtime Dependencies</td><td>78</td></tr>
+  <tr><td>Dev Dependencies</td><td>22</td></tr>
+  <tr><td>Backend API Services</td><td>27</td></tr>
+  <tr><td>Data Models / Interfaces</td><td>42</td></tr>
+  <tr><td>Translation Languages</td><td>5</td></tr>
+  <tr><td>User Roles</td><td>8</td></tr>
+  <tr><td>Functional Modules</td><td>14+</td></tr>
+  <tr><td>Unit Test Spec Files</td><td>16</td></tr>
+  <tr><td>Third-Party UI Components</td><td>20+</td></tr>
+</table>
+
+<h3>2.3 Project Maturity Assessment</h3>
+<table>
+  <tr><th>Dimension</th><th>Rating</th><th>Notes</th></tr>
+  <tr><td>Feature Completeness</td><td><span class="badge badge-green">High</span></td><td>All major modules implemented</td></tr>
+  <tr><td>Code Organization</td><td><span class="badge badge-green">High</span></td><td>Well-structured modular architecture</td></tr>
+  <tr><td>Test Coverage</td><td><span class="badge badge-orange">Low-Medium</span></td><td>Only 16 spec files across limited modules</td></tr>
+  <tr><td>Documentation</td><td><span class="badge badge-red">Low</span></td><td>No README or formal docs in repo</td></tr>
+  <tr><td>State Management</td><td><span class="badge badge-orange">Medium</span></td><td>Services + localStorage, no dedicated library</td></tr>
+  <tr><td>Security</td><td><span class="badge badge-green">High</span></td><td>JWT auth, role guards, interceptors in place</td></tr>
+  <tr><td>Build Pipeline</td><td><span class="badge badge-green">High</span></td><td>Docker, multi-stage build, Nginx config</td></tr>
+  <tr><td>i18n Readiness</td><td><span class="badge badge-green">High</span></td><td>5 languages with custom loader</td></tr>
+</table>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section">
+<h2>3. Technology Stack Analysis</h2>
+
+<h3>3.1 Core Framework</h3>
+<p>The application is built on <strong>Angular 20.0.0-next.8</strong>, a pre-release version of the Angular framework. This represents both an opportunity (early access to latest features) and a risk (pre-release stability concerns). The application uses <strong>Angular standalone components</strong> bootstrapped via <code>bootstrapApplication()</code>, aligning with modern Angular best practices.</p>
+
+<h3>3.2 UI &amp; Component Libraries</h3>
+<table>
+  <tr><th>Category</th><th>Libraries</th><th>Version</th></tr>
+  <tr><td>CSS Framework</td><td>Bootstrap</td><td>5.3.6</td></tr>
+  <tr><td>Angular Bootstrap</td><td>@ng-bootstrap/ng-bootstrap</td><td>18.0.0</td></tr>
+  <tr><td>Material Components</td><td>@angular/material, @angular/cdk</td><td>20.0.0-next.8</td></tr>
+  <tr><td>Icons</td><td>@ant-design/icons-angular</td><td>19.0.0</td></tr>
+  <tr><td>Charts</td><td>ApexCharts + ng-apexcharts</td><td>5.2.0 / 1.15.0</td></tr>
+  <tr><td>Calendar</td><td>angular-calendar, flatpickr, dayjs, date-fns</td><td>0.31.1 / 4.6.13</td></tr>
+  <tr><td>Forms</td><td>ng-select, ngx-mask, ngx-chips, ng2-date-picker, ngx-slider</td><td>Various</td></tr>
+  <tr><td>Rich Text</td><td>ngx-quill, ngx-editor</td><td>27.0.2 / 18.0.0</td></tr>
+  <tr><td>Notifications</td><td>ngx-toastr, sweetalert2, angular-notifier</td><td>19.0.0 / 11.21.2</td></tr>
+</table>
+
+<h3>3.3 Technology Observations</h3>
+<div class="info-box warn">
+<strong>⚠ Pre-Release Dependencies:</strong> Angular 20.0.0-next.8, @angular/material 20.0.0-next.8, and @angular/cli 20.0.0-next.8 are pre-release versions. While they offer cutting-edge features, they may contain breaking changes before stable release. This should be monitored for production readiness.
+</div>
+
+<div class="info-box warn">
+<strong>⚠ Legacy Dependencies:</strong> jQuery 3.7.1 is included as a dependency, which is unusual for a modern Angular application. This likely originates from the Mantis template's legacy code and should be evaluated for removal to reduce bundle size.
+</div>
+
+<div class="info-box">
+<strong>ℹ Package Manager:</strong> Both package-lock.json (npm) and yarn.lock are present, which can lead to inconsistencies. A single package manager should be standardized.
+</div>
+</div>
+
+<!-- SECTION 4 -->
+<div class="section">
+<h2>4. Application Architecture</h2>
+
+<h3>4.1 High-Level Architecture</h3>
+<p>The application follows a standard Angular SPA architecture with three distinct layout contexts:</p>
+<ul>
+  <li><strong>Guest Layout</strong> &mdash; Public pages (landing, login, register, forgot password)</li>
+  <li><strong>Admin Layout</strong> &mdash; Authenticated users with sidebar navigation, top navbar, and theme configuration panel</li>
+  <li><strong>Simple Layout</strong> &mdash; Minimal layout for component demos and contact page</li>
+</ul>
+
+<h3>4.2 Routing Architecture</h3>
+<p>The routing module defines three main route groups with lazy-loaded components:</p>
+<table>
+  <tr><th>Route Group</th><th>Layout</th><th>Auth Required</th><th>Key Paths</th></tr>
+  <tr><td>Guest / Public</td><td>Guest Layout</td><td>No</td><td><code>/</code>, <code>/login</code>, <code>/register</code>, <code>/forgot-password</code>, <code>/code-verify</code></td></tr>
+  <tr><td>Authenticated</td><td>Admin Layout</td><td>Yes (AuthGuard)</td><td><code>/dashboard/*</code>, <code>/admin/*</code>, <code>/pm/*</code>, <code>/statement/*</code>, <code>/helpdesk/*</code>, <code>/professionals/*</code>, <code>/chat</code>, <code>/calendar</code>, <code>/polls</code></td></tr>
+  <tr><td>Simple</td><td>Simple Layout</td><td>Varies</td><td><code>/components/*</code>, <code>/contact-us</code></td></tr>
+  <tr><td>Error</td><td>&mdash;</td><td>No</td><td><code>/unauthorized</code>, <code>**</code> (404)</td></tr>
+</table>
+
+<h3>4.3 Component Tree</h3>
+<pre style="font-size:9pt;background:#f5f5f5;padding:12px;border-radius:6px;overflow-x:auto;">
+AppComponent
+├─ GuestLayoutComponent (public routes)
+│  ├─ LandingComponent
+│  ├─ AuthLoginComponent
+│  ├─ AuthRegisterComponent
+│  ├─ ForgotPasswordComponent / ResetPasswordComponent / CheckMailComponent / CodeVerifyComponent
+│  └─ InviteAcceptComponent
+├─ AdminLayoutComponent (authenticated routes)
+│  ├─ NavigationComponent (sidebar)
+│  │  └─ NavContentComponent (role-filtered menu items)
+│  ├─ NavBarComponent
+│  │  ├─ NavLeftComponent
+│  │  └─ NavRightComponent (user menu, notifications, language, fullscreen)
+│  ├─ ConfigurationComponent (theme customization panel)
+│  ├─ BreadcrumbComponent
+│  └─ Router Outlet (lazy-loaded feature components)
+└─ SimpleLayoutComponent
+   └─ Router Outlet
+</pre>
+
+<h3>4.4 Data Flow Pattern</h3>
+<p>The application follows a unidirectional data flow pattern:</p>
+<ol>
+  <li><strong>User Action</strong> → Component event handler</li>
+  <li><strong>Service Call</strong> → HTTP request via Angular HttpClient</li>
+  <li><strong>Interceptor</strong> → JWT token injection via BasicAuthInterceptor/JwtInterceptor</li>
+  <li><strong>API Response</strong> → Observable stream returned to component</li>
+  <li><strong>State Update</strong> → Component updates local state or service-based state</li>
+  <li><strong>View Update</strong> → Angular change detection re-renders the template</li>
+</ol>
+</div>
+
+<!-- SECTION 5 -->
+<div class="section">
+<h2>5. User Roles &amp; Access Control</h2>
+
+<h3>5.1 Role Hierarchy</h3>
+<table>
+  <tr><th>#</th><th>Role</th><th>Enum Value</th><th>Privilege Level</th></tr>
+  <tr><td>1</td><td><strong>Admin</strong></td><td><code>Admin</code></td><td><span class="badge badge-red">System-wide</span></td></tr>
+  <tr><td>2</td><td><strong>Property Manager</strong></td><td><code>PropertyManager</code></td><td><span class="badge badge-purple">Multi-building</span></td></tr>
+  <tr><td>3</td><td><strong>Admin Agent</strong></td><td><code>AdminAgent</code></td><td><span class="badge badge-purple">Multi-building</span></td></tr>
+  <tr><td>4</td><td><strong>Property Agent</strong></td><td><code>PropertyAgent</code></td><td><span class="badge badge-blue">Assigned Buildings</span></td></tr>
+  <tr><td>5</td><td><strong>Building Manager</strong></td><td><code>BuildingManager</code></td><td><span class="badge badge-blue">Single Building</span></td></tr>
+  <tr><td>6</td><td><strong>Owner</strong></td><td><code>Owner</code></td><td><span class="badge badge-green">Owned Apartments</span></td></tr>
+  <tr><td>7</td><td><strong>Resident</strong></td><td><code>Resident</code></td><td><span class="badge badge-green">Resident Unit</span></td></tr>
+  <tr><td>8</td><td><strong>User</strong></td><td><code>User</code></td><td><span class="badge badge-grey">Basic</span></td></tr>
+</table>
+
+<h3>5.2 Role-Based Access Implementation</h3>
+<ul>
+  <li><strong>AuthGuardChild</strong> — Route guard that checks authentication status before activating routes</li>
+  <li><strong>Route Data Roles</strong> — Routes specify <code>data: { role: [...] }</code> for role-restricted access</li>
+  <li><strong>NavigationService</strong> — Filters sidebar menu items based on user role, showing only relevant sections</li>
+  <li><strong>API-Level Authorization</strong> — Backend services enforce authorization; the front-end primarily controls UI visibility</li>
+</ul>
+
+<div class="info-box">
+<strong>Note:</strong> The Role enum is defined in two locations: <code>role.ts</code> (under <code>_helpers</code>) and <code>role.model.ts</code> (under <code>models</code>). This duplication should be consolidated to a single source of truth.
+</div>
+</div>
+
+<!-- SECTION 6 -->
+<div class="section">
+<h2>6. Functional Modules</h2>
+
+<h3>6.1 Module Overview</h3>
+<table>
+  <tr><th>Module</th><th>Route</th><th>Primary Roles</th><th>Key Features</th></tr>
+  <tr>
+    <td><strong>Authentication</strong></td>
+    <td><code>/login</code>, <code>/register</code>, <code>/forgot-password</code>, etc.</td>
+    <td>All (unauthenticated)</td>
+    <td>JWT login, registration, email confirmation, password reset, invitation acceptance</td>
+  </tr>
+  <tr>
+    <td><strong>Dashboard</strong></td>
+    <td><code>/dashboard/*</code></td>
+    <td>All authenticated</td>
+    <td>Default, analytics, finance dashboards with charts and KPIs</td>
+  </tr>
+  <tr>
+    <td><strong>Admin Panel</strong></td>
+    <td><code>/admin/*</code></td>
+    <td>Admin</td>
+    <td>System-wide dashboard, finance overview, building registry</td>
+  </tr>
+  <tr>
+    <td><strong>Property Manager Panel</strong></td>
+    <td><code>/pm/*</code></td>
+    <td>PropertyManager, PropertyAgent, AdminAgent</td>
+    <td>PM dashboard, building management, support agent assignment</td>
+  </tr>
+  <tr>
+    <td><strong>Building Manager Panel</strong></td>
+    <td><code>/statement/*</code></td>
+    <td>BuildingManager</td>
+    <td>Expense statement create/edit/list/details, participant management</td>
+  </tr>
+  <tr>
+    <td><strong>Online Courses</strong></td>
+    <td><code>/online-course/*</code></td>
+    <td>BuildingManager</td>
+    <td>Course management, students, teachers, pricing, settings</td>
+  </tr>
+  <tr>
+    <td><strong>Membership</strong></td>
+    <td><code>/membership/*</code></td>
+    <td>BuildingManager</td>
+    <td>Membership dashboard, list, pricing, settings</td>
+  </tr>
+  <tr>
+    <td><strong>Helpdesk (Support)</strong></td>
+    <td><code>/helpdesk/*</code></td>
+    <td>All authenticated</td>
+    <td>Ticket create/list/details, comments, assignment, status management</td>
+  </tr>
+  <tr>
+    <td><strong>Professionals Directory</strong></td>
+    <td><code>/professionals/*</code></td>
+    <td>All authenticated</td>
+    <td>Professional search, registration, approval, reviews, favorites</td>
+  </tr>
+  <tr>
+    <td><strong>Chat</strong></td>
+    <td><code>/chat</code></td>
+    <td>All authenticated</td>
+    <td>Real-time (or near-real-time) messaging</td>
+  </tr>
+  <tr>
+    <td><strong>Calendar</strong></td>
+    <td><code>/calendar</code></td>
+    <td>All authenticated</td>
+    <td>Event creation, editing, pinning, building-wide calendar</td>
+  </tr>
+  <tr>
+    <td><strong>Polls</strong></td>
+    <td><code>/polls</code></td>
+    <td>All authenticated</td>
+    <td>Poll creation, voting, results, deactivation</td>
+  </tr>
+  <tr>
+    <td><strong>User Profile</strong></td>
+    <td><code>/user/*</code></td>
+    <td>All authenticated</td>
+    <td>Profile management, account settings, user cards and lists</td>
+  </tr>
+  <tr>
+    <td><strong>Customer Management</strong></td>
+    <td><code>/customer</code></td>
+    <td>All authenticated</td>
+    <td>Customer list view</td>
+  </tr>
+</table>
+
+<h3>6.2 Core Business Flow: Common Expense Statement</h3>
+<p>The expense statement module is the central business feature of the application:</p>
+<ol>
+  <li><strong>Building Manager</strong> creates a new statement (monthly/periodic expense allocation)</li>
+  <li>System <strong>allocates expenses</strong> across building apartments based on defined rules</li>
+  <li><strong>Notifications</strong> are sent to residents/owners about the new statement</li>
+  <li>Residents/Owners can <strong>view their allocated amount</strong> and payment status</li>
+  <li><strong>Payments</strong> are tracked per statement, per user, with collection rate monitoring</li>
+  <li>Building Manager can <strong>edit/draft/delete</strong> statements as needed</li>
+  <li><strong>Dashboards</strong> display collection rates, monthly trends, and outstanding balances</li>
+</ol>
+
+<h3>6.3 Support Ticket Workflow</h3>
+<ol>
+  <li>Any building member can <strong>create a support ticket</strong> (issue/complaint)</li>
+  <li>Tickets are <strong>routed to the appropriate agent</strong> or building manager</li>
+  <li>Agents can <strong>assign, comment, and update status</strong> (open/in-progress/resolved)</li>
+  <li>Users can <strong>track their tickets</strong> through the dashboard and inbox views</li>
+  <li><strong>Notifications</strong> keep users informed of ticket updates</li>
+</ol>
+</div>
+
+<!-- SECTION 7 -->
+<div class="section">
+<h2>7. API Integration &amp; Backend Services</h2>
+
+<h3>7.1 API Architecture</h3>
+<table>
+  <tr><th>Property</th><th>Value</th></tr>
+  <tr><td>Base URL (Dev)</td><td>http://localhost:8080</td></tr>
+  <tr><td>Base URL (Prod)</td><td>https://mock-data-api-nextjs.vercel.app</td></tr>
+  <tr><td>API Versioning</td><td>/api/v1/{resource}</td></tr>
+  <tr><td>Authentication</td><td>JWT Bearer Token</td></tr>
+  <tr><td>HTTP Client</td><td>Angular HttpClient</td></tr>
+  <tr><td>Dev Proxy</td><td>Angular proxy config (proxy.conf.json)</td></tr>
+</table>
+
+<h3>7.2 Service Inventory</h3>
+<table>
+  <tr><th>Service</th><th>API Path</th><th>Key Operations</th></tr>
+  <tr><td>Authentication</td><td><code>/api/v1/auth</code></td><td>Login, register, confirm, password reset, user refresh</td></tr>
+  <tr><td>User</td><td><code>/api/v1/users</code></td><td>CRUD users, role assignment, profile image, invitations</td></tr>
+  <tr><td>Building</td><td><code>/api/v1/buildings</code></td><td>CRUD buildings, code-based joining, document upload, settings</td></tr>
+  <tr><td>Apartment</td><td><code>/api/v1/apartments</code></td><td>Batch create, list by building, update, delete</td></tr>
+  <tr><td>Building Member</td><td><code>/api/v1/building-members</code></td><td>List members, assign apartment, remove</td></tr>
+  <tr><td>Common Expense</td><td><code>/api/v1/expenses/statements</code></td><td>CRUD statements, categories, drafts</td></tr>
+  <tr><td>Payment</td><td><code>/api/v1/payments</code></td><td>Record, list, summary, per-building stats</td></tr>
+  <tr><td>Notification</td><td><code>/api/v1/notifications</code></td><td>List notifications, mark as read</td></tr>
+  <tr><td>Support Ticket</td><td><code>/api/v1/support-tickets</code></td><td>CRUD tickets, status, assignment, comments</td></tr>
+  <tr><td>Professional</td><td><code>/api/v1/professionals</code></td><td>Search, register, approve, manage, reviews, images</td></tr>
+  <tr><td>Calendar</td><td><code>/api/v1/calendar</code></td><td>CRUD events, pin events</td></tr>
+  <tr><td>Poll</td><td><code>/api/v1/polls</code></td><td>CRUD polls, voting, results</td></tr>
+  <tr><td>Company</td><td><code>/api/v1/companies</code></td><td>CRUD companies</td></tr>
+  <tr><td>Agent Management</td><td><code>/api/v1/agents</code></td><td>List agents, update building assignments</td></tr>
+  <tr><td>Admin Dashboard</td><td><code>/api/v1/admin/dashboard</code></td><td>Admin-level aggregated statistics</td></tr>
+  <tr><td>PM Dashboard</td><td><code>/api/v1/pm/dashboard</code></td><td>PM-level analytics, financial charts, collection rates</td></tr>
+  <tr><td>Building Dashboard</td><td><code>/api/v1/dashboard</code></td><td>Building-specific manager dashboard</td></tr>
+  <tr><td>User Dashboard</td><td><code>/api/v1/dashboard/user</code></td><td>User-level dashboard, history, charts, unpaid items</td></tr>
+</table>
+
+<h3>7.3 Integration Pattern</h3>
+<p>All services follow a consistent pattern:</p>
+<ul>
+  <li>Singleton services (<code>@Injectable({ providedIn: 'root' })</code>)</li>
+  <li>Base URL stored in the environment or hardcoded</li>
+  <li>HTTP methods return typed RxJS <code>Observable&lt;T&gt;</code></li>
+  <li>JWT token injected via <code>BasicAuthInterceptor</code> / <code>JwtInterceptor</code></li>
+  <li>Standard CRUD pattern: <code>get</code>, <code>create</code>/<code>save</code>, <code>update</code>, <code>delete</code></li>
+</ul>
+
+<div class="info-box warn">
+<strong>⚠ Some services use hardcoded API URLs</strong> (e.g., <code>http://localhost:8080</code>) instead of referencing <code>environment.apiUrl</code>. This should be standardized for maintainability.
+</div>
+</div>
+
+<!-- SECTION 8 -->
+<div class="section">
+<h2>8. Data Models &amp; State Management</h2>
+
+<h3>8.1 Data Models</h3>
+<p>The application defines <strong>42 TypeScript interfaces and data transfer objects (DTOs)</strong> covering:</p>
+<table>
+  <tr><th>Category</th><th>Models</th></tr>
+  <tr><td>Authentication</td><td>AuthenticationResponse, RegistrationRequest</td></tr>
+  <tr><td>Building</td><td>BuildingDTO, BuildingRequest, BuildingMeta, BuildingDocument</td></tr>
+  <tr><td>Apartment</td><td>ApartmentDTO, ApartmentRequest, ApartmentUpdateRequest</td></tr>
+  <tr><td>Members</td><td>BuildingMemberDTO, InviteRequest, UserTableDTO</td></tr>
+  <tr><td>Company</td><td>CompanyDTO</td></tr>
+  <tr><td>Expenses</td><td>CommonExpenseStatement, CommonExpenseAllocation, CommonExpenseSummaryDTO</td></tr>
+  <tr><td>Payments</td><td>PaymentDTO, StatementUserPaymentDTO, MonthlyAmountStatsDTO</td></tr>
+  <tr><td>Dashboard</td><td>AdminDashboardDTO, PmDashboardDTO, ManagerDashboardDTO, ChartDTO</td></tr>
+  <tr><td>Support Tickets</td><td>SupportTicket (request/response), TicketComment</td></tr>
+  <tr><td>Professionals</td><td>Professional model with categories, reviews, images, admin stats</td></tr>
+  <tr><td>Calendar</td><td>CalendarDTO</td></tr>
+  <tr><td>Polls</td><td>Poll model</td></tr>
+  <tr><td>Notifications</td><td>NotificationDTO</td></tr>
+  <tr><td>Navigation</td><td>NavigationItem</td></tr>
+  <tr><td>Pagination</td><td>PageResponse (generic paginated response)</td></tr>
+</table>
+
+<h3>8.2 State Management Strategy</h3>
+<p>The application does <strong>not use a dedicated state management library</strong> (e.g., NgRx, Akita, NgXs). Instead, it employs:</p>
+
+<table>
+  <tr><th>Mechanism</th><th>Usage</th><th>Examples</th></tr>
+  <tr><td><strong>Angular Signals</strong></td><td>Modern reactive state (Angular 17+)</td><td>ThemeService (dark mode, RTL), WizardStateService (persisted wizard flow)</td></tr>
+  <tr><td><strong>BehaviorSubject/Subject</strong></td><td>Reactive state with observable streams</td><td>TabNavigationService (tab index), UserDashboardService (refresh triggers)</td></tr>
+  <tr><td><strong>localStorage/sessionStorage</strong></td><td>Persistent client-side storage</td><td>JWT token, current user, building ID, wizard state, theme preferences</td></tr>
+  <tr><td><strong>Service Properties</strong></td><td>In-memory singleton state</td><td>AuthenticationService.currentUser, SharedDataService</td></tr>
+</table>
+
+<div class="info-box warn">
+<strong>⚠ No Dedicated State Management:</strong> As the application grows, the absence of a formal state management library may lead to challenges with:
+<ul>
+  <li>Cross-component state synchronization</li>
+  <li>DevTools for debugging state changes</li>
+  <li>Consistent state update patterns</li>
+  <li>Performance optimization with selectors</li>
+</ul>
+For the current scope, the Signals + Services approach may be sufficient, but it should be revisited as features expand.
+</div>
+</div>
+
+<!-- SECTION 9 -->
+<div class="section">
+<h2>9. Internationalization &amp; Localization</h2>
+
+<h3>9.1 Language Support</h3>
+<table>
+  <tr><th>Code</th><th>Language</th><th>Status</th></tr>
+  <tr><td><code>gr</code></td><td>Greek</td><td><span class="badge badge-green">Default</span></td></tr>
+  <tr><td><code>en</code></td><td>English</td><td><span class="badge badge-green">Full</span></td></tr>
+  <tr><td><code>fr</code></td><td>French</td><td><span class="badge badge-blue">Available</span></td></tr>
+  <tr><td><code>ro</code></td><td>Romanian</td><td><span class="badge badge-blue">Available</span></td></tr>
+  <tr><td><code>cn</code></td><td>Chinese</td><td><span class="badge badge-blue">Available</span></td></tr>
+</table>
+
+<h3>9.2 Implementation Details</h3>
+<ul>
+  <li><strong>Library:</strong> @ngx-translate/core with custom <code>CustomTranslateLoader</code></li>
+  <li><strong>Default Language:</strong> Greek (<code>gr</code>), set in MantisConfig</li>
+  <li><strong>Translation Format:</strong> JSON files in <code>src/assets/i18n/</code></li>
+  <li><strong>Loader Strategy:</strong> Custom loader imports JSON files at build time (not HTTP fetch)</li>
+  <li><strong>Language Switching:</strong> Via NavRightComponent language dropdown using <code>TranslateService.use()</code></li>
+</ul>
+
+<h3>9.3 Business Impact</h3>
+<p>The i18n implementation is strategically important as it allows the application to serve multiple regional markets from a single codebase. The default Greek language suggests the primary target market is Greece/Cyprus, with English, French, Romanian, and Chinese supporting secondary markets.</p>
+</div>
+
+<!-- SECTION 10 -->
+<div class="section">
+<h2>10. Build, Deployment &amp; DevOps</h2>
+
+<h3>10.1 Build Pipeline</h3>
+<table>
+  <tr><th>Stage</th><th>Tool</th><th>Details</th></tr>
+  <tr><td>Development Build</td><td>Angular CLI (<code>ng serve</code>)</td><td>Port 4200, proxy to localhost:8080, HMR, source maps</td></tr>
+  <tr><td>Production Build</td><td>Angular CLI (<code>ng build</code>)</td><td>Output hashing, budgets (4MB initial, 20KB component styles), AOT</td></tr>
+  <tr><td>Docker Build</td><td>Multi-stage Dockerfile</td><td>Node 20-alpine build → Nginx alpine serve</td></tr>
+  <tr><td>Docker Compose</td><td>docker-compose.yml</td><td>Port 8081:80, healthcheck, app-network bridge</td></tr>
+  <tr><td>Web Server</td><td>Nginx</td><td>SPA routing, 1-year asset cache, gzip</td></tr>
+</table>
+
+<h3>10.2 Configuration Files</h3>
+<table>
+  <tr><th>File</th><th>Purpose</th></tr>
+  <tr><td><code>angular.json</code></td><td>Angular CLI project configuration (builder, budgets, assets, styles, scripts)</td></tr>
+  <tr><td><code>tsconfig.json</code> / <code>tsconfig.app.json</code> / <code>tsconfig.spec.json</code></td><td>TypeScript compilation targets (ES2022, strict mode)</td></tr>
+  <tr><td><code>eslint.config.mjs</code></td><td>Flat ESLint config (TypeScript + Angular template linting)</td></tr>
+  <tr><td><code>.prettierrc</code></td><td>Code formatting (140 char width, single quotes, no trailing commas)</td></tr>
+  <tr><td><code>.browserslistrc</code></td><td>Target browsers (modern Chrome, Firefox, Edge, Safari)</td></tr>
+  <tr><td><code>Dockerfile</code></td><td>Multi-stage Docker build for production deployment</td></tr>
+  <tr><td><code>docker-compose.yml</code></td><td>Container orchestration for frontend service</td></tr>
+  <tr><td><code>nginx.conf</code></td><td>Nginx configuration for SPA serving with caching rules</td></tr>
+  <tr><td><code>proxy.conf.json</code></td><td>Angular dev server proxy to backend API</td></tr>
+</table>
+
+<h3>10.3 CI/CD Readiness</h3>
+<p>The project is well-equipped for CI/CD with:</p>
+<ul>
+  <li>Dockerized build and deployment</li>
+  <li>Playwright config for CI (port 4200, Chromium)</li>
+  <li>Linting (ESLint) and formatting (Prettier) configured</li>
+  <li>No CI pipeline configuration files found (e.g., GitHub Actions, Jenkinsfile) — would need to be added</li>
+</ul>
+</div>
+
+<!-- SECTION 11 -->
+<div class="section">
+<h2>11. Quality Assurance &amp; Testing</h2>
+
+<h3>11.1 Testing Strategy</h3>
+<table>
+  <tr><th>Type</th><th>Framework</th><th>Scope</th><th>Current Coverage</th></tr>
+  <tr><td>Unit Tests</td><td>Jasmine 5.1 + Karma</td><td>Component logic</td><td><span class="badge badge-orange">Low (16 spec files)</span></td></tr>
+  <tr><td>E2E Tests</td><td>Playwright 1.61</td><td>Full user workflows</td><td><span class="badge badge-red">None found</span></td></tr>
+</table>
+
+<h3>11.2 Unit Test Inventory</h3>
+<table>
+  <tr><th>Module</th><th>Component</th><th>Spec File Count</th></tr>
+  <tr><td>Authentication</td><td>Login, Register, Forgot Password, Reset Password, Check Mail, Code Verify</td><td>6</td></tr>
+  <tr><td>Helpdesk</td><td>Dashboard, Ticket List, Ticket Create, Ticket Details</td><td>4</td></tr>
+  <tr><td>Professionals</td><td>List, Approval, Manage, Register Modal, Details Modal, My Businesses</td><td>6</td></tr>
+  <tr><td><strong>Total</strong></td><td></td><td><strong>16</strong></td></tr>
+</table>
+
+<h3>11.3 Quality Assessment</h3>
+<div class="info-box warn">
+<strong>⚠ Test coverage is limited</strong> to authentication, helpdesk, and professional modules. Core business functionality (buildings, apartments, expense statements, payments, polls, calendar, chat) has no unit tests. E2E test infrastructure is in place but no spec files have been written. This represents a significant quality risk for the core business features.
+</div>
+
+<h3>11.4 Linting &amp; Formatting</h3>
+<ul>
+  <li><strong>ESLint:</strong> Flat config with TypeScript and Angular-specific rules, directive/component selector enforcement</li>
+  <li><strong>Prettier:</strong> Consistent formatting with 140 char width, single quotes, no trailing commas</li>
+  <li>No pre-commit hooks or lint-staged configuration found</li>
+</ul>
+</div>
+
+<!-- SECTION 12 -->
+<div class="section">
+<h2>12. Security Analysis</h2>
+
+<h3>12.1 Authentication &amp; Authorization</h3>
+<table>
+  <tr><th>Control</th><th>Implementation</th><th>Effectiveness</th></tr>
+  <tr><td>JWT Authentication</td><td>Login endpoint returns JWT; stored in localStorage/sessionStorage</td><td><span class="badge badge-green">Standard</span></td></tr>
+  <tr><td>Token Interceptor</td><td>BasicAuthInterceptor / JwtInterceptor adds Bearer token to all HTTP requests</td><td><span class="badge badge-green">Effective</span></td></tr>
+  <tr><td>Route Guards</td><td>AuthGuardChild prevents unauthorized route access</td><td><span class="badge badge-green">Effective</span></td></tr>
+  <tr><td>Role-Based Access</td><td>Route data roles + NavigationService filtering</td><td><span class="badge badge-green">Good</span></td></tr>
+  <tr><td>Token Persistence</td><td>localStorage (remember me) vs sessionStorage (session only)</td><td><span class="badge badge-blue">Configurable</span></td></tr>
+  <tr><td>XSS Protection</td><td>Angular's built-in sanitization</td><td><span class="badge badge-green">Standard</span></td></tr>
+</table>
+
+<h3>12.2 Security Considerations</h3>
+<ul>
+  <li><strong>JWT Storage:</strong> Tokens stored in browser storage (localStorage/sessionStorage) which is susceptible to XSS attacks. Consider httpOnly cookies for production.</li>
+  <li><strong>Role Duplication:</strong> Role enum defined in two places increases risk of inconsistencies</li>
+  <li><strong>reCAPTCHA:</strong> ng-recaptcha is included, suggesting CAPTCHA protection for forms</li>
+  <li><strong>Backend Authorization:</strong> The front-end role checks are primarily UX-level; real authorization must be enforced on the backend</li>
+</ul>
+
+<div class="info-box warn">
+<strong>⚠ Environment Exposure:</strong> The production API URL (<code>https://mock-data-api-nextjs.vercel.app</code>) is compiled into the front-end bundle. Ensure this is acceptable from a security standpoint.
+</div>
+</div>
+
+<!-- SECTION 13 -->
+<div class="section">
+<h2>13. Performance Considerations</h2>
+
+<h3>13.1 Bundle Size</h3>
+<table>
+  <tr><th>Metric</th><th>Budget</th><th>Notes</th></tr>
+  <tr><td>Initial Bundle</td><td>4 MB (warning) / 5 MB (error)</td><td>Angular + Bootstrap + 78 dependencies is sizable</td></tr>
+  <tr><td>Component Styles</td><td>20 KB</td><td>Per-component style budget</td></tr>
+</table>
+
+<h3>13.2 Performance Factors</h3>
+<table>
+  <tr><th>Factor</th><th>Impact</th><th>Mitigation</th></tr>
+  <tr><td>78 Runtime Dependencies</td><td><span class="badge badge-orange">Medium</span></td><td>Tree-shaking via Angular CLI; evaluate unused deps</td></tr>
+  <tr><td>jQuery Inclusion</td><td><span class="badge badge-orange">Low-Medium</span></td><td>Evaluate removal; likely unused in Angular context</td></tr>
+  <tr><td>Multiple CSS Frameworks</td><td><span class="badge badge-orange">Low</span></td><td>Bootstrap + Material CDK; some overlap</td></tr>
+  <tr><td>AOT Compilation</td><td><span class="badge badge-green">Positive</span></td><td>Enabled by default in Angular production builds</td></tr>
+  <tr><td>Lazy-Loaded Routes</td><td><span class="badge badge-green">Positive</span></td><td>Feature modules are lazy-loaded</td></tr>
+  <tr><td>CDK Overlay</td><td><span class="badge badge-green">Positive</span></td><td>Efficient overlay rendering from Angular Material CDK</td></tr>
+  <tr><td>Nginx Caching</td><td><span class="badge badge-green">Positive</span></td><td>1-year cache for static assets, gzip compression</td></tr>
+  <tr><td>Custom Fonts</td><td><span class="badge badge-orange">Low-Medium</span></td><td>4 font families available; variable fonts would reduce payload</td></tr>
+</table>
+</div>
+
+<!-- SECTION 14 -->
+<div class="section">
+<h2>14. Risk Assessment</h2>
+
+<h3>14.1 Risk Matrix</h3>
+<table>
+  <tr><th>#</th><th>Risk</th><th>Severity</th><th>Likelihood</th><th>Mitigation</th></tr>
+  <tr>
+    <td>R1</td>
+    <td>Pre-release Angular 20 (next.8) — potential breaking changes before stable</td>
+    <td><span class="badge badge-red">High</span></td>
+    <td><span class="badge badge-orange">Medium</span></td>
+    <td>Monitor Angular changelog; plan migration path to stable; run tests frequently</td>
+  </tr>
+  <tr>
+    <td>R2</td>
+    <td>Limited test coverage on core business modules (statements, payments, buildings)</td>
+    <td><span class="badge badge-red">High</span></td>
+    <td><span class="badge badge-red">High</span></td>
+    <td>Prioritize unit tests for expense statements, payments, building management</td>
+  </tr>
+  <tr>
+    <td>R3</td>
+    <td>No E2E tests for critical user workflows</td>
+    <td><span class="badge badge-red">High</span></td>
+    <td><span class="badge badge-red">High</span></td>
+    <td>Implement Playwright E2E tests for core flows: login → statement → payment</td>
+  </tr>
+  <tr>
+    <td>R4</td>
+    <td>Duplicate Role enum definitions may lead to authorization inconsistencies</td>
+    <td><span class="badge badge-orange">Medium</span></td>
+    <td><span class="badge badge-orange">Medium</span></td>
+    <td>Consolidate to single source of truth; add lint rule</td>
+  </tr>
+  <tr>
+    <td>R5</td>
+    <td>Mixed package manager (npm + yarn lock files) may cause CI/build conflicts</td>
+    <td><span class="badge badge-orange">Medium</span></td>
+    <td><span class="badge badge-orange">Medium</span></td>
+    <td>Standardize on one package manager; remove the other lock file</td>
+  </tr>
+  <tr>
+    <td>R6</td>
+    <td>No formal documentation or README — onboarding friction for new developers</td>
+    <td><span class="badge badge-orange">Medium</span></td>
+    <td><span class="badge badge-red">High</span></td>
+    <td>Create README with setup instructions, architecture overview, and contribution guide</td>
+  </tr>
+  <tr>
+    <td>R7</td>
+    <td>jQuery dependency in Angular app — unnecessary bundle bloat and technical debt</td>
+    <td><span class="badge badge-grey">Low</span></td>
+    <td><span class="badge badge-green">Low</span></td>
+    <td>Audit jQuery usage; remove if unused</td>
+  </tr>
+  <tr>
+    <td>R8</td>
+    <td>Hardcoded API URLs in some services instead of environment variables</td>
+    <td><span class="badge badge-orange">Medium</span></td>
+    <td><span class="badge badge-orange">Medium</span></td>
+    <td>Refactor to use environment.apiUrl consistently across all services</td>
+  </tr>
+  <tr>
+    <td>R9</td>
+    <td>No dedicated state management — potential scaling issues as features grow</td>
+    <td><span class="badge badge-orange">Medium</span></td>
+    <td><span class="badge badge-blue">Low</span></td>
+    <td>Evaluate need for NgRx or similar; cross-bridge when state complexity increases</td>
+  </tr>
+  <tr>
+    <td>R10</td>
+    <td>No CI/CD pipeline configuration in repository</td>
+    <td><span class="badge badge-orange">Medium</span></td>
+    <td><span class="badge badge-orange">Medium</span></td>
+    <td>Add GitHub Actions or GitLab CI configuration for automated testing and deployment</td>
+  </tr>
+</table>
+</div>
+
+<!-- SECTION 15 -->
+<div class="section">
+<h2>15. Recommendations</h2>
+
+<h3>15.1 Immediate (Short-Term)</h3>
+<ol>
+  <li><strong>Standardize package manager</strong> — Remove either <code>yarn.lock</code> or <code>package-lock.json</code> to avoid dependency conflicts</li>
+  <li><strong>Consolidate Role enum</strong> — Merge <code>role.ts</code> and <code>role.model.ts</code> into a single source of truth</li>
+  <li><strong>Create README.md</strong> — Document setup instructions, architecture, environment variables, and deployment process</li>
+  <li><strong>Audit jQuery usage</strong> — Determine if jQuery is actively used or can be safely removed to reduce bundle size</li>
+  <li><strong>Standardize API URLs</strong> — Refactor all services to use <code>environment.apiUrl</code> instead of hardcoded values</li>
+</ol>
+
+<h3>15.2 Medium-Term (1-3 Months)</h3>
+<ol>
+  <li><strong>Expand test coverage</strong> — Prioritize unit tests for: expense statements CRUD, payment processing, building &amp; apartment management, user role transitions</li>
+  <li><strong>Implement E2E tests</strong> — Use Playwright for critical user journeys: registration → building creation → statement creation → payment tracking</li>
+  <li><strong>Add CI/CD pipeline</strong> — GitHub Actions workflow for lint → test → build → deploy stages</li>
+  <li><strong>Migrate to stable Angular</strong> — Once Angular 20 reaches stable, migrate the project to eliminate pre-release risk</li>
+  <li><strong>Remove unused dependencies</strong> — Conduct a full audit of the 78 runtime dependencies and remove any unused packages</li>
+</ol>
+
+<h3>15.3 Long-Term (3-6 Months)</h3>
+<ol>
+  <li><strong>Evaluate state management</strong> — If state complexity grows, consider adopting Angular Signals fully or introducing a lightweight state management solution</li>
+  <li><strong>Performance optimization</strong> — Implement lazy loading for images, consider variable fonts, audit bundle size with source-map-explorer</li>
+  <li><strong>Accessibility (a11y)</strong> — Audit components for WCAG compliance; ensure keyboard navigation and screen reader support</li>
+  <li><strong>PWA readiness</strong> — Evaluate adding service worker for offline capabilities and improved loading performance</li>
+  <li><strong>Monitoring &amp; analytics</strong> — Integrate application performance monitoring (e.g., Sentry, Datadog) for production observability</li>
+</ol>
+
+<h3>15.4 Business Strategy Recommendations</h3>
+<table>
+  <tr><th>Area</th><th>Recommendation</th><th>Expected Benefit</th></tr>
+  <tr><td>Market Positioning</td><td>Leverage Greek language default for Greek/Cypriot market expansion</td><td>Strong local market fit</td></tr>
+  <tr><td>Monetization</td><td>Membership module suggests tiered pricing model — refine and highlight</td><td>Recurring revenue stream</td></tr>
+  <tr><td>Professional Directory</td><td>Monetize as a lead-generation platform for property service providers</td><td>Additional revenue channel</td></tr>
+  <tr><td>Multi-Building Support</td><td>Property Manager role supports multi-building portfolios — key B2B selling point</td><td>Enterprise adoption</td></tr>
+  <tr><td>White-Label Readiness</td><td>Extensive theme customization enables white-labeling for property management companies</td><td>Partnership &amp; OEM opportunities</td></tr>
+  <tr><td>Internationalization</td><td>5 languages support expansion into French, Romanian, and Chinese markets</td><td>Geographic scalability</td></tr>
+</table>
+
+</div>
+
+<div class="footer">
+  <p>Building Manager — Project Analysis Document<br>
+  Generated: July 2026 &bull; Confidential</p>
+</div>
+
+</body>
+</html>

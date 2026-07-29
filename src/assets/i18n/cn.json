@@ -133,5 +133,13 @@
 ,
   "ADMIN": "管理员",
   "BUILDING_MANAGER": "楼宇管理员",
-  "PROPERTY_MANAGER": "物业经理"
+  "PROPERTY_MANAGER": "物业经理",
+  "REGULATION": "规章",
+  "FLOOR_PLAN": "平面图",
+  "CONTRACT": "合同",
+  "INSURANCE": "保险",
+  "INVOICE": "发票",
+  "CERTIFICATE": "证书",
+  "TECHNICAL": "技术文件",
+  "OTHER": "其他"
 }

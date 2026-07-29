@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -14,7 +15,7 @@ import {
   providedIn: 'root'
 })
 export class SupportTicketService {
-  private readonly baseUrl = 'http://localhost:8080/api/v1/support-tickets';
+  private readonly baseUrl = `${environment.apiUrl}/api/v1/support-tickets`;
 
   constructor(private http: HttpClient) {}
 

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -6,7 +7,7 @@ import { CalendarDTO } from '../models/calendarDTO';
 
 @Injectable({ providedIn: 'root' })
 export class CalendarService {
-  private baseUrl = `http://localhost:8080/api/v1/calendar`;
+  private baseUrl = `${environment.apiUrl}/api/v1/calendar`;
 
   constructor(private http: HttpClient) {}
 

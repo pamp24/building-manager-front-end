@@ -185,5 +185,13 @@
 ,
   "ADMIN": "Admin",
   "BUILDING_MANAGER": "Διαχειριστής Πολυκατοικίας",
-  "PROPERTY_MANAGER": "Διαχειριστής Ακινήτων"
+  "PROPERTY_MANAGER": "Διαχειριστής Ακινήτων",
+  "REGULATION": "Κανονισμός",
+  "FLOOR_PLAN": "Κάτοψη",
+  "CONTRACT": "Σύμβαση",
+  "INSURANCE": "Ασφάλιση",
+  "INVOICE": "Τιμολόγιο",
+  "CERTIFICATE": "Πιστοποιητικό",
+  "TECHNICAL": "Τεχνικό",
+  "OTHER": "Άλλο"
 }

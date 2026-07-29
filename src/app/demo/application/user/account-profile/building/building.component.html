@@ -2,8 +2,9 @@
   <div class="col-lg-4 col-xxl-3">
     <app-card cardTitle="Κωδικός Πολυκατοικίας">
       <h5 class="mb-0">{{ buildingData?.buildingCode }}</h5>
-      <p class="text-muted mb-0 small">Με τον κωδικό αυτό μπορείτε να προσθέσετε και άλλους χρήστες στην Πολυκατοικία</p>
+      <p class="text-muted mb-0 small">Με τον κωδικό αυτό μπορείτε να προσθέσετε και άλλους χρήστες στην πολυκατοικία.</p>
     </app-card>
+
     <app-card *ngIf="buildingData?.company as c" [showHeader]="false" blockClass="position-relative">
       <div class="text-center mt-3">
         <div class="chat-avatar d-inline-flex mx-auto">
@@ -11,7 +12,7 @@
         </div>
 
         <h5 class="mb-0">{{ c.companyName }}</h5>
-        <p class="text-muted mb-0">Εταιρία Διαχείρισης</p>
+        <p class="text-muted mb-0">Εταιρεία Διαχείρισης</p>
 
         <hr class="my-3" />
 
@@ -44,6 +45,7 @@
         </div>
       </div>
     </app-card>
+
     <app-card [showHeader]="false" blockClass="position-relative">
       <div class="position-absolute end-0 top-0 p-3"></div>
       <div class="text-center mt-3">
@@ -51,14 +53,10 @@
           <img class="manager-avatar" [src]="buildingData?.managerProfileImgUrl || 'assets/images/user/avatar-5.jpg'" alt="Manager image" />
         </div>
         <h5 class="mb-0">{{ buildingData?.managerFullName }}</h5>
-        <p class="text-muted mb-0">{{ this.buildingData?.managerRole | translate }}</p>
+        <p class="text-muted mb-0">{{ buildingData?.managerRole | translate }}</p>
         <p></p>
         <hr class="my-3" />
         <div class="row g-3">
-          <!-- <div class="col-4">
-            <h5 class="mb-0">86</h5>
-            <p class="text-muted">Ένοικοι</p>
-          </div> -->
           <div class="col-4 border border-top-0 border-bottom-0">
             <h5 class="mb-0">{{ buildingData?.floors }}</h5>
             <p class="text-muted">Όροφοι</p>
@@ -81,32 +79,78 @@
         }
       </div>
     </app-card>
-    <app-card cardTitle="Διαθεσιμότητα θέσεων">
-      @for (skill of skills; track skill) {
-        <div class="row align-items-center mb-3">
-          <div class="col-sm-6 mb-2 mb-sm-0">
-            <p class="mb-0">{{ skill.title }}</p>
+
+    <app-card cardTitle="Αρχεία Πολυκατοικίας">
+      <div *ngIf="isEditing && (hasRole('BuildingManager') || hasRole('PropertyManager'))" class="documents-upload mb-3">
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label">Κατηγορία αρχείων</label>
+            <select class="form-select" [(ngModel)]="selectedDocumentCategory" [ngModelOptions]="{ standalone: true }">
+              <option *ngFor="let category of documentCategories" [value]="category">
+                {{ category | translate }}
+              </option>
+            </select>
           </div>
-          <div class="col-sm-6">
-            <div class="d-flex align-items-center">
-              <div class="flex-grow-1 me-3">
-                <ngb-progressbar class="progress progress-primary" type="progress-bar" [value]="skill.value" height="6px"></ngb-progressbar>
-              </div>
-              <div class="flex-shrink-0">
-                <p class="mb-0 text-muted">{{ skill.value }}%</p>
-              </div>
-            </div>
+
+          <div class="col-12">
+            <label class="form-label">Μεταφόρτωση αρχείων</label>
+            <input type="file" multiple class="form-control" [accept]="acceptedDocumentTypes" (change)="onDocumentFilesSelected($event)" />
+            <small class="text-muted d-block mt-2">
+              Υποστηρίζονται PDF, εικόνες, Word και Excel. Έως {{ maxUploadFiles }} αρχεία, {{ maxUploadFileSizeMb }}MB το καθένα.
+            </small>
           </div>
         </div>
-      }
+
+        <div class="selected-files mt-3" *ngIf="selectedUploadFiles.length > 0">
+          <div class="selected-file-item" *ngFor="let file of selectedUploadFiles; let i = index">
+            <div>
+              <div class="selected-file-name">{{ file.name }}</div>
+              <div class="selected-file-meta">{{ getSelectedUploadFileTypeLabel(file) }} • {{ getDocumentSizeLabel(file.size) }}</div>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-danger" [disabled]="isUploadingDocuments" (click)="removeSelectedUploadFile(i)">Αφαίρεση</button>
+          </div>
+        </div>
+
+        <div class="text-end mt-3">
+          <button type="button" class="btn btn-primary" [disabled]="selectedUploadFiles.length === 0 || isUploadingDocuments" (click)="uploadSelectedDocuments()">
+            {{ isUploadingDocuments ? 'Μεταφόρτωση...' : 'Ανέβασμα αρχείων' }}
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="isLoadingDocuments" class="documents-empty">
+        <div class="documents-empty-title">Φόρτωση αρχείων...</div>
+      </div>
+
+      <div *ngIf="!isLoadingDocuments && buildingDocuments.length === 0" class="documents-empty">
+        <div class="documents-empty-title">Δεν υπάρχουν διαθέσιμα αρχεία</div>
+        <div class="documents-empty-text">Δεν έχουν καταχωρηθεί ακόμη έγγραφα για την πολυκατοικία.</div>
+      </div>
+
+      <div *ngIf="!isLoadingDocuments && buildingDocuments.length > 0" class="documents-list">
+        @for (document of buildingDocuments; track document.id) {
+          <a class="document-item" [href]="resolveDocumentUrl(document.fileUrl)" target="_blank" rel="noopener noreferrer">
+            <div class="document-item-main">
+              <span class="document-badge">{{ getDocumentTypeLabel(document) }}</span>
+              <div>
+                <div class="document-name">{{ document.fileName }}</div>
+                <div class="document-meta">{{ getDocumentCategoryKey(document.category) | translate }} • {{ getDocumentSizeLabel(document.sizeBytes) }}</div>
+              </div>
+            </div>
+            <span class="document-open">Άνοιγμα</span>
+          </a>
+        }
+      </div>
     </app-card>
   </div>
+
   <div class="col-lg-8 col-xxl-9">
     <app-card cardTitle="Περιγραφή" [padding]="24">
       <p class="mb-0">
         {{ buildingData?.buildingDescription || 'Δεν έχει οριστεί περιγραφή για την πολυκατοικία.' }}
       </p>
     </app-card>
+
     <app-card cardTitle="Στοιχεία Πολυκατοικίας" [padding]="24">
       <form [formGroup]="buildingForm" (ngSubmit)="submitChanges()">
         <div class="row">
@@ -134,6 +178,7 @@
             <label>{{ field.label }}</label>
             <input type="text" class="form-control" [formControlName]="field.name" />
           </div>
+
           <div class="col-md-6 form-group" *ngIf="buildingForm.get('parkingExist')?.value">
             <label>Αριθμός Θέσεων Πάρκινγκ</label>
             <input type="number" class="form-control" formControlName="parkingSpacesNum" />
@@ -167,6 +212,7 @@
               <option [value]="false">Όχι</option>
             </select>
           </div>
+
           <div class="col-md-6 form-group">
             <label>Διαθέτει Κεντρική Θέρμανση</label>
             <select class="form-select" formControlName="hasCentralHeating">
@@ -177,6 +223,7 @@
         </div>
       </form>
     </app-card>
+
     <app-card cardTitle="Θέρμανση" [padding]="24">
       <div [formGroup]="buildingForm">
         <div class="row">
@@ -197,19 +244,18 @@
         </div>
       </div>
     </app-card>
+
     <div *ngIf="hasRole('BuildingManager') || hasRole('PropertyManager')" class="mt-4 text-end">
-      <!-- Εναλλαγή edit mode -->
       <button type="button" class="btn btn-secondary me-2" (click)="toggleEdit()">
         {{ isEditing ? 'Ακύρωση' : 'Επεξεργασία' }}
       </button>
-      <!-- Αποθήκευση εμφανίζεται μόνο σε edit mode -->
       <button type="button" class="btn btn-success" [disabled]="!isEditing || buildingForm.invalid" (click)="submitChanges()">
         Αποθήκευση
       </button>
     </div>
   </div>
 </div>
-<!-- Pagination -->
+
 <div class="datatable-bottom mt-3" *ngIf="!buildingId && total > 1">
   <ngb-pagination
     [collectionSize]="total"

@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -13,7 +14,7 @@ import {
   providedIn: 'root'
 })
 export class PmDashboardService {
-  private api = 'http://localhost:8080/api/v1/pm/dashboard';
+  private api = `${environment.apiUrl}/api/v1/pm/dashboard`;
 
   constructor(private http: HttpClient) {}
 

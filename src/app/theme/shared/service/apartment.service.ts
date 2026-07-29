@@ -1,50 +1,53 @@
+import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApartmentDTO } from '../models/apartmentDTO';
 import { ApartmentRequest } from '../models/apartmentRequest';
+import { ApartmentUpdateRequest } from '../models/apartmentUpdateRequest';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApartmentService {
   constructor(private http: HttpClient) {}
+  private readonly baseUrl = `${environment.apiUrl}/api/v1/apartments`;
 
   saveMultiple(apartments: ApartmentRequest[]): Observable<ApartmentRequest[]> {
-    return this.http.post<ApartmentRequest[]>('http://localhost:8080/api/v1/apartments/batch', apartments);
+    return this.http.post<ApartmentRequest[]>(`${this.baseUrl}/batch`, apartments);
   }
 
   getMyApartment() {
-    return this.http.get<ApartmentDTO>('http://localhost:8080/api/v1/apartments/myApartment');
+    return this.http.get<ApartmentDTO>(`${this.baseUrl}/myApartment`);
   }
 
   getMyApartments(): Observable<ApartmentDTO[]> {
-    return this.http.get<ApartmentDTO[]>('http://localhost:8080/api/v1/apartments/my-apartments');
+    return this.http.get<ApartmentDTO[]>(`${this.baseUrl}/my-apartments`);
   }
 
   getApartmentsInSameBuilding(): Observable<ApartmentDTO[]> {
-    return this.http.get<ApartmentDTO[]>('http://localhost:8080/api/v1/apartments/same-building');
+    return this.http.get<ApartmentDTO[]>(`${this.baseUrl}/same-building`);
   }
 
   updateMyApartment(apartment: ApartmentDTO): Observable<ApartmentDTO> {
-    return this.http.put<ApartmentDTO>('http://localhost:8080/api/v1/apartments/update/myApartment', apartment);
+    return this.http.put<ApartmentDTO>(`${this.baseUrl}/update/myApartment`, apartment);
   }
 
   addApartment(apartment: ApartmentRequest): Observable<number> {
-    return this.http.post<number>('http://localhost:8080/api/v1/apartments/batch', apartment);
+    return this.http.post<number>(`${this.baseUrl}/batch`, apartment);
   }
   getApartmentsByBuilding(buildingId: number): Observable<ApartmentDTO[]> {
-    return this.http.get<ApartmentDTO[]>(`http://localhost:8080/api/v1/apartments/building/${buildingId}/list`);
+    return this.http.get<ApartmentDTO[]>(`${this.baseUrl}/building/${buildingId}/list`);
   }
   getAvailableApartments(buildingId: number, role: string): Observable<ApartmentDTO[]> {
-    return this.http.get<ApartmentDTO[]>(`http://localhost:8080/api/v1/apartments/${buildingId}/available?role=${role}`);
+    return this.http.get<ApartmentDTO[]>(`${this.baseUrl}/${buildingId}/available?role=${role}`);
   }
 
-  updateApartment(apartmentId: number, apartment: ApartmentDTO): Observable<ApartmentDTO> {
-    return this.http.put<ApartmentDTO>(`http://localhost:8080/api/v1/apartments/update/myApartment/${apartmentId}`, apartment);
+  updateApartment(apartmentId: number, request: ApartmentUpdateRequest): Observable<ApartmentDTO> {
+    return this.http.put<ApartmentDTO>(`${this.baseUrl}/${apartmentId}`, request);
   }
 
   deleteApartment(apartmentId: number): Observable<void> {
-    return this.http.delete<void>(`http://localhost:8080/api/v1/apartments/delete/${apartmentId}`);
+    return this.http.delete<void>(`${this.baseUrl}/delete/${apartmentId}`);
   }
 }

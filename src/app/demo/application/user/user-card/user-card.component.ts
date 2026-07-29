@@ -22,6 +22,7 @@ import {
 import { ApartmentDTO } from 'src/app/theme/shared/models/apartmentDTO';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NewApartmentComponent } from './new-apartment/new-apartment.component';
+import { environment } from 'src/environments/environment';
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
 import { RouterModule } from '@angular/router';
 import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
@@ -38,7 +39,7 @@ export class UserCardComponent implements OnInit, OnChanges {
   @Input() pmView = false;
   @Input() buildingId?: number;
 
-  private readonly apiBase = 'http://localhost:8080/api/v1';
+  private readonly apiBase = `${environment.apiUrl}/api/v1`;
 
   private modalService = inject(NgbModal);
   private iconService = inject(IconService);
@@ -98,6 +99,12 @@ export class UserCardComponent implements OnInit, OnChanges {
     if (this.pmView && changes['buildingId'] && this.buildingId) {
       this.loadSelectedBuildingForPm(this.buildingId);
     }
+  }
+
+  get canManageApartment(): boolean {
+    const normalizedRole = (this.userRole ?? '').replace(/_/g, '').toLowerCase();
+
+    return ['admin', 'buildingmanager', 'propertymanager'].includes(normalizedRole);
   }
 
   private loadSelectedBuildingForPm(buildingId: number): void {
@@ -198,7 +205,6 @@ export class UserCardComponent implements OnInit, OnChanges {
     this.buildingService.getBuilding(buildingId).subscribe((building) => {
       const noParking = building.parkingSpacesNum > 0 && this.currentUsedParking >= building.parkingSpacesNum;
       const noStorage = building.storageNum > 0 && this.currentUsedStorages >= building.storageNum;
-
       if (noParking || noStorage) {
         alert('Πρέπει  να τροποποιήσετε την πολυκατοικία.');
         return;
@@ -246,7 +252,6 @@ export class UserCardComponent implements OnInit, OnChanges {
 
     return cleanUrl.startsWith('/') ? cleanUrl : `/${cleanUrl}`;
   }
-
 
   openDelete(card: any): void {
     const apartment: ApartmentDTO | null = card?.apartment ?? null;

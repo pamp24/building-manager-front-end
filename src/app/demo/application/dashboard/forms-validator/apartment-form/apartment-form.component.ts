@@ -17,6 +17,7 @@ import { AuthenticationService } from 'src/app/theme/shared/service';
 export class ApartmentFormComponent implements OnInit {
   form: FormGroup;
   isSubmitted = false;
+  errorMessage = '';
 
   storageLimit = 0;
   managerHouseExist = false;
@@ -93,9 +94,9 @@ export class ApartmentFormComponent implements OnInit {
       storageSlot: [''],
       isManagerHouse: [false],
       ownerId: [null],
-      commonPercent: ['', [Validators.required, Validators.min(0), Validators.max(100)]],
-      elevatorPercent: ['', [Validators.required, Validators.min(0), Validators.max(100)]],
-      heatingPercent: ['', [Validators.required, Validators.min(0), Validators.max(100)]]
+      commonPercent: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
+      elevatorPercent: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
+      heatingPercent: [0, [Validators.required, Validators.min(0), Validators.max(100)]]
     });
   }
 
@@ -103,7 +104,7 @@ export class ApartmentFormComponent implements OnInit {
     const apartmentsLimit = this.buildingMeta?.apartmentsNum ?? 0;
 
     if (apartmentsLimit > 0 && this.apartments.length >= apartmentsLimit) {
-      alert(`Δεν μπορείτε να προσθέσετε περισσότερα από ${apartmentsLimit} διαμερίσματα.\nΘα πρέπει να γίνει επεξεργασία της πολυκατοικίας`);
+      alert(`Δεν μπορείτε να προσθέσετε περισσότερα από ${apartmentsLimit} διαμερίσματα.\nΘα πρέπει να γίνει επεξεργασία της πολυκατοικίας.`);
       return;
     }
 
@@ -124,29 +125,34 @@ export class ApartmentFormComponent implements OnInit {
 
   onFinish(): void {
     this.isSubmitted = true;
+    this.errorMessage = '';
 
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      const invalidFields = this.getInvalidFieldLabels();
+      this.errorMessage = invalidFields.length > 0
+        ? `Υπάρχουν μη έγκυρα πεδία: ${invalidFields.join(', ')}.`
+        : 'Συμπληρώστε όλα τα υποχρεωτικά πεδία πριν την ολοκλήρωση.';
       return;
     }
 
     const apartmentsLimit = this.buildingMeta?.apartmentsNum ?? 0;
     if (apartmentsLimit > 0 && this.apartments.length > apartmentsLimit) {
-      alert(`Δεν μπορείτε να δηλώσετε περισσότερα από ${apartmentsLimit} διαμερίσματα.\nΘα πρέπει να γίνει επεξεργασία της πολυκατοικίας`);
+      this.errorMessage = `Δεν μπορείτε να δηλώσετε περισσότερα από ${apartmentsLimit} διαμερίσματα.`;
       return;
     }
 
     const parkingLimit = this.buildingMeta?.parkingSpacesNum ?? 0;
     const usedParking = this.apartments.value.filter((apartment: any) => apartment.hasParking === true).length;
     if (usedParking > parkingLimit) {
-      alert(`Δεν μπορείτε να δηλώσετε περισσότερες από ${parkingLimit} θέσεις parking.\nΘα πρέπει να γίνει επεξεργασία της πολυκατοικίας`);
+      this.errorMessage = `Δεν μπορείτε να δηλώσετε περισσότερες από ${parkingLimit} θέσεις parking.`;
       return;
     }
 
     const storageLimit = this.buildingMeta?.storageNum ?? 0;
     const usedStorages = this.apartments.value.filter((apartment: any) => apartment.hasStorage === true).length;
     if (usedStorages > storageLimit) {
-      alert(`Δεν μπορείτε να δηλώσετε περισσότερες από ${storageLimit} αποθήκες.\nΘα πρέπει να γίνει επεξεργασία της πολυκατοικίας`);
+      this.errorMessage = `Δεν μπορείτε να δηλώσετε περισσότερες από ${storageLimit} αποθήκες.`;
       return;
     }
 
@@ -184,7 +190,10 @@ export class ApartmentFormComponent implements OnInit {
         alert('Τα διαμερίσματα αποθηκεύτηκαν με επιτυχία!');
         this.finished.emit();
       },
-      error: (err) => console.error('Σφάλμα:', err)
+      error: (err) => {
+        console.error('Σφάλμα:', err);
+        this.errorMessage = err?.error?.message || 'Η αποθήκευση των διαμερισμάτων απέτυχε. Ελέγξτε τα στοιχεία και δοκιμάστε ξανά.';
+      }
     });
   }
 
@@ -251,5 +260,38 @@ export class ApartmentFormComponent implements OnInit {
         });
       }
     });
+  }
+
+  private getInvalidFieldLabels(): string[] {
+    const fieldLabels: Record<string, string> = {
+      ownerFirstName: 'Όνομα ιδιοκτήτη',
+      ownerLastName: 'Επώνυμο ιδιοκτήτη',
+      isRented: 'Ενοικιάζεται',
+      residentFirstName: 'Όνομα ενοικιαστή',
+      residentLastName: 'Επώνυμο ενοικιαστή',
+      apartmentNumber: 'Αριθμός διαμερίσματος',
+      floor: 'Όροφος',
+      sqMetersApart: 'Τετραγωνικά μέτρα',
+      hasParking: 'Parking',
+      parkingSlot: 'Θέση parking',
+      hasStorage: 'Αποθήκη',
+      storageSlot: 'Αριθμός αποθήκης',
+      commonPercent: 'Χιλιοστά κοινοχρήστων',
+      elevatorPercent: 'Χιλιοστά ασανσέρ',
+      heatingPercent: 'Χιλιοστά θέρμανσης'
+    };
+
+    const invalid: string[] = [];
+
+    this.apartments.controls.forEach((control, index) => {
+      const group = control as FormGroup;
+      Object.entries(group.controls).forEach(([name, fieldControl]) => {
+        if (fieldControl.invalid) {
+          invalid.push(`Διαμέρισμα ${index + 1}: ${fieldLabels[name] ?? name}`);
+        }
+      });
+    });
+
+    return invalid;
   }
 }

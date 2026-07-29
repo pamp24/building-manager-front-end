@@ -4,6 +4,7 @@ import { Component, Input, OnInit, output, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 // project import
+import { environment } from 'src/environments/environment';
 import { AuthenticationService } from 'src/app/theme/shared/service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { MantisConfig } from 'src/app/app-config';
@@ -112,7 +113,7 @@ export class NavRightComponent implements OnInit {
     if (!url) return 'assets/images/user/avatar-1.jpg';
     if (url.startsWith('http')) return url;
 
-    return `http://localhost:8080/api/v1${url}`;
+    return `${environment.apiUrl}/api/v1${url}`;
   }
 
   onAvatarError(e: Event) {

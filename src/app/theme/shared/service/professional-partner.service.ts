@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ProfessionalBusinessDTO } from '../models/professional.model';
@@ -6,7 +7,7 @@ import { ProfessionalBusinessDTO } from '../models/professional.model';
   providedIn: 'root'
 })
 export class ProfessionalPartnerService {
-  private readonly apiUrl = 'http://localhost:8080/api/v1/professional-partners';
+  private readonly apiUrl = `${environment.apiUrl}/api/v1/professional-partners`;
 
   constructor(private http: HttpClient) {}
 
