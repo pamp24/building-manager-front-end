@@ -141,5 +141,6 @@
   "INVOICE": "发票",
   "CERTIFICATE": "证书",
   "TECHNICAL": "技术文件",
-  "OTHER": "其他"
+  "OTHER": "其他",
+  "Chat": "聊天"
 }

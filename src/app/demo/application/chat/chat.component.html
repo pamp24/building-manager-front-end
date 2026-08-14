@@ -7,15 +7,21 @@
             <div id="chat-user_list" class="show collapse collapse-horizontal" [ngbCollapse]="isCollapsed">
               <div class="chat-user_list">
                 <div class="card-body px-4">
-                  <h5 class="mb-3">
-                    Messages
-                    <span class="badge d-inline-flex align-items-center justify-content-center wid-20 hei-20 bg-secondary rounded-circle">
-                      9
-                    </span>
-                  </h5>
+                  <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h5 class="mb-0">
+                      Messages
+                      <span class="badge d-inline-flex align-items-center justify-content-center wid-20 hei-20 bg-secondary rounded-circle">
+                        {{ conversations.length }}
+                      </span>
+                    </h5>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="openNewChat(newChat)">
+                      <i antIcon type="plus" theme="outline"></i>
+                      Νέο
+                    </button>
+                  </div>
                   <div class="form-search">
                     <i antIcon type="search" theme="outline"></i>
-                    <input type="search" class="form-control" placeholder="Search" />
+                    <input type="search" class="form-control" placeholder="Αναζήτηση" [(ngModel)]="searchTerm" />
                   </div>
                 </div>
                 <app-scrollbar [customStyle]="'calc(100vh - 412px)'">
@@ -24,50 +30,12 @@
                   </div>
                 </app-scrollbar>
                 <div class="card-body px-4">
-                  <div class="list-group list-group-flush">
-                    <a class="list-group-item list-group-item-action" href="javascritp:">
-                      <i class="me-2 f-14" antIcon type="logout" theme="outline"></i>
-                      <span>Logout</span>
-                    </a>
-                    <a class="list-group-item list-group-item-action" href="javascritp:">
-                      <i class="me-2 f-14" antIcon type="setting" theme="outline"></i>
-                      <span>Setting</span>
-                    </a>
-                    <div class="list-group-item pb-0 pe-0">
-                      <div class="media align-items-center user-section">
-                        <div class="chat-avatar">
-                          <img class="rounded-circle img-fluid wid-40" src="assets/images/user/avatar-5.jpg" alt="User image" />
-                          @if (status === 'active') {
-                            <i class="text-success user-status" antIcon type="check-circle" theme="fill"></i>
-                          } @else if (status === 'away') {
-                            <i class="text-danger user-status" antIcon type="clock-circle" theme="fill"></i>
-                          } @else if (status === 'offline') {
-                            <i class="text-secondary user-status" antIcon type="minus-circle" theme="fill"></i>
-                          }
-                        </div>
-                        <div class="media-body mx-md-3">
-                          <h5 class="mb-0">John Doe</h5>
-                        </div>
-                        <div class="dropdown" ngbDropdown>
-                          <a class="avatar avatar-xs btn-link-secondary dropdown-toggle arrow-none" ngbDropdownToggle>
-                            <i antIcon type="right" theme="outline"></i>
-                          </a>
-                          <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
-                            <a class="dropdown-item" (click)="userStatus('active')">
-                              <i class="text-success" antIcon type="check-circle" theme="fill"></i>
-                              Active
-                            </a>
-                            <a class="dropdown-item" (click)="userStatus('away')">
-                              <i class="text-danger" antIcon type="clock-circle" theme="fill"></i>
-                              Away
-                            </a>
-                            <a class="dropdown-item" (click)="userStatus('offline')">
-                              <i class="text-secondary" antIcon type="minus-circle" theme="fill"></i>
-                              Edit Do not disturb
-                            </a>
-                          </div>
-                        </div>
-                      </div>
+                  <div class="media align-items-center user-section">
+                    <div class="chat-avatar">
+                      <img class="rounded-circle img-fluid wid-40" [src]="myAvatar" alt="User image" />
+                    </div>
+                    <div class="media-body mx-md-3">
+                      <h5 class="mb-0 text-truncate">{{ myName }}</h5>
                     </div>
                   </div>
                 </div>
@@ -76,7 +44,7 @@
           </div>
         </div>
         <div class="chat-content">
-          @if (getUser) {
+          @if (activeConversation) {
             <div class="card-header py-3">
               <div class="d-sm-flex align-items-center justify-content-between">
                 <ul class="list-inline mb-0">
@@ -103,40 +71,26 @@
                   <li class="list-inline-item">
                     <div class="media align-items-center">
                       <div class="chat-avatar position-relative">
-                        <img class="rounded-circle img-fluid wid-40" src="{{ getUser.avatar }}" alt="User image" />
-                        @if (getUser.online_status === 'available') {
+                        <img
+                          class="rounded-circle img-fluid wid-40"
+                          [src]="conversationAvatar(activeConversation)"
+                          alt="User image"
+                        />
+                        @if (activeConversation.type === 'BUILDING') {
                           <i class="text-success me-2" antIcon type="check-circle" theme="fill"></i>
-                        } @else if (getUser.online_status === 'do_not_disturb') {
-                          <i class="text-secondary me-2" antIcon type="minus-circle" theme="fill"></i>
-                        } @else if (getUser.online_status === 'offline') {
-                          <i class="text-warning me-2" antIcon type="clock-circle" theme="fill"></i>
                         }
                       </div>
                       <div class="media-body mx-2">
-                        <h5 class="mb-0">{{ getUser.name }}</h5>
-                        <span class="text-sm text-muted">{{ getUser.lastMessage }}</span>
+                        <h5 class="mb-0">{{ activeConversation.name }}</h5>
+                        <span class="text-sm text-muted">{{ conversationTypeLabel(activeConversation) }}</span>
                       </div>
                     </div>
                   </li>
                 </ul>
                 <ul class="list-inline mb-0">
                   <li class="list-inline-item">
-                    <a class="avatar avatar-s btn-link-secondary">
-                      <i class="f-20 text-muted" antIcon type="phone" theme="outline"></i>
-                    </a>
-                  </li>
-                  <li class="list-inline-item">
-                    <a class="avatar avatar-s btn-link-secondary">
-                      <i class="f-20 text-muted" antIcon type="video-camera" theme="outline"></i>
-                    </a>
-                  </li>
-                  <li class="list-inline-item">
                     <a class="d-lg-none avatar avatar-s btn-link-secondary" (click)="openInfo(userInfo)">
-                      @if (listIsCollapsed === true) {
-                        <i class="f-20 text-muted" antIcon type="info-circle" theme="outline"></i>
-                      } @else {
-                        <i class="f-20 text-danger" antIcon type="close" theme="outline"></i>
-                      }
+                      <i class="f-20 text-muted" antIcon type="info-circle" theme="outline"></i>
                     </a>
                     <a
                       class="d-none d-lg-inline-flex avatar avatar-s btn-link-secondary"
@@ -150,105 +104,55 @@
                       }
                     </a>
                   </li>
-                  <li class="list-inline-item">
-                    <div class="dropdown" ngbDropdown>
-                      <a class="avatar avatar-s btn-link-secondary dropdown-toggle arrow-none" ngbDropdownToggle>
-                        <i class="f-20 text-muted" antIcon type="more" theme="outline"></i>
-                      </a>
-                      <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
-                        <a class="dropdown-item">Name</a>
-                        <a class="dropdown-item">Date</a>
-                        <a class="dropdown-item">Ratting</a>
-                        <a class="dropdown-item">Unread</a>
-                      </div>
-                    </div>
-                  </li>
                 </ul>
               </div>
             </div>
             <div class="chat-message">
               <app-scrollbar [customStyle]="'calc(100vh - 315px)'">
                 <div class="card-body">
-                  @for (message of findUserHistory; track message) {
-                    <div class="{{ message.to === 'User1' ? 'message-in' : 'message-out' }}">
+                  @if (messages.length === 0) {
+                    <div class="text-center text-muted py-5">
+                      <p class="mb-0">Δεν υπάρχουν μηνύματα ακόμα. Στείλε το πρώτο!</p>
+                    </div>
+                  }
+                  @for (message of messages; track message.id) {
+                    <div class="{{ message.mine ? 'message-out' : 'message-in' }}">
                       <div class="d-flex">
-                        @if (message.to === 'User1') {
+                        @if (!message.mine) {
                           <div class="flex-shrink-0">
-                            @if (getUser) {
-                              <div class="chat-avatar position-relative">
-                                <img class="rounded-circle img-fluid wid-40 me-2 m-md-0" src="{{ getUser.avatar }}" alt="User image" />
-                                @if (getUser.online_status === 'available') {
-                                  <i class="text-success me-2" antIcon type="check-circle" theme="fill"></i>
-                                } @else if (getUser.online_status === 'do_not_disturb') {
-                                  <i class="text-secondary me-2" antIcon type="minus-circle" theme="fill"></i>
-                                } @else if (getUser.online_status === 'offline') {
-                                  <i class="text-warning me-2" antIcon type="clock-circle" theme="fill"></i>
-                                }
-                              </div>
-                            }
-                          </div>
-                        }
-                        @if (message.to !== 'User1') {
-                          <div class="flex-shrink-0">
-                            <ul class="list-inline ms-auto mb-0">
-                              <li class="list-inline-item">
-                                <div class="dropdown" ngbDropdown>
-                                  <a
-                                    class="avatar avatar-xs btn-link-secondary dropdown-toggle arrow-none"
-                                    ngbDropdownToggle
-                                    title="Options"
-                                    href="javascript:"
-                                  >
-                                    <i class="f-14" antIcon type="more" theme="outline"></i>
-                                  </a>
-                                  <div class="dropdown-menu" ngbDropdownMenu>
-                                    <a class="dropdown-item" href="javascript:">
-                                      <i antIcon theme="outline" type="backward"></i>
-                                      Reply
-                                    </a>
-                                    <a class="dropdown-item" href="javascript:">
-                                      <i antIcon theme="outline" type="forward"></i>
-                                      Forward
-                                    </a>
-                                    <a class="dropdown-item" href="javascript:">
-                                      <i antIcon theme="outline" type="copy"></i>
-                                      Copy
-                                    </a>
-                                    <a class="dropdown-item" href="javascript:">
-                                      <i antIcon theme="outline" type="delete"></i>
-                                      Delete
-                                    </a>
-                                  </div>
-                                </div>
-                              </li>
-                              <li class="list-inline-item">
-                                <a href="javascript:" class="avatar avatar-xs btn-link-secondary" title="Edit Message">
-                                  <i class="f-14" antIcon type="edit" theme="outline"></i>
-                                </a>
-                              </li>
-                            </ul>
+                            <div class="chat-avatar position-relative">
+                              <img
+                                class="rounded-circle img-fluid wid-40 me-2 m-md-0"
+                                [src]="imgSrc(message.senderAvatar)"
+                                alt="User image"
+                              />
+                            </div>
                           </div>
                         }
                         <div class="flex-grow-1 mx-md-3">
-                          <div class="msg-content {{ message.to === 'User1' ? '' : 'bg-primary' }}">
-                            <p class="mb-0">{{ message.text }}</p>
-                          </div>
-                          <p class="mb-0 text-muted text-sm">{{ message.time }}</p>
-                        </div>
-                        @if (message.to !== 'User1') {
-                          <div class="flex-shrink-0">
-                            @if (getUser) {
-                              <div class="chat-avatar position-relative">
-                                <img class="rounded-circle img-fluid wid-40" src="assets/images/user/avatar-5.jpg" alt="User image" />
-                                @if (status === 'active') {
-                                  <i class="text-success user-status" antIcon type="check-circle" theme="fill"></i>
-                                } @else if (status === 'away') {
-                                  <i class="text-danger user-status" antIcon type="clock-circle" theme="fill"></i>
-                                } @else if (status === 'offline') {
-                                  <i class="text-secondary user-status" antIcon type="minus-circle" theme="fill"></i>
-                                }
-                              </div>
+                          @if (activeConversation.type === 'BUILDING' && !message.mine) {
+                            <p class="mb-0 text-sm f-w-600">{{ message.senderName }}</p>
+                          }
+                          <div class="msg-content {{ message.mine ? 'bg-primary' : '' }}">
+                            @if (message.imageUrl) {
+                              <img
+                                class="msg-image"
+                                [src]="imgSrc(message.imageUrl)"
+                                alt="Photo"
+                                (load)="scrollToBottomIfNeeded()"
+                              />
                             }
+                            @if (message.content) {
+                              <p class="mb-0">{{ message.content }}</p>
+                            }
+                          </div>
+                          <p class="mb-0 text-muted text-sm">{{ formatTime(message.createdAt) }}</p>
+                        </div>
+                        @if (message.mine) {
+                          <div class="flex-shrink-0">
+                            <div class="chat-avatar position-relative">
+                              <img class="rounded-circle img-fluid wid-40" [src]="myAvatar" alt="User image" />
+                            </div>
                           </div>
                         }
                       </div>
@@ -260,10 +164,10 @@
             <div class="card-footer py-2">
               <textarea
                 class="form-control border-0 shadow-none px-0"
-                placeholder="Type a Message"
+                placeholder="Γράψε ένα μήνυμα..."
                 rows="2"
                 [(ngModel)]="message"
-                (keyup.enter)="sendNewMessage(getUser.name)"
+                (keyup.enter)="sendMessage()"
               ></textarea>
               @if (errorMessage) {
                 <div class="text-danger text-sm">{{ errorMessage }}</div>
@@ -271,27 +175,47 @@
               <hr class="my-2" />
               <div class="d-sm-flex align-items-center">
                 <ul class="list-inline me-auto mb-0">
-                  @for (task of footer_icon; track task) {
-                    <li class="list-inline-item">
-                      <a href="javascript:" class="avatar avatar-xs btn-link-secondary" title="Input Type">
-                        <i class="f-16 text-muted" antIcon type="{{ task.icon }}" theme="outline"></i>
-                      </a>
-                    </li>
-                  }
+                  <li class="list-inline-item">
+                    <a href="javascript:" class="avatar avatar-xs btn-link-secondary" title="Emoji" (click)="toggleEmojiPanel()">
+                      <i class="f-16 text-muted" antIcon type="smile" theme="outline"></i>
+                    </a>
+                  </li>
+                  <li class="list-inline-item">
+                    <a href="javascript:" class="avatar avatar-xs btn-link-secondary" title="Φωτογραφία" (click)="fileInput.click()">
+                      <i class="f-16 text-muted" antIcon type="picture" theme="outline"></i>
+                    </a>
+                  </li>
+                  <li class="list-inline-item">
+                    <a href="javascript:" class="avatar avatar-xs btn-link-secondary" title="Συνημμένο" (click)="fileInput.click()">
+                      <i class="f-16 text-muted" antIcon type="paper-clip" theme="outline"></i>
+                    </a>
+                  </li>
                 </ul>
+                <input #fileInput type="file" accept="image/*" class="d-none" (change)="onFileSelected($event)" />
                 <ul class="list-inline ms-auto mb-0">
                   <li class="list-inline-item">
                     <a
                       href="javascript:"
                       class="avatar avatar-s btn-link-primary"
-                      title="Send Your Message"
-                      (click)="sendNewMessage(getUser.name)"
+                      title="Αποστολή"
+                      (click)="sendMessage()"
                     >
                       <i class="f-20 text-primary" antIcon type="send" theme="outline"></i>
                     </a>
                   </li>
                 </ul>
               </div>
+              @if (emojiPanelVisible) {
+                <div class="emoji-panel">
+                  @for (emoji of emojis; track emoji) {
+                    <button type="button" class="emoji-btn" (click)="addEmoji(emoji)">{{ emoji }}</button>
+                  }
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="card-header py-3">
+              <p class="mb-0 text-muted">Επέλεξε μια συνομιλία για να ξεκινήσεις.</p>
             </div>
           }
         </div>
@@ -300,7 +224,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
           </div>
           <div class="offcanvas-body p-0">
-            @if (getUser) {
+            @if (activeConversation) {
               <div id="chat-user_info" class="collapse collapse-horizontal" [ngbCollapse]="listIsCollapsed">
                 <div class="chat-user_info">
                   <div class="text-center card-body position-relative pb-0">
@@ -311,7 +235,7 @@
                     </div>
                     <ng-container *ngTemplateOutlet="getUserInfo"></ng-container>
                   </div>
-                  <ng-container *ngTemplateOutlet="personalDetails"></ng-container>
+                  <ng-container *ngTemplateOutlet="conversationDetails"></ng-container>
                 </div>
               </div>
             }
@@ -325,7 +249,7 @@
 <!-- for media -->
 <ng-template #userList let-offcanvas>
   <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="offcanvasExampleLabel">User List</h5>
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Συνομιλίες</h5>
     <button
       type="button"
       class="btn-close text-reset"
@@ -341,7 +265,7 @@
 
 <ng-template #userInfo let-offcanvas>
   <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="offcanvasExampleLabel">User Info</h5>
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Πληροφορίες</h5>
     <button
       type="button"
       class="btn-close text-reset"
@@ -356,7 +280,7 @@
         <ng-container *ngTemplateOutlet="getUserInfo"></ng-container>
       </div>
       <div class="card">
-        <ng-container *ngTemplateOutlet="personalDetails"></ng-container>
+        <ng-container *ngTemplateOutlet="conversationDetails"></ng-container>
       </div>
     </div>
   </div>
@@ -364,49 +288,24 @@
 
 <ng-template #getUserInfo>
   <div class="chat-avatar d-inline-flex mx-auto">
-    <img class="rounded-circle img-fluid wid-100" src="{{ getUser.avatar }}" alt="User image" />
+    <img class="rounded-circle img-fluid wid-100" [src]="conversationAvatar(activeConversation!)" alt="User image" />
   </div>
-  <h5 class="mb-0">{{ getUser.name }}</h5>
-  <p class="text-muted text-sm">{{ getUser.status }}</p>
+  <h5 class="mb-0">{{ activeConversation?.name }}</h5>
+  <p class="text-muted text-sm">{{ activeConversation ? conversationTypeLabel(activeConversation) : '' }}</p>
   <div class="d-flex align-items-center justify-content-center mb-4">
-    @if (getUser.online_status === 'available') {
+    @if (activeConversation?.type === 'BUILDING') {
       <i class="text-success me-2" antIcon type="check-circle" theme="fill"></i>
-      <span class="badge bg-light-success text-capitalize">{{ getUser.online_status }}</span>
-    } @else if (getUser.online_status === 'do_not_disturb') {
-      <i class="text-secondary me-2" antIcon type="minus-circle" theme="fill"></i>
-      <span class="badge bg-light-secondary text-capitalize">{{ getUser.online_status }}</span>
-    } @else if (getUser.online_status === 'offline') {
-      <i class="text-warning me-2" antIcon type="clock-circle" theme="fill"></i>
-      <span class="badge bg-light-warning text-capitalize">{{ getUser.online_status }}</span>
+      <span class="badge bg-light-success text-capitalize">Ομαδική συνομιλία</span>
+    } @else {
+      <i class="text-secondary me-2" antIcon type="check-circle" theme="fill"></i>
+      <span class="badge bg-light-secondary text-capitalize">Προσωπική συνομιλία</span>
     }
   </div>
-  <ul class="list-inline ms-auto mb-0">
-    @for (task of icon_list; track task) {
-      <li class="list-inline-item">
-        <a class="avatar avatar-s btn-link-secondary">
-          <i class="text-muted f-16" antIcon type="{{ task.icon }}" theme="outline"></i>
-        </a>
-      </li>
-    }
-  </ul>
 </ng-template>
 
-<ng-template #personalDetails>
+<ng-template #conversationDetails>
   <app-scrollbar customStyle="'calc(100vh - 387px)'">
     <div class="card-body user-all-details">
-      <div class="row g-3 mb-3">
-        @for (card of cards; track card) {
-          <div class="col-6">
-            <div class="p-3 rounded {{ card.background }}">
-              <p class="mb-1">{{ card.title }}</p>
-              <div class="d-flex align-items-center">
-                <i class="{{ card.text_color }} f-16" antIcon type="{{ card.icon }}" theme="outline"></i>
-                <h4 class="mb-0 ms-2">{{ card.amount }}</h4>
-              </div>
-            </div>
-          </div>
-        }
-      </div>
       <a
         class="btn border-0 px-0 text-start w-100"
         data-bs-toggle="collapse"
@@ -414,48 +313,45 @@
         [attr.aria-expanded]="!infoCollapsed"
       >
         <div class="float-end"><i antIcon type="down" theme="outline"></i></div>
-        <h5 class="mb-0">Information</h5>
+        <h5 class="mb-0">Πληροφορίες</h5>
       </a>
       <div class="collapse show" [ngbCollapse]="infoCollapsed">
         <div class="py-3">
           <div class="d-flex align-items-center justify-content-between mb-2">
-            <p class="mb-0">Address</p>
-            <p class="mb-0 text-muted">{{ getUser.location }}</p>
-          </div>
-          <div class="d-flex align-items-center justify-content-between mb-2">
-            <p class="mb-0">Email</p>
-            <p class="mb-0 text-muted">{{ getUser.work_email }}</p>
-          </div>
-          <div class="d-flex align-items-center justify-content-between mb-2">
-            <p class="mb-0">Phone</p>
-            <p class="mb-0 text-muted">{{ getUser.personal_phone }}</p>
-          </div>
-          <div class="d-flex align-items-center justify-content-between mb-2">
-            <p class="mb-0">Last visited</p>
-            <p class="mb-0 text-muted">{{ getUser.lastMessage }}</p>
+            <p class="mb-0">Τύπος</p>
+            <p class="mb-0 text-muted">{{ activeConversation ? conversationTypeLabel(activeConversation) : '' }}</p>
           </div>
         </div>
       </div>
-      <hr class="my-3" />
-      <div class="form-check form-switch d-flex align-items-center justify-content-between p-0">
-        <label class="form-check-label h5 mb-0" for="customSwitchemlnot1">Notification</label>
-        <input class="form-check-input chat h5 mb-0 position-relative" type="checkbox" id="customSwitchemlnot1" checked />
-      </div>
-      <hr class="my-3" />
-      <h5 class="mb-3">File type</h5>
-      <hr class="my-3" />
-      @for (task of file; track task) {
-        <div class="media align-items-center mb-2">
-          <a class="avatar avatar-s {{ task.background }}">
-            <i antIcon type="{{ task.icon }}" theme="outline"></i>
-          </a>
-          <div class="media-body ms-3">
-            <h6 class="mb-0">{{ task.title }}</h6>
-            <span class="text-muted text-sm">{{ task.text }}</span>
+      @if (activeConversation?.type === 'BUILDING' && (activeConversation?.members?.length ?? 0) > 0) {
+        <hr class="my-1" />
+        <a
+          class="btn border-0 px-0 text-start w-100"
+          data-bs-toggle="collapse"
+          (click)="membersCollapsed = !membersCollapsed"
+          [attr.aria-expanded]="!membersCollapsed"
+        >
+          <div class="float-end"><i antIcon type="down" theme="outline"></i></div>
+          <h5 class="mb-0">Μέλη ({{ activeConversation?.members?.length }})</h5>
+        </a>
+        <div class="collapse show" [ngbCollapse]="membersCollapsed">
+          <div class="py-3">
+            @for (member of activeConversation?.members; track member.userId) {
+              <div class="d-flex align-items-center mb-3">
+                <div class="chat-avatar">
+                  <img
+                    class="rounded-circle img-fluid wid-40"
+                    style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%"
+                    [src]="imgSrc(member.profileImageUrl)"
+                    alt="User image"
+                  />
+                </div>
+                <div class="media-body mx-2">
+                  <h6 class="mb-0 text-truncate">{{ member.fullName }}</h6>
+                </div>
+              </div>
+            }
           </div>
-          <a class="avatar avatar-xs btn-link-secondary" href="javascript:">
-            <i antIcon type="right" theme="outline"></i>
-          </a>
         </div>
       }
     </div>
@@ -464,42 +360,68 @@
 
 <ng-template #chatPersonList>
   <div class="list-group list-group-flush">
-    @for (list of chatHistory; track list) {
+    @for (list of filteredConversations; track list.id) {
       <a
         href="javascript:"
         class="list-group-item list-group-item-action user-list"
-        (click)="chatPerson(list.id)"
-        [ngClass]="{ 'bg-light-primary': list.id === selectedPersonId }"
+        (click)="selectConversation(list)"
+        [ngClass]="{ 'bg-light-primary': list.id === activeConversation?.id }"
       >
         <div class="media align-items-center">
           <div class="chat-avatar">
-            <img class="rounded-circle img-fluid wid-40" src="{{ list.avatar }}" alt="User image" />
-            @if (list.online_status === 'available') {
+            <img class="rounded-circle img-fluid wid-40" [src]="conversationAvatar(list)" alt="User image" />
+            @if (list.type === 'BUILDING') {
               <i class="text-success chat-user-status" antIcon type="check-circle" theme="fill"></i>
-            } @else if (list.online_status === 'do_not_disturb') {
-              <i class="text-secondary chat-user-status" antIcon type="minus-circle" theme="fill"></i>
-            } @else if (list.online_status === 'offline') {
-              <i class="text-warning chat-user-status" antIcon type="clock-circle" theme="fill"></i>
             }
           </div>
           <div class="media-body">
             <div class="d-flex align-items-center justify-content-between">
               <h5 class="mb-0 text-truncate">{{ list.name }}</h5>
-              <span class="float-end text-sm text-muted f-w-400">{{ list.lastMessage }}</span>
             </div>
             <div class="d-flex align-items-center justify-content-between">
-              <span class="text-sm text-muted">{{ list.status }}</span>
-              <span>
-                @if (list.unReadChatCount === 0) {
-                  <i class="text-primary f-12" antIcon type="check" theme="outline"></i>
-                } @else {
-                  <div class="unread bg-primary"></div>
-                }
-              </span>
+              <span class="text-sm text-muted text-truncate" style="flex: 1 1 auto; min-width: 0">{{ truncatePreview(list.lastMessage || conversationTypeLabel(list)) }}</span>
+              <span class="text-sm text-muted f-w-400 ms-2 text-nowrap">{{ conversationTypeLabel(list) }}</span>
             </div>
           </div>
         </div>
       </a>
+    } @empty {
+      <p class="mb-0 text-muted text-sm p-3">Δεν υπάρχουν συνομιλίες ακόμα.</p>
     }
+  </div>
+</ng-template>
+
+<ng-template #newChat let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Νέα συνομιλία</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="list-group list-group-flush">
+      @for (member of members; track member.userId) {
+        <a
+          href="javascript:"
+          class="list-group-item list-group-item-action"
+          (click)="startPrivateChat(member.userId); modal.close()"
+        >
+          <div class="media align-items-center">
+            <div class="chat-avatar">
+              <img
+                class="rounded-circle img-fluid wid-40"
+                style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%"
+                [src]="imgSrc(member.profileImageUrl)"
+                alt="User image"
+              />
+            </div>
+            <div class="media-body mx-2">
+              <h5 class="mb-0 text-truncate">{{ member.fullName }}</h5>
+              <span class="text-sm text-muted">{{ member.buildingName }}</span>
+            </div>
+          </div>
+        </a>
+      } @empty {
+        <p class="mb-0 text-muted text-sm">Δεν υπάρχουν διαθέσιμα μέλη προς συνομιλία.</p>
+      }
+    </div>
   </div>
 </ng-template>

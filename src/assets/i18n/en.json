@@ -142,5 +142,6 @@
   "INVOICE": "Invoice",
   "CERTIFICATE": "Certificate",
   "TECHNICAL": "Technical",
-  "OTHER": "Other"
+  "OTHER": "Other",
+  "Chat": "Chat"
 }
