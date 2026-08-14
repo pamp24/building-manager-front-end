@@ -34,6 +34,14 @@ export const NavigationItems: NavigationItem[] = [
         url: '/admin/buildings'
       },
       {
+        id: 'admin-users',
+        title: 'Users',
+        type: 'item',
+        classes: 'nav-item',
+        icon: 'team',
+        url: '/admin/users'
+      },
+      {
         id: 'support-agents',
         title: 'Support Agents',
         type: 'item',

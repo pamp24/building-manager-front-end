@@ -22,6 +22,12 @@ const routes: Routes = [
     data: { role: [Role.Admin] }
   },
   {
+    path: 'users',
+    loadComponent: () =>
+      import('./admin-users-panel/admin-users.component').then((c) => c.AdminUsersComponent),
+    data: { role: [Role.Admin] }
+  },
+  {
     path: 'buildings/:id',
     loadComponent: () =>
       import('../property-manager-panel/buildings/buildings-view/buildings-view.component').then((c) => c.BuildingsViewComponent),

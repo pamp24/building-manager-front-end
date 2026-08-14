@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { IconService } from '@ant-design/icons-angular';
-import { EyeOutline } from '@ant-design/icons-angular/icons';
+import { EyeOutline, HomeOutline, UserOutline, TeamOutline } from '@ant-design/icons-angular/icons';
 
 import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
@@ -30,7 +30,7 @@ export class AdminBuildingsComponent implements OnInit {
   error?: string;
 
   constructor(private buildingService: BuildingService) {
-    this.iconService.addIcon(...[EyeOutline]);
+    this.iconService.addIcon(...[EyeOutline, HomeOutline, UserOutline, TeamOutline]);
   }
 
   ngOnInit(): void {
