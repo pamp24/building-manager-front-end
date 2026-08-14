@@ -21,6 +21,8 @@ export interface BuildingDTO {
   parkingSpacesNum: number;
   buildingCode: string;
   buildingDescription?: string;
+  active: boolean;
+  enable: boolean;
   undergroundFloorExist: boolean;
   halfFloorExist: boolean;
   overTopFloorExist: boolean;
@@ -37,6 +39,8 @@ export interface BuildingDTO {
   managerCity: string;
   managerProfileImgUrl?: string;
   managerRole: string;
+
+  profileImageUrl?: string;
 
   hasCentralHeating: boolean;
   heatingType?: string;

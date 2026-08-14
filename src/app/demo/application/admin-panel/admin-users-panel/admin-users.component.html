@@ -36,6 +36,7 @@
             <option value="">Όλα</option>
             <option value="enabled">Ενεργοί</option>
             <option value="disabled">Ανενεργοί</option>
+            <option value="deleted">Διαγραμμένοι</option>
           </select>
         </div>
 
@@ -88,29 +89,46 @@
                 <span class="badge text-bg-light">{{ user.role ? (user.role | translate) : '-' }}</span>
               </td>
               <td>
-                <span class="badge" [ngClass]="user.enabled ? 'text-bg-success' : 'text-bg-danger'">
-                  {{ user.enabled ? 'Ενεργός' : 'Ανενεργός' }}
-                </span>
+                @if (user.deleted) {
+                  <span class="badge text-bg-dark">Διαγραμμένος</span>
+                } @else {
+                  <span class="badge" [ngClass]="user.enabled ? 'text-bg-success' : 'text-bg-danger'">
+                    {{ user.enabled ? 'Ενεργός' : 'Ανενεργός' }}
+                  </span>
+                }
               </td>
               <td class="text-end">
-                <button
-                  type="button"
-                  class="btn btn-sm"
-                  [ngClass]="user.enabled ? 'btn-light-danger' : 'btn-light-success'"
-                  [disabled]="updatingId === user.id"
-                  (click)="toggleEnabled(user)"
-                >
-                  @if (updatingId === user.id) {
-                    <span class="spinner-border spinner-border-sm me-1" role="status"></span>
-                  }
-                  <i
-                    class="mx-1 d-inline-flex align-items-center"
-                    antIcon
-                    [type]="user.enabled ? 'stop' : 'check-circle'"
-                    theme="outline"
-                  ></i>
-                  {{ user.enabled ? 'Απενεργοποίηση' : 'Ενεργοποίηση' }}
-                </button>
+                <div class="d-inline-flex gap-2 align-items-center">
+                  <button
+                    type="button"
+                    class="btn btn-sm"
+                    [ngClass]="user.enabled ? 'btn-light-danger' : 'btn-light-success'"
+                    [disabled]="updatingId === user.id || user.deleted"
+                    (click)="toggleEnabled(user)"
+                  >
+                    @if (updatingId === user.id) {
+                      <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                    }
+                    <i
+                      class="mx-1 d-inline-flex align-items-center"
+                      antIcon
+                      [type]="user.enabled ? 'stop' : 'check-circle'"
+                      theme="outline"
+                    ></i>
+                    {{ user.enabled ? 'Απενεργοποίηση' : 'Ενεργοποίηση' }}
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-light-danger"
+                    [disabled]="updatingId === user.id || user.deleted || isCurrentUser(user)"
+                    [title]="isCurrentUser(user) ? 'Δεν μπορείτε να διαγράψετε τον λογαριασμό σας' : ''"
+                    (click)="softDeleteUser(user)"
+                  >
+                    <i class="mx-1 d-inline-flex align-items-center" antIcon type="delete" theme="outline"></i>
+                    Διαγραφή
+                  </button>
+                </div>
               </td>
             </tr>
           }

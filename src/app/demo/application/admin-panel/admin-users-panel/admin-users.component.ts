@@ -3,10 +3,11 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { IconService } from '@ant-design/icons-angular';
-import { UserSwitchOutline, StopOutline, CheckCircleOutline, TeamOutline } from '@ant-design/icons-angular/icons';
+import { UserSwitchOutline, StopOutline, CheckCircleOutline, TeamOutline, DeleteOutline } from '@ant-design/icons-angular/icons';
 
 import { AdminUserDTO } from 'src/app/theme/shared/models/adminUserDTO';
 import { UserService } from 'src/app/theme/shared/service/user.service';
+import { AuthenticationService } from 'src/app/theme/shared/service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { environment } from 'src/environments/environment';
 
@@ -28,8 +29,8 @@ export class AdminUsersComponent implements OnInit {
   error?: string;
   updatingId?: number;
 
-  constructor(private userService: UserService) {
-    this.iconService.addIcon(...[UserSwitchOutline, StopOutline, CheckCircleOutline, TeamOutline]);
+  constructor(private userService: UserService, private authService: AuthenticationService) {
+    this.iconService.addIcon(...[UserSwitchOutline, StopOutline, CheckCircleOutline, TeamOutline, DeleteOutline]);
   }
 
   ngOnInit(): void {
@@ -66,8 +67,9 @@ export class AdminUsersComponent implements OnInit {
       const matchesRole = !this.selectedRole || user.role === this.selectedRole;
       const matchesStatus =
         !this.selectedStatus ||
-        (this.selectedStatus === 'enabled' && user.enabled) ||
-        (this.selectedStatus === 'disabled' && !user.enabled);
+        (this.selectedStatus === 'deleted' && user.deleted) ||
+        (this.selectedStatus === 'enabled' && !user.deleted && user.enabled) ||
+        (this.selectedStatus === 'disabled' && !user.deleted && !user.enabled);
 
       return matchesSearch && matchesRole && matchesStatus;
     });
@@ -118,6 +120,33 @@ export class AdminUsersComponent implements OnInit {
   }
 
   trackById = (_: number, user: AdminUserDTO) => user.id;
+
+  isCurrentUser(user: AdminUserDTO): boolean {
+    return this.authService.currentUserValue?.id === user.id;
+  }
+
+  softDeleteUser(user: AdminUserDTO): void {
+    const confirmed = confirm(`Είστε σίγουροι ότι θέλετε να διαγράψετε (soft-delete) τον χρήστη "${user.fullName}";`);
+    if (!confirmed) {
+      return;
+    }
+
+    this.updatingId = user.id;
+    this.userService.softDeleteUser(user.id).subscribe({
+      next: () => {
+        this.updatingId = undefined;
+        const index = this.users.findIndex((u) => u.id === user.id);
+        if (index !== -1) {
+          this.users[index] = { ...this.users[index], deleted: true, enabled: false };
+        }
+      },
+      error: (err) => {
+        this.updatingId = undefined;
+        console.error(err);
+        this.error = err?.error?.message || 'Αποτυχία διαγραφής χρήστη.';
+      }
+    });
+  }
 
   imgSrc(url?: string | null): string {
     if (!url) return 'assets/images/user/avatar-1.jpg';

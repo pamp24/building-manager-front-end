@@ -48,6 +48,10 @@ export class UserService {
     });
   }
 
+  softDeleteUser(userId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/users/${userId}`);
+  }
+
   inviteUserToBuilding(payload: inviteRequest): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/invites`, payload);
   }

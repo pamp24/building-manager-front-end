@@ -12,5 +12,6 @@ export interface AdminUserDTO {
   lastLoginDate?: string;
   enabled: boolean;
   accountLocked: boolean;
+  deleted: boolean;
   role?: string;
 }

@@ -57,6 +57,17 @@ export class BuildingService {
     return this.http.post<BuildingDocumentDTO[]>(`${this.apiUrl}/${buildingId}/documents`, formData);
   }
 
+  uploadBuildingImage(buildingId: number, file: File): Observable<{ imageUrl: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post<{ imageUrl: string }>(`${this.apiUrl}/${buildingId}/image`, formData);
+  }
+
+  setBuildingActive(buildingId: number, active: boolean): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${buildingId}/active?active=${active}`, {});
+  }
+
   getByCode(code: string) {
     return this.http.get<{ buildingId: number }>(`${this.apiUrl}/by-code/${encodeURIComponent(code)}`);
   }

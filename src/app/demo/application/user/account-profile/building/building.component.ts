@@ -41,6 +41,12 @@ export class BuildingComponent implements OnInit {
   selectedUploadFiles: File[] = [];
   selectedDocumentCategory = 'OTHER';
 
+  isUploadingBuildingImage = false;
+  selectedBuildingImage?: File;
+
+  readonly acceptedBuildingImageTypes = '.jpg,.jpeg,.png,.webp';
+  readonly maxBuildingImageSizeMb = 10;
+
   readonly acceptedDocumentTypes = '.pdf,.jpg,.jpeg,.png,.webp,.doc,.docx,.xls,.xlsx';
   readonly maxUploadFiles = 10;
   readonly maxUploadFileSizeMb = 10;
@@ -104,6 +110,10 @@ export class BuildingComponent implements OnInit {
 
   get buildingDocuments(): BuildingDocumentDTO[] {
     return this.buildingData?.documents ?? [];
+  }
+
+  get buildingCoverUrl(): string {
+    return this.buildingData?.profileImageUrl ? this.resolveDocumentUrl(this.buildingData.profileImageUrl) : 'assets/images/admin/img-course-1.png';
   }
 
   private loadBuildingById(id: number): void {
@@ -269,6 +279,58 @@ export class BuildingComponent implements OnInit {
           alert(err?.error?.message || 'Η μεταφόρτωση αρχείων απέτυχε.');
         }
       });
+  }
+
+  onBuildingImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) {
+      return;
+    }
+
+    const file = input.files[0];
+
+    if (!this.isAllowedBuildingImage(file)) {
+      alert('Η εικόνα δεν υποστηρίζεται. Επιλέξτε JPG, PNG ή WEBP.');
+      input.value = '';
+      return;
+    }
+
+    if (file.size > this.maxBuildingImageSizeMb * 1024 * 1024) {
+      alert(`Η εικόνα ξεπερνά το όριο των ${this.maxBuildingImageSizeMb}MB.`);
+      input.value = '';
+      return;
+    }
+
+    this.selectedBuildingImage = file;
+    input.value = '';
+  }
+
+  uploadSelectedBuildingImage(): void {
+    if (!this.buildingData?.id || !this.selectedBuildingImage || this.isUploadingBuildingImage) {
+      return;
+    }
+
+    this.isUploadingBuildingImage = true;
+
+    this.buildingService.uploadBuildingImage(this.buildingData.id, this.selectedBuildingImage).subscribe({
+      next: (res) => {
+        this.buildingData = { ...this.buildingData, profileImageUrl: res.imageUrl };
+        this.selectedBuildingImage = undefined;
+        this.isUploadingBuildingImage = false;
+        alert('Η φωτογραφία ανέβηκε με επιτυχία!');
+      },
+      error: (err) => {
+        console.error('Σφάλμα ανεβάσματος φωτογραφίας:', err);
+        this.isUploadingBuildingImage = false;
+        alert(err?.error?.message || 'Η μεταφόρτωση της φωτογραφίας απέτυχε.');
+      }
+    });
+  }
+
+  private isAllowedBuildingImage(file: File): boolean {
+    const allowedMimeTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
+    const allowedExtensions = /\.(jpg|jpeg|png|webp)$/i;
+    return allowedMimeTypes.has(file.type) || allowedExtensions.test(file.name);
   }
 
   getDocumentTypeLabel(document: BuildingDocumentDTO): string {
