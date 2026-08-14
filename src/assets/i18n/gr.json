@@ -167,6 +167,10 @@
   "User": "Χρήστης",
   "Owner": "Ιδιοκτήτης",
   "Resident": "Ενοικιαστής",
+  "Admin": "Admin",
+  "PropertyManager": "Διαχειριστής Ακινήτων",
+  "PropertyAgent": "Μεσίτης Ακινήτων",
+  "AdminAgent": "Διαχειριστικός Υπάλληλος",
   "Building Manager Panel": "Πίνακας Διαχειριστή Πολυκατοικίας",
   "Property Manager Panel": "Πίνακας Διαχειριστή Ακινήτων",
   "Company": "Εταιρεία",
@@ -193,5 +197,12 @@
   "INVOICE": "Τιμολόγιο",
   "CERTIFICATE": "Πιστοποιητικό",
   "TECHNICAL": "Τεχνικό",
-  "OTHER": "Άλλο"
+  "OTHER": "Άλλο",
+  "RESIDENT": "Ενοικιαστής",
+  "OWNER": "Ιδιοκτήτης",
+  "PROPERTY_AGENT": "Μεσίτης Ακινήτων",
+  "ADMIN_AGENT": "Μεσίτης Διαχειριστή",
+  "COMPANY": "Εταιρεία",
+  "PROFESSIONAL": "Επαγγελματίας",
+  "BUSINESS": "Επιχείρηση"
 }

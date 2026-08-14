@@ -5,7 +5,6 @@ import { BidiModule } from '@angular/cdk/bidi';
 
 // project import
 import { CardComponent } from './components/card/card.component';
-import { CustomTranslateLoader } from './custom-translate-loader';
 
 // third party
 import { NgScrollbarModule } from 'ngx-scrollbar';
@@ -13,7 +12,7 @@ import { IconModule } from '@ant-design/icons-angular';
 import 'hammerjs';
 import 'mousetrap';
 import { GalleryModule } from '@ks89/angular-modal-gallery';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 // bootstrap import
 import {
@@ -45,12 +44,7 @@ import { CodeInputModule } from 'angular-code-input';
     GalleryModule,
     CardComponent,
     BidiModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useClass: CustomTranslateLoader
-      }
-    }),
+    TranslateModule,
     IconModule
   ],
   exports: [

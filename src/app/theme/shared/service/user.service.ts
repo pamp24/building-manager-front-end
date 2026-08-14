@@ -7,6 +7,7 @@ import { User } from '../components/_helpers/user';
 import { Observable } from 'rxjs';
 import { UserUpdateDTO } from 'src/app/theme/shared/models/UserUpdateDTO';
 import { UserTableDto } from 'src/app/theme/shared/models/userTableDTO';
+import { AdminUserDTO } from 'src/app/theme/shared/models/adminUserDTO';
 import { inviteRequest } from '../models/inviteRequest';
 
 @Injectable({ providedIn: 'root' })
@@ -35,6 +36,20 @@ export class UserService {
 
   getUsersInSameBuilding(): Observable<UserTableDto[]> {
     return this.http.get<UserTableDto[]>(`${this.apiUrl}/users/same-building`);
+  }
+
+  getAllUsers(): Observable<AdminUserDTO[]> {
+    return this.http.get<AdminUserDTO[]>(`${this.apiUrl}/users`);
+  }
+
+  setUserEnabled(userId: number, enabled: boolean): Observable<AdminUserDTO> {
+    return this.http.put<AdminUserDTO>(`${this.apiUrl}/users/${userId}/enable`, null, {
+      params: { enabled }
+    });
+  }
+
+  softDeleteUser(userId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/users/${userId}`);
   }
 
   inviteUserToBuilding(payload: inviteRequest): Observable<any> {

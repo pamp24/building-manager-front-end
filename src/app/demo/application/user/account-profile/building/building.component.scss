@@ -7,6 +7,12 @@
   display: block;
 }
 
+.building-cover-img {
+  height: 180px;
+  object-fit: cover;
+  object-position: center;
+}
+
 .documents-empty {
   padding: 0.5rem 0;
 }

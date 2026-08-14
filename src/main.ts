@@ -11,8 +11,10 @@ import { AppRoutingModule } from './app/app-routing.module';
 import { BasicAuthInterceptor } from 'src/app/theme/shared/components/_helpers/basic-auth.interceptor';
 import { JwtInterceptor } from 'src/app/theme/shared/components/_helpers/error.interceptor';
 import { SharedModule } from './app/theme/shared/shared.module';
+import { CustomTranslateLoader } from './app/theme/shared/custom-translate-loader';
 
 // third party
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { ToastrModule } from 'ngx-toastr';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
@@ -22,7 +24,19 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
   providers: [
-    importProvidersFrom(BrowserModule, AppRoutingModule, SharedModule, ToastrModule.forRoot(), SweetAlert2Module.forRoot()),
+    importProvidersFrom(
+      BrowserModule,
+      AppRoutingModule,
+      SharedModule,
+      ToastrModule.forRoot(),
+      SweetAlert2Module.forRoot(),
+      TranslateModule.forRoot({
+        loader: {
+          provide: TranslateLoader,
+          useClass: CustomTranslateLoader
+        }
+      })
+    ),
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     [provideHttpClient(withInterceptorsFromDi())],

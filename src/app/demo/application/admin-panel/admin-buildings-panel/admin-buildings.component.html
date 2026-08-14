@@ -29,7 +29,7 @@
             </button>
 
             <button
-              *ngIf="searchTerm || selectedCountry || selectedRegion || selectedCity || selectedAssignment"
+              *ngIf="searchTerm || selectedCountry || selectedRegion || selectedCity || selectedAssignment || selectedStatus || selectedCompanyId || selectedManager || selectedHeating"
               type="button"
               class="btn btn-outline-secondary"
               (click)="clearFilters()"
@@ -83,6 +83,45 @@
                 <option value="without-company">Χωρίς εταιρεία PM</option>
               </select>
             </div>
+
+            <div class="col-md-6 col-xl-3">
+              <label class="form-label">Κατάσταση</label>
+              <select class="form-select" [(ngModel)]="selectedStatus">
+                <option value="">Όλες</option>
+                <option value="active">Ενεργό</option>
+                <option value="inactive">Ανενεργό</option>
+              </select>
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+              <label class="form-label">Εταιρεία / PM</label>
+              <select class="form-select" [(ngModel)]="selectedCompanyId">
+                <option value="">Όλες</option>
+                @for (company of availableCompanies; track company.id) {
+                  <option [value]="company.id">{{ company.name }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+              <label class="form-label">Διαχειριστής κτιρίου</label>
+              <select class="form-select" [(ngModel)]="selectedManager">
+                <option value="">Όλοι</option>
+                @for (manager of availableManagers; track manager) {
+                  <option [value]="manager">{{ manager }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+              <label class="form-label">Τύπος θέρμανσης</label>
+              <select class="form-select" [(ngModel)]="selectedHeating">
+                <option value="">Όλοι</option>
+                @for (heating of heatingTypes; track heating.value) {
+                  <option [value]="heating.value">{{ heating.label }}</option>
+                }
+              </select>
+            </div>
           </div>
         </div>
       </div>
@@ -97,9 +136,14 @@
         <div class="col-sm-6 col-lg-4 col-xxl-3">
           <app-card [showHeader]="false" cardClass="border h-100" blockClass="p-2">
             <div class="position-relative">
-              <img src="assets/images/admin/img-course-1.png" alt="building" class="img-fluid w-100" />
+              <img [src]="imgSrc(building.profileImageUrl)" alt="building" class="building-card-img img-fluid w-100" />
               <div class="position-absolute top-0 end-0 p-2">
                 <span class="badge text-bg-light text-uppercase">{{ building.buildingCode }}</span>
+              </div>
+              <div class="position-absolute top-0 start-0 p-2">
+                <span class="badge" [class.text-bg-success]="building.active" [class.text-bg-secondary]="!building.active">
+                  {{ building.active ? 'Ενεργό' : 'Ανενεργό' }}
+                </span>
               </div>
             </div>
 
@@ -156,7 +200,19 @@
               </li>
             </ul>
 
-            <a class="btn btn-sm btn-outline-primary mb-2" [routerLink]="['/admin/buildings', building.id]">Προβολή</a>
+            <div class="d-flex gap-2 mb-2">
+              <a class="btn btn-sm btn-outline-primary flex-grow-1" [routerLink]="['/admin/buildings', building.id]">Προβολή</a>
+
+              <div ngbDropdown class="d-inline-block" placement="top-end">
+                <button class="btn btn-sm btn-outline-secondary" ngbDropdownToggle>Επεξεργασία</button>
+                <div ngbDropdownMenu>
+                  <button ngbDropdownItem (click)="toggleBuildingActive(building)">
+                    {{ building.active ? 'Απενεργοποίηση' : 'Ενεργοποίηση' }}
+                  </button>
+                  <button ngbDropdownItem class="text-danger" (click)="softDeleteBuilding(building)">Διαγραφή</button>
+                </div>
+              </div>
+            </div>
           </app-card>
         </div>
       }

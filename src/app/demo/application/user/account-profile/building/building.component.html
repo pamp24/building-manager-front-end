@@ -1,5 +1,35 @@
 <div class="row">
   <div class="col-lg-4 col-xxl-3">
+    <app-card cardTitle="Φωτογραφία Πολυκατοικίας">
+      <div class="text-center">
+        <img class="building-cover-img img-fluid w-100 rounded" [src]="buildingCoverUrl" alt="Building image" />
+      </div>
+
+      <div *ngIf="hasRole('BuildingManager') || hasRole('PropertyManager')" class="mt-3">
+        <div *ngIf="!selectedBuildingImage">
+          <input type="file" class="form-control" [accept]="acceptedBuildingImageTypes" (change)="onBuildingImageSelected($event)" />
+          <small class="text-muted d-block mt-2">JPG, PNG ή WEBP. Έως {{ maxBuildingImageSizeMb }}MB.</small>
+        </div>
+
+        <div *ngIf="selectedBuildingImage" class="d-flex align-items-center justify-content-between gap-2 mb-2">
+          <span class="text-truncate">{{ selectedBuildingImage.name }}</span>
+          <button type="button" class="btn btn-sm btn-outline-danger flex-shrink-0" [disabled]="isUploadingBuildingImage" (click)="selectedBuildingImage = undefined">
+            Αφαίρεση
+          </button>
+        </div>
+
+        <button
+          *ngIf="selectedBuildingImage"
+          type="button"
+          class="btn btn-primary w-100"
+          [disabled]="isUploadingBuildingImage"
+          (click)="uploadSelectedBuildingImage()"
+        >
+          {{ isUploadingBuildingImage ? 'Μεταφόρτωση...' : 'Ανέβασμα φωτογραφίας' }}
+        </button>
+      </div>
+    </app-card>
+
     <app-card cardTitle="Κωδικός Πολυκατοικίας">
       <h5 class="mb-0">{{ buildingData?.buildingCode }}</h5>
       <p class="text-muted mb-0 small">Με τον κωδικό αυτό μπορείτε να προσθέσετε και άλλους χρήστες στην πολυκατοικία.</p>
