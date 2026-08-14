@@ -1,0 +1,20 @@
+<div class="modal-header">
+  <h5 class="modal-title">Προσοχή: Χιλιοστά</h5>
+  <button type="button" class="btn-close" (click)="activeModal.dismiss()"></button>
+</div>
+
+<div class="modal-body">
+  <p class="mb-1">
+    Το άθροισμα των χιλιοστών της πολυκατοικίας είναι
+    <b>{{ currentSum | number: '1.2-2' }}</b> / 1000.
+  </p>
+  <p class="mb-0">
+    Θέλεις να μοιραστούν τα υπόλοιπα χιλιοστά ισόποσα στα διαμερίσματα
+    και να συνεχίσεις τη δημιουργία της κατάστασης;
+  </p>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-outline-secondary" (click)="activeModal.dismiss()">Ακύρωση</button>
+  <button class="btn btn-primary" (click)="activeModal.close('continue')">Συνέχεια</button>
+</div>

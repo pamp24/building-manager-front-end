@@ -147,33 +147,7 @@
           <div class="col-12">
             <div class="statement-total ms-auto">
               <div class="row">
-                <div class="col-6">
-                  <div class="mb-3">
-                    <label class="form-label">Έκπτωση(%)</label>
-                    <input type="number" class="form-control" formControlName="discountPercent" />
-                  </div>
-                </div>
-                <div class="col-6">
-                  <div class="mb-3">
-                    <label class="form-label">Φόρος(%)</label>
-                    <input type="number" class="form-control" formControlName="taxPercent" />
-                  </div>
-                </div>
-                <div class="col-6"><p>Συνολικό Ποσό :</p></div>
-                <div class="col-6 text-end">
-                  <p>{{ subTotal | number: '1.2-2' }} €</p>
-                </div>
-
-                <div class="col-6"><p>Έκπτωση :</p></div>
-                <div class="col-6 text-end text-success">
-                  <p>-{{ discount | number: '1.2-2' }} €</p>
-                </div>
-
-                <div class="col-6"><p>Φόρος :</p></div>
-                <div class="col-6 text-end">
-                  <p>{{ tax | number: '1.2-2' }} €</p>
-                </div>
-
+                
                 <div class="col-6">
                   <p><b>Τελικό Ποσό :</b></p>
                 </div>

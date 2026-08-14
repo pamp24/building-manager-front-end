@@ -16,6 +16,7 @@ import { OnInit } from '@angular/core';
 
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
 import { ManagerModalComponent } from './manager-modal/manager-modal.component';
+import { CommonPercentWarningModalComponent } from './common-percent-warning-modal/common-percent-warning-modal.component';
 import { ManagerDTO } from 'src/app/theme/shared/models/managerDTO';
 import { ManagedBuildingDTO } from '../statement-list/building-selector-inline/building-selector-inline.component';
 import { ApartmentDTO } from 'src/app/theme/shared/models/apartmentDTO';
@@ -273,6 +274,48 @@ export class StatementCreateComponent implements OnInit, OnChanges {
 
     if (!this.selectedBuilding) {
       alert('Δεν έχει επιλεγεί πολυκατοικία');
+      return;
+    }
+
+    const commonPercentSum = this.selectedApartments.reduce((sum, a) => sum + (a.commonPercent || 0), 0);
+
+    if (Math.abs(commonPercentSum - 1000) > 0.01) {
+      const modalRef = this.modalService.open(CommonPercentWarningModalComponent, { size: 'md' });
+      modalRef.componentInstance.currentSum = commonPercentSum;
+
+      modalRef.result.then(
+        (result) => {
+          if (result === 'continue') {
+            this.ApartmentService.redistributeCommonPercent(this.selectedBuilding!.id).subscribe({
+              next: () => {
+                this.ApartmentService.getApartmentsByBuilding(this.selectedBuilding!.id).subscribe({
+                  next: (apartments) => {
+                    this.selectedApartments = apartments;
+                    console.log('Χιλιοστά αναδιανεμήθηκαν:', apartments.map((a) => a.commonPercent));
+                  },
+                  error: () => {}
+                });
+                this.doCreateAndSend();
+              },
+              error: (err) => {
+                console.error('Σφάλμα αναδιανομής χιλιοστών', err);
+                alert('Σφάλμα κατά την αναδιανομή των χιλιοστών!');
+              }
+            });
+          }
+        },
+        () => {
+          console.log('Ο χρήστης ακύρωσε τη δημιουργία κατάστασης');
+        }
+      );
+      return;
+    }
+
+    this.doCreateAndSend();
+  }
+
+  private doCreateAndSend() {
+    if (!this.selectedBuilding) {
       return;
     }
 

@@ -39,6 +39,14 @@ export class ApartmentService {
   getApartmentsByBuilding(buildingId: number): Observable<ApartmentDTO[]> {
     return this.http.get<ApartmentDTO[]>(`${this.baseUrl}/building/${buildingId}/list`);
   }
+
+  getCommonPercentSum(buildingId: number): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/building/${buildingId}/common-percent-sum`);
+  }
+
+  redistributeCommonPercent(buildingId: number): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/building/${buildingId}/redistribute-common-percent`, {});
+  }
   getAvailableApartments(buildingId: number, role: string): Observable<ApartmentDTO[]> {
     return this.http.get<ApartmentDTO[]>(`${this.baseUrl}/${buildingId}/available?role=${role}`);
   }
