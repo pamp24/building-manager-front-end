@@ -2,20 +2,17 @@
   <div class="me-auto">
     <h5 class="mb-0">Έξοδα Θέρμανσης</h5>
   </div>
-  <div>
-    <select class="form-select text-sm">
-      <option value="1" selected>Today</option>
-      <option value="2">This Month</option>
-      <option value="3">This Year</option>
-    </select>
-  </div>
 </div>
 <div class="card">
   <div class="card-body">
-    <h6 class="mb-2 f-w-400 text-muted">This Week Statistics</h6>
-    <h3 class="mb-0">$7,650</h3>
+    <h6 class="mb-2 f-w-400 text-muted">Σύνολο 12 τελευταίων μηνών – Πολυκατοικία</h6>
+    <h3 class="mb-0">{{ total | number: '1.2-2' }} €</h3>
+    <div *ngIf="apartmentTotal !== null && apartmentTotal > 0" class="text-muted mt-1" style="font-size: 0.85rem">
+      Διαμέρισμα: {{ apartmentTotal | number: '1.2-2' }} €
+    </div>
     <div id="chart">
       <apx-chart
+        *ngIf="hasData"
         [series]="chartOptions.series"
         [chart]="chartOptions.chart"
         [dataLabels]="chartOptions.dataLabels"
@@ -28,6 +25,9 @@
         [plotOptions]="chartOptions.plotOptions"
         [tooltip]="chartOptions.tooltip"
       ></apx-chart>
+      <div *ngIf="!hasData" class="text-center text-muted py-4">
+        Δεν υπάρχουν δεδομένα εξόδων θέρμανσης.
+      </div>
     </div>
   </div>
 </div>
