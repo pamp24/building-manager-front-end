@@ -198,6 +198,24 @@ export const NavigationItems: NavigationItem[] = [
         url: '/polls',
         icon: 'line-chart',
         role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
+      },
+      {
+        id: 'chat',
+        title: 'Chat',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/chat',
+        icon: 'message',
+        role: [
+          Role.Admin,
+          Role.User,
+          Role.PropertyManager,
+          Role.BuildingManager,
+          Role.Owner,
+          Role.Resident,
+          Role.PropertyAgent,
+          Role.AdminAgent
+        ]
       }
     ]
   },

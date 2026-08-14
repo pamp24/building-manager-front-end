@@ -141,5 +141,6 @@
   "INVOICE": "Facture",
   "CERTIFICATE": "Certificat",
   "TECHNICAL": "Technique",
-  "OTHER": "Autre"
+  "OTHER": "Autre",
+  "Chat": "Messagerie"
 }

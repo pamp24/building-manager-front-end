@@ -140,5 +140,6 @@
   "INVOICE": "Factură",
   "CERTIFICATE": "Certificat",
   "TECHNICAL": "Tehnic",
-  "OTHER": "Altul"
+  "OTHER": "Altul",
+  "Chat": "Chat"
 }
