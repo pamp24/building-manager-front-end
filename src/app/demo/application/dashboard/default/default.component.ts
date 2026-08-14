@@ -57,6 +57,8 @@ export class DefaultComponent implements OnInit {
   totalAmount = 0;
   lastStatementItems: any[] = [];
   allocations: any[] = [];
+  transactionHistory: any[] = [];
+  ownerResidentPayments: any[] = [];
   selectedAllocation: any = null;
   // public props
   isDarkThemes!: boolean;
@@ -84,6 +86,8 @@ buildingId: any;
       }
     });
     this.loadAllocations();
+    this.loadTransactionHistory();
+    this.loadOwnerResidentPayments();
   }
 
   private loadRole() {
@@ -133,6 +137,25 @@ buildingId: any;
     }
   });
 }
+
+  loadTransactionHistory() {
+    this.userDashboardService.getHistory().subscribe({
+      next: (history) => {
+        this.transactionHistory = history ?? [];
+      },
+      error: (err) => console.error('Σφάλμα φόρτωσης ιστορικού συναλλαγών', err)
+    });
+  }
+
+  loadOwnerResidentPayments() {
+    if (this.role !== 'Owner') return;
+    this.userDashboardService.getOwnerResidentPayments().subscribe({
+      next: (data) => {
+        this.ownerResidentPayments = data ?? [];
+      },
+      error: (err) => console.error('Σφάλμα φόρτωσης πληρωμών ενοίκου', err)
+    });
+  }
 
   getUserId(): number {
     const userStr = localStorage.getItem('currentUser');

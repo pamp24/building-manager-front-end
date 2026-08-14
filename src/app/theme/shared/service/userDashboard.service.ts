@@ -47,12 +47,21 @@ export class UserDashboardService {
     return this.http.get<any>(`${this.baseUrl}/statement-mini-chart`);
   }
 
+  getHeatingChartData(buildingId?: number) {
+    const params = buildingId ? `?buildingId=${buildingId}` : '';
+    return this.http.get<any>(`${this.baseUrl}/heating-chart${params}`);
+  }
+
+  getOwnerResidentPayments() {
+    return this.http.get<any[]>(`${this.baseUrl}/owner-occupancy`);
+  }
+
   getUnpaidForApartment() {
     return this.http.get<number>(`${this.baseUrl}/unpaid`);
   }
 
   payAllocation(id: number, amount: number) {
-    return this.http.patch(`/expenses/allocations/${id}/pay`, { amount });
+    return this.http.patch(`${environment.apiUrl}/api/v1/expenses/allocations/${id}/pay`, { amount });
   }
   getBuildingPending() {
     return this.http.get<any>(`${this.baseUrl}/building-pending`);

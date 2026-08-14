@@ -85,6 +85,8 @@
               </small>
             </div>
           </div>
+        } @empty {
+          <div class="text-center text-muted py-4">Δεν υπάρχουν εκκρεμείς πληρωμές.</div>
         }
       </div>
     </div>
@@ -112,8 +114,12 @@
                 <td class="text-center">{{ item.descriptionItem }}</td>
                 <td class="text-end">{{ item.price }} €</td>
               </tr>
+            } @empty {
+              <tr>
+                <td colspan="4" class="text-center text-muted py-4">Δεν υπάρχουν έξοδα για τον τελευταίο μήνα.</td>
+              </tr>
             }
-            <tr class="table-secondary fw-bold">
+            <tr *ngIf="lastStatementItems.length > 0" class="table-secondary fw-bold">
               <td class="text-end"></td>
               <td colspan="3" class="text-end">Σύνολο: {{ totalAmount | number: '1.2-2' }} €</td>
             </tr>
@@ -134,26 +140,33 @@
   <div class="col-md-12 col-xl-4">
     <h5 class="mb-3">Ιστορικό Συναλλαγών</h5>
     <div class="card">
-      <div class="list-group list-group-flush">
-        <!-- @for (history of transaction; track history) {
-          <a href="javascript:" class="list-group-item list-group-item-action">
-            <div class="d-flex">
-              <div class="flex-shrink-0">
-                <div class="avatar avatar-s rounded-circle {{ history.background }}">
-                  <i antIcon type="{{ history.icon }}" theme="outline"></i>
-                </div>
-              </div>
-              <div class="flex-grow-1 ms-3">
-                <h6 class="mb-1">{{ history.title }}</h6>
-                <p class="mb-0 text-muted">{{ history.time }}</p>
-              </div>
-              <div class="flex-shrink-0 text-end">
-                <h6 class="mb-1">{{ history.amount }}</h6>
-                <p class="mb-0 text-muted">{{ history.percentage }}</p>
-              </div>
-            </div>
-          </a>
-        } -->
+      <div class="table-responsive" style="max-height: 340px; overflow-y: auto">
+        <table class="table table-hover mb-0">
+          <thead class="table-light" style="position: sticky; top: 0; z-index: 2;">
+            <tr>
+              <th>Μήνας</th>
+              <th class="text-end">Χρέωση</th>
+              <th class="text-end">Υπόλοιπο</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (history of transactionHistory; track history) {
+              <tr>
+                <td>{{ history.month }}</td>
+                <td class="text-end">{{ history.billed | number: '1.2-2' }} €</td>
+                <td class="text-end">
+                  <span [class.text-success]="history.remaining <= 0" [class.text-danger]="history.remaining > 0">
+                    {{ history.remaining | number: '1.2-2' }} €
+                  </span>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="3" class="text-center text-muted py-4">Δεν υπάρχουν συναλλαγές.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
       </div>
     </div>
     <div class="card">
@@ -242,5 +255,45 @@
   </div>
   <div class="col-md-12 col-xl-4">
     <app-acquisition-chart />
+  </div>
+
+  <div class="col-md-12 col-xl-12" *ngIf="role === 'Owner'">
+    <h5 class="mb-3">Πληρωμές Ενοίκου στο Διαμέρισμά μου</h5>
+    <div class="card">
+      <div class="table-responsive scroll-10">
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th>Μήνας</th>
+              <th>Ένοικος</th>
+              <th class="text-end">Χρέωση</th>
+              <th class="text-end">Πληρωμένο</th>
+              <th class="text-end">Υπόλοιπο</th>
+              <th class="text-center">Κατάσταση</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (payment of ownerResidentPayments; track payment) {
+              <tr>
+                <td>{{ payment.month }}</td>
+                <td>{{ payment.residentName }}</td>
+                <td class="text-end">{{ payment.billed | number: '1.2-2' }} €</td>
+                <td class="text-end">{{ payment.paid | number: '1.2-2' }} €</td>
+                <td class="text-end">{{ payment.remaining | number: '1.2-2' }} €</td>
+                <td class="text-center">
+                  <span class="badge" [class.bg-success]="payment.isPaid" [class.bg-danger]="!payment.isPaid">
+                    {{ payment.isPaid ? 'Εξοφλημένο' : 'Ανεξόφλητο' }}
+                  </span>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="6" class="text-center text-muted py-4">Δεν υπάρχει ένοικος στο διαμέρισμά σας ή δεν υπάρχουν δεδομένα.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
