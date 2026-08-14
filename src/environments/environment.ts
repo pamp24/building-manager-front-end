@@ -7,7 +7,9 @@ import packageInfo from '../../package.json';
 export const environment = {
   appVersion: packageInfo.version,
   production: false,
-  apiUrl: 'http://localhost:8080'
+  apiUrl: 'http://localhost:8080',
+  stripePublishableKey: 'pk_test_51REPLACEME',
+  vivaWalletMerchantId: 'REPLACE_WITH_VIVA_MERCHANT_ID'
 };
 
 /*

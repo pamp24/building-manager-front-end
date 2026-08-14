@@ -134,11 +134,21 @@ buildingId: any;
   });
 }
 
+  getUserId(): number {
+    const userStr = localStorage.getItem('currentUser');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      return user.id || 0;
+    }
+    return 0;
+  }
+
   openModal(task: any) {
   this.selectedAllocation = task; 
 
   const ref = this.modal.open(PaymentModalComponent, { size: 'md' });
   ref.componentInstance.allocation = task;
+  ref.componentInstance.currentUserId = this.getUserId();
 
   ref.result.then(
     (amount) => this.handlePay(amount),

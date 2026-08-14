@@ -1,0 +1,24 @@
+<div class="payment-methods">
+  <label
+    *ngFor="let method of methods"
+    class="payment-method-option"
+    [class.selected]="selected === method.value"
+    [class.disabled]="method.disabled"
+  >
+    <input
+      type="radio"
+      name="paymentMethod"
+      [value]="method.value"
+      [(ngModel)]="selected"
+      (change)="onSelect(method.value)"
+      [disabled]="method.disabled"
+    />
+    <div class="method-content">
+      <span class="method-icon">{{ method.icon }}</span>
+      <div class="method-info">
+        <span class="method-label">{{ method.label }}</span>
+        <span class="method-desc">{{ method.description }}</span>
+      </div>
+    </div>
+  </label>
+</div>
