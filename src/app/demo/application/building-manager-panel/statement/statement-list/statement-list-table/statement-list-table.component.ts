@@ -34,6 +34,7 @@
     expandedStatementId: number | null = null;
     statementUserPayments: StatementUserPaymentDTO[] = [];
     paymentsLoading = false;
+    isManager = false;
 
     // pagination
     page = 1;
@@ -54,6 +55,12 @@
       private paymentService: PaymentService
     ) {
       this.iconService.addIcon(...[EyeOutline, EditOutline, DeleteOutline, CaretDownOutline, CaretUpOutline]);
+      const userStr = localStorage.getItem('currentUser');
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        const role = user.role;
+        this.isManager = role === 'Admin' || role === 'BuildingManager';
+      }
     }
 
     ngOnChanges() {
@@ -75,7 +82,7 @@
         );
       }
 
-      // Ταξινόμηση
+      // Ταξινόμηση: default πάντα από πιο νέο σε πιο παλιό (startDate desc)
       if (this.sortColumn && this.sortDirection) {
         result.sort((a, b) => {
           const column = this.sortColumn as keyof CommonExpenseStatement;
@@ -84,6 +91,12 @@
           if (valA < valB) return this.sortDirection === 'asc' ? -1 : 1;
           if (valA > valB) return this.sortDirection === 'asc' ? 1 : -1;
           return 0;
+        });
+      } else {
+        result.sort((a, b) => {
+          const dateA = a.startDate ? new Date(a.startDate).getTime() : 0;
+          const dateB = b.startDate ? new Date(b.startDate).getTime() : 0;
+          return dateB - dateA;
         });
       }
 

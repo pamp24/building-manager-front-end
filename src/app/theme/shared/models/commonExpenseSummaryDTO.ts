@@ -3,5 +3,6 @@ export interface CommonStatementSummaryDTO {
   totalPaid: number;
   totalPending: number;
   percentPaid: number;
+  paidPercent?: number;
   lastDueDate: string | null;
 }
