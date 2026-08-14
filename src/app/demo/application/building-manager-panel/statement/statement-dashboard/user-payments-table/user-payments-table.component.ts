@@ -14,6 +14,7 @@ export class UserPaymentsTableComponent {
   @Input() statementUserPayments: StatementUserPaymentDTO[] = [];
   @Input() currentMonthLabel!: string;
   @Input() paymentsLoading = false;
+  @Input() isManager = false;
   @Output() editUser = new EventEmitter<StatementUserPaymentDTO>();
 
   translateStatus(status: string): string {

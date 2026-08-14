@@ -43,7 +43,7 @@ import { RecentPaymentsComponent } from './recent-payments/recent-payments.compo
 import { Router } from '@angular/router';
 import { UserPaymentsTableComponent } from './user-payments-table/user-payments-table.component';
 
-import { NgbNav, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbNav, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { ThemeService } from 'src/app/theme/shared/service/customs-theme.service';
 import { ManagerDashboardService } from 'src/app/theme/shared/service/managerDashboard.service';
 import { TabNavigationService } from 'src/app/theme/shared/service/TabNavigation.service';
@@ -59,6 +59,7 @@ import { CalendarService } from 'src/app/theme/shared/service/calendarService.se
 import { PollService } from 'src/app/theme/shared/service/poll.service';
 import { StatementChartComponent } from './statement-chart/statement-chart.component';
 import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
+import { StatementPaymentComponent } from '../statement-list/statement-list-table/statement-payment/statement-payment.component';
 
 @Component({
   selector: 'app-statement-dashboard',
@@ -82,12 +83,14 @@ export class StatementDashboardComponent implements OnInit {
   private tabNav = inject(TabNavigationService);
   private buildingService = inject(BuildingService);
   private paymentService = inject(PaymentService);
+  private modal = inject(NgbModal);
   @ViewChild('nav', { static: false }) nav?: NgbNav;
   @Input() buildingId!: number;
   backgroundColor!: string;
   building?: BuildingDTO;
 
   dashboardData?: ManagerDashboardDTO;
+  isManager = false;
   
   currentBuildingIndex: number = 0;
   activeTab = 1;
@@ -155,6 +158,13 @@ export class StatementDashboardComponent implements OnInit {
     effect(() => {
       this.isDarkTheme(this.themeService.isDarkMode());
     });
+
+    const userStr = localStorage.getItem('currentUser');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      const role = user.role;
+      this.isManager = role === 'Admin' || role === 'BuildingManager';
+    }
   }
 
   ngOnInit(): void {
@@ -298,7 +308,39 @@ export class StatementDashboardComponent implements OnInit {
   }
 
   onEditUser(payment: any): void {
-    console.log('Επεξεργασία πληρωμής χρήστη:', payment);
+    if (!this.isManager) return;
+
+    if (payment.status === 'PAID') {
+      alert('Ο χρήστης έχει ήδη εξοφλήσει πλήρως αυτό το παραστατικό.');
+      return;
+    }
+
+    const modalRef = this.modal.open(StatementPaymentComponent, {
+      size: 'md',
+      backdrop: 'static'
+    });
+
+    modalRef.componentInstance.payment = {
+      ...payment,
+      userFullName: `${payment.userFirstName ?? ''} ${payment.userLastName ?? ''}`.trim(),
+      statementId: this.selectedStatementId
+    };
+
+    modalRef.componentInstance.paymentSaved.subscribe((req: PaymentDTO) => {
+      this.paymentsLoading = true;
+
+      this.paymentService.createPayment(req).subscribe({
+        next: () => {
+          this.onStatementChange();
+          this.paymentsLoading = false;
+          alert('Η πληρωμή καταχωρήθηκε με επιτυχία!');
+        },
+        error: (err) => {
+          console.error('Σφάλμα αποθήκευσης πληρωμής:', err);
+          this.paymentsLoading = false;
+        }
+      });
+    });
   }
 
   loadRecentAnnouncements(): void {

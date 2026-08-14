@@ -152,8 +152,12 @@ export class StatementListComponent implements OnInit, OnChanges {
       next: (data) => {
         this.summary = {
           ...data,
+          percentPaid: Number(data.paidPercent ?? data.percentPaid ?? 0),
           lastDueDate: data.lastDueDate ? new Date(data.lastDueDate).toISOString() : null
         };
+        if (data.totalPending != null) {
+          this.totalUnpaidAmount = data.totalPending;
+        }
       },
       error: (err) => console.error('Σφάλμα φόρτωσης summary:', err)
     });
@@ -251,7 +255,8 @@ export class StatementListComponent implements OnInit, OnChanges {
         percentage: grandTotal ? ((totalPaid / grandTotal) * 100).toFixed(1) : 0,
         color: 'text-success',
         statement: this.paidStatements.length,
-        data: [0, 20, 10, 45, 30, 55, 20, 30],
+        data: this.paidStatements.map((s) => s.total ?? 0),
+        labels: this.paidStatements.map((s) => s.code),
         colors: ['#52c41a']
       },
       {
@@ -261,7 +266,8 @@ export class StatementListComponent implements OnInit, OnChanges {
         percentage: grandTotal ? ((totalPending / grandTotal) * 100).toFixed(1) : 0,
         color: 'text-warning',
         statement: this.pendingStatements.length,
-        data: [30, 20, 55, 30, 45, 10, 20, 0],
+        data: this.pendingStatements.map((s) => s.total ?? 0),
+        labels: this.pendingStatements.map((s) => s.code),
         colors: ['#faad14']
       },
       {
@@ -271,7 +277,8 @@ export class StatementListComponent implements OnInit, OnChanges {
         percentage: grandTotal ? ((totalOverdue / grandTotal) * 100).toFixed(1) : 0,
         color: 'text-danger',
         statement: this.expiredStatements.length,
-        data: [0, 20, 10, 45, 30, 55, 20, 30],
+        data: this.expiredStatements.map((s) => s.total ?? 0),
+        labels: this.expiredStatements.map((s) => s.code),
         colors: ['#ff4d4f']
       }
     ];
@@ -300,24 +307,22 @@ export class StatementListComponent implements OnInit, OnChanges {
     // Φιλτράρουμε μόνο όσα είναι ISSUED ή EXPIRED
     const unpaidStatements = this.statements.filter((s) => s.status === 'ISSUED' || s.status === 'EXPIRED');
 
-    // Υπολογισμός συνολικού ποσού
-    this.totalUnpaidAmount = unpaidStatements.reduce((sum, s) => sum + (s.total ?? 0), 0);
+    // Υπολογισμός συνολικού ποσού (fallback αν δεν ήρθε από το summary του backend)
+    const calculatedUnpaid = unpaidStatements.reduce((sum, s) => sum + (s.total ?? 0), 0);
+    if (this.summary?.totalPending == null) {
+      this.totalUnpaidAmount = calculatedUnpaid;
+    }
 
-    // Υπολογισμός ποσών για progress bar
-    const paidStatements = this.statements.filter((s) => s.status === 'PAID');
-    const totalPaid = paidStatements.reduce((sum, s) => sum + (s.total ?? 0), 0);
-    const totalAll = totalPaid + this.totalUnpaidAmount;
-
-    // Υπολογισμός τελευταίας ημερομηνίας λήξης
+    // Υπολογισμός τελευταίας ημερομηνίας λήξης από τα εκκρεμή
     const lastDueDate = unpaidStatements.length
       ? new Date(Math.max(...unpaidStatements.filter((s) => !!s.endDate).map((s) => new Date(s.endDate!).getTime())))
       : null;
 
+    // Κρατάμε το ακριβές percentPaid από το backend (βασισμένο στις κατανομές),
+    // ώστε ένα ολόκληρα πληρωμένο παραστατικό να φαίνεται σωστά στη μπάρα.
     this.summary = {
-      totalAmount: this.totalUnpaidAmount,
-      totalPending: this.totalUnpaidAmount,
-      lastDueDate,
-      percentPaid: totalAll > 0 ? (totalPaid / totalAll) * 100 : 0
+      ...(this.summary ?? {}),
+      lastDueDate
     } as any;
   }
 

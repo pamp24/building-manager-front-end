@@ -19,8 +19,9 @@ export class StatementListChartComponent implements OnInit {
 
   // public props
   chartOptions!: Partial<ApexOptions>;
-  readonly seriesData = input.required<[]>();
+  readonly seriesData = input.required<number[]>();
   readonly colors = input.required<string[]>();
+  readonly labels = input<string[]>([]);
 
   // constructor
   constructor() {
@@ -66,10 +67,17 @@ export class StatementListChartComponent implements OnInit {
           enabled: false
         },
         x: {
-          show: false
+          show: true
         },
         marker: {
           show: false
+        },
+        custom: ({ dataPointIndex }) => {
+          const label = this.labels()?.[dataPointIndex];
+          const value = this.seriesData()?.[dataPointIndex];          return `<div style="padding: 6px 10px; font-size: 12px; line-height: 1.4;">
+            <div style="font-weight: 600;">${label ?? 'Παραστατικό'}</div>
+            <div>${typeof value === 'number' ? value.toLocaleString('el-GR') + ' €' : value ?? ''}</div>
+          </div>`;
         }
       },
       colors: this.colors()
