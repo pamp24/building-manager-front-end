@@ -11,6 +11,10 @@ export class TabNavigationService {
 constructor(private buildingService: BuildingService, private router: Router) {}
 
 goToTab(tabId: number) {
-  this.router.navigate(['/invoice/list'], { queryParams: { tab: tabId } });
+  this.router.navigate(['/statement/list'], { queryParams: { tab: tabId } });
+}
+
+emitTabChange(tabId: number) {
+  this.tabChangeSource.next(tabId);
 }
 }
