@@ -17,6 +17,6 @@ export class RecentPaymentsComponent {
   constructor(private router: Router) {}
 
   goToInvoiceList(): void {
-    this.router.navigate(['/invoice/list']);
+    this.router.navigate(['/statement/list']);
   }
 }

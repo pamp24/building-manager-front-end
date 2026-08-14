@@ -80,6 +80,16 @@ export class StatementListComponent implements OnInit, OnChanges {
       this.currentBuildingId = this.buildingId;
       this.showBuildingSelector = false;
       this.loadStatementsAndSummary(this.buildingId);
+
+      this.tabNav.tabChange$.subscribe((tabId) => {
+        if (tabId != null && tabId >= 1 && tabId <= 6) {
+          this.activeTab = tabId;
+          setTimeout(() => {
+            this.nav?.select(tabId);
+            document.getElementById('statement-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 0);
+        }
+      });
       return;
     }
 

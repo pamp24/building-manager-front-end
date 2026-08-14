@@ -172,7 +172,7 @@
     }
 
     onEdit(statement: CommonExpenseStatement) {
-      this.router.navigate(['/invoice/edit', statement.id]);
+      this.router.navigate(['/statement/edit', statement.id]);
     }
 
     onDelete(statement: CommonExpenseStatement) {

@@ -86,6 +86,7 @@ export class StatementDashboardComponent implements OnInit {
   private modal = inject(NgbModal);
   @ViewChild('nav', { static: false }) nav?: NgbNav;
   @Input() buildingId!: number;
+  hasInputBuildingId = false;
   backgroundColor!: string;
   building?: BuildingDTO;
 
@@ -168,6 +169,7 @@ export class StatementDashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.hasInputBuildingId = !!this.buildingId;
     this.loadBuildingsAndManagerDashboard();
 
   }
@@ -300,11 +302,15 @@ export class StatementDashboardComponent implements OnInit {
 }
 
   goToTab(tabId: number): void {
-  this.router.navigate(['/invoice/list'], { queryParams: { tab: tabId } });
-}
+    if (this.hasInputBuildingId) {
+      this.tabNav.emitTabChange(tabId);
+      return;
+    }
+    this.tabNav.goToTab(tabId);
+  }
 
   goToInvoiceList(): void {
-    this.router.navigate(['/invoice/list']);
+    this.router.navigate(['/statement/list']);
   }
 
   onEditUser(payment: any): void {

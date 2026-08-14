@@ -45,7 +45,7 @@ export class StatementDetailsComponent {
   detailsIcons = [
     {
       icon: 'edit',
-      link: '/invoice/edit'
+      link: '/statement/edit'
     },
     {
       icon: 'printer'

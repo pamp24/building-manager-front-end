@@ -146,7 +146,7 @@ export class StatementEditComponent implements OnInit {
       next: (updated) => {
         alert('Το παραστατικό ενημερώθηκε!');
         console.log('Updated:', updated);
-        this.router.navigate(['/invoice/list']);
+        this.router.navigate(['/statement/list']);
       },
       error: (err) => {
         console.error('Σφάλμα ενημέρωσης:', err);
@@ -197,6 +197,6 @@ export class StatementEditComponent implements OnInit {
     this.items.removeAt(i);
   }
   goBack() {
-    this.router.navigate(['/invoice/list']);
+    this.router.navigate(['/statement/list']);
   }
 }
