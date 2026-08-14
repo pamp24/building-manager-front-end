@@ -279,6 +279,13 @@ const routes: Routes = [
         data: {
           role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident, Role.PropertyAgent]
         }
+      },
+      {
+        path: 'payment/complete',
+        loadComponent: () => import('./demo/application/payment/payment-status/payment-status.component').then((c) => c.PaymentStatusComponent),
+        data: {
+          role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident, Role.PropertyAgent]
+        }
       }
     ]
   },

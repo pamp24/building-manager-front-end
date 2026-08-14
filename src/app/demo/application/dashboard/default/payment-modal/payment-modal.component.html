@@ -4,45 +4,74 @@
 </div>
 
 <div class="modal-body">
+  <ng-container [ngSwitch]="step">
+    <!-- Step 1: Payment form -->
+    <ng-container *ngSwitchCase="'form'">
+      <p><strong>Κωδικός:</strong> {{ allocation?.code }}</p>
+      <p><strong>Μήνας:</strong> {{ allocation?.month }}</p>
+      <p><strong>Υπόλοιπο:</strong> {{ allocation?.remainingAmount || allocation?.amount }} €</p>
 
-  <p><strong>Κωδικός:</strong> {{ allocation?.code }}</p>
-  <p><strong>Μήνας:</strong> {{ allocation?.month }}</p>
-  <p><strong>Υπόλοιπο:</strong> {{ allocation?.remainingAmount }} €</p>
+      <label class="form-label mt-3">Μέθοδος Πληρωμής</label>
+      <app-payment-method-selection
+        [selected]="selectedMethod"
+        (methodChange)="onMethodChange($event)"
+      ></app-payment-method-selection>
 
-  <!-- Επιλογή Κάρτας -->
-  <label class="form-label mt-3">Επιλέξτε κάρτα</label>
-  <select class="form-select" [(ngModel)]="selectedCard">
-    <option *ngFor="let c of cards" [value]="c.id">
-      {{ c.name }} — {{ c.masked }}
-    </option>
-  </select>
+      <div *ngIf="selectedMethod === 'cash' || selectedMethod === 'bank_transfer'" class="mt-3">
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="fullAmount" [(ngModel)]="fullAmount" (change)="toggleFullAmount()" />
+          <label for="fullAmount" class="form-check-label">Πλήρες ποσό ({{ allocation?.remainingAmount || allocation?.amount }} €)</label>
+        </div>
+        <label class="form-label mt-2">Ποσό πληρωμής</label>
+        <input type="number" class="form-control" [(ngModel)]="paymentAmount" [disabled]="fullAmount" />
+      </div>
+    </ng-container>
 
-  <!-- Πλήρες ποσό checkbox -->
-  <div class="form-check mt-3">
-    <input 
-      type="checkbox" 
-      class="form-check-input"
-      id="fullAmount"
-      [(ngModel)]="fullAmount"
-      (change)="toggleFullAmount()" />
+    <!-- Step 2: Stripe Checkout -->
+    <ng-container *ngSwitchCase="'stripe'">
+      <app-stripe-checkout
+        [clientSecret]="clientSecret"
+        [returnUrl]="returnUrl"
+        (paymentSuccess)="onPaymentSuccess()"
+        (paymentError)="onPaymentError($event)"
+      ></app-stripe-checkout>
+    </ng-container>
 
-    <label for="fullAmount" class="form-check-label">
-      Πλήρες ποσό ({{ allocation?.remainingAmount }} €)
-    </label>
-  </div>
+    <!-- Step 3: Processing -->
+    <ng-container *ngSwitchCase="'processing'">
+      <div class="text-center py-4">
+        <div class="spinner-border text-primary mb-3" role="status"></div>
+        <p class="text-muted">Επεξεργασία πληρωμής...</p>
+      </div>
+    </ng-container>
 
-  <!-- Ποσό πληρωμής -->
-  <label class="form-label mt-3">Ποσό πληρωμής</label>
-  <input 
-    type="number" 
-    class="form-control"
-    [(ngModel)]="paymentAmount"
-    [disabled]="fullAmount"
-  />
+    <!-- Step 4: Done -->
+    <ng-container *ngSwitchCase="'done'">
+      <div class="text-center py-4">
+        <div class="text-success mb-2" style="font-size: 48px;">&#10003;</div>
+        <h5>Η πληρωμή ολοκληρώθηκε επιτυχώς</h5>
+      </div>
+    </ng-container>
 
+    <!-- Step 5: Error -->
+    <ng-container *ngSwitchCase="'error'">
+      <div class="text-center py-4">
+        <div class="text-danger mb-2" style="font-size: 48px;">&#10007;</div>
+        <h5>Σφάλμα Πληρωμής</h5>
+        <p class="text-danger">{{ errorMessage }}</p>
+        <button class="btn btn-outline-primary" (click)="retry()">Προσπάθεια ξανά</button>
+      </div>
+    </ng-container>
+  </ng-container>
 </div>
 
-<div class="modal-footer">
+<div class="modal-footer" *ngIf="step === 'form'">
   <button class="btn btn-secondary" (click)="activeModal.dismiss()">Κλείσιμο</button>
-  <button class="btn btn-primary" (click)="confirmPay()">Πληρωμή</button>
+  <button class="btn btn-primary" (click)="proceedWithPayment()" [disabled]="!paymentAmount || paymentAmount <= 0">
+    {{ selectedMethod === 'stripe' || selectedMethod === 'viva' ? 'Συνέχεια' : 'Πληρωμή' }}
+  </button>
+</div>
+
+<div class="modal-footer" *ngIf="step === 'done'">
+  <button class="btn btn-primary" (click)="close()">Κλείσιμο</button>
 </div>

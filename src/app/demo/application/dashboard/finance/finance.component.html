@@ -1,296 +1,224 @@
-<div class="row">
-  <div class="col-md-5 col-xxl-4">
-    <app-card [showHeader]="false">
-      <div class="d-flex align-items-center justify-content-between mb-3">
-        <h5 class="mb-0">My Card</h5>
-        <div ngbDropdown placement="bottom-end">
-          <a class="avatar avatar-s btn-link-secondary arrow-none" ngbDropdownToggle>
-            <i class="f-18" antIcon type="more" theme="outline"></i>
-          </a>
-          <div ngbDropdownMenu>
-            <a ngbDropdownItem>Today</a>
-            <a ngbDropdownItem>Weekly</a>
-            <a ngbDropdownItem>Monthly</a>
-          </div>
-        </div>
+<div class="row" *ngIf="!loading && !error && finance">
+  <!-- Header -->
+  <div class="col-12 mb-3">
+    <div class="d-flex align-items-center justify-content-between">
+      <div>
+        <h4 class="mb-1">{{ finance.buildingName }}</h4>
+        <p class="text-muted mb-0">Code: {{ finance.buildingCode }} &middot; Role: <span class="badge bg-primary">{{ finance.userRole }}</span></p>
       </div>
-      <app-card [showHeader]="false" cardClass="overflow-hidden my-card">
-        <div class="d-flex">
-          <div class="flex-grow-1 me-3">
-            <p class="text-white text-sm text-opacity-50 mb-0">CARD NAME</p>
-            <h5 class="text-white">Jonh Smith</h5>
-          </div>
-          <div class="flex-shrink-0">
-            <img src="assets/images/widget/img-card-master.svg" alt="img" class="img-fluid" />
-          </div>
-        </div>
-        <h4 class="text-white my-3">**** **** **** **** 8361</h4>
-        <div class="row">
-          <div class="col-auto">
-            <p class="text-white text-sm text-opacity-50 mb-0">EXP</p>
-            <h6 class="text-white mb-0">7/30</h6>
-          </div>
-          <div class="col-auto">
-            <p class="text-white text-sm text-opacity-50 mb-0">CVV</p>
-            <h6 class="text-white mb-0">455</h6>
-          </div>
-        </div>
-      </app-card>
-      <div class="text-center mt-3">
-        <h3 class="mb-1">$1.480.000</h3>
-        <p class="text-muted mb-0">Total Balance</p>
-      </div>
-    </app-card>
-    <app-card [showHeader]="false" [padding]="0">
-      <div class="d-flex align-items-center justify-content-between p-3">
-        <h5 class="mb-0">Transactions</h5>
-        <div ngbDropdown placement="bottom-end">
-          <a class="avatar avatar-s btn-link-secondary arrow-none" href="javascript:" ngbDropdownToggle>
-            <i class="f-18" antIcon type="more" theme="outline"></i>
-          </a>
-          <div ngbDropdownMenu>
-            <a ngbDropdownItem>Today</a>
-            <a ngbDropdownItem>Weekly</a>
-            <a ngbDropdownItem>Monthly</a>
-          </div>
-        </div>
-      </div>
-      <ul class="list-group list-group-flush">
-        @for (list of transactionsList; track list) {
-          <li class="list-group-item px-3">
-            <div class="d-flex align-items-center">
-              <div class="flex-shrink-0">
-                <div class="avatar avatar-s border {{ list.background }}">{{ list.icon }}</div>
-              </div>
-              <div class="flex-grow-1 ms-3">
-                <div class="row g-1">
-                  <div class="col-6">
-                    <h6 class="mb-0">{{ list.title }}</h6>
-                    <p class="text-muted mb-0">
-                      <small>{{ list.description }}</small>
-                    </p>
-                  </div>
-                  <div class="col-6 text-end">
-                    <h6 class="mb-1">{{ list.amount }}</h6>
-                    <p class="{{ list.status_color }} mb-0">
-                      <i class="{{ list.progress }}"></i>
-                      {{ list.percentage }}%
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </li>
-        }
-      </ul>
-    </app-card>
-  </div>
-  <div class="col-md-7 col-xxl-8">
-    <div class="row">
-      <div class="col-md-6 col-xxl-4">
-        <app-transactions-chart [seriesData]="[20, 10, 18, 12, 25, 10, 20]" [colors]="['#52c41a']" />
-      </div>
-      <div class="col-md-6 col-xxl-4">
-        <app-transactions-chart [seriesData]="[20, 15, 24, 18, 20, 10, 25]" [colors]="['#52c41a']" />
-      </div>
-      <div class="col-md-12 col-xxl-4">
-        <app-transactions-chart [seriesData]="[20, 10, 18, 12, 25, 10, 20]" [colors]="['#ff4d4f']" />
+      <div class="text-end" *ngIf="finance.lastStatementMonth">
+        <small class="text-muted">Last Statement</small>
+        <h5 class="mb-0">{{ finance.lastStatementMonth }}</h5>
       </div>
     </div>
-    <app-cash-flow-chart />
-    <app-card [showHeader]="false">
-      <div class="d-flex align-items-center justify-content-between mb-3">
-        <h5 class="mb-0">Where your money go ?</h5>
-        <button class="btn btn-sm btn-primary">
-          <div class="d-flex align-items-center">
-            <i class="me-2 d-flex" antIcon type="plus" theme="outline"></i>
-            <span>Add New</span>
-          </div>
-        </button>
-      </div>
-      <div class="row g-3">
-        @for (item of moneyGoList; track item) {
-          <div class="col-md-6 col-xxl-3">
-            <app-card [showHeader]="false" [padding]="14" cardClass="border mb-0 shadow-none">
-              <div class="d-flex align-items-center justify-content-between mb-3">
-                <img src="{{ item.image }}" alt="img" class="img-fluid" />
-                <div ngbDropdown placement="bottom-end">
-                  <a class="avatar avatar-xs btn-link-secondary arrow-none" href="javascript:" ngbDropdownToggle>
-                    <i class="f-18" antIcon type="more" theme="outline"></i>
-                  </a>
-                  <div ngbDropdownMenu>
-                    <a ngbDropdownItem>Today</a>
-                    <a ngbDropdownItem>Weekly</a>
-                    <a ngbDropdownItem>Monthly</a>
-                  </div>
-                </div>
-              </div>
-              <h6 class="mb-3">{{ item.title }}</h6>
-              <div class="bg-dark p-3 pt-4 rounded">
-                <div class="progress bg-white bg-opacity-25" style="height: 6px">
-                  <div class="progress-bar bg-white" [style.width.%]="item.progress"></div>
-                </div>
-                <div class="d-flex align-items-center justify-content-between mt-2">
-                  <p class="mb-0 text-white text-opacity-75 text-sm">{{ item.progress }}%</p>
-                  <p class="mb-0 text-white text-opacity-75 text-sm">{{ item.total }}</p>
-                </div>
-              </div>
-            </app-card>
-          </div>
-        }
-      </div>
-    </app-card>
   </div>
-  <div class="col-md-12 col-xxl-4">
-    <app-card [showHeader]="false">
-      <h5 class="mb-3">Accounts</h5>
-      <div class="row g-3">
-        @for (card of accountCardList; track card) {
-          <div class="col-12">
-            @if (card.addNewCard === true) {
-              <input class="form-control d-none" type="file" id="formFile" />
-              <label for="formFile" class="form-label d-block mb-0">
-                <app-card [showHeader]="false" cardClass="shadow-none border mb-0" blockClass="text-center" [padding]="16">
-                  <span class="d-flex align-items-center justify-content-center gap-2 flex-column">
-                    <span class="avatar avatar-s bg-dark text-white rounded-circle">
-                      <i class="f-18 d-flex" antIcon type="plus" theme="outline"></i>
-                    </span>
-                    <span class="text-muted">Add to Account</span>
-                  </span>
-                </app-card>
-              </label>
-            } @else {
-              <app-card [showHeader]="false" cardClass="shadow-none border mb-0" [padding]="16">
-                <div class="d-flex align-items-center">
-                  <div class="flex-shrink-0">
-                    <img src="{{ card.image }}" alt="img" class="img-fluid" />
-                  </div>
-                  <div class="flex-grow-1 ms-3">
-                    <div class="d-flex align-items-center justify-content-center gap-2 text-success">
-                      <i class="ti ti-circle f-10"></i>
-                      <p class="mb-0">Active</p>
-                    </div>
-                  </div>
-                  <div class="flex-shrink-0">
-                    <h6 class="mb-0">12,920.000</h6>
-                    <p class="mb-0">US Dollar</p>
-                  </div>
-                </div>
-              </app-card>
-            }
-          </div>
-        }
+
+  <!-- Summary Cards -->
+  <div class="col-md-6 col-xl-3" *ngIf="!finance.managerView">
+    <div class="card shadow-sm mb-3">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">My Pending</h6>
+        <h3 class="mb-0 text-danger">{{ finance.myPending | currency:'EUR' }}</h3>
       </div>
-    </app-card>
+    </div>
   </div>
-  <div class="col-md-6 col-xxl-4">
-    <app-card cardTitle="Quick Transfer" headerClass="pb-0 border-bottom-0" blockClass="py-3">
-      <div class="d-flex align-items-center justify-content-between gap-2 my-3">
-        @for (list of userList; track list) {
-          @if (list.newUserAdd === true) {
-            <a href="javascript:" class="avatar border border-secondary rounded-circle btn-light-secondary">
-              <i class="feather icon-plus f-20"></i>
-            </a>
-          } @else {
-            <a href="javascript:" class="avatar overflow-x-auto">
-              <img class="rounded-circle img-fluid" src="{{ list.image }}" alt="User image" />
-            </a>
-          }
-        }
+  <div class="col-md-6 col-xl-3" *ngIf="!finance.managerView">
+    <div class="card shadow-sm mb-3">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">My Paid</h6>
+        <h3 class="mb-0 text-success">{{ finance.myPaid | currency:'EUR' }}</h3>
       </div>
-      <h5 class="my-2">Recent Transfer</h5>
-      <ul class="list-group list-group-flush">
-        @for (list of recentTransfer; track list; let last = $last) {
-          <li class="list-group-item bg-transparent px-0 border-0" [ngClass]="{ 'pb-1': last }">
-            <div class="d-flex align-items-center">
-              <div class="flex-shrink-0">
-                <div class="avatar avatar-s border rounded" [ngClass]="backgroundColor">
-                  <img src="{{ list.image }}" alt="img" class="wid-25 rounded-circle" />
-                </div>
-              </div>
-              <div class="flex-grow-1 ms-3">
-                <div class="row g-1">
-                  <div class="col-6">
-                    <h6 class="mb-0">{{ list.name }}</h6>
-                    <p class="text-muted mb-0">{{ list.date }}</p>
-                  </div>
-                  <div class="col-6 text-end">
-                    <h5 class="mb-1 {{ list.color }}">{{ list.amount }}</h5>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </li>
-        }
-      </ul>
-    </app-card>
+    </div>
   </div>
-  <div class="col-md-6 col-xxl-4">
-    <app-category-chart />
+
+  <!-- Manager summary cards -->
+  <div class="col-md-6 col-xl-3" *ngIf="finance.managerView">
+    <div class="card shadow-sm mb-3 border-start border-primary border-3">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Total Collected</h6>
+        <h3 class="mb-0 text-success">{{ finance.totalBuildingCollected | currency:'EUR' }}</h3>
+      </div>
+    </div>
   </div>
-  <div class="col-sm-12">
-    <app-card cardTitle="Transaction History" [padding]="0">
-      <ng-template #headerOptionsTemplate>
-        <button class="btn btn-sm btn-link-primary">View All</button>
-      </ng-template>
-      <div class="table-responsive">
-        <table class="table table-hover mb-0">
-          <thead>
-            <tr>
-              <th>USER NAME</th>
-              <th>CATEGORY</th>
-              <th>DATE/TIME</th>
-              <th>AMOUNT</th>
-              <th>STATUS</th>
-              <th>ACTIONS</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (history of transactionsHistoryList; track history) {
+  <div class="col-md-6 col-xl-3" *ngIf="finance.managerView">
+    <div class="card shadow-sm mb-3 border-start border-danger border-3">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Total Pending</h6>
+        <h3 class="mb-0 text-danger">{{ finance.totalBuildingPending | currency:'EUR' }}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-xl-3" *ngIf="finance.managerView">
+    <div class="card shadow-sm mb-3 border-start border-info border-3">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Collection Rate</h6>
+        <h3 class="mb-0">{{ finance.collectionRate | number:'1.1-1' }}%</h3>
+        <div class="progress mt-2" style="height: 6px;">
+          <div class="progress-bar bg-success" [style.width.%]="collectionRateWidth"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-xl-3" *ngIf="finance.managerView">
+    <div class="card shadow-sm mb-3 border-start bg-light">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Members / Apartments</h6>
+        <h3 class="mb-0">{{ finance.totalMembers }} / {{ finance.totalApartments }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statement History -->
+  <div class="col-12 col-xl-8">
+    <div class="card shadow-sm mb-3">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Statement History</h5>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
               <tr>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0">
-                      <img src="{{ history.image }}" alt="user image" class="img-radius wid-40" />
-                    </div>
-                    <div class="flex-grow-1 ms-3">
-                      <h6 class="mb-0">{{ history.name }}</h6>
-                    </div>
-                  </div>
+                <th>Month</th>
+                <th>Code</th>
+                <th class="text-end">Building Total</th>
+                <th class="text-end" *ngIf="!finance.managerView">My Share</th>
+                <th class="text-end" *ngIf="!finance.managerView">Paid</th>
+                <th class="text-end" *ngIf="!finance.managerView">Remaining</th>
+                <th class="text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let stmt of finance.statements">
+                <td>{{ stmt.month }}</td>
+                <td><small>{{ stmt.code }}</small></td>
+                <td class="text-end">{{ stmt.totalForBuilding | currency:'EUR' }}</td>
+                <td class="text-end" *ngIf="!finance.managerView">{{ stmt.totalForApartment | currency:'EUR' }}</td>
+                <td class="text-end" *ngIf="!finance.managerView">{{ stmt.paidAmount | currency:'EUR' }}</td>
+                <td class="text-end" *ngIf="!finance.managerView">
+                  <span [class.text-danger]="stmt.remainingAmount > 0" [class.text-success]="stmt.remainingAmount <= 0">
+                    {{ stmt.remainingAmount | currency:'EUR' }}
+                  </span>
                 </td>
-                <td>{{ history.category }}</td>
-                <td>
-                  {{ history.date }}
-                  <span class="text-muted text-sm d-block">{{ history.time }}</span>
-                </td>
-                <td>{{ history.amount }}</td>
-                <td>
-                  @if (history.status === 'completed') {
-                    <span class="badge text-bg-success text-sm">Completed</span>
-                  } @else if (history.status === 'pending') {
-                    <span class="badge text-bg-warning text-sm">Pending</span>
-                  } @else if (history.status === 'canceled') {
-                    <span class="badge text-bg-danger text-sm">Canceled</span>
-                  } @else if (history.status === 'progress') {
-                    <span class="badge text-bg-primary text-sm">In Progress</span>
-                  }
-                </td>
-                <td>
-                  <a href="javascript:" class="avatar avatar-xs btn-link-secondary">
-                    <i class="f-18 d-flex" antIcon type="eye" theme="outline"></i>
-                  </a>
-                  <a href="javascript:" class="avatar avatar-xs btn-link-secondary mx-1">
-                    <i class="f-18 d-flex" antIcon type="edit" theme="outline"></i>
-                  </a>
-                  <a href="javascript:" class="avatar avatar-xs btn-link-secondary">
-                    <i class="f-18 d-flex" antIcon type="delete" theme="outline"></i>
-                  </a>
+                <td class="text-center">
+                  <span [class]="statusBadge(stmt.isPaid ? 'PAID' : 'UNPAID')">
+                    {{ stmt.isPaid ? 'Paid' : 'Unpaid' }}
+                  </span>
                 </td>
               </tr>
-            }
-          </tbody>
-        </table>
+              <tr *ngIf="!finance.statements?.length">
+                <td colspan="7" class="text-center text-muted py-3">No statements found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </app-card>
+    </div>
+  </div>
+
+  <!-- Current Month Expenses -->
+  <div class="col-12 col-xl-4">
+    <div class="card shadow-sm mb-3">
+      <div class="card-header">
+        <h5 class="mb-0">Current Month Expenses</h5>
+      </div>
+      <div class="card-body">
+        <div *ngFor="let exp of finance.currentMonthExpenses" class="mb-3">
+          <div class="d-flex justify-content-between mb-1">
+            <span class="small">{{ categoryLabel(exp.category) }}</span>
+            <span class="small fw-bold">{{ exp.totalAmount | currency:'EUR' }}</span>
+          </div>
+          <div class="progress" style="height: 8px;">
+            <div class="progress-bar" role="progressbar"
+                 [style.width.%]="(exp.totalAmount / maxCategoryAmount) * 100"
+                 [class.bg-primary]="true">
+            </div>
+          </div>
+        </div>
+        <p *ngIf="!finance.currentMonthExpenses?.length" class="text-muted text-center mb-0 py-3">No expenses this month.</p>
+      </div>
+    </div>
+
+    <!-- Recent Payments -->
+    <div class="card shadow-sm mb-3">
+      <div class="card-header">
+        <h5 class="mb-0">Recent Payments</h5>
+      </div>
+      <div class="card-body p-0">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item px-3" *ngFor="let p of recentPayments">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <small class="fw-bold d-block">{{ p.userFullName || '—' }}</small>
+                <small class="text-muted">{{ p.paymentDate | date:'dd/MM/yyyy' }}</small>
+              </div>
+              <span class="fw-bold text-success">{{ p.amount | currency:'EUR' }}</span>
+            </div>
+          </li>
+          <li class="list-group-item px-3 text-center text-muted py-3" *ngIf="!recentPayments.length">
+            No recent payments.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Manager: Member Payment Status -->
+  <div class="col-12" *ngIf="finance.managerView && finance.memberPaymentStatuses?.length">
+    <div class="card shadow-sm mb-3">
+      <div class="card-header">
+        <h5 class="mb-0">Member Payment Status (Last Statement)</h5>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Member</th>
+                <th>Apartment</th>
+                <th class="text-end">Due</th>
+                <th class="text-end">Paid</th>
+                <th class="text-end">Remaining</th>
+                <th class="text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let m of finance.memberPaymentStatuses">
+                <td>{{ m.fullName }}</td>
+                <td>{{ m.apartmentNumber }}</td>
+                <td class="text-end">{{ m.amountDue | currency:'EUR' }}</td>
+                <td class="text-end">{{ m.amountPaid | currency:'EUR' }}</td>
+                <td class="text-end">
+                  <span [class.text-danger]="m.amountDue - m.amountPaid > 0" [class.text-success]="m.amountDue - m.amountPaid <= 0">
+                    {{ m.amountDue - m.amountPaid | currency:'EUR' }}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <span [class]="statusBadge(m.status)">{{ statusLabel(m.status) }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading -->
+<div class="row" *ngIf="loading">
+  <div class="col-12 text-center py-5">
+    <div class="spinner-border text-primary mb-3" role="status"></div>
+    <p class="text-muted">Loading financial data...</p>
+  </div>
+</div>
+
+<!-- Error -->
+<div class="row" *ngIf="error">
+  <div class="col-12 text-center py-5">
+    <div class="text-danger mb-2" style="font-size: 48px;">&#9888;</div>
+    <h5>Error</h5>
+    <p class="text-muted">{{ error }}</p>
+    <button class="btn btn-primary" (click)="loadFinance()">Retry</button>
   </div>
 </div>
