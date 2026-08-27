@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Component, TemplateRef, viewChild, inject, Input, OnInit, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, inject, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -24,7 +24,7 @@ import { IconService } from '@ant-design/icons-angular';
 import { EditOutline, DeleteOutline, PushpinOutline, PushpinFill } from '@ant-design/icons-angular/icons';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 
-type UiCalendarEvent = CalendarEvent & { pinned?: boolean; description?: string };
+type UiCalendarEvent = CalendarEvent & { pinned?: boolean; description?: string; active?: boolean; buildingId?: number };
 
 @Component({
   selector: 'app-calendar',
@@ -39,7 +39,6 @@ type UiCalendarEvent = CalendarEvent & { pinned?: boolean; description?: string 
     CalendarDayModule,
     FormsModule,
     DatePipe,
-    NgbTooltipModule,
     NgbTooltipModule,
     SharedModule
   ]
@@ -58,12 +57,15 @@ export class CalenderComponent implements OnInit, OnChanges {
 
   events: UiCalendarEvent[] = [];
 
-  readonly modalContent = viewChild.required<TemplateRef<string>>('modalContent');
+  // Φίλτρο πίνακα ανακοινώσεων: 'all' | 'active' | 'inactive'
+  statusFilter: 'all' | 'active' | 'inactive' = 'all';
 
-  modalData!: { action: string; event: CalendarEvent };
-
-  selectedBuildingId!: number;
   myBuildings: any[] = [];
+
+  get filteredEvents(): UiCalendarEvent[] {
+    if (this.statusFilter === 'all') return this.events;
+    return this.events.filter((e) => !!e.active === (this.statusFilter === 'active'));
+  }
 
   constructor(
     private calendarService: CalendarService,
@@ -82,11 +84,6 @@ export class CalenderComponent implements OnInit, OnChanges {
 
           this.buildingId = Number(firstBuilding?.id ?? firstBuilding?.buildingId);
 
-          console.log('BUILDINGS:', buildings);
-          console.log('INIT buildingId:', this.buildingId);
-
-          this.loadEvents();
-          console.log('selectedBuildingId:', this.buildingId);
           this.loadEvents();
         } else {
           console.warn('Δεν βρέθηκαν πολυκατοικίες για τον χρήστη');
@@ -98,7 +95,6 @@ export class CalenderComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['buildingId'] && this.buildingId) {
-      console.log('Building ID changed:', this.buildingId);
       this.loadEvents();
     }
   }
@@ -106,7 +102,7 @@ export class CalenderComponent implements OnInit, OnChanges {
   loadEvents(): void {
     if (!this.buildingId) return;
 
-    this.calendarService.getByBuilding(this.buildingId).subscribe({
+    this.calendarService.getByBuilding(this.buildingId, true).subscribe({
       next: (data) => {
         this.events = data.map((e) => ({
           id: e.id,
@@ -118,7 +114,9 @@ export class CalenderComponent implements OnInit, OnChanges {
             primary: e.colorPrimary ?? '#1677ff',
             secondary: '#D1E8FF'
           },
-          pinned: !!e.pinned
+          pinned: !!e.pinned,
+          active: e.active,
+          buildingId: e.buildingId
         }));
 
         this.refresh.next();
@@ -145,11 +143,6 @@ export class CalenderComponent implements OnInit, OnChanges {
     this.refresh.next();
   }
 
-  handleEvent(action: string, event: CalendarEvent): void {
-    this.modalData = { event, action };
-    this.modal.open(this.modalContent, { size: 'lg' });
-  }
-
   setView(view: CalendarView) {
     this.view = view;
   }
@@ -173,8 +166,6 @@ export class CalenderComponent implements OnInit, OnChanges {
         buildingId: Number(this.buildingId)
       };
 
-      console.log('CALENDAR PAYLOAD:', payload);
-
       this.calendarService.create(payload).subscribe({
         next: () => this.loadEvents(),
         error: (err) => console.error('Σφάλμα προσθήκης event:', err)
@@ -188,7 +179,7 @@ export class CalenderComponent implements OnInit, OnChanges {
     modalRef.componentInstance.eventData = {
       id: event.id,
       title: event.title,
-      description: (event as any).description, // αν δεν το έχεις, πρόσθεσέ το
+      description: (event as any).description,
       startDate: event.start,
       endDate: event.end,
       colorPrimary: event.color?.primary,

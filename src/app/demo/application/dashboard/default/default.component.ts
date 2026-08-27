@@ -9,7 +9,6 @@ import { SalesReportChartComponent } from 'src/app/theme/shared/apexchart/sales-
 
 // icons
 import { IconService } from '@ant-design/icons-angular';
-import { AcquisitionChartComponent } from 'src/app/theme/shared/apexchart/acquisition-chart/acquisition-chart.component';
 import { CheckOutline, CloseOutline, ClockCircleOutline, PlusOutline } from '@ant-design/icons-angular/icons';
 import { ThemeService } from 'src/app/theme/shared/service/customs-theme.service';
 import { RouterModule } from '@angular/router';
@@ -35,8 +34,6 @@ import { UserDashboardService } from 'src/app/theme/shared/service/userDashboard
     CommonModule,
     SharedModule,
     LastStatementCardComponent,
-    AcquisitionChartComponent,
-    PollsTableComponent,
     BuildingTotalCardComponent,
     BuildingChartComponent,
     SalesReportChartComponent,

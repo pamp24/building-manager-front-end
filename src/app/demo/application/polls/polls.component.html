@@ -10,6 +10,10 @@
     {{ voteError }}
   </div>
 
+  <div *ngIf="toastMessage" class="alert alert-success mt-3 text-center">
+    {{ toastMessage }}
+  </div>
+
   <div *ngIf="!notMember">
     <!--   ΠΙΝΑΚΑΣ ΔΙΑΧΕΙΡΙΣΤΗ    -->
 
