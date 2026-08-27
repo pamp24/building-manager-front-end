@@ -40,7 +40,7 @@
               [refresh]="refresh"
               [activeDayIsOpen]="activeDayIsOpen"
               (dayClicked)="dayClicked($event.day)"
-              (eventClicked)="handleEvent('Clicked', $event.event)"
+              (eventClicked)="openEditModal($event.event)"
               (eventTimesChanged)="eventTimesChanged($event)"
             ></mwl-calendar-month-view>
           }
@@ -49,7 +49,7 @@
               [viewDate]="viewDate"
               [events]="events"
               [refresh]="refresh"
-              (eventClicked)="handleEvent('Clicked', $event.event)"
+              (eventClicked)="openEditModal($event.event)"
               (eventTimesChanged)="eventTimesChanged($event)"
             ></mwl-calendar-week-view>
           }
@@ -58,7 +58,7 @@
               [viewDate]="viewDate"
               [events]="events"
               [refresh]="refresh"
-              (eventClicked)="handleEvent('Clicked', $event.event)"
+              (eventClicked)="openEditModal($event.event)"
               (eventTimesChanged)="eventTimesChanged($event)"
             ></mwl-calendar-day-view>
           }
@@ -75,21 +75,50 @@
 
       <div class="table-responsive mt-4">
         <h5 class="mb-3">Γεγονότα που έχουν προστεθεί</h5>
+
+        <!-- Φίλτρα ενεργών / ανενεργών -->
+        <div class="btn-group btn-group-sm mb-3" role="group" aria-label="Φίλτρο κατάστασης">
+          <button
+            type="button"
+            class="btn"
+            [ngClass]="statusFilter === 'all' ? 'btn-primary' : 'btn-outline-secondary'"
+            (click)="statusFilter = 'all'"
+          >Όλες</button>
+          <button
+            type="button"
+            class="btn"
+            [ngClass]="statusFilter === 'active' ? 'btn-success' : 'btn-outline-secondary'"
+            (click)="statusFilter = 'active'"
+          >Ενεργές</button>
+          <button
+            type="button"
+            class="btn"
+            [ngClass]="statusFilter === 'inactive' ? 'btn-secondary' : 'btn-outline-secondary'"
+            (click)="statusFilter = 'inactive'"
+          >Ανενεργές</button>
+        </div>
+
         <table class="table table-bordered align-middle text-center">
           <thead class="table-light">
             <tr>
               <th>Τίτλος</th>
               <th>Αρχή</th>
               <th>Λήξη</th>
+              <th>Κατάσταση</th>
               <th>Ενέργειες</th>
             </tr>
           </thead>
           <tbody>
-            @for (event of events; track event) {
+            @for (event of filteredEvents; track event) {
               <tr>
                 <td>{{ event.title }}</td>
                 <td>{{ event.start | date: 'medium' }}</td>
                 <td>{{ event.end | date: 'medium' }}</td>
+                <td>
+                  <span class="badge px-3 py-2" [ngClass]="$any(event).active ? 'bg-success' : 'bg-secondary'">
+                    {{ $any(event).active ? 'Ενεργή' : 'Ανενεργή' }}
+                  </span>
+                </td>
                 <td>
                   <ul class="list-inline mb-0">
                     <!-- Pin -->

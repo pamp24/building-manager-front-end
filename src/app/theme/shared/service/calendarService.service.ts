@@ -11,8 +11,8 @@ export class CalendarService {
 
   constructor(private http: HttpClient) {}
 
-  getByBuilding(buildingId: number): Observable<CalendarDTO[]> {
-  return this.http.get<CalendarDTO[]>(`${this.baseUrl}/building/${buildingId}`);
+  getByBuilding(buildingId: number, includeInactive = false): Observable<CalendarDTO[]> {
+  return this.http.get<CalendarDTO[]>(`${this.baseUrl}/building/${buildingId}?includeInactive=${includeInactive}`);
 }
 
   create(event: any): Observable<any> {

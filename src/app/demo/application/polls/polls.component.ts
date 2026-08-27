@@ -36,6 +36,7 @@ export class PollsComponent implements OnInit {
   pollVotes: any[] = [];
   votesLoading = false;
   activePolls: any[] = [];
+  loading = false;
 
   buildings: any[] = [];
   manageableBuildings: any[] = [];
@@ -86,13 +87,22 @@ export class PollsComponent implements OnInit {
 }
 
   loadPolls() {
+    this.loading = true;
     this.pollService.getMy().subscribe({
       next: (data) => {
         this.polls = data || [];
         this.activePolls = this.polls.filter((p) => p.active);
+        this.userVotedPolls = {};
+        this.polls.forEach((p) => {
+          if (Array.isArray(p.votedOptionIds)) {
+            this.userVotedPolls[p.id] = p.votedOptionIds;
+          }
+        });
+        this.loading = false;
       },
       error: (err) => {
         console.error(err);
+        this.loading = false;
         this.voteError = 'Σφάλμα φόρτωσης ψηφοφοριών.';
       }
     });
@@ -108,7 +118,9 @@ export class PollsComponent implements OnInit {
 
   isWinner(poll: any, option: any): boolean {
     if (poll.active) return false;
-    const maxVotes = Math.max(...poll.options.map((o: any) => o.votes));
+    const options = poll.options || [];
+    if (!options.length) return false;
+    const maxVotes = Math.max(...options.map((o: any) => o.votes));
     return option.votes === maxVotes && maxVotes > 0;
   }
 
@@ -126,15 +138,21 @@ export class PollsComponent implements OnInit {
           this.polls = [...this.polls];
         }
 
+        if (Array.isArray(updatedPoll.votedOptionIds)) {
+          this.userVotedPolls[pollId] = updatedPoll.votedOptionIds;
+        }
+
         if (this.expandedPollId === pollId) {
           this.loadVotes(pollId);
         }
+
+        this.toastMessage = 'Η ψήφος σου καταγράφηκε.';
         setTimeout(() => (this.toastMessage = null), 3000);
       },
       error: (err) => {
         console.error(err);
-        this.toastMessage = 'Σφάλμα κατά την ψήφο.';
-        setTimeout(() => (this.toastMessage = null), 3000);
+        this.voteError = 'Σφάλμα κατά την ψήφο. Προσπάθησε ξανά.';
+        setTimeout(() => (this.voteError = null), 3000);
       }
     });
   }
@@ -218,11 +236,7 @@ export class PollsComponent implements OnInit {
     if (!confirm('Θέλετε σίγουρα να διαγράψετε αυτή τη ψηφοφορία;')) return;
 
     this.pollService.deactivate(pollId).subscribe({
-      next: () => {
-        this.polls = this.polls.filter((p) => p.id !== pollId);
-        this.activePolls = this.polls.filter((p) => p.active);
-        this.loadPolls();
-      },
+      next: () => this.loadPolls(),
       error: (err) => {
         console.error('Σφάλμα διαγραφής:', err);
         alert('Σφάλμα κατά τη διαγραφή.');

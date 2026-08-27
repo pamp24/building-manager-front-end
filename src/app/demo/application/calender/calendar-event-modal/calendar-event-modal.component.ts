@@ -46,12 +46,29 @@ export class CalendarEventModalComponent implements OnInit {
 
   saveEvent(): void {
     const payload = {
-      ...this.event,
+      title: this.event.title,
+      description: this.event.description,
+      startDate: this.toLocalIso(this.event.startDate),
+      endDate: this.event.endDate ? this.toLocalIso(this.event.endDate) : null,
+      colorPrimary: this.event.colorPrimary,
+      colorSecondary: this.event.colorSecondary,
       buildingId: this.buildingId,
       id: this.eventData?.id ?? null
     };
 
     this.save.emit(payload);
     this.activeModal.close();
+  }
+
+  private toLocalIso(value: any): string {
+    const date = value instanceof Date ? value : new Date(value);
+    if (isNaN(date.getTime())) {
+      return value;
+    }
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return (
+      `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}` +
+      `T${pad(date.getHours())}:${pad(date.getMinutes())}`
+    );
   }
 }

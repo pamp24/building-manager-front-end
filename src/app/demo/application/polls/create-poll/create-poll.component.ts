@@ -43,7 +43,13 @@ export class CreatePollComponent {
     // === ΠΕΡΝΑΜΕ ΤΟ buildingId ΣΤΟ BACKEND ===
     this.newPoll.buildingId = this.buildingId;
 
-    this.pollService.create(this.newPoll).subscribe({
+    // Αν οι ημερομηνίες είναι κενές, μην τις στέλνεις στο backend
+    // (το Jackson δεν δέχεται κενό string για LocalDateTime → 400)
+    const payload = { ...this.newPoll };
+    if (!payload.startDate) payload.startDate = null;
+    if (!payload.endDate) payload.endDate = null;
+
+    this.pollService.create(payload).subscribe({
       next: () => {
         this.pollCreated.emit();
         this.activeModal.close();  // κλείνει το modal
