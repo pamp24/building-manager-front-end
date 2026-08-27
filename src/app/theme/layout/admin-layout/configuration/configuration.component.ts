@@ -5,6 +5,7 @@ import { Location, LocationStrategy } from '@angular/common';
 // project import
 import { MantisConfig } from 'src/app/app-config';
 import { ThemeService } from 'src/app/theme/shared/service/customs-theme.service';
+import { AuthenticationService } from 'src/app/theme/shared/service/authentication.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { ScrollbarComponent } from 'src/app/theme/shared/components/scrollbar/scrollbar.component';
 
@@ -25,6 +26,7 @@ export class ConfigurationComponent implements OnInit {
   private renderer = inject(Renderer2);
   private iconService = inject(IconService);
   private document = inject<Document>(DOCUMENT);
+  private authenticationService = inject(AuthenticationService);
 
   // public props
   readonly Customize = output();
@@ -50,16 +52,42 @@ export class ConfigurationComponent implements OnInit {
 
   // life cycle event
   ngOnInit() {
-    this.layoutType = MantisConfig.isDarkMode;
+    const storedMode = localStorage.getItem('theme-mode') ?? sessionStorage.getItem('theme-mode');
+    this.layoutType = storedMode !== null ? storedMode === 'dark' : MantisConfig.isDarkMode;
     this.setDarkLayout(this.layoutType);
-    this.bodyColor = MantisConfig.theme_color;
+
+    // Το θέμα προσαρμόζεται αυτόματα βάσει του ρόλου του χρήστη
+    this.bodyColor = this.resolveRolePreset(this.authenticationService.currentUserValue?.role);
     this.SetBodyColor(this.bodyColor);
+
     this.rtlLayout = MantisConfig.isRtlLayout;
     this.setLayout(this.rtlLayout);
     this.boxLayout = MantisConfig.isBox_container;
     this.setBoxContainer(this.boxLayout);
     this.setFontFamily = MantisConfig.font_family;
     this.fontFamily(this.setFontFamily);
+  }
+
+  /**
+   * Αντιστοιχίζει τον ρόλο του χρήστη στο χρώμα (preset) του θέματος.
+   * PM → green (preset-4) | BM → orange (preset-6) | owner/resident → blue (preset-1) | admin → purple (preset-3)
+   */
+  private resolveRolePreset(role?: string): string {
+    switch (role) {
+      case 'PropertyManager':
+      case 'PropertyAgent':
+        return 'preset-4'; // πρασινο
+      case 'BuildingManager':
+        return 'preset-6'; // πορτοκαλί
+      case 'Admin':
+      case 'AdminAgent':
+        return 'preset-3'; // μοβ
+      case 'Owner':
+      case 'Resident':
+      case 'User':
+      default:
+        return 'preset-1'; // μπλε
+    }
   }
 
   // public method
@@ -95,7 +123,14 @@ export class ConfigurationComponent implements OnInit {
   }
 
   setDarkLayout(isDark: boolean) {
-    if (isDark) {
+    localStorage.setItem('theme-mode', isDark ? 'dark' : 'light');
+    sessionStorage.setItem('theme-mode', isDark ? 'dark' : 'light');
+
+    // Το dark theme εφαρμόζεται μόνο σε συνδεδεμένο χρήστη (η σελίδα Login μένει πάντα ανοιχτή/light)
+    const loggedIn = !!this.authenticationService.currentUserValue;
+    const applyDark = isDark && loggedIn;
+
+    if (applyDark) {
       document.querySelector('body')?.classList.add('mantis-dark');
       document.querySelector('html')?.classList.add('dark');
       this.layoutType = true;

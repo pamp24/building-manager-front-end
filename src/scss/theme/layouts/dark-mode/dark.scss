@@ -170,9 +170,20 @@ body.mantis-dark {
 
   // customize
   .menu-styler {
+    .style-block {
+      background: #{$dark-layout-color-light};
+      border-left: 1px solid var(--pc-border-color);
+    }
+
+    .list-group {
+      --bs-list-group-bg: #{$dark-layout-color-light};
+    }
+
     .list-group-flush {
       background: #{$dark-layout-color-light};
+      border-color: var(--pc-border-color);
     }
+
     .pct-content {
       .btn {
         color: var(--bs-body-color) !important;
