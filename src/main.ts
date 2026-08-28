@@ -3,7 +3,12 @@ import { enableProdMode, importProvidersFrom } from '@angular/core';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { registerLocaleData } from '@angular/common';
+import localeEl from '@angular/common/locales/el';
 import { environment } from './environments/environment';
+
+// register EL locale data (used by the calendar for Greek month/day names)
+registerLocaleData(localeEl);
 
 // project import
 import { AppComponent } from './app/app.component';

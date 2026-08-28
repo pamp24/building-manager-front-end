@@ -22,14 +22,14 @@
     <app-card [showHeader]="false">
       <form [formGroup]="form">
         <div class="row g-3">
-          <div class="col-sm-6 col-xl-4">
+          <div class="col-sm-6 col-xl-3">
             <div class="mb-0">
               <label class="form-label">Κωδικός Κατάστασης Κοινοχρήστων</label>
               <input type="text" class="form-control" formControlName="code" readonly />
             </div>
           </div>
           <!-- Τύπος -->
-          <div class="col-sm-6 col-xl-2">
+          <div class="col-sm-6 col-xl-3">
             <label class="form-label">Κατάσταση</label>
             <select class="form-select" formControlName="type">
               <option>Νέο</option>
@@ -37,19 +37,44 @@
               <option>Παλαιότερο</option>
             </select>
           </div>
-          <!-- Μήνας -->
-          <div class="col-sm-6 col-xl-2">
-            <label class="form-label">Μήνας</label>
-            <input type="month" class="form-control" formControlName="month" />
-          </div>
           <!-- Ημερομηνίες -->
-          <div class="col-sm-6 col-xl-2">
+          <div class="col-sm-6 col-xl-3">
             <label class="form-label">Ημερομηνία Έναρξης</label>
-            <input type="datetime-local" class="form-control" formControlName="startDate" />
+            <div class="input-group">
+              <input
+                class="form-control"
+                placeholder="ηη/μμ/εεεε"
+                name="startDateText"
+                ngbDatepicker
+                #startDp="ngbDatepicker"
+                [(ngModel)]="startDateModel"
+                [ngModelOptions]="{ standalone: true }"
+                (dateSelect)="onStartDateSelect($event)"
+                readonly
+              />
+              <button type="button" class="btn btn-outline-secondary" (click)="startDp.toggle()">
+                <i class="f-16" antIcon type="calendar" theme="outline"></i>
+              </button>
+            </div>
           </div>
-          <div class="col-sm-6 col-xl-2">
+          <div class="col-sm-6 col-xl-3">
             <label class="form-label">Ημερομηνία Λήξης</label>
-            <input type="datetime-local" class="form-control" formControlName="endDate" />
+            <div class="input-group">
+              <input
+                class="form-control"
+                placeholder="ηη/μμ/εεεε"
+                name="endDateText"
+                ngbDatepicker
+                #endDp="ngbDatepicker"
+                [(ngModel)]="endDateModel"
+                [ngModelOptions]="{ standalone: true }"
+                (dateSelect)="onEndDateSelect($event)"
+                readonly
+              />
+              <button type="button" class="btn btn-outline-secondary" (click)="endDp.toggle()">
+                <i class="f-16" antIcon type="calendar" theme="outline"></i>
+              </button>
+            </div>
           </div>
           <div class="col-xl-6">
             <div class="border rounded p-3 h-100">

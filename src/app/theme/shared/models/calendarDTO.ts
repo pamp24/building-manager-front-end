@@ -8,4 +8,5 @@ export interface CalendarDTO {
   buildingId: number;
   active: boolean;
   pinned: boolean;
+  createdDate?: string;
 }

@@ -20,7 +20,7 @@
           </div>
         </div>
         <div class="col-md-4">
-          <h3>{{ viewDate | calendarDate: view + 'ViewTitle' : 'en' }}</h3>
+          <h3>{{ viewDate | calendarDate: view + 'ViewTitle' : 'el' }}</h3>
         </div>
         <div class="col-md-4">
           <div class="btn-group">
@@ -68,7 +68,7 @@
       <br />
       <br />
       <h3>
-        <button class="btn btn-primary float-end" (click)="openAddModal()">Προσθήκη</button>
+        <button *ngIf="canCreateAnnouncement" class="btn btn-primary float-end" (click)="openAddModal()">Προσθήκη</button>
         <div class="clearfix"></div>
       </h3>
       <h3>Επεξεργασία Ανακοινώσεων</h3>
@@ -82,19 +82,19 @@
             type="button"
             class="btn"
             [ngClass]="statusFilter === 'all' ? 'btn-primary' : 'btn-outline-secondary'"
-            (click)="statusFilter = 'all'"
+            (click)="setStatusFilter('all')"
           >Όλες</button>
           <button
             type="button"
             class="btn"
             [ngClass]="statusFilter === 'active' ? 'btn-success' : 'btn-outline-secondary'"
-            (click)="statusFilter = 'active'"
+            (click)="setStatusFilter('active')"
           >Ενεργές</button>
           <button
             type="button"
             class="btn"
             [ngClass]="statusFilter === 'inactive' ? 'btn-secondary' : 'btn-outline-secondary'"
-            (click)="statusFilter = 'inactive'"
+            (click)="setStatusFilter('inactive')"
           >Ανενεργές</button>
         </div>
 
@@ -102,16 +102,18 @@
           <thead class="table-light">
             <tr>
               <th>Τίτλος</th>
+              <th>Ανακοίνωση</th>
               <th>Αρχή</th>
               <th>Λήξη</th>
               <th>Κατάσταση</th>
-              <th>Ενέργειες</th>
+              <th *ngIf="isManager">Ενέργειες</th>
             </tr>
           </thead>
           <tbody>
-            @for (event of filteredEvents; track event) {
+            @for (event of paginatedEvents; track event) {
               <tr>
                 <td>{{ event.title }}</td>
+                <td>{{ $any(event).description }}</td>
                 <td>{{ event.start | date: 'medium' }}</td>
                 <td>{{ event.end | date: 'medium' }}</td>
                 <td>
@@ -119,7 +121,7 @@
                     {{ $any(event).active ? 'Ενεργή' : 'Ανενεργή' }}
                   </span>
                 </td>
-                <td>
+                <td *ngIf="isManager">
                   <ul class="list-inline mb-0">
                     <!-- Pin -->
                     <li class="list-inline-item">
@@ -161,11 +163,27 @@
               </tr>
             } @empty {
               <tr>
-                <td colspan="5" class="text-muted text-center">Δεν έχουν προστεθεί γεγονότα ακόμα</td>
+                <td [attr.colspan]="isManager ? 6 : 5" class="text-muted text-center">Δεν έχουν προστεθεί γεγονότα ακόμα</td>
               </tr>
             }
           </tbody>
         </table>
+
+        <nav *ngIf="filteredEvents.length > 0" class="mt-3">
+          <ul class="pagination pagination-sm justify-content-center mb-0">
+            <li class="page-item" [class.disabled]="page === 1">
+              <a class="page-link" href="javascript:void(0)" (click)="goToPage(page - 1)">Προηγ</a>
+            </li>
+            @for (p of pageArray; track p) {
+              <li class="page-item" [class.active]="p === page">
+                <a class="page-link" href="javascript:void(0)" (click)="goToPage(p)">{{ p }}</a>
+              </li>
+            }
+            <li class="page-item" [class.disabled]="page === totalPages">
+              <a class="page-link" href="javascript:void(0)" (click)="goToPage(page + 1)">Επόμ</a>
+            </li>
+          </ul>
+        </nav>
       </div>
     </app-card>
   </div>

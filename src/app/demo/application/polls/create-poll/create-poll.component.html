@@ -20,11 +20,37 @@
       <div class="row mt-3">
         <div class="col-md-6">
           <label class="form-label">Ημερομηνία Έναρξης</label>
-          <input type="datetime-local" class="form-control" [(ngModel)]="newPoll.startDate" name="startDate" />
+          <div class="input-group">
+            <input
+              class="form-control"
+              placeholder="εεεε-μμ-ηη"
+              name="startDateText"
+              ngbDatepicker
+              #startDp="ngbDatepicker"
+              [(ngModel)]="startDateModel"
+              readonly
+            />
+            <button type="button" class="btn btn-outline-secondary" (click)="startDp.toggle()">
+              <i class="f-16" antIcon type="calendar" theme="outline"></i>
+            </button>
+          </div>
         </div>
         <div class="col-md-6">
           <label class="form-label">Ημερομηνία Λήξης</label>
-          <input type="datetime-local" class="form-control" [(ngModel)]="newPoll.endDate" name="endDate" />
+          <div class="input-group">
+            <input
+              class="form-control"
+              placeholder="εεεε-μμ-ηη"
+              name="endDateText"
+              ngbDatepicker
+              #endDp="ngbDatepicker"
+              [(ngModel)]="endDateModel"
+              readonly
+            />
+            <button type="button" class="btn btn-outline-secondary" (click)="endDp.toggle()">
+              <i class="f-16" antIcon type="calendar" theme="outline"></i>
+            </button>
+          </div>
         </div>
       </div>
 

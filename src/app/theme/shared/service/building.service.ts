@@ -8,6 +8,7 @@ import { BuildingDocumentDTO } from '../models/building-document.model';
 import { BuildingRequest } from '../models/buildingRequest';
 import { ManagerDTO } from '../models/managerDTO';
 import { ManagedBuildingDTO } from '../models/managedBuildingDTO';
+import { MemberPermissionDTO } from '../models/memberPermissionDTO';
 
 @Injectable({ providedIn: 'root' })
 export class BuildingService {
@@ -96,5 +97,24 @@ export class BuildingService {
   getAllBuildingsForAdmin(): Observable<BuildingDTO[]> {
   return this.http.get<BuildingDTO[]>(`${this.apiUrl}/admin/all`);
 }
+
+  getMemberPermissions(buildingId: number): Observable<MemberPermissionDTO[]> {
+    return this.http.get<MemberPermissionDTO[]>(`${this.apiUrl}/${buildingId}/member-permissions`);
+  }
+
+  getMyPermissions(buildingId: number): Observable<MemberPermissionDTO> {
+    return this.http.get<MemberPermissionDTO>(`${this.apiUrl}/${buildingId}/my-permissions`);
+  }
+
+  updateMemberPermission(
+    buildingId: number,
+    userId: number,
+    permission: Partial<MemberPermissionDTO>
+  ): Observable<MemberPermissionDTO> {
+    return this.http.put<MemberPermissionDTO>(
+      `${this.apiUrl}/${buildingId}/member-permissions/${userId}`,
+      permission
+    );
+  }
   
 }

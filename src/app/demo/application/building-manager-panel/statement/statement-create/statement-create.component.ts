@@ -4,12 +4,13 @@ import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/cor
 
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { GreekDatepickerI18n } from 'src/app/theme/shared/service/greek-datepicker-i18n';
 
 // icons
 import { IconService } from '@ant-design/icons-angular';
-import { CloseOutline, DeleteOutline, EditOutline, PlusOutline } from '@ant-design/icons-angular/icons';
+import { CloseOutline, DeleteOutline, EditOutline, PlusOutline, CalendarOutline } from '@ant-design/icons-angular/icons';
 
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbDate, NgbDatepickerI18n } from '@ng-bootstrap/ng-bootstrap';
 
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { OnInit } from '@angular/core';
@@ -29,9 +30,12 @@ import { Observable } from 'rxjs';
   selector: 'app-statement-create',
   imports: [SharedModule],
   templateUrl: './statement-create.component.html',
-  styleUrl: './statement-create.component.scss'
+  styleUrl: './statement-create.component.scss',
+  providers: [{ provide: NgbDatepickerI18n, useClass: GreekDatepickerI18n }]
 })
 export class StatementCreateComponent implements OnInit, OnChanges {
+  startDateModel: NgbDate | null = null;
+  endDateModel: NgbDate | null = null;
   @Input() buildingId?: number;
   @Input() pmView = false;
   // public props
@@ -67,7 +71,7 @@ export class StatementCreateComponent implements OnInit, OnChanges {
     private buildingService: BuildingService,
     private ApartmentService: ApartmentService
   ) {
-    this.iconService.addIcon(...[EditOutline, PlusOutline, CloseOutline, DeleteOutline]);
+    this.iconService.addIcon(...[EditOutline, PlusOutline, CloseOutline, DeleteOutline, CalendarOutline]);
   }
 
   ngOnInit(): void {
@@ -219,6 +223,22 @@ export class StatementCreateComponent implements OnInit, OnChanges {
       return;
     }
     this.items.removeAt(i);
+  }
+
+  onStartDateSelect(model: NgbDate) {
+    this.startDateModel = model;
+    const mm = String(model.month).padStart(2, '0');
+    // Το πεδίο month (YYYY-MM) συμπληρώνεται αυτόματα από την ημερομηνία έναρξης
+    this.form.patchValue({ startDate: this.toDateString(model), month: `${model.year}-${mm}` });
+  }
+
+  onEndDateSelect(model: NgbDate) {
+    this.endDateModel = model;
+    this.form.patchValue({ endDate: this.toDateString(model) });
+  }
+
+  private toDateString(model: NgbDate): string {
+    return `${String(model.year).padStart(4, '0')}-${String(model.month).padStart(2, '0')}-${String(model.day).padStart(2, '0')}`;
   }
 
   calculateTotals() {

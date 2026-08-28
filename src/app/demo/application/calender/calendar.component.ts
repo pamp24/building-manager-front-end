@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Component, inject, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, inject, Input, OnInit, OnChanges, SimpleChanges, LOCALE_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -24,7 +24,7 @@ import { IconService } from '@ant-design/icons-angular';
 import { EditOutline, DeleteOutline, PushpinOutline, PushpinFill } from '@ant-design/icons-angular/icons';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 
-type UiCalendarEvent = CalendarEvent & { pinned?: boolean; description?: string; active?: boolean; buildingId?: number };
+type UiCalendarEvent = CalendarEvent & { pinned?: boolean; description?: string; active?: boolean; buildingId?: number; createdDate?: string };
 
 @Component({
   selector: 'app-calendar',
@@ -41,7 +41,8 @@ type UiCalendarEvent = CalendarEvent & { pinned?: boolean; description?: string;
     DatePipe,
     NgbTooltipModule,
     SharedModule
-  ]
+  ],
+  providers: [{ provide: LOCALE_ID, useValue: 'el' }]
 })
 export class CalenderComponent implements OnInit, OnChanges {
   private iconService = inject(IconService);
@@ -60,11 +61,39 @@ export class CalenderComponent implements OnInit, OnChanges {
   // Φίλτρο πίνακα ανακοινώσεων: 'all' | 'active' | 'inactive'
   statusFilter: 'all' | 'active' | 'inactive' = 'all';
 
+  page = 1;
+  pageSize = 5;
+
   myBuildings: any[] = [];
+  canCreateAnnouncement = false;
+  isManager = false;
 
   get filteredEvents(): UiCalendarEvent[] {
     if (this.statusFilter === 'all') return this.events;
     return this.events.filter((e) => !!e.active === (this.statusFilter === 'active'));
+  }
+
+  get totalPages(): number {
+    return Math.max(1, Math.ceil(this.filteredEvents.length / this.pageSize));
+  }
+
+  get pageArray(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  get paginatedEvents(): UiCalendarEvent[] {
+    const start = (this.page - 1) * this.pageSize;
+    return this.filteredEvents.slice(start, start + this.pageSize);
+  }
+
+  setStatusFilter(filter: 'all' | 'active' | 'inactive'): void {
+    this.statusFilter = filter;
+    this.page = 1;
+  }
+
+  goToPage(p: number): void {
+    if (p < 1 || p > this.totalPages) return;
+    this.page = p;
   }
 
   constructor(
@@ -84,6 +113,7 @@ export class CalenderComponent implements OnInit, OnChanges {
 
           this.buildingId = Number(firstBuilding?.id ?? firstBuilding?.buildingId);
 
+          this.loadCanCreate();
           this.loadEvents();
         } else {
           console.warn('Δεν βρέθηκαν πολυκατοικίες για τον χρήστη');
@@ -95,8 +125,24 @@ export class CalenderComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['buildingId'] && this.buildingId) {
+      this.loadCanCreate();
       this.loadEvents();
     }
+  }
+
+  loadCanCreate(): void {
+    if (!this.buildingId) return;
+
+    this.buildingService.getMyPermissions(this.buildingId).subscribe({
+      next: (permission) => {
+        this.canCreateAnnouncement = !!permission.canCreateAnnouncement;
+        this.isManager = !!permission.isManager;
+      },
+      error: () => {
+        this.canCreateAnnouncement = false;
+        this.isManager = false;
+      }
+    });
   }
 
   loadEvents(): void {
@@ -104,21 +150,29 @@ export class CalenderComponent implements OnInit, OnChanges {
 
     this.calendarService.getByBuilding(this.buildingId, true).subscribe({
       next: (data) => {
-        this.events = data.map((e) => ({
-          id: e.id,
-          title: e.title,
-          description: e.description,
-          start: new Date(e.startDate),
-          end: e.endDate ? new Date(e.endDate) : undefined,
-          color: {
-            primary: e.colorPrimary ?? '#1677ff',
-            secondary: '#D1E8FF'
-          },
-          pinned: !!e.pinned,
-          active: e.active,
-          buildingId: e.buildingId
-        }));
+        this.events = data
+          .map((e) => ({
+            id: e.id,
+            title: e.title,
+            description: e.description,
+            start: new Date(e.startDate),
+            end: e.endDate ? new Date(e.endDate) : undefined,
+            color: {
+              primary: e.colorPrimary ?? '#1677ff',
+              secondary: '#D1E8FF'
+            },
+            pinned: !!e.pinned,
+            active: e.active,
+            buildingId: e.buildingId,
+            createdDate: e.createdDate
+          }))
+          .sort((a, b) => {
+            const ca = a.createdDate ? new Date(a.createdDate).getTime() : 0;
+            const cb = b.createdDate ? new Date(b.createdDate).getTime() : 0;
+            return cb - ca;
+          });
 
+        this.page = 1;
         this.refresh.next();
       },
       error: (err) => console.error('Σφάλμα φόρτωσης γεγονότων:', err)

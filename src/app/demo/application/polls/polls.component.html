@@ -118,7 +118,7 @@
           </div>
         </div>
       </app-card>
-      <div *ngIf="isManager" class="text-end p-3">
+      <div *ngIf="canCreatePoll" class="text-end p-3">
         <button class="btn btn-primary" (click)="openAddModal()">+ Νέα Ψηφοφορία</button>
       </div>
     </div>
