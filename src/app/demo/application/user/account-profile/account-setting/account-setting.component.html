@@ -1,6 +1,7 @@
 <div *ngIf="messageBuilding" class="alert alert-primary text-center my-3">
   {{ messageBuilding }}
 </div>
+
 <app-card *ngIf="building" cardTitle="Πολυκατοικία" [padding]="24" class="mb-3">
   <div class="row">
     <div class="col-md-6">
@@ -13,31 +14,11 @@
     </div>
   </div>
 </app-card>
-<div class="row">
-  <div class="col-md-6">
-    <app-card cardTitle="Ειδοποιήσεις για την έκδοση Κοινοχρήστων" [padding]="24">
-      <h6 class="mb-4">Ειδοποιήσεις μέσω Email και SMS</h6>
-      @for (item of email_setting; track item) {
-        <div class="d-flex align-items-center justify-content-between mb-3">
-          <div>
-            <p class="mb-0" [ngClass]="{ 'text-muted': !item.check }">{{ item.title }}</p>
-          </div>
-          <div class="form-check form-switch p-0">
-            <input
-              type="checkbox"
-              class="m-0 form-check-input h5 position-relative"
-              role="switch"
-              [checked]="item.check"
-              (change)="item.check = $event.target.checked"
-            />
-          </div>
-        </div>
-      }
-    </app-card>
 
+<div class="row" *ngIf="building">
+  <div class="col-md-6">
     <app-card cardTitle="Ειδοποιήσεις από την εφαρμογή" [padding]="24">
-      <h6 class="mb-4">Ειδοποιήσεις</h6>
-      @for (item of notification; track item) {
+      @for (item of appItems; track item.key) {
         <div class="d-flex align-items-center justify-content-between mb-3">
           <div>
             <p class="mb-0" [ngClass]="{ 'text-muted': !item.check }">{{ item.title }}</p>
@@ -57,29 +38,8 @@
   </div>
 
   <div class="col-md-6">
-    <app-card cardTitle="Activity Related Emails">
-      <h6 class="mb-4">When to email?</h6>
-      @for (item of active_email; track item) {
-        <div class="d-flex align-items-center justify-content-between mb-3">
-          <div>
-            <p class="mb-0" [ngClass]="{ 'text-muted': !item.check }">{{ item.title }}</p>
-          </div>
-          <div class="form-check form-switch p-0">
-            <input
-              type="checkbox"
-              class="m-0 form-check-input h5 position-relative"
-              role="switch"
-              [checked]="item.check"
-              (change)="item.check = $event.target.checked"
-            />
-          </div>
-        </div>
-      }
-
-      <hr class="my-4" />
-
-      <h6 class="mb-4">Ειδοποιήσεις Διαχειριστή</h6>
-      @for (item of active_email; track item) {
+    <app-card cardTitle="Ειδοποιήσεις μέσω Email" [padding]="24">
+      @for (item of emailItems; track item.key) {
         <div class="d-flex align-items-center justify-content-between mb-3">
           <div>
             <p class="mb-0" [ngClass]="{ 'text-muted': !item.check }">{{ item.title }}</p>
@@ -97,15 +57,108 @@
       }
     </app-card>
   </div>
-  <div *ngIf="pmView" class="mb-3">
-    <a class="btn btn-outline-primary" [routerLink]="['/pm/buildings']">Πίσω</a>
+
+  <div class="col-md-6">
+    <app-card cardTitle="Ειδοποιήσεις μέσω SMS" [padding]="24">
+      <!-- <p class="text-muted f-12 mb-3">
+        Σημείωση: Για πραγματική αποστολή SMS χρειάζεται ρύθμιση SMS provider (π.χ. Twilio).
+        Χωρίς provider, τα SMS μόνο καταγράφονται (δεν αποστέλλονται).
+      </p> -->
+      @for (item of smsItems; track item.key) {
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <div>
+            <p class="mb-0" [ngClass]="{ 'text-muted': !item.check }">{{ item.title }}</p>
+          </div>
+          <div class="form-check form-switch p-0">
+            <input
+              type="checkbox"
+              class="m-0 form-check-input h5 position-relative"
+              role="switch"
+              [checked]="item.check"
+              (change)="item.check = $event.target.checked"
+            />
+          </div>
+        </div>
+      }
+    </app-card>
   </div>
-  <div class="col-12 text-end btn-page">
-    <button type="button" class="btn btn-outline-secondary" [disabled]="loading || saving || !hasChanges" (click)="resetSettings()">
-      Άκυρο
-    </button>
-    <button type="button" class="btn btn-primary" [disabled]="saving || loading || !hasChanges" (click)="saveSettings()">
-      {{ saving ? 'Αποθήκευση...' : 'Αποθήκευση' }}
-    </button>
-  </div>
+
+  <ng-container *ngIf="isManager">
+    <div class="col-md-6">
+      <app-card cardTitle="Ειδοποιήσεις Διαχειριστή" [padding]="24">
+        <div class="row align-items-center fw-medium f-12 text-muted mb-2" style="display:grid; grid-template-columns: 1fr 1fr 1fr">
+          <div>Επιλογή</div>
+          <div class="text-center">Εντός εφαρμογής</div>
+          <div class="text-center">Email</div>
+        </div>
+        @for (option of managerOptions; track option.title) {
+          <div class="row align-items-center mb-3" style="display:grid; grid-template-columns: 1fr 1fr 1fr">
+            <p class="mb-0 pe-2">{{ option.title }}</p>
+            <div class="text-center">
+              <div class="form-check form-switch p-0 d-inline-flex">
+                <input
+                  type="checkbox"
+                  id="mgrApp-{{ option.title }}"
+                  class="m-0 form-check-input h5 position-relative"
+                  role="switch"
+                  [checked]="option.appCheck"
+                  (change)="option.appCheck = $event.target.checked"
+                />
+              </div>
+            </div>
+            <div class="text-center">
+              <div class="form-check form-switch p-0 d-inline-flex">
+                <input
+                  type="checkbox"
+                  id="mgrEmail-{{ option.title }}"
+                  class="m-0 form-check-input h5 position-relative"
+                  role="switch"
+                  [checked]="option.emailCheck"
+                  (change)="option.emailCheck = $event.target.checked"
+                />
+              </div>
+            </div>
+          </div>
+        }
+      </app-card>
+    </div>
+
+    <div class="col-md-6">
+      <app-card cardTitle="Δικαιώματα Δημιουργίας Μελών" [padding]="24">
+        <p class="f-12 text-muted mb-3">
+          Με τους διακόπτες αυτούς δίνετε σε όλα τα μέλη της πολυκατοικίας (ή σε κανένα)
+          το δικαίωμα να δημιουργούν ανακοινώσεις και ψηφοφορίες.
+        </p>
+        @for (item of memberCreateItems; track item.key) {
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <div>
+              <p class="mb-0" [ngClass]="{ 'text-muted': !item.check }">{{ item.title }}</p>
+            </div>
+            <div class="form-check form-switch p-0">
+              <input
+                type="checkbox"
+                class="m-0 form-check-input h5 position-relative"
+                role="switch"
+                [checked]="item.check"
+                (change)="item.check = $event.target.checked"
+              />
+            </div>
+          </div>
+        }
+      </app-card>
+    </div>
+  </ng-container>
+</div>
+
+<div *ngIf="pmView" class="mb-3">
+  <a class="btn btn-outline-primary" [routerLink]="['/pm/buildings']">Πίσω</a>
+</div>
+
+<div class="col-12 text-end btn-page" *ngIf="building">
+  <button type="button" class="btn btn-outline-secondary" [disabled]="loading || saving || !hasChanges" (click)="resetSettings()">
+    Άκυρο
+  </button>
+  <button type="button" class="btn btn-primary" [disabled]="saving || loading || !hasChanges" (click)="saveSettings()">
+    {{ saving ? 'Αποθήκευση...' : 'Αποθήκευση' }}
+  </button>
 </div>

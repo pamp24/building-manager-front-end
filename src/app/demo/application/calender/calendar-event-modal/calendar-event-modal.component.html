@@ -23,9 +23,9 @@
         mwlFlatpickr
         [(ngModel)]="event.startDate"
         [altInput]="true"
-        [enableTime]="true"
-        dateFormat="Y-m-dTH:i"
-        altFormat="F j, Y H:i"
+        [locale]="greekLocale"
+        dateFormat="Y-m-d"
+        altFormat="F j, Y"
       />
     </div>
 
@@ -37,9 +37,9 @@
         mwlFlatpickr
         [(ngModel)]="event.endDate"
         [altInput]="true"
-        [enableTime]="true"
-        dateFormat="Y-m-dTH:i"
-        altFormat="F j, Y H:i"
+        [locale]="greekLocale"
+        dateFormat="Y-m-d"
+        altFormat="F j, Y"
       />
     </div>
   </div>

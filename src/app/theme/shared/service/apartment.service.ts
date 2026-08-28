@@ -29,7 +29,7 @@ export class ApartmentService {
     return this.http.get<ApartmentDTO[]>(`${this.baseUrl}/same-building`);
   }
 
-  updateMyApartment(apartment: ApartmentDTO): Observable<ApartmentDTO> {
+  updateMyApartment(apartment: Partial<ApartmentDTO>): Observable<ApartmentDTO> {
     return this.http.put<ApartmentDTO>(`${this.baseUrl}/update/myApartment`, apartment);
   }
 

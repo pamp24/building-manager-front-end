@@ -27,6 +27,7 @@ export class PollsComponent implements OnInit {
   buildingId!: number;
   userVotedPolls: Record<number, number[]> = {};
   isManager = false;
+  canCreatePoll = false;
   notMember = false;
   voteError: string | null = null;
   toastMessage: string | null = null;
@@ -75,16 +76,37 @@ export class PollsComponent implements OnInit {
       this.isManager = this.manageableBuildings.length > 0;
       this.notMember = !this.isManager && this.buildings.length === 0;
 
-      console.log('IS MANAGER = ', this.isManager);
-      console.log('NOT MEMBER = ', this.notMember);
+      if (!this.selectedBuildingId && this.buildings.length) {
+        this.selectedBuildingId = this.buildings[0].id;
+      }
+
+      const checkId = this.selectedBuildingId || this.buildings[0]?.id;
+      if (checkId) {
+        this.loadCanCreate(checkId);
+      } else {
+        this.canCreatePoll = false;
+      }
     },
     error: (err) => {
       console.error(err);
       this.notMember = true;
       this.isManager = false;
+      this.canCreatePoll = false;
     }
   });
 }
+
+  loadCanCreate(buildingId: number): void {
+    this.buildingService.getMyPermissions(buildingId).subscribe({
+      next: (permission) => {
+        this.canCreatePoll = !!permission.canCreatePoll;
+        this.isManager = !!permission.isManager;
+      },
+      error: () => {
+        this.canCreatePoll = false;
+      }
+    });
+  }
 
   loadPolls() {
     this.loading = true;

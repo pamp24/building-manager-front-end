@@ -8,8 +8,25 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
 import { BuildingNotificationSettingsDTO } from 'src/app/theme/shared/models/buildingNotificationSettingsDTO';
+import { NotificationPreferenceDTO } from 'src/app/theme/shared/models/notificationPreferenceDTO';
 import { BuildingSettingsService } from '../../../../../theme/shared/service/building-settings.service';
+import { NotificationPreferenceService } from '../../../../../theme/shared/service/notification-preference.service';
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
+import { AuthenticationService } from 'src/app/theme/shared/service/authentication.service';
+
+interface SettingItem {
+  key: string;
+  title: string;
+  check: boolean;
+}
+
+interface ManagerOption {
+  title: string;
+  appKey: string;
+  appCheck: boolean;
+  emailKey: string;
+  emailCheck: boolean;
+}
 
 @Component({
   selector: 'app-account-setting',
@@ -20,7 +37,11 @@ import { BuildingService } from 'src/app/theme/shared/service/building.service';
 export class AccountSettingComponent implements OnInit, OnChanges {
   @Input() pmView = false;
   @Input() buildingId?: number;
-  initialSettingsJson = '';
+
+  private activeBuildingId?: number;
+
+  initialPrefsJson = '';
+  initialBuildingJson = '';
   building?: BuildingDTO;
   buildingName = '';
   buildingAddress = '';
@@ -29,16 +50,25 @@ export class AccountSettingComponent implements OnInit, OnChanges {
   saving = false;
 
   settings?: BuildingNotificationSettingsDTO;
+  preferences?: NotificationPreferenceDTO;
+
+  appItems: SettingItem[] = [];
+  emailItems: SettingItem[] = [];
+  smsItems: SettingItem[] = [];
+  managerOptions: ManagerOption[] = [];
+  memberCreateItems: SettingItem[] = [];
+
+  isManager = false;
 
   constructor(
     private buildingSettingsService: BuildingSettingsService,
-    private buildingService: BuildingService
+    private notificationPreferenceService: NotificationPreferenceService,
+    private buildingService: BuildingService,
+    private authenticationService: AuthenticationService
   ) {}
 
   ngOnInit(): void {
-    if (this.buildingId) {
-      this.loadSelectedBuilding(this.buildingId);
-    }
+    this.resolveBuilding();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -47,8 +77,44 @@ export class AccountSettingComponent implements OnInit, OnChanges {
     }
   }
 
-  private loadSelectedBuilding(buildingId: number): void {
+  /**
+   * Βρίσκει την πολυκατοικία που θα ρυθμιστούν οι ειδοποιήσεις.
+   * Αν δεν δόθηκε buildingId (π.χ. από το προφίλ χρήστη), παίρνει
+   * αυτόματα το τρέχον κτήριο του χρήστη.
+   */
+  private resolveBuilding(): void {
+    if (this.buildingId) {
+      this.loadSelectedBuilding(this.buildingId);
+      return;
+    }
+
+    const currentBuildingId = this.authenticationService.currentUserValue?.currentBuildingId;
+    if (currentBuildingId) {
+      this.loadSelectedBuilding(currentBuildingId);
+      return;
+    }
+
     this.loading = true;
+    this.buildingService.getMyBuildings().subscribe({
+      next: (buildings) => {
+        if (buildings && buildings.length) {
+          this.loadSelectedBuilding(buildings[0].id);
+        } else {
+          this.messageBuilding = 'Δεν έχετε πολυκατοικία για να ρυθμίσετε ειδοποιήσεις.';
+          this.loading = false;
+        }
+      },
+      error: () => {
+        this.messageBuilding = 'Αποτυχία φόρτωσης της πολυκατοικίας.';
+        this.loading = false;
+      }
+    });
+  }
+
+  private loadSelectedBuilding(buildingId: number): void {
+    this.activeBuildingId = buildingId;
+    this.loading = true;
+    this.isManager = this.pmView;
 
     this.buildingService.getBuilding(buildingId).subscribe({
       next: (building) => {
@@ -57,148 +123,218 @@ export class AccountSettingComponent implements OnInit, OnChanges {
         this.buildingAddress = `${building.street1} ${building.stNumber1}, ${building.city}`;
         this.messageBuilding = '';
 
-        this.loadNotificationSettings(buildingId);
+        const uid = this.authenticationService.currentUserValue?.id;
+        const role = (this.authenticationService.currentUserValue?.role ?? '').toUpperCase().replace(/\s/g, '');
+        this.isManager =
+          this.pmView ||
+          (building.managerId != null && building.managerId === uid) ||
+          role === 'ADMIN' ||
+          role === 'BUILDINGMANAGER' ||
+          role === 'BUILDING_MANAGER' ||
+          role === 'PROPERTYMANAGER' ||
+          role === 'PROPERTY_MANAGER';
+
+        this.loadPreferences();
+        this.loadBuildingSettings(buildingId);
       },
-      error: (err) => {
-        console.error('Σφάλμα φόρτωσης πολυκατοικίας:', err);
+      error: () => {
+        console.error('Σφάλμα φόρτωσης πολυκατοικίας');
         this.messageBuilding = 'Αποτυχία φόρτωσης στοιχείων πολυκατοικίας.';
         this.loading = false;
       }
     });
   }
 
-  private loadNotificationSettings(buildingId: number): void {
+  private loadPreferences(): void {
+    this.notificationPreferenceService.getPreferences().subscribe({
+      next: (prefs) => {
+        this.preferences = prefs;
+
+        this.appItems = [
+          { key: 'appForStatementIssued', title: 'Παραστατικό κοινοχρήστων', check: !!prefs.appForStatementIssued },
+          { key: 'appForNewPoll', title: 'Νέα ψηφοφορία', check: !!prefs.appForNewPoll },
+          { key: 'appForNewAnnouncement', title: 'Νέα ανακοίνωση', check: !!prefs.appForNewAnnouncement },
+          { key: 'appForAddedToBuilding', title: 'Προσθήκη σε πολυκατοικία', check: !!prefs.appForAddedToBuilding }
+        ];
+
+        this.emailItems = [
+          { key: 'emailForStatementIssued', title: 'Παραστατικό κοινοχρήστων', check: !!prefs.emailForStatementIssued },
+          { key: 'emailForNewPoll', title: 'Νέα ψηφοφορία', check: !!prefs.emailForNewPoll },
+          { key: 'emailForNewAnnouncement', title: 'Νέα ανακοίνωση', check: !!prefs.emailForNewAnnouncement },
+          { key: 'emailForAddedToBuilding', title: 'Προσθήκη σε πολυκατοικία', check: !!prefs.emailForAddedToBuilding }
+        ];
+
+        this.smsItems = [
+          { key: 'smsForStatementIssued', title: 'Παραστατικό κοινοχρήστων', check: !!prefs.smsForStatementIssued },
+          { key: 'smsForNewPoll', title: 'Νέα ψηφοφορία', check: !!prefs.smsForNewPoll },
+          { key: 'smsForNewAnnouncement', title: 'Νέα ανακοίνωση', check: !!prefs.smsForNewAnnouncement },
+          { key: 'smsForAddedToBuilding', title: 'Προσθήκη σε πολυκατοικία', check: !!prefs.smsForAddedToBuilding }
+        ];
+
+        this.initialPrefsJson = JSON.stringify(this.buildPrefsPayload());
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Σφάλμα φόρτωσης προσωπικών ρυθμίσεων:', err);
+        this.loading = false;
+      }
+    });
+  }
+
+  private loadBuildingSettings(buildingId: number): void {
+    if (!this.isManager) {
+      this.initialBuildingJson = '{}';
+      this.loading = false;
+      return;
+    }
+
     this.buildingSettingsService.getNotificationSettings(buildingId).subscribe({
       next: (settings) => {
         this.settings = settings;
 
-        this.email_setting = [
-          { title: 'Ειδοποιήση για την έκδοση κοινοχρήστων', check: settings.emailForStatementIssued },
-          { title: 'Ειδοποιήση για νέα ψηφοφορία στην πολυκατοικία', check: settings.emailForNewPoll },
-          { title: 'Ειδοποιήση για νέα ανακοίνωση στην πολυκατοικία', check: settings.emailForNewAnnouncement }
+        this.managerOptions = [
+          {
+            title: 'Προσθήκη νέου μέλους',
+            appKey: 'managerAppForAddedToBuilding',
+            appCheck: !!settings.managerAppForAddedToBuilding,
+            emailKey: 'managerEmailForAddedToBuilding',
+            emailCheck: !!settings.managerEmailForAddedToBuilding
+          },
+          {
+            title: 'Έξοδος μέλους από πολυκατοικία',
+            appKey: 'managerAppForMemberLeave',
+            appCheck: !!settings.managerAppForMemberLeave,
+            emailKey: 'managerEmailForMemberLeave',
+            emailCheck: !!settings.managerEmailForMemberLeave
+          }
         ];
 
-        this.notification = [
-          { title: 'Ειδοποιήση αιτήματος για είσοδο νέου μέλους στην πολυκατοικία', check: settings.appForJoinRequest },
-          { title: 'Ειδοποιήση για έξοδο μέλους από την πολυκατοικία', check: settings.appForMemberLeave },
-          { title: 'Ειδοποιήση για πληρωμή κοινοχρήστων από μέλος της πολυκατοικίας', check: settings.appForPaymentCompleted },
-          { title: 'Ειδοποιήση για νέα ψηφοφορία στην πολυκατοικία', check: settings.appForNewPoll },
-          { title: 'Ειδοποιήση για νέα ανακοίνωση στην πολυκατοικία', check: settings.appForNewAnnouncement }
+        this.memberCreateItems = [
+          { key: 'membersCanCreateAnnouncement', title: 'Τα μέλη μπορούν να δημιουργούν ανακοινώσεις', check: !!settings.membersCanCreateAnnouncement },
+          { key: 'membersCanCreatePoll', title: 'Τα μέλη μπορούν να δημιουργούν ψηφοφορίες', check: !!settings.membersCanCreatePoll }
         ];
 
-        this.active_email = [
-          { title: 'Όταν κάποιος κάνει αλλαγές στο διαμέρισμά του', check: settings.managerEmailForApartmentChanges },
-          { title: 'Λάβατε άμεσο μήνυμα', check: settings.managerEmailForDirectMessage },
-          { title: 'Κάποιος σας προσέθεσε σε μια νέα πολυκατοικία', check: settings.managerEmailForAddedToBuilding }
-        ];
-
-        const payload = this.buildSettingsPayload();
-        this.initialSettingsJson = JSON.stringify(payload);
-
+        this.initialBuildingJson = JSON.stringify(this.buildBuildingPayload());
         this.loading = false;
       },
       error: (err) => {
-        console.error('Σφάλμα φόρτωσης ρυθμίσεων:', err);
+        console.error('Σφάλμα φόρτωσης ρυθμίσεων πολυκατοικίας:', err);
         this.loading = false;
       }
     });
   }
 
   get hasChanges(): boolean {
-    const currentPayload = this.buildSettingsPayload();
-    if (!currentPayload) return false;
+    const prefsChanged =
+      this.preferences != null &&
+      JSON.stringify(this.buildPrefsPayload()) !== this.initialPrefsJson;
 
-    return JSON.stringify(currentPayload) !== this.initialSettingsJson;
+    let buildingChanged = false;
+    if (this.isManager) {
+      buildingChanged =
+        this.settings != null &&
+        JSON.stringify(this.buildBuildingPayload()) !== this.initialBuildingJson;
+    }
+
+    return prefsChanged || buildingChanged;
   }
 
   saveSettings(): void {
-    if (!this.buildingId) return;
-
-    const payload: BuildingNotificationSettingsDTO = {
-      buildingId: this.buildingId,
-
-      emailForStatementIssued: this.email_setting[0].check,
-      emailForNewPoll: this.email_setting[1].check,
-      emailForNewAnnouncement: this.email_setting[2].check,
-
-      appForJoinRequest: this.notification[0].check,
-      appForMemberLeave: this.notification[1].check,
-      appForPaymentCompleted: this.notification[2].check,
-      appForNewPoll: this.notification[3].check,
-      appForNewAnnouncement: this.notification[4].check,
-
-      managerEmailForApartmentChanges: this.active_email[0].check,
-      managerEmailForDirectMessage: this.active_email[1].check,
-      managerEmailForAddedToBuilding: this.active_email[2].check
-    };
+    const prefsPayload = this.buildPrefsPayload();
+    if (!prefsPayload) return;
 
     this.saving = true;
 
-    this.buildingSettingsService.updateNotificationSettings(this.buildingId, payload).subscribe({
+    this.notificationPreferenceService.updatePreferences(prefsPayload).subscribe({
       next: () => {
-        const payload = this.buildSettingsPayload();
-        this.initialSettingsJson = JSON.stringify(payload);
+        this.initialPrefsJson = JSON.stringify(prefsPayload);
 
-        this.saving = false;
-        alert('Οι ρυθμίσεις αποθηκεύτηκαν επιτυχώς.');
+        if (!this.isManager) {
+          this.saving = false;
+          alert('Οι ρυθμίσεις αποθηκεύτηκαν επιτυχώς.');
+          return;
+        }
+
+        const buildingPayload = this.buildBuildingPayload();
+        if (!buildingPayload || !this.activeBuildingId) {
+          this.saving = false;
+          alert('Οι ρυθμίσεις αποθηκεύτηκαν επιτυχώς.');
+          return;
+        }
+
+        this.buildingSettingsService.updateNotificationSettings(this.activeBuildingId, buildingPayload).subscribe({
+          next: () => {
+            this.initialBuildingJson = JSON.stringify(buildingPayload);
+            this.saving = false;
+            alert('Οι ρυθμίσεις αποθηκεύτηκαν επιτυχώς.');
+          },
+          error: (err) => {
+            console.error('Σφάλμα αποθήκευσης ρυθμίσεων πολυκατοικίας:', err);
+            this.saving = false;
+            alert('Αποτυχία αποθήκευσης ρυθμίσεων.');
+          }
+        });
       },
       error: (err) => {
-        console.error('Σφάλμα αποθήκευσης ρυθμίσεων:', err);
+        console.error('Σφάλμα αποθήκευσης προσωπικών ρυθμίσεων:', err);
         this.saving = false;
         alert('Αποτυχία αποθήκευσης ρυθμίσεων.');
       }
     });
   }
 
-  email_setting = [
-    { title: 'Ειδοποιήση για την έκδοση κοινοχρήστων', check: true },
-    { title: 'Ειδοποιήση για νέα ψηφοφορία στην πολυκατοικία', check: false },
-    { title: 'Ειδοποιήση για νέα ανακοίνωση στην πολυκατοικία', check: false }
-  ];
-
-  notification = [
-    { title: 'Ειδοποιήση αιτήματος για είσοδο νέου μέλους στην πολυκατοικία', check: true },
-    { title: 'Ειδοποιήση για έξοδο μέλους από την πολυκατοικία', check: true },
-    { title: 'Ειδοποιήση για πληρωμή κοινοχρήστων από μέλος της πολυκατοικίας', check: false },
-    { title: 'Ειδοποιήση για νέα ψηφοφορία στην πολυκατοικία', check: false },
-    { title: 'Ειδοποιήση για νέα ανακοίνωση στην πολυκατοικία', check: false }
-  ];
-
-  active_email = [
-    { title: 'Όταν κάποιος κάνει αλλαγές στο διαμέρισμά του', check: true },
-    { title: 'Λάβατε άμεσο μήνυμα', check: false },
-    { title: 'Κάποιος σας προσέθεσε σε μια νέα πολυκατοικία', check: true }
-  ];
+  toggleMemberPermission(): void {
+    // Όχι πλέον σε χρήση: τα δικαιώματα δημιουργίας μελών ρυθμίζονται
+    // μέσω των καθολικών διακοπτών membersCanCreateAnnouncement / membersCanCreatePoll.
+  }
 
   resetSettings(): void {
-    if (!this.buildingId) return;
-
     if (!confirm('Θέλετε να ακυρώσετε τις αλλαγές και να επαναφέρετε τις αποθηκευμένες ρυθμίσεις;')) {
       return;
     }
 
-    this.loadNotificationSettings(this.buildingId);
+    if (this.activeBuildingId != null) {
+      this.loadBuildingSettings(this.activeBuildingId);
+    }
+    this.loadPreferences();
   }
 
-  private buildSettingsPayload(): BuildingNotificationSettingsDTO | null {
-    if (!this.buildingId) return null;
+  private buildPrefsPayload(): NotificationPreferenceDTO | null {
+    if (!this.preferences) return null;
 
-    return {
-      buildingId: this.buildingId,
+    const current = this.preferences;
 
-      emailForStatementIssued: this.email_setting[0].check,
-      emailForNewPoll: this.email_setting[1].check,
-      emailForNewAnnouncement: this.email_setting[2].check,
-
-      appForJoinRequest: this.notification[0].check,
-      appForMemberLeave: this.notification[1].check,
-      appForPaymentCompleted: this.notification[2].check,
-      appForNewPoll: this.notification[3].check,
-      appForNewAnnouncement: this.notification[4].check,
-
-      managerEmailForApartmentChanges: this.active_email[0].check,
-      managerEmailForDirectMessage: this.active_email[1].check,
-      managerEmailForAddedToBuilding: this.active_email[2].check
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const payload: any = {
+      appForJoinRequest: current.appForJoinRequest ?? true,
+      appForMemberLeave: current.appForMemberLeave ?? true,
+      appForPaymentCompleted: current.appForPaymentCompleted ?? false
     };
+
+    [...this.appItems, ...this.emailItems, ...this.smsItems].forEach((item) => {
+      payload[item.key] = item.check;
+    });
+
+    return payload as NotificationPreferenceDTO;
+  }
+
+  private buildBuildingPayload(): BuildingNotificationSettingsDTO | null {
+    if (!this.activeBuildingId) return null;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const payload: any = {
+      buildingId: this.activeBuildingId
+    };
+
+    this.managerOptions.forEach((opt) => {
+      payload[opt.appKey] = opt.appCheck;
+      payload[opt.emailKey] = opt.emailCheck;
+    });
+
+    this.memberCreateItems.forEach((item) => {
+      payload[item.key] = item.check;
+    });
+
+    return payload as BuildingNotificationSettingsDTO;
   }
 }

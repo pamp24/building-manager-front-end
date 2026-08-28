@@ -137,22 +137,38 @@ export class ApartmentComponent implements OnInit {
   toggleEdit() {
     this.isEditing = !this.isEditing;
     if (this.isEditing) {
-      this.form.enable();
+      this.enableEditableFields();
     } else {
       this.form.disable();
     }
+  }
+
+  // Πεδία που επιτρέπεται να αλλάζει το μέλος μόνο του (προσωπικά στοιχεία)
+  private editableFields = [
+    'ownerFirstName',
+    'ownerLastName',
+    'residentFirstName',
+    'residentLastName',
+    'apDescription'
+  ];
+
+  private enableEditableFields() {
+    this.editableFields.forEach((field) => this.form.get(field)?.enable());
   }
 
   //Update στοιχείων
   onUpdate() {
     if (this.form.invalid) return;
 
+    const values = this.form.getRawValue();
+
     const payload = {
       id: this.filteredApartments[this.currentApartmentIndex].id,
-      ...this.form.value,
-      isRented: this.form.value.isRented === 'true',
-      hasParking: this.form.value.hasParking === 'true',
-      hasStorage: this.form.value.hasStorage === 'true'
+      ownerFirstName: values.ownerFirstName,
+      ownerLastName: values.ownerLastName,
+      residentFirstName: values.residentFirstName,
+      residentLastName: values.residentLastName,
+      description: values.apDescription
     };
 
     this.apartmentService.updateMyApartment(payload).subscribe({

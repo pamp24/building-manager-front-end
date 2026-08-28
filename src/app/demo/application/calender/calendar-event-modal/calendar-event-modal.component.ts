@@ -4,6 +4,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FlatpickrDirective } from 'angularx-flatpickr';
+import { Greek } from 'flatpickr/dist/l10n/gr.js';
 
 @Component({
   selector: 'app-calendar-event-modal',
@@ -17,6 +18,8 @@ export class CalendarEventModalComponent implements OnInit {
   @Input() eventData: any = null;
   @Input() isEdit = false;
   @Output() save = new EventEmitter<any>();
+
+  greekLocale = Greek;
 
   constructor(public activeModal: NgbActiveModal) {}
 
@@ -66,9 +69,6 @@ export class CalendarEventModalComponent implements OnInit {
       return value;
     }
     const pad = (n: number) => String(n).padStart(2, '0');
-    return (
-      `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}` +
-      `T${pad(date.getHours())}:${pad(date.getMinutes())}`
-    );
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
   }
 }
