@@ -20,6 +20,7 @@ import {
   SearchOutline
 } from '@ant-design/icons-angular/icons';
 import { ApartmentDTO } from 'src/app/theme/shared/models/apartmentDTO';
+import { compareApartments } from 'src/app/theme/shared/models/apartment-order';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NewApartmentComponent } from './new-apartment/new-apartment.component';
 import { environment } from 'src/environments/environment';
@@ -28,10 +29,11 @@ import { RouterModule } from '@angular/router';
 import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
 import { DeleteApartmentComponent } from './delete-apartment/delete-apartment.component';
 import { EditApartmentComponent } from './edit-apartment/edit-apartment.component';
+import { BulkApartmentsComponent } from './bulk-apartments.component';
 
 @Component({
   selector: 'app-user-card',
-  imports: [CommonModule, SharedModule, CardPreviewComponent, RouterModule],
+  imports: [CommonModule, SharedModule, CardPreviewComponent, RouterModule, BulkApartmentsComponent],
   templateUrl: './user-card.component.html',
   styleUrls: ['./user-card.component.scss']
 })
@@ -60,6 +62,15 @@ export class UserCardComponent implements OnInit, OnChanges {
   pageSize = 1;
   total = 0;
   messageApartments = '';
+  bulkSending = false;
+
+  openBulk(content: any): void {
+    this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+  }
+
+  refreshBulk(): void {
+    if (this.buildingId) this.loadBuildingData(this.buildingId);
+  }
 
   // Constructor
   constructor(
@@ -153,6 +164,8 @@ export class UserCardComponent implements OnInit, OnChanges {
               ]
             }));
 
+            this.sortCards();
+
             if (data.length === 0) {
               this.messageApartments = 'Δεν υπάρχουν ακόμα καταχωρημένα διαμερίσματα σε αυτήν την πολυκατοικία.';
             } else {
@@ -186,12 +199,12 @@ export class UserCardComponent implements OnInit, OnChanges {
   }
 
   sortCards() {
-    if (this.sortOption === 'name') {
+    if (this.sortOption === 'default' || this.sortOption === 'floorAsc') {
+      this.card_detail.sort((a, b) => compareApartments(a.apartment, b.apartment));
+    } else if (this.sortOption === 'name') {
       this.card_detail.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (this.sortOption === 'floorAsc') {
-      this.card_detail.sort((a, b) => (a.apartment.floor || '').localeCompare(b.apartment.floor || ''));
     } else if (this.sortOption === 'floorDesc') {
-      this.card_detail.sort((a, b) => (b.apartment.floor || '').localeCompare(a.apartment.floor || ''));
+      this.card_detail.sort((a, b) => compareApartments(b.apartment, a.apartment));
     }
   }
 

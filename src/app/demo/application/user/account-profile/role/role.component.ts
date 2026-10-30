@@ -336,11 +336,19 @@ export class RoleComponent implements OnInit, OnChanges {
     this.apartmentToInvite = null;
   }
 
-  openEditModal(member: any): void {
+  openEditModal(member: BuildingMemberDTO): void {
+    if (member.id == null) return;
+    const memberId = member.id;
     const ref = this.modal.open(MemberEditModalComponent, { centered: true, backdrop: 'static' });
 
     ref.componentInstance.member = member;
+    ref.componentInstance.pmView = this.pmView;
+    ref.componentInstance.buildingId = this.currentBuildingId;
     ref.componentInstance.filteredApartments = this.filteredApartments;
+
+    ref.componentInstance.managerAssigned.subscribe(() => {
+      if (this.currentBuildingId != null) this.loadMembers(this.currentBuildingId);
+    });
 
     ref.componentInstance.roleChanged.subscribe((role: 'Owner' | 'Resident' | '') => {
       this.roleToInvite = role;
@@ -354,7 +362,7 @@ export class RoleComponent implements OnInit, OnChanges {
           const role = result.role as 'Owner' | 'Resident';
           const apartmentId = Number(result.apartmentId);
 
-          this.buildingMemberService.assignApartment(member.id, role, apartmentId).subscribe({
+          this.buildingMemberService.assignApartment(memberId, role, apartmentId).subscribe({
             next: () => {
               // refresh members + apartments
               this.loadMembers(this.currentBuildingId!);

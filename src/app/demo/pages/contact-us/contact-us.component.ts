@@ -1,202 +1,51 @@
-// angular import
-import { Component, HostListener, OnDestroy, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-
-// project import
-import { SharedModule } from 'src/app/theme/shared/shared.module';
-
-// icons
-import { IconService } from '@ant-design/icons-angular';
-import {
-  DiscordOutline,
-  FacebookOutline,
-  GithubOutline,
-  InstagramOutline,
-  LinkedinOutline,
-  TwitterOutline
-} from '@ant-design/icons-angular/icons';
+import { HttpClient } from '@angular/common/http';
+import { Component, inject } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { finalize } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { PublicFooterComponent } from '../public-info/public-footer.component';
+import { PublicHeaderComponent } from '../public-info/public-header.component';
 
 @Component({
   selector: 'app-contact-us',
-  imports: [CommonModule, RouterModule, SharedModule],
+  imports: [ReactiveFormsModule, RouterLink, PublicHeaderComponent, PublicFooterComponent],
   templateUrl: './contact-us.component.html',
   styleUrls: ['./contact-us.component.scss']
 })
-export class ContactUsComponent implements OnInit, OnDestroy {
-  private iconService = inject(IconService);
+export class ContactUsComponent {
+  private http = inject(HttpClient);
+  readonly form = new FormGroup({
+    firstName: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.pattern(/.*\S.*/), Validators.maxLength(100)] }),
+    lastName: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.pattern(/.*\S.*/), Validators.maxLength(100)] }),
+    email: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.email, Validators.maxLength(254), Validators.pattern(/^[^\s@,;<>"()\[\]]+@[^\s@,;<>"()\[\]]+$/)] }),
+    phone: new FormControl('', { nonNullable: true, validators: [Validators.maxLength(40), Validators.pattern(/[^\r\n]*/)] }),
+    message: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.pattern(/[\s\S]*\S[\s\S]*/), Validators.maxLength(5000)] }),
+    privacyAccepted: new FormControl(false, { nonNullable: true, validators: [Validators.requiredTrue] })
+  });
+  loading = false;
+  success = false;
+  error = false;
 
-  // public props
-  isCollapsed = true;
-  isScrolled: boolean = false;
-
-  constructor() {
-    this.iconService.addIcon(
-      ...[TwitterOutline, DiscordOutline, InstagramOutline, FacebookOutline, TwitterOutline, LinkedinOutline, GithubOutline]
-    );
+  submit() {
+    if (this.loading || this.success) return;
+    this.form.markAllAsTouched();
+    if (this.form.invalid) return;
+    const value = this.form.getRawValue();
+    this.loading = true;
+    this.error = false;
+    this.http.post(`${environment.apiUrl}/api/v1/contact`, {
+      firstName: value.firstName.trim(), lastName: value.lastName.trim(), email: value.email.trim(),
+      phone: value.phone.trim(), message: value.message.trim(), privacyAccepted: value.privacyAccepted
+    }, { observe: 'response' }).pipe(finalize(() => this.loading = false)).subscribe({
+      next: response => { this.success = response.status === 204; this.error = !this.success; },
+      error: () => this.error = true
+    });
   }
 
-  // HostListener
-  @HostListener('window:scroll', [])
-  onWindowScroll() {
-    // logic to check scroll position
-    if (window.pageYOffset > 0) {
-      this.isScrolled = true;
-      document.querySelector('.navbar')?.classList.add('contact-nav');
-      document.querySelector('.navbar')?.classList.remove('default');
-    } else {
-      this.isScrolled = false;
-      document.querySelector('.navbar')?.classList.add('default');
-      document.querySelector('.navbar')?.classList.remove('contact-nav');
-    }
+  reset() {
+    this.form.reset();
+    this.success = false;
+    this.error = false;
   }
-
-  // lid cycle event
-  ngOnInit() {
-    document.querySelector('.navbar')?.classList.add('default');
-    document.querySelector('.navbar')?.classList.add('contact-us');
-  }
-
-  ngOnDestroy() {
-    document.querySelector('.navbar')?.classList.remove('contact-us');
-  }
-
-  // public method
-  short_link = [
-    {
-      title: 'Βοήθεια',
-      support: [
-        {
-          support_link: 'Blog',
-          url: 'https://blog.codedthemes.com/'
-        },
-        {
-          support_link: 'Documentation',
-          url: 'https://codedthemes.gitbook.io/mantis-angular'
-        },
-        {
-          support_link: 'Change Log',
-          url: 'https://codedthemes.gitbook.io/mantis-angular/changelog'
-        },
-        {
-          support_link: 'Support',
-          url: 'https://codedthemes.support-hub.io/'
-        }
-      ]
-    },
-    {
-      title: 'Store Help',
-      support: [
-        {
-          support_link: 'License',
-          url: 'https://codedthemes.com/license//'
-        },
-        {
-          support_link: 'Refund Policy',
-          url: 'https://codedthemes.com/terms-and-conditions/'
-        },
-        {
-          support_link: 'Submit a Request',
-          url: 'https://codedthemes.com/contact/'
-        },
-        {
-          support_link: 'Affiliate',
-          url: 'https://codedthemes.com/affiliate/'
-        }
-      ]
-    },
-    {
-      title: 'Mantis Eco-System',
-      support: [
-        {
-          support_link: 'CodeIgniter',
-          url: 'https://codedthemes.com/item/mantis-codeigniter-admin-template/'
-        },
-        {
-          support_link: 'React MUI',
-          url: 'https://mui.com/store/items/mantis-react-admin-dashboard-template/'
-        },
-        {
-          support_link: 'Angular',
-          url: 'https://codedthemes.com/item/mantis-angular-admin-template/'
-        },
-        {
-          support_link: 'Bootstrap 5',
-          url: 'https://codedthemes.com/item/mantis-bootstrap-admin-dashboard/'
-        },
-        {
-          support_link: '.Net',
-          url: 'https://codedthemes.com/item/mantis-dotnet-bootstrap-dashboard-template/'
-        },
-        {
-          support_link: 'Vue',
-          url: 'https://codedthemes.com/item/mantis-vue-admin-template/'
-        }
-      ]
-    },
-    {
-      title: 'Περισσότερα Προϊόντα',
-      support: [
-        {
-          support_link: 'Berry Angular',
-          url: 'https://codedthemes.com/item/berry-angular-admin-dashboard-template/'
-        },
-        {
-          support_link: 'Free Berry Angular',
-          url: 'https://codedthemes.com/item/berry-angular-free-admin-template/'
-        },
-        {
-          support_link: 'Angular Bundle',
-          url: 'https://codedthemes.com/item/angular-mega-bundle/'
-        },
-        {
-          support_link: 'Big Bundle',
-          url: 'https://codedthemes.com/item/big-bundle/'
-        },
-        {
-          support_link: 'Figma UI Kits',
-          url: 'https://codedthemes.com/item/category/templates/figma/'
-        }
-      ]
-    }
-  ];
-
-  socialLinks = [
-    {
-      link: 'https://www.instagram.com/codedthemes/',
-      title: 'instagram',
-      icon: 'instagram',
-      theme: 'outline'
-    },
-    {
-      link: 'https://x.com/codedthemes',
-      title: 'twitter',
-      icon: 'twitter',
-      theme: 'outline'
-    },
-    {
-      link: 'https://in.linkedin.com/company/codedthemes',
-      title: 'linkedin',
-      icon: 'linkedin',
-      theme: 'outline'
-    },
-    {
-      link: 'https://www.facebook.com/codedthemes/',
-      title: 'facebook',
-      icon: 'facebook',
-      theme: 'outline'
-    },
-    {
-      link: 'https://discord.com/invite/p2E2WhCb6s',
-      title: 'Discord',
-      icon: 'discord',
-      theme: 'outline'
-    },
-    {
-      link: 'https://github.com/codedthemes',
-      title: 'Github',
-      icon: 'github',
-      theme: 'outline'
-    }
-  ];
 }

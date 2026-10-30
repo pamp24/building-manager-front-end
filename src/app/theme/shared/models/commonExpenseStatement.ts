@@ -30,6 +30,7 @@ export interface CommonExpenseItem {
   descriptionItem: string;
   quantity: number;
   price: number;
+  selectedApartmentIds?: number[] | null;
   amount?: number;
   distributionType?: 'COMMON' | 'ELEVATOR' | 'HEATING' | 'EQUAL';
 }

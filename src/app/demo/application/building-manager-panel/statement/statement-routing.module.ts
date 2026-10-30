@@ -34,7 +34,7 @@ const routes: Routes = [
         path: 'list',
         loadComponent: () => import('./statement-list/statement-list.component').then((c) => c.StatementListComponent),
         data: {
-          role: [Role.Admin, Role.BuildingManager]
+          role: [Role.Admin, Role.BuildingManager, Role.PropertyManager, Role.PropertyAgent, Role.AdminAgent, Role.Owner, Role.Resident, Role.User]
         }
       },
       {

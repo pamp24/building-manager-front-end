@@ -8,6 +8,17 @@ import { NotificationDTO } from 'src/app/theme/shared/models/notificationDTO';
 import { ScrollbarComponent } from 'src/app/theme/shared/components/scrollbar/scrollbar.component';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
+import { IconService } from '@ant-design/icons-angular';
+import {
+  UserAddOutline,
+  CheckCircleOutline,
+  FileTextOutline,
+  NotificationOutline,
+  ClockCircleOutline,
+  CalendarOutline,
+  ShopOutline,
+  BellOutline
+} from '@ant-design/icons-angular/icons';
 
 type UiNotification = {
   id: number;
@@ -35,8 +46,20 @@ export class NotificationDropdownComponent implements OnInit {
 
   constructor(
     private notificationService: NotificationService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private iconService: IconService
+  ) {
+    this.iconService.addIcon(...[
+      UserAddOutline,
+      CheckCircleOutline,
+      FileTextOutline,
+      NotificationOutline,
+      ClockCircleOutline,
+      CalendarOutline,
+      ShopOutline,
+      BellOutline
+    ]);
+  }
 
   ngOnInit(): void {
     this.load();

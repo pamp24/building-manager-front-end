@@ -1,0 +1,34 @@
+<app-public-header />
+<main>
+  <section class="hero"><div class="wrap"><p class="eyebrow">OIKIO / ΤΙΜΟΛΟΓΗΣΗ</p><h1>Μια πιο απλή διαχείριση,<br /><em>στο δικό σας μέτρο.</em></h1><p>Συγκρίνετε τα πακέτα με βάση τις ανάγκες της πολυκατοικίας ή της επιχείρησής σας.</p></div></section>
+  <section class="pricing wrap">
+    <div class="controls">
+      <div><span class="control-label">ΓΙΑ ΠΟΙΟΝ</span><div class="segmented" aria-label="Τύπος διαχειριστή"><button [class.active]="type === 'individual'" [attr.aria-pressed]="type === 'individual'" (click)="type = 'individual'">Ιδιώτες</button><button [class.active]="type === 'business'" [attr.aria-pressed]="type === 'business'" (click)="type = 'business'">Επιχειρήσεις</button></div></div>
+      <div><span class="control-label">ΧΡΕΩΣΗ</span><div class="segmented"><button [class.active]="!annual" [attr.aria-pressed]="!annual" (click)="annual = false">Μηνιαία</button><button [class.active]="annual" [attr.aria-pressed]="annual" (click)="annual = true">Ετήσια @if (catalog) { −{{ catalog.annualDiscountBasisPoints / 100 }}% }</button></div></div>
+    </div>
+    <div class="estimator"><div><p class="eyebrow">ΥΠΟΛΟΓΙΣΜΟΣ</p><h2>Πείτε μας το μέγεθός σας</h2><p>Προσαρμόστε τα στοιχεία για να δείτε την επιλεξιμότητα και την εκτιμώμενη χρέωση.</p></div>
+      <div class="inputs"><label>Πολυκατοικίες <input type="number" min="1" max="100000" [(ngModel)]="buildings" /></label><label>Διαμερίσματα <input type="number" min="1" max="100000" [(ngModel)]="apartments" /></label><label class="range">Διαμερίσματα (1–250) <input type="range" min="1" max="250" [(ngModel)]="apartments" /></label></div>
+    </div>
+    @if (!validCounts) { <p class="error" role="alert">Εισάγετε ακέραιους αριθμούς από 1 έως 100.000.</p> }
+    @if (error) { <div class="state" role="alert">Ο κατάλογος τιμών δεν είναι διαθέσιμος. <button (click)="load()">Δοκιμάστε ξανά</button></div> }
+    @else if (!catalog) { <p class="state">Φόρτωση τιμών...</p> }
+    @else {
+      <div class="cards">
+        @for (plan of plans; track plan.id; let i = $index) {
+          <article class="plan" [class.featured]="i === 1"><div class="plan-top"><span class="number">0{{ i + 1 }} / {{ type === 'individual' ? 'ΙΔΙΩΤΕΣ' : 'ΕΠΙΧΕΙΡΗΣΕΙΣ' }}</span><h3>{{ planName(plan.id) }}</h3>
+            <div class="amount">@if (plan.quoteOnly) { Προσφορά } @else if (validCounts && eligible(plan, buildings, apartments)) { @if (price(plan, catalog, apartments, annual); as result) { {{ result.total / 100 | currency:catalog.currency }} <small>/ {{ annual ? 'έτος' : 'μήνα' }}</small> } } @else { Μη επιλέξιμο }</div>
+            @if (plan.quoteOnly) { <p>Για ανάγκες που απαιτούν εξατομικευμένη πρόταση.</p> }
+            @else if (validCounts && eligible(plan, buildings, apartments)) { @if (price(plan, catalog, apartments, annual); as result) { @if (result.vat !== null) { <p>Καθαρή αξία {{ result.amount / 100 | currency:catalog.currency }} + ΦΠΑ {{ catalog.businessVatBasisPoints / 100 }}% ({{ result.vat / 100 | currency:catalog.currency }}).</p> } @else { <p>Η τιμή περιλαμβάνει ΦΠΑ.</p> } } }
+            @else { <p>Τα στοιχεία σας υπερβαίνουν τα όρια του πακέτου ή δεν είναι έγκυρα.</p> }
+          </div>
+          <ul><li>{{ plan.maxBuildings === null ? 'Όριο πολυκατοικιών κατόπιν προσφοράς' : plan.id === 'INDIVIDUAL_FREE' && plan.maxBuildings === 1 ? plan.maxBuildings + ' πολυκατοικία' : 'Έως ' + plan.maxBuildings + ' πολυκατοικίες' }}</li><li>{{ plan.maxApartments === null ? (plan.quoteOnly ? 'Όριο διαμερισμάτων κατόπιν προσφοράς' : 'Χωρίς όριο διαμερισμάτων') : 'Έως ' + plan.maxApartments + ' διαμερίσματα' }}</li>@if (plan.id === 'INDIVIDUAL_PLUS') { <li>Όλες οι λειτουργίες του Free</li> @if (plan.includedApartments !== null) { <li>{{ plan.includedApartments }} διαμερίσματα στη βασική τιμή</li> } @if (plan.extraApartmentMonthlyCents !== null) { <li>+{{ plan.extraApartmentMonthlyCents / 100 | currency:catalog.currency }} / μήνα ανά επιπλέον διαμέρισμα</li> } @for (feature of plusFeatures; track feature) { <li>{{ feature }}</li> } } @else if (plan.extraApartmentMonthlyCents && plan.includedApartments !== null) { <li>{{ plan.includedApartments }} διαμερίσματα περιλαμβάνονται, επιπλέον {{ plan.extraApartmentMonthlyCents / 100 | currency:catalog.currency }} / μήνα ανά διαμέρισμα</li> } @if (plan.id === 'INDIVIDUAL_FREE') { @for (feature of freeFeatures; track feature) { <li>{{ feature }}</li> } }</ul>
+          @if (plan.id === 'INDIVIDUAL_EXTENDED') { <ul>@for (feature of extendedFeatures; track feature) { <li>{{ feature }}</li> }</ul> }
+          <a class="plan-link" [routerLink]="plan.quoteOnly ? '/contact-us' : '/register'">{{ plan.quoteOnly ? 'Ζητήστε προσφορά' : 'Δημιουργία λογαριασμού' }} <span>↗</span></a></article>
+        }
+      </div>
+      <p class="disclaimer">Οι τιμές αποτελούν εκτίμηση βάσει του τρέχοντος καταλόγου. Η ενεργοποίηση συνδρομών και η πληρωμή δεν είναι ακόμη διαθέσιμες. Οι δυνατότητες και η διαθεσιμότητά τους ανά πακέτο είναι υπό επιβεβαίωση.</p>
+    }
+  </section>
+  <section class="features"><div class="wrap feature-grid"><div><p class="eyebrow">ΜΙΑ ΚΟΙΝΗ ΑΦΕΤΗΡΙΑ</p><h2>Η καθημερινότητα της πολυκατοικίας, σε ένα μέρος.</h2></div><div><p>Το Oikio συγκεντρώνει εργαλεία για την οργάνωση κοινοχρήστων, την επικοινωνία και τη συμμετοχή των μελών.</p><p>Η διάθεση λειτουργιών ανά πακέτο δεν έχει ακόμη επιβεβαιωθεί. Επικοινωνήστε μαζί μας για τις δυνατότητες που χρειάζεστε.</p><a routerLink="/features">Δείτε τις λειτουργίες →</a></div></div></section>
+  <section class="cta"><div class="wrap"><p class="eyebrow">ΞΕΚΙΝΗΣΤΕ ΜΕ ΤΟ OIKIO</p><h2>Ας οργανώσουμε τη διαχείριση μαζί.</h2><div><a routerLink="/register">Εγγραφή</a><a class="secondary" routerLink="/contact-us">Επικοινωνία</a><a class="secondary" routerLink="/login">Σύνδεση</a></div></div></section>
+</main><app-public-footer />

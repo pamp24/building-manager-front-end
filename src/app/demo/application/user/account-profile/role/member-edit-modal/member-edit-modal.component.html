@@ -1,6 +1,6 @@
 <div class="modal-header">
   <h5 class="modal-title">Ανάθεση Ρόλου & Διαμερίσματος</h5>
-  <button type="button" class="btn-close" (click)="activeModal.dismiss()"></button>
+  <button type="button" class="btn-close" (click)="activeModal.dismiss()" [disabled]="isSending"></button>
 </div>
 
 <div class="modal-body">
@@ -35,7 +35,16 @@
     </div>
   </div>
 
-  <div class="text-danger mt-3" *ngIf="errorMsg">{{ errorMsg }}</div>
+  <div *ngIf="pmView" class="mt-4 border-top pt-3">
+    <div *ngIf="member.isBuildingManager" class="text-success">Τρέχων διαχειριστής πολυκατοικίας</div>
+    <button *ngIf="!member.isBuildingManager && member.status === 'JOINED' && member.id != null" type="button"
+      class="btn btn-outline-primary" (click)="designateManager()" [disabled]="isSending || buildingId == null">
+      <span *ngIf="isSending" class="spinner-border spinner-border-sm me-2"></span>
+      Ορισμός ως διαχειριστή πολυκατοικίας
+    </button>
+    <p class="text-muted mb-0 mt-2">Ο ρόλος και το διαμέρισμα του μέλους δεν αλλάζουν.</p>
+  </div>
+  <div class="text-danger mt-3" *ngIf="errorMsg" role="alert">{{ errorMsg }}</div>
 </div>
 
 <div class="modal-footer">

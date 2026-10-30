@@ -5,7 +5,9 @@ export interface ChatMessageDTO {
   senderName: string;
   senderAvatar?: string;
   content: string;
-  imageUrl?: string;
+  imageUrl?: string | null;
   createdAt: string;
+  editedAt?: string | null;
+  deletedAt?: string | null;
   mine: boolean;
 }

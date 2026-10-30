@@ -9,7 +9,7 @@
     </div>
   </app-card>
 
-  <div class="col-xxl-8">
+  <div class="col-xxl-8" *ngIf="isManagementRole">
     <div class="row g-3 mb-3">
       @for (cards of widgetCards; track cards.title) {
         <div class="col-md-6 col-lg-4">
@@ -45,7 +45,7 @@
       }
     </div>
   </div>
-  <div class="col-xxl-4">
+  <div class="col-xxl-4" *ngIf="isManagementRole">
     <app-card [showHeader]="false" [padding]="14" cardClass="total-recievables">
       <div class="d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center">
@@ -87,7 +87,7 @@
               <span class="avatar bg-light-primary lh-1">{{ totalCount }}</span>
             </button>
             <ng-template ngbNavContent>
-              <app-statement-list-table [statements]="statements" (refreshRequested)="reloadStatements()" />
+              <app-statement-list-table [statements]="statements" [isManagementRole]="isManagementRole" [myApartments]="myApartments" (refreshRequested)="reloadStatements()" />
             </ng-template>
           </li>
 
@@ -97,17 +97,17 @@
               <span class="avatar bg-light-success lh-1">{{ paidCount }}</span>
             </button>
             <ng-template ngbNavContent>
-              <app-statement-list-table [statements]="paidStatements" (refreshRequested)="reloadStatements()" />
+              <app-statement-list-table [statements]="paidStatements" [isManagementRole]="isManagementRole" [myApartments]="myApartments" (refreshRequested)="reloadStatements()" />
             </ng-template>
           </li>
 
           <li [ngbNavItem]="3">
             <button ngbNavLink>
-              Εκκρεμούν
+              Τρέχοντα
               <span class="avatar bg-light-warning lh-1">{{ pendingCount }}</span>
             </button>
             <ng-template ngbNavContent>
-              <app-statement-list-table [statements]="pendingStatements" (refreshRequested)="reloadStatements()" />
+              <app-statement-list-table [statements]="pendingStatements" [isManagementRole]="isManagementRole" [myApartments]="myApartments" (refreshRequested)="reloadStatements()" />
             </ng-template>
           </li>
 
@@ -117,7 +117,7 @@
               <span class="avatar bg-light-danger lh-1">{{ expiredCount }}</span>
             </button>
             <ng-template ngbNavContent>
-              <app-statement-list-table [statements]="expiredStatements" (refreshRequested)="reloadStatements()" />
+              <app-statement-list-table [statements]="expiredStatements" [isManagementRole]="isManagementRole" [myApartments]="myApartments" (refreshRequested)="reloadStatements()" />
             </ng-template>
           </li>
 
@@ -127,7 +127,7 @@
               <span class="avatar bg-light-danger lh-1">{{ closedCount }}</span>
             </button>
             <ng-template ngbNavContent>
-              <app-statement-list-table [statements]="closedStatements" (refreshRequested)="reloadStatements()" />
+              <app-statement-list-table [statements]="closedStatements" [isManagementRole]="isManagementRole" [myApartments]="myApartments" (refreshRequested)="reloadStatements()" />
             </ng-template>
           </li>
 
@@ -137,7 +137,7 @@
               <span class="avatar bg-light-primary lh-1">{{ draftCount }}</span>
             </button>
             <ng-template ngbNavContent>
-              <app-statement-list-table [statements]="draftStatements" (refreshRequested)="reloadStatements()" />
+              <app-statement-list-table [statements]="draftStatements" [isManagementRole]="isManagementRole" [myApartments]="myApartments" (refreshRequested)="reloadStatements()" />
             </ng-template>
           </li>
         </ul>

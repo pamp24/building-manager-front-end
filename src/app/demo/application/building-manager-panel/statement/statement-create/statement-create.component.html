@@ -148,6 +148,13 @@
                         <option value="">-- Επιλογή --</option>
                         <option *ngFor="let c of expenseCategories" [value]="c.value">{{ c.label }}</option>
                       </select>
+                      <div *ngIf="item.get('category')?.value === 'SPECIAL'" class="mt-2">
+                        <label class="form-label" [attr.for]="'create-apartments-' + i">Διαμερίσματα ειδικής δαπάνης</label>
+                        <select class="form-select" [id]="'create-apartments-' + i" formControlName="selectedApartmentIds" multiple>
+                          <option *ngFor="let a of selectedApartments" [ngValue]="a.id">{{ a.floor }}{{ a.number }}</option>
+                        </select>
+                        <small class="text-muted">Επιλέξτε ένα ή περισσότερα διαμερίσματα (Ctrl/Command για πολλαπλή επιλογή).</small>
+                      </div>
                     </td>
                     <td><input type="text" class="form-control" formControlName="descriptionItem" /></td>
                     <td><input type="number" class="form-control" formControlName="price" /></td>

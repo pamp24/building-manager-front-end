@@ -163,6 +163,15 @@ export const NavigationItems: NavigationItem[] = [
         role: [Role.Admin, Role.User, Role.PropertyManager, Role.BuildingManager, Role.Owner, Role.Resident]
       },
       {
+        id: 'statement-list-shared',
+        title: 'List Expenses Invoices',
+        type: 'item',
+        classes: 'nav-item',
+        icon: 'unordered-list',
+        url: '/statement/list',
+        role: [Role.User, Role.Owner, Role.Resident, Role.PropertyManager, Role.PropertyAgent, Role.AdminAgent]
+      },
+      {
         id: 'Data-Input',
         title: 'Data Input',
         type: 'item',

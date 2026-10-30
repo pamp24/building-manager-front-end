@@ -145,11 +145,7 @@
           <div class="col-md-6 mb-3" *ngIf="form.get('hasCentralHeating')?.value">
             <label class="form-label">Τύπος</label>
             <select class="form-select" formControlName="heatingType">
-              <option value="OIL">Πετρέλαιο</option>
-              <option value="NATURAL_GAS">Φυσικό Αέριο</option>
-              <option value="ELECTRIC">Ηλεκτρικό</option>
-              <option value="HEAT_PUMP">Αντλία Θερμότητας</option>
-              <option value="NONE">Καθόλου</option>
+              <option *ngFor="let type of heatingTypes" [value]="type.value">{{ type.label }}</option>
             </select>
           </div>
 

@@ -22,6 +22,9 @@ import { LastStatementCardComponent } from 'src/app/theme/shared/apexchart/last-
 import { BuildingTotalCardComponent } from 'src/app/theme/shared/apexchart/building-total-card/building-total-card.component';
 import { BuildingChartComponent } from 'src/app/theme/shared/apexchart/building-chart/building-chart.component';
 import { UserDashboardService } from 'src/app/theme/shared/service/userDashboard.service';
+import { UserService } from 'src/app/theme/shared/service/user.service';
+import { AuthenticationService } from 'src/app/theme/shared/service';
+import { Role } from 'src/app/theme/shared/components/_helpers/role';
 
 
 @Component({
@@ -50,6 +53,9 @@ export class DefaultComponent implements OnInit {
   private iconService = inject(IconService);
   private themeService = inject(ThemeService);
   private dashboardService = inject(UserDashboardService);
+  private userService = inject(UserService);
+  private authenticationService = inject(AuthenticationService);
+  showWelcomeBanner = false;
   role: string | null = null;
   totalAmount = 0;
   lastStatementItems: any[] = [];
@@ -74,6 +80,14 @@ buildingId: any;
   }
 
   ngOnInit(): void {
+    this.userService.getCurrentUser().subscribe({
+      next: (user) => {
+        this.showWelcomeBanner = (this.authenticationService.currentUserValue?.role || Role.User) === Role.User && user.buildingMember === false;
+      },
+      error: () => {
+        this.showWelcomeBanner = false;
+      }
+    });
     this.loadLastStatementItems();
 
     this.userDashboardService.getDashboard().subscribe({

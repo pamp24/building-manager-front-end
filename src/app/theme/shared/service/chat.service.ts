@@ -27,6 +27,18 @@ export class ChatService {
     return this.http.get<ChatMessageDTO[]>(`${this.apiUrl}/${conversationId}/messages`);
   }
 
+  hideConversation(conversationId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${conversationId}`);
+  }
+
+  editMessage(conversationId: number, messageId: number, content: string): Observable<ChatMessageDTO> {
+    return this.http.put<ChatMessageDTO>(`${this.apiUrl}/${conversationId}/messages/${messageId}`, { content });
+  }
+
+  deleteMessage(conversationId: number, messageId: number): Observable<ChatMessageDTO> {
+    return this.http.delete<ChatMessageDTO>(`${this.apiUrl}/${conversationId}/messages/${messageId}`);
+  }
+
   sendMessage(conversationId: number, content: string): Observable<ChatMessageDTO> {
     return this.http.post<ChatMessageDTO>(`${this.apiUrl}/${conversationId}/messages`, { content });
   }

@@ -12,6 +12,7 @@ export interface BuildingMemberDTO {
   role: string;
   profileImageUrl?: string | null;
   status: MemberDisplayStatus;
+  isBuildingManager: boolean;
   buildingId: number;
   buildingName: string;
   apartmentNumber?: string | null;

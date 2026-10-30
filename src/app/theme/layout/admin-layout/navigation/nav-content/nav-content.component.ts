@@ -1,7 +1,9 @@
 // Angular import
-import { AfterViewInit, Component, ElementRef, OnInit, viewChild, output, inject } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, ElementRef, OnInit, viewChild, output, inject } from '@angular/core';
 import { CommonModule, Location, LocationStrategy } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { EMPTY, catchError, filter, startWith, switchMap } from 'rxjs';
 
 // project import
 import { NavigationItems } from '../navigation';
@@ -56,6 +58,7 @@ import {
 } from '@ant-design/icons-angular/icons';
 import { NavigationItem } from 'src/app/theme/shared/models/navigation';
 import { ProfessionalService } from 'src/app/theme/shared/service/professional.service';
+import { UserService } from 'src/app/theme/shared/service/user.service';
 
 @Component({
   selector: 'app-nav-content',
@@ -68,6 +71,10 @@ export class NavContentComponent implements AfterViewInit, OnInit {
   private location = inject(Location);
   private locationStrategy = inject(LocationStrategy);
   private iconService = inject(IconService);
+  private destroyRef = inject(DestroyRef);
+  private userService = inject(UserService);
+  private hasJoinedBuilding = true;
+  private hasMyBusiness = true;
 
   // After Media 1025 menu Open In Use
   readonly NavCollapsedMob = output();
@@ -147,9 +154,26 @@ export class NavContentComponent implements AfterViewInit, OnInit {
   ngOnInit() {
     this.layout = MantisConfig.layout;
 
-    const currentUserRole = this.authenticationService.currentUserValue?.role || Role.User;
-
-    this.navigation = this.filterMenu(NavigationItems, currentUserRole);
+    this.reloadMenu();
+    this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+      startWith(null),
+      switchMap(() => this.professionalService.hasMyBusiness().pipe(catchError(() => EMPTY))),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe((hasBusiness) => {
+      this.hasMyBusiness = hasBusiness;
+      this.reloadMenu();
+    });
+    this.userService.getCurrentUser().subscribe({
+      next: (user) => {
+        this.hasJoinedBuilding = user.buildingMember === true;
+        this.reloadMenu();
+      },
+      error: () => {
+        this.hasJoinedBuilding = this.authenticationService.currentUserValue?.buildingMember !== false;
+        this.reloadMenu();
+      }
+    });
   }
 
   getUserAvatar(): string {
@@ -174,6 +198,8 @@ export class NavContentComponent implements AfterViewInit, OnInit {
   filterMenu(items: NavigationItem[], userRole: string, parentRoles: string[] = [Role.Admin]): NavigationItem[] {
     return (items ?? [])
       .map((item): NavigationItem | null => {
+        if (item.id === 'Data-Input' && this.hasJoinedBuilding) return null;
+        if (item.id === 'my-professional-businesses' && !this.hasMyBusiness) return null;
         const effectiveRoles = item.role && item.role.length > 0 ? item.role : parentRoles;
 
         const filteredChildren = item.children ? this.filterMenu(item.children, userRole, effectiveRoles) : undefined;

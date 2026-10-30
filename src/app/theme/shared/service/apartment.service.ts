@@ -17,6 +17,10 @@ export class ApartmentService {
     return this.http.post<ApartmentRequest[]>(`${this.baseUrl}/batch`, apartments);
   }
 
+  createBulk(buildingId: number, apartments: ApartmentRequest[]): Observable<number[]> {
+    return this.http.post<number[]>(`${this.baseUrl}/building/${buildingId}/bulk`, apartments);
+  }
+
   getMyApartment() {
     return this.http.get<ApartmentDTO>(`${this.baseUrl}/myApartment`);
   }

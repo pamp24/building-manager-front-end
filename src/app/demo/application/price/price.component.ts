@@ -1,125 +1,46 @@
-// angular import
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-// project import
-import { SharedModule } from 'src/app/theme/shared/shared.module';
-
-// icons
-import { IconService } from '@ant-design/icons-angular';
-import { InfoCircleOutline } from '@ant-design/icons-angular/icons';
+import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { PricingCatalog, PricingPlan, PricingService, eligible, freeFeatures, plusFeatures, extendedFeatures, planName, price } from 'src/app/theme/shared/service/pricing.service';
 
 @Component({
   selector: 'app-price',
-  imports: [CommonModule, SharedModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './price.component.html',
   styleUrls: ['./price.component.scss']
 })
 export class PriceComponent {
-  private iconService = inject(IconService);
+  private pricing = inject(PricingService);
+  catalog: PricingCatalog | null = null;
+  error = false;
   selectedType: 'individual' | 'company' = 'individual';
-  // public props
-  isChecked = true;
+  annual = false;
+  buildings = 1;
+  apartments = 1;
+  selection: { name: string; annual: boolean; buildings: number; apartments: number; currency: string; total: number; amount: number; vat: number | null } | null = null;
+  readonly tierImages = ['assets/images/price/tier-1.png', 'assets/images/price/tier-2.png', 'assets/images/price/tier-3.png'];
+  readonly price = price;
+  readonly eligible = eligible;
+  readonly freeFeatures = freeFeatures;
+  readonly plusFeatures = plusFeatures;
+  readonly extendedFeatures = extendedFeatures;
+  readonly planName = planName;
 
-  // constructor
-  constructor() {
-    this.iconService.addIcon(...[InfoCircleOutline]);
+  constructor() { this.load(); }
+  selectPlan(plan: PricingPlan) {
+    if (!this.catalog || !this.validCounts || !eligible(plan, this.buildings, this.apartments)) return;
+    const estimate = price(plan, this.catalog, this.apartments, this.annual);
+    if (!estimate) return;
+    this.selection = { name: planName(plan.id), annual: this.annual, buildings: this.buildings, apartments: this.apartments, currency: this.catalog.currency, ...estimate };
   }
-
-  // public methods
-  individualPlans = [
-  {
-    price_type: 'Free',
-    yearly: 0,
-    monthly: 0,
-    btn_type: 'btn-outline-primary',
-    includeItems: [
-      { available: true, title: '1 πολυκατοικία' },
-      { available: true, title: 'Έως 5 διαμερίσματα' },
-      { available: true, title: 'Βασική έκδοση κοινοχρήστων' },
-      { available: true, title: 'Ανακοινώσεις' },
-      { available: true, title: 'Βασικές ψηφοφορίες' },
-      { available: false, title: 'Reports' },
-      { available: false, title: 'Helpdesk' }
-    ]
-  },
-  {
-    price_type: 'Professional',
-    yearly: 49,
-    monthly: 5,
-    btn_type: 'btn-outline-primary',
-    includeItems: [
-      { available: true, title: 'Έως 3 πολυκατοικίες' },
-      { available: true, title: 'Έως 50 διαμερίσματα' },
-      { available: true, title: 'Πλήρης έκδοση κοινοχρήστων' },
-      { available: true, title: 'Ανακοινώσεις & ψηφοφορίες' },
-      { available: true, title: 'Προσκλήσεις ενοίκων / ιδιοκτητών' },
-      { available: true, title: 'Reports' },
-      { available: true, title: 'Βασικό Helpdesk' }
-    ]
-  },
-  {
-    price_type: 'Premium',
-    yearly: 99,
-    monthly: 10,
-    btn_type: 'btn-outline-primary',
-    includeItems: [
-      { available: true, title: 'Έως 10 πολυκατοικίες' },
-      { available: true, title: 'Έως 150 διαμερίσματα' },
-      { available: true, title: 'Priority Helpdesk' },
-      { available: true, title: 'Chat ενοίκων' },
-      { available: true, title: 'Advanced reports' },
-      { available: true, title: 'Υποστήριξη setup' }
-    ]
+  load() {
+    this.error = false;
+    this.pricing.catalog().subscribe({ next: catalog => this.catalog = catalog, error: () => this.error = true });
   }
-];
-
-  companyPlans = [
-  {
-    price_type: 'Basic',
-    yearly: 149,
-    monthly: 15,
-    btn_type: 'btn-outline-primary',
-    includeItems: [
-      { available: true, title: 'Έως 5 πολυκατοικίες' },
-      { available: true, title: 'Έως 100 διαμερίσματα' },
-      { available: true, title: 'Dashboard εταιρίας' },
-      { available: true, title: 'Κοινόχρηστα' },
-      { available: true, title: 'Ανακοινώσεις & ψηφοφορίες' },
-      { available: true, title: 'Βασικά reports' },
-      { available: false, title: 'Support agents' },
-      { available: false, title: 'Advanced Helpdesk' }
-    ]
-  },
-  {
-    price_type: 'Professional',
-    yearly: 399,
-    monthly: 39,
-    btn_type: 'btn-primary',
-    includeItems: [
-      { available: true, title: 'Έως 20 πολυκατοικίες' },
-      { available: true, title: 'Έως 500 διαμερίσματα' },
-      { available: true, title: 'Dashboard εταιρίας' },
-      { available: true, title: 'Agents / υπάλληλοι' },
-      { available: true, title: 'Ανάθεση πολυκατοικιών σε agents' },
-      { available: true, title: 'Helpdesk tickets' },
-      { available: true, title: 'Advanced reports' }
-    ]
-  },
-  {
-    price_type: 'Premium',
-    yearly: 999,
-    monthly: 99,
-    btn_type: 'btn-outline-primary',
-    includeItems: [
-      { available: true, title: 'Απεριόριστες πολυκατοικίες' },
-      { available: true, title: 'Απεριόριστα διαμερίσματα' },
-      { available: true, title: 'Advanced Helpdesk system' },
-      { available: true, title: 'Support agents' },
-      { available: true, title: 'Custom onboarding' },
-      { available: true, title: 'Priority support' },
-      { available: true, title: 'Premium analytics' }
-    ]
+  get plans() {
+    return this.catalog?.plans.filter(plan => plan.id.startsWith(this.selectedType === 'individual' ? 'INDIVIDUAL_' : 'BUSINESS_')) ?? [];
   }
-];
+  get sliderApartments() { return Number.isFinite(this.apartments) ? Math.min(250, Math.max(1, this.apartments)) : 1; }
+  get validCounts() { return Number.isInteger(this.buildings) && Number.isInteger(this.apartments) && this.buildings >= 1 && this.apartments >= 1 && this.buildings <= 100000 && this.apartments <= 100000; }
 }

@@ -1,137 +1,163 @@
 <div class="row" *ngIf="statement">
   <div class="col-sm-12">
     <app-card [showHeader]="false">
-      <!-- Header με εικονίδιο και status -->
-      <div class="row g-3" id="print-section">
-        <div class="col-12">
-          <div class="row align-items-center g-3">
-            <div class="col-sm-6">
-              <div class="d-flex align-items-center mb-2 navbar-brand">
-                <img src="assets/images/logo-dark.svg" class="img-fluid logo-lg" alt="images" />
-                <span class="badge rounded ms-2 {{ statusBadgeClass }}">
-                  {{ translateStatus(statement?.status) }}
-                </span>
-              </div>
-              <p class="mb-0">Κωδικός: {{ statement?.code }}</p>
-            </div>
-            <div class="col-sm-6 text-sm-end">
-              <h6>
-                Ημ/νία
-                <span class="text-muted f-w-400">{{ statement?.startDate | date: 'dd/MM/yyyy' }}</span>
-              </h6>
-              <h6>
-                Ημ. Λήξης
-                <span class="text-muted f-w-400">{{ statement?.endDate | date: 'dd/MM/yyyy' }}</span>
-              </h6>
-            </div>
-          </div>
-        </div>
+      <div class="d-flex justify-content-end gap-2 mb-3 d-print-none">
+        <button class="btn btn-primary" (click)="printStatement()">Εκτύπωση</button>
+        <button class="btn btn-primary" (click)="downloadPDF()">Λήψη PDF</button>
+        <button class="btn btn-danger" (click)="close()">Κλείσιμο</button>
+      </div>
 
-        <div class="row mt-3">
-          <!-- Από -->
-          <div class="col-xl-6">
-            <div class="border rounded p-3 h-100">
-              <h6 class="mb-2">Από:</h6>
-              <ng-container *ngIf="selectedBuilding">
-                <h5>Όνομα Κτιρίου: {{ selectedBuilding.name }}</h5>
-                <p>Διεύθυνση: {{ selectedBuilding.street1 }} {{ selectedBuilding.stNumber1 }}</p>
-                <p>Διεύθυνση2: {{ selectedBuilding.street2 }} {{ selectedBuilding.stNumber2 }}</p>
-                <p>Πόλη: {{ selectedBuilding.city }}, ΤΚ: {{ selectedBuilding.postalCode }}</p>
-                <p>Διαχειριστής: {{ selectedBuilding.managerFullName }}</p>
-                <p>Τηλέφωνο: {{ selectedBuilding.managerPhone }}</p>
-                <p>E-mail: {{ selectedBuilding.managerEmail }}</p>
-              </ng-container>
+        <div id="print-section" class="statement-print-sheet">
+          <div class="statement-app-brand">
+            <img src="assets/images/oikio-icon.png" alt="Oikio" class="statement-app-logo" />
+            <div class="statement-app-brand-text">
+              <div class="statement-app-name">Building Manager Network</div>
+              <div class="statement-app-subtitle">Εκδοση Κοινοχρήστων</div>
             </div>
           </div>
 
-          <!-- Προς -->
-          <div class="col-xl-6">
-            <div class="border rounded p-3 h-100">
-              <h6 class="mb-3">Προς (Διαμερίσματα):</h6>
-
-              <div *ngIf="apartments.length > 0; else noApts">
-                <ul class="list-group list-group-flush">
-                  <li *ngFor="let apt of apartments" class="list-group-item px-0">
-                    <div class="d-flex flex-column">
-                      <span class="fw-bold">Διαμέρισμα {{ apt.number }} (Όροφος: {{ apt.floor }})</span>
-                      <small class="text-muted">Ιδιοκτήτης: {{ apt.ownerLastName || '—' }} {{ apt.ownerFirstName || '—' }}</small>
-                      <small class="text-muted">Ενοικιαστής: {{ apt.residentLastName || '—' }} {{ apt.residentFirstName || '—' }}</small>
-                    </div>
-                  </li>
-                </ul>
-              </div>
+          <div class="statement-top-layout">
+          <div class="statement-left-column">
+            <div class="issuer-panel">
+              <div class="issuer-line issuer-title">{{ issuerName || selectedBuilding?.name }}</div>
+              <div class="issuer-line" *ngIf="issuerAddressLine">{{ issuerAddressLine }}</div>
+              <div class="issuer-line" *ngIf="issuerCityLine">{{ issuerCityLine }}</div>
+              <div class="issuer-line" *ngIf="selectedBuilding?.buildingDescription">{{ selectedBuilding?.buildingDescription }}</div>
+              <div class="issuer-line" *ngIf="issuerPhone">{{ issuerPhone }}</div>
             </div>
 
-            <ng-template #noApts>
-              <p class="text-muted mb-0">Δεν υπάρχουν διαμερίσματα σε αυτό το παραστατικό</p>
-            </ng-template>
-          </div>
-        </div>
-
-        <!-- Items Table -->
-        <div class="col-12">
-          <div class="table-responsive">
-            <table class="table table-hover mb-0">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Κατηγορία</th>
-                  <th>Περιγραφή</th>
-                  <th class="text-end">Τιμή</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let item of statement?.items; let i = index">
-                  <td>{{ i + 1 }}</td>
-                  <td>{{ translateCategory(item.category) }}</td>
-                  <td>{{ item.descriptionItem }}</td>
-                  <td class="text-end">{{ item.price | number: '1.2-2' }} €</td>
-                </tr>
-              </tbody>
+            <table class="statement-meta-table">
+              <tr>
+                <th>ΚΩΔΙΚΟΣ</th>
+                <td>{{ statement.code }}</td>
+                <th>ΗΜ/ΝΙΑ</th>
+                <td>{{ statement.startDate | date: 'd/M/yyyy' }}</td>
+              </tr>
+              <tr>
+                <th>ΜΗΝΑΣ</th>
+                <td colspan="3">{{ formatMonth(statement.month) }}</td>
+              </tr>
+              <tr>
+                <th>ΔΙΑΧΕΙΡΙΣΤΗΣ</th>
+                <td colspan="3">{{ selectedBuilding?.managerFullName || manager?.fullName || '—' }}</td>
+              </tr>
+              <tr>
+                <th>ΔΙΕΥΘΥΝΣΗ</th>
+                <td colspan="3">{{ buildingAddress || '—' }}</td>
+              </tr>
+              <tr>
+                <th>ΠΕΡΙΟΧΗ</th>
+                <td colspan="3">{{ selectedBuilding?.city || '—' }}</td>
+              </tr>
             </table>
+
+            <div class="announcement-panel">
+              <div class="announcement-title">ΑΝΑΚΟΙΝΩΣΗ</div>
+              <div class="announcement-body">{{ statement.description || '—' }}</div>
+            </div>
           </div>
-        </div>
 
-        <!-- Totals -->
-        <div class="col-12">
-          <div class="invoice-total ms-auto">
-            <div class="row">
-              <div class="col-6"><p class="text-muted mb-1 text-start">Υποσύνολο :</p></div>
-              <div class="col-6">
-                <p class="mb-1 text-end">{{ statement?.subTotal | number: '1.2-2' }} €</p>
+          <div class="statement-right-column">
+            <div class="expense-grid">
+              <div class="expense-box" *ngFor="let section of categorySections">
+                <table>
+                  <colgroup>
+                    <col />
+                    <col class="amount-column" />
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th>{{ section.label }}</th>
+                      <th class="text-end">ΠΟΣΟ</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of section.items">
+                      <td>{{ item.descriptionItem }}</td>
+                      <td class="text-end">{{ getItemAmount(item) | number: '1.2-2' }}</td>
+                    </tr>
+                    <tr *ngFor="let _ of section.emptyRows" class="expense-empty-row">
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                    </tr>
+                    <tr class="expense-total-row">
+                      <td>ΣΥΝΟΛΟ</td>
+                      <td class="text-end">{{ section.total | number: '1.2-2' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
+            </div>
 
-              <div class="col-6"><p class="text-muted mb-1 text-start">Έκπτωση :</p></div>
-              <div class="col-6">
-                <p class="mb-1 text-end text-success">{{ statement?.discountPercent }} %</p>
-              </div>
-
-              <div class="col-6"><p class="text-muted mb-1 text-start">ΦΠΑ :</p></div>
-              <div class="col-6">
-                <p class="mb-1 text-end">{{ statement?.taxPercent }} %</p>
-              </div>
-
-              <div class="col-6"><p class="f-w-600 mb-1 text-start">Σύνολο :</p></div>
-              <div class="col-6">
-                <p class="f-w-600 mb-1 text-end">{{ statement?.total | number: '1.2-2' }} €</p>
-              </div>
+            <div class="grand-total-box">
+              <span>ΓΕΝΙΚΟ ΣΥΝΟΛΟ</span>
+              <strong>{{ statement.total | number: '1.2-2' }}</strong>
             </div>
           </div>
         </div>
 
-        <!-- Notes -->
-        <div class="col-12" *ngIf="statement?.description">
-          <label class="form-label">Σημειώσεις</label>
-          <p class="mb-0">{{ statement?.description }}</p>
-        </div>
-
-        <!-- Actions -->
-        <div class="col-12">
-          <div class="d-flex justify-content-end gap-2 d-print-none">
-            <button printSectionId="print-section" ngxPrint class="btn btn-primary">Εκτύπωση</button>
-            <button printSectionId="print-section" ngxPrint class="btn btn-primary" (click)="downloadPDF()">Λήψη PDF</button>
-            <button class="btn btn-danger" (click)="close()">Κλείσιμο</button>
-          </div>
+        <div class="allocations-table-wrap">
+          <table class="allocations-table">
+            <thead>
+              <tr>
+                <th rowspan="2">Α/Α</th>
+                <th rowspan="2">ΟΝΟΜΑΤΕΠΩΝΥΜΟ</th>
+                <th rowspan="2">ΑΡ. ΔΙΑΜ.</th>
+                <th colspan="3">ΧΙΛΙΟΣΤΑ</th>
+                <th colspan="8">ΠΟΣΟ ΑΝΑΛΟΓΙΑΣ ΣΕ ΕΥΡΩ</th>
+                <th rowspan="2">ΓΕΝΙΚΟ ΣΥΝΟΛΟ</th>
+              </tr>
+              <tr>
+                <th>ΚΟΙΝ/ΤΑ</th>
+                <th>ΑΣΑΝΣΕΡ</th>
+                <th>ΘΕΡ/ΝΣΗ</th>
+                <th>ΚΟΙΝ/ΤΑ</th>
+                <th>ΑΣΑΝΣΕΡ</th>
+                <th>ΘΕΡ/ΝΣΗ</th>
+                <th>ΙΣΑ ΜΕΡΗ</th>
+                <th>BOILER</th>
+                <th>ΕΙΔΙΚΕΣ</th>
+                <th>ΙΔΙΟΚΤΗΤΩΝ</th>
+                <th>ΛΟΙΠΑ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of apartmentRows">
+                <td>{{ row.displayIndex | number: '2.0-0' }}</td>
+                <td class="text-start">{{ row.displayName }}</td>
+                <td>{{ row.apartmentLabel }}</td>
+                <td>{{ displayPercent(row.commonPercent) }}</td>
+                <td>{{ displayPercent(row.elevatorPercent) }}</td>
+                <td>{{ displayPercent(row.heatingPercent) }}</td>
+                <td>{{ displayAmount(getApartmentCategoryAmount(row, 'COMMON')) }}</td>
+                <td>{{ displayAmount(getApartmentCategoryAmount(row, 'ELEVATOR')) }}</td>
+                <td>{{ displayAmount(getApartmentCategoryAmount(row, 'HEATING')) }}</td>
+                <td>{{ displayAmount(getApartmentCategoryAmount(row, 'EQUAL')) }}</td>
+                <td>{{ displayAmount(getApartmentCategoryAmount(row, 'BOILER')) }}</td>
+                <td>{{ displayAmount(getApartmentCategoryAmount(row, 'SPECIAL')) }}</td>
+                <td>{{ displayAmount(getApartmentCategoryAmount(row, 'OWNERS')) }}</td>
+                <td>{{ displayAmount(getApartmentCategoryAmount(row, 'OTHER')) }}</td>
+                <td class="row-total">{{ row.total | number: '1.2-2' }}</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th colspan="3" class="text-end">ΓΕΝΙΚΑ ΣΥΝΟΛΑ =&gt;</th>
+                <th>{{ displayPercent(commonPercentTotal) }}</th>
+                <th>{{ displayPercent(elevatorPercentTotal) }}</th>
+                <th>{{ displayPercent(heatingPercentTotal) }}</th>
+                <th>{{ displayAmount(getCategoryGrandTotal('COMMON')) }}</th>
+                <th>{{ displayAmount(getCategoryGrandTotal('ELEVATOR')) }}</th>
+                <th>{{ displayAmount(getCategoryGrandTotal('HEATING')) }}</th>
+                <th>{{ displayAmount(getCategoryGrandTotal('EQUAL')) }}</th>
+                <th>{{ displayAmount(getCategoryGrandTotal('BOILER')) }}</th>
+                <th>{{ displayAmount(getCategoryGrandTotal('SPECIAL')) }}</th>
+                <th>{{ displayAmount(getCategoryGrandTotal('OWNERS')) }}</th>
+                <th>{{ displayAmount(getCategoryGrandTotal('OTHER')) }}</th>
+                <th class="row-total">{{ statement.total | number: '1.2-2' }}</th>
+              </tr>
+            </tfoot>
+          </table>
         </div>
       </div>
     </app-card>

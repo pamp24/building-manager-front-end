@@ -1,0 +1,23 @@
+<div class="row apartment-preview-modal">
+  <div class="col-sm-12">
+    <app-card [showHeader]="false">
+      <div class="d-flex justify-content-end gap-2 mb-3">
+        <button class="btn btn-primary" (click)="print()">Εκτύπωση</button>
+        <button class="btn btn-primary" (click)="download()">Λήψη PDF</button>
+        <button class="btn btn-danger" (click)="activeModal.dismiss()">Κλείσιμο</button>
+      </div>
+
+      <div class="apartment-pdf-modal-body">
+        <div *ngIf="loading" class="text-center py-5">
+          <div class="spinner-border text-primary" role="status"></div>
+        </div>
+
+        <div *ngIf="!loading && pdfUrl" class="pdf-frame-wrap">
+          <iframe [src]="pdfUrl" title="Apartment statement pdf" class="pdf-frame"></iframe>
+        </div>
+
+        <div *ngIf="!loading && !pdfUrl" class="text-center text-muted py-5">Δεν ήταν δυνατή η φόρτωση του ειδοποιητηρίου.</div>
+      </div>
+    </app-card>
+  </div>
+</div>

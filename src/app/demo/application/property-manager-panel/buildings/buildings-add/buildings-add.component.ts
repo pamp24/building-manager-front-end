@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
 import { Router } from '@angular/router';
+import { BUILDING_COUNTRIES, BUILDING_HEATING_TYPES } from '../building-options';
 
 @Component({
   selector: 'app-buildings-add',
@@ -22,8 +23,9 @@ export class BuildingsAddComponent implements OnInit {
   loading = false;
   error?: string;
 
-  countries = ['Ελλάδα'];
-  states = [
+  countries = BUILDING_COUNTRIES;
+  heatingTypes = BUILDING_HEATING_TYPES;
+  static readonly states = [
     'Νομός Αττικής',
     'Νομός Αιτωλοακαρνανίας',
     'Νομός Αργολίδας',
@@ -76,6 +78,7 @@ export class BuildingsAddComponent implements OnInit {
     'Νομός Χανίων',
     'Νομός Χίου'
   ];
+  states = BuildingsAddComponent.states;
 
   selectedRegulationFile: File | null = null;
 

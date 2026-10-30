@@ -1,0 +1,14 @@
+<p>Κατεβάστε το πρότυπο, αντικαταστήστε την ενδεικτική γραμμή με τα στοιχεία σας και διατηρήστε τις επικεφαλίδες. Μία γραμμή ανά κτίριο. Γίνονται δεκτές και οι αγγλικές επικεφαλίδες παλαιότερων προτύπων, αλλά κάθε πεδίο πρέπει να εμφανίζεται μόνο μία φορά.</p>
+<button type="button" class="btn btn-outline-primary mb-3" (click)="download()">Λήψη προτύπου Excel</button>
+<p>Η χώρα είναι Ελλάδα και ο νομός πρέπει να αντιστοιχεί στις επιλογές της φόρμας. Γράψτε τον Τ.Κ. ως κείμενο με 5 ψηφία. Για τις επιλογές χρησιμοποιήστε Ναι ή Όχι (κενό σημαίνει Όχι).</p>
+<p>Χρησιμοποιήστε τις αναπτυσσόμενες λίστες για χώρα, νομό, επιλογές Ναι/Όχι και τύπο θέρμανσης. Αν υπάρχει πάρκινγκ ή αποθήκη, συμπληρώστε πλήθος τουλάχιστον 1. Για κεντρική θέρμανση συμπληρώστε τύπο και λίτρα από 0. Διαφορετικά αφήστε τα σχετικά πεδία κενά ή στο 0 / Καθόλου. Γίνονται δεκτοί και οι παλαιότεροι αγγλικοί κωδικοί θέρμανσης.</p>
+<p class="text-muted">Έως 500 κτίρια και 2 MB. Ο αρχικός έλεγχος γίνεται στη συσκευή σας. Εντοπίζονται διπλότυπα διεύθυνσης μέσα στο αρχείο, όχι στη βάση δεδομένων. Η εισαγωγή γίνεται μόνο με το Ανέβασμα.</p>
+<label for="bulk-file" class="form-label">Αρχείο Excel (.xlsx)</label>
+<input id="bulk-file" type="file" class="form-control mb-3" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" [disabled]="sending || !!uploadedCount" (change)="select($event)" />
+<button type="button" class="btn btn-primary" [disabled]="busy || sending || !!uploadedCount" (click)="check()">{{ busy ? 'Έλεγχος...' : 'Έλεγχος αρχείου' }}</button>
+<div *ngIf="success" class="alert alert-success mt-3" role="status">Ο έλεγχος του αρχείου ολοκληρώθηκε επιτυχώς. Δεν έγινε εισαγωγή και δεν ελέγχθηκαν διπλότυπα στη βάση.</div>
+<div *ngIf="uploadedCount" class="alert alert-success mt-3" role="status">Η εισαγωγή ολοκληρώθηκε: {{ uploadedCount }} κτίρια δημιουργήθηκαν.</div>
+<div *ngIf="errors.length" class="alert alert-danger mt-3" role="alert">
+  <strong>Βρέθηκαν προβλήματα:</strong>
+  <ul class="mb-0"><li *ngFor="let error of errors">{{ error }}</li></ul>
+</div>

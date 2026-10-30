@@ -3727,10 +3727,10 @@ fdir@^6.4.3, fdir@^6.4.4:
   resolved "https://registry.npmjs.org/fdir/-/fdir-6.4.4.tgz"
   integrity sha512-1NZP+GK4GfuAv3PqKvxQRDMjdSRZjnkq7KfhlNrCNNlZ0ygQFpebfrnfnq/W7fpUnAv9aGWmY1zKx7FYL3gwhg==
 
-fflate@^0.8.1:
-  version "0.8.2"
-  resolved "https://registry.npmjs.org/fflate/-/fflate-0.8.2.tgz"
-  integrity sha512-cPJU47OaAoCbg0pBvzsgpTPhmhqI5eJjh/JIu8tPj5q+T7iLvW/JAYUqmE7KOB4R1ZyEhzBaIQpQpardBF5z8A==
+fflate@^0.8.1, fflate@^0.8.2, fflate@^0.8.3:
+  version "0.8.3"
+  resolved "https://registry.npmjs.org/fflate/-/fflate-0.8.3.tgz"
+  integrity sha512-tbZNuJrLwGUp3zshBtdy4W+ORxZuIh8a5ilyIEQDC5rY1f3U20JMry0Ll3WBzU58EZKsEuJFXhb5gwv8CsPvgA==
 
 file-entry-cache@^8.0.0:
   version "8.0.0"
@@ -3945,7 +3945,7 @@ gopd@^1.2.0:
   resolved "https://registry.npmjs.org/gopd/-/gopd-1.2.0.tgz"
   integrity sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==
 
-graceful-fs@^4.1.2, graceful-fs@^4.2.11, graceful-fs@^4.2.4, graceful-fs@^4.2.6:
+graceful-fs@^4.1.2, graceful-fs@^4.2.11, graceful-fs@^4.2.2, graceful-fs@^4.2.4, graceful-fs@^4.2.6:
   version "4.2.11"
   resolved "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.11.tgz"
   integrity sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==
@@ -5173,6 +5173,11 @@ node-gyp@^11.0.0:
     tar "^7.4.3"
     which "^5.0.0"
 
+node-int64@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.npmjs.org/node-int64/-/node-int64-0.4.0.tgz"
+  integrity sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw==
+
 node-releases@^2.0.19:
   version "2.0.19"
   resolved "https://registry.npmjs.org/node-releases/-/node-releases-2.0.19.tgz"
@@ -5830,6 +5835,16 @@ raw-body@2.5.2:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
+read-excel-file@^9.3.14:
+  version "9.3.14"
+  resolved "https://registry.npmjs.org/read-excel-file/-/read-excel-file-9.3.14.tgz"
+  integrity sha512-rfEpNMthm/REIpSCLnGTrQD5aW+U9rrhFuGYF+XRO8Soz+7b+rAOW1z2vJbNiEINbFPbjRW16vz0KnX41Si9qw==
+  dependencies:
+    fflate "^0.8.3"
+    saxen "^11.1.0"
+    unzipper-esm "^0.13.3"
+    worker-f "^0.1.12"
+
 readable-stream@^2.0.1:
   version "2.3.8"
   resolved "https://registry.npmjs.org/readable-stream/-/readable-stream-2.3.8.tgz"
@@ -6112,6 +6127,11 @@ sax@^1.2.4:
   version "1.4.1"
   resolved "https://registry.npmjs.org/sax/-/sax-1.4.1.tgz"
   integrity sha512-+aWOz7yVScEGoKNd4PA10LZ8sk0A/z5+nXQG5giUO5rprX9jgYsTdov9qCchZiPIZezbZH+jRut8nPodFAX4Jg==
+
+saxen@^11.1.0:
+  version "11.2.0"
+  resolved "https://registry.npmjs.org/saxen/-/saxen-11.2.0.tgz"
+  integrity sha512-2bG564AAJcm/3vyZC0Uhs/mACrH+4AHMaKHKAB2M5xMqomUZa27FQ7MYaQGFKVcJk/MVzSEQ34A8QZWW+eiWEw==
 
 schema-utils@^4.0.0, schema-utils@^4.2.0, schema-utils@^4.3.0:
   version "4.3.0"
@@ -6784,6 +6804,14 @@ unpipe@~1.0.0, unpipe@1.0.0:
   resolved "https://registry.npmjs.org/unpipe/-/unpipe-1.0.0.tgz"
   integrity sha512-pjy2bYhSsufwWlKwPc+l3cN7+wuJlK6uz0YdJEOlQDbl6jo/YlPi4mb8agUkVC8BF7V8NuzeyPNqRksA3hztKQ==
 
+unzipper-esm@^0.13.3:
+  version "0.13.3"
+  resolved "https://registry.npmjs.org/unzipper-esm/-/unzipper-esm-0.13.3.tgz"
+  integrity sha512-LUO6VZ6fCzkDbdMev0/fOhoIeVGKaOkTIOoYxVLE0SQjfvmAHK+oywl7lfhloSZIsdGJ25mJ18Mtd9CyTASjrA==
+  dependencies:
+    graceful-fs "^4.2.2"
+    node-int64 "^0.4.0"
+
 update-browserslist-db@^1.1.1:
   version "1.1.1"
   resolved "https://registry.npmjs.org/update-browserslist-db/-/update-browserslist-db-1.1.1.tgz"
@@ -7036,6 +7064,11 @@ word-wrap@^1.2.5:
   resolved "https://registry.npmjs.org/word-wrap/-/word-wrap-1.2.5.tgz"
   integrity sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==
 
+worker-f@^0.1.12:
+  version "0.1.21"
+  resolved "https://registry.npmjs.org/worker-f/-/worker-f-0.1.21.tgz"
+  integrity sha512-pMi7wCz3uZVxRvRSphyaIYoN7rm9bV0usifTib7u01kKU+hOo+/hFwhajYnpOCHyr0Xp3/2ulc4F+Jm2a3YIfg==
+
 "wrap-ansi-cjs@npm:wrap-ansi@^7.0.0":
   version "7.0.0"
   resolved "https://registry.npmjs.org/wrap-ansi/-/wrap-ansi-7.0.0.tgz"
@@ -7080,6 +7113,13 @@ wrap-ansi@^9.0.0:
     ansi-styles "^6.2.1"
     string-width "^7.0.0"
     strip-ansi "^7.1.0"
+
+write-excel-file@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.npmjs.org/write-excel-file/-/write-excel-file-4.1.1.tgz"
+  integrity sha512-MUnCnNtQrcZek832ZcU24uU0rSphFmKPD1DvIjXOlygVb93CV7Tme6H3jUTkxsMmjB2W7HIzERzjqTi5kui71A==
+  dependencies:
+    fflate "^0.8.2"
 
 ws@^8.18.0:
   version "8.18.0"

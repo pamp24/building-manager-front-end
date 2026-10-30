@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { BuildingMemberDTO } from 'src/app/theme/shared/models/BuildingMemberDTO';
+import { BuildingService } from 'src/app/theme/shared/service/building.service';
 
 type ApartmentLite = {
   id: number;
@@ -25,6 +26,10 @@ export class MemberEditModalComponent {
   @Input({ required: true })
   member!: BuildingMemberDTO;
 
+  @Input() pmView = false;
+  @Input() buildingId: number | null = null;
+  @Output() managerAssigned = new EventEmitter<void>();
+
   @Input()
   filteredApartments: ApartmentLite[] = [];
 
@@ -38,7 +43,25 @@ export class MemberEditModalComponent {
   isSending = false;
   errorMsg: string | null = null;
 
-  constructor(public activeModal: NgbActiveModal) {}
+  constructor(public activeModal: NgbActiveModal, private buildingService: BuildingService) {}
+
+  designateManager(): void {
+    if (!this.pmView || this.buildingId == null || this.member.id == null || this.member.status !== 'JOINED' || this.member.isBuildingManager || this.isSending) return;
+
+    this.isSending = true;
+    this.errorMsg = null;
+    this.buildingService.assignBuildingManager(this.buildingId, this.member.id).subscribe({
+      next: () => {
+        this.isSending = false;
+        this.managerAssigned.emit();
+        this.activeModal.close();
+      },
+      error: (err) => {
+        this.isSending = false;
+        this.errorMsg = err.error?.message || 'Αποτυχία ορισμού διαχειριστή πολυκατοικίας.';
+      }
+    });
+  }
 
   get displayFullName(): string {
     return this.member?.fullName?.trim() || '—';

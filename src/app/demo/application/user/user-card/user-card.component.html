@@ -39,7 +39,7 @@
 <!-- Κάρτες Διαμερισμάτων -->
 <div class="row">
   <div class="p-3 d-sm-flex align-items-center justify-content-between user-card">
-    <div class="d-flex align-items-center m-sm-0 mt-3">
+    <div class="d-flex flex-wrap gap-2 align-items-center m-sm-0 mt-3">
       <select
         *ngIf="!messageApartments"
         class="form-select"
@@ -61,6 +61,7 @@
         <i class="me-2 d-flex" antIcon type="plus" theme="outline"></i>
         <span>Προσθήκη Διαμερίσματος</span>
       </a>
+      <button *ngIf="pmView && userRole === 'PropertyManager' && currentBuilding" type="button" class="btn btn-outline-primary" (click)="openBulk(bulkModal)">Μαζική Προσθήκη</button>
     </div>
   </div>
 
@@ -152,4 +153,12 @@
   <div class="modal-footer">
     <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="modal.close('Close click')">Κλείσιμο</button>
   </div>
+</ng-template>
+
+<ng-template #bulkModal let-modal>
+  <div class="modal-header">
+    <h2 class="modal-title fs-5">Μαζική Προσθήκη Διαμερισμάτων</h2>
+    <button type="button" class="btn-close" aria-label="Κλείσιμο" [disabled]="bulkSending" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body"><app-bulk-apartments *ngIf="currentBuilding as building" [building]="building" (uploaded)="refreshBulk()" (sendingChange)="bulkSending = $event" (closed)="modal.close()" /></div>
 </ng-template>

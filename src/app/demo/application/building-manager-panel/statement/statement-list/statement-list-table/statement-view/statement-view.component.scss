@@ -1,0 +1,286 @@
+.statement-print-sheet {
+  background: #fff;
+  color: #243447;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.statement-app-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  border: 1px solid #d8e2ee;
+  background: linear-gradient(180deg, #f7fbff 0%, #eef6ff 100%);
+}
+
+.statement-app-logo {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+.statement-app-brand-text {
+  min-width: 0;
+}
+
+.statement-app-name {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #16324f;
+}
+
+.statement-app-subtitle {
+  font-size: 12px;
+  color: #5f748a;
+}
+
+.statement-status-badge {
+  margin-left: auto;
+}
+
+.statement-top-layout {
+  display: grid;
+  grid-template-columns: 29% 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+.statement-left-column,
+.statement-right-column {
+  min-width: 0;
+}
+
+.issuer-panel,
+.statement-meta-table,
+.announcement-panel,
+.expense-box table,
+.allocations-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.issuer-panel {
+  border: 1px solid #cfd8e3;
+  padding: 8px;
+  min-height: 116px;
+  background: #fbfdff;
+}
+
+.issuer-line {
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.issuer-title {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.statement-meta-table {
+  margin-top: 0;
+}
+
+.statement-meta-table th,
+.statement-meta-table td,
+.expense-box th,
+.expense-box td,
+.allocations-table th,
+.allocations-table td {
+  border: 1px solid #cfd8e3;
+  padding: 2px 4px;
+  vertical-align: top;
+}
+
+.statement-meta-table th {
+  width: 24%;
+  background: #e7f3f7;
+  color: #18384f;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.statement-meta-table td {
+  background: #ffffff;
+}
+
+.announcement-panel {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  border: 1px solid #cfd8e3;
+  border-top: 0;
+  min-height: 110px;
+}
+
+.announcement-title {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  text-align: center;
+  border-right: 1px solid #cfd8e3;
+  background: #e7f3f7;
+  color: #18384f;
+  font-weight: 700;
+  padding: 6px 0;
+}
+
+.announcement-body {
+  padding: 8px;
+  white-space: pre-line;
+  line-height: 1.45;
+  background: #ffffff;
+}
+
+.expense-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+}
+
+.expense-box th {
+  background: #dff1f4;
+  color: #17384a;
+  font-weight: 700;
+}
+
+.expense-box td {
+  height: 22px;
+  background: #ffffff;
+}
+
+.expense-empty-row td {
+  color: transparent;
+}
+
+.expense-box .amount-column {
+  width: 88px;
+}
+
+.expense-box th:last-child,
+.expense-box td:last-child,
+.expense-total-row td:last-child,
+.grand-total-box strong,
+.allocations-table .row-total,
+.allocations-table tfoot th,
+.allocations-table tfoot td {
+  background: #fff1b8;
+}
+
+.expense-total-row td {
+  font-weight: 700;
+}
+
+.expense-total-row td:first-child {
+  background: #f6fbfd;
+}
+
+.grand-total-box {
+  margin-top: 8px;
+  margin-left: auto;
+  width: 240px;
+  display: grid;
+  grid-template-columns: 1fr 110px;
+  border: 1px solid #cfd8e3;
+  font-weight: 700;
+}
+
+.grand-total-box span,
+.grand-total-box strong {
+  padding: 6px 8px;
+}
+
+.grand-total-box span {
+  background: #e7f3f7;
+  color: #17384a;
+}
+
+.grand-total-box strong {
+  text-align: right;
+  font-size: 22px;
+  color: #3d2f05;
+}
+
+.allocations-table-wrap {
+  margin-top: 10px;
+  overflow-x: auto;
+}
+
+.allocations-table {
+  font-size: 10px;
+}
+
+.allocations-table th {
+  background: #e4f3f7;
+  color: #16384a;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.allocations-table td {
+  text-align: right;
+  white-space: nowrap;
+  background: #ffffff;
+}
+
+.allocations-table td.text-start,
+.allocations-table th.text-start {
+  text-align: left;
+}
+
+.allocations-table tfoot th,
+.allocations-table tfoot td {
+  font-weight: 700;
+}
+
+.statement-footer-note {
+  margin-top: 8px;
+  font-size: 12px;
+}
+
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 8mm;
+  }
+
+  .statement-print-sheet {
+    font-size: 10px;
+  }
+
+  .statement-top-layout,
+  .expense-grid {
+    gap: 0;
+  }
+
+  .expense-box,
+  .allocations-table tr,
+  .announcement-panel,
+  .issuer-panel {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
+
+@media (max-width: 1200px) {
+  .statement-top-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .expense-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .expense-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .grand-total-box {
+    width: 100%;
+  }
+}

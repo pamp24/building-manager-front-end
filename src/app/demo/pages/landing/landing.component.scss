@@ -12,6 +12,191 @@
   --animate-duration: 0.9s;
 }
 
+.landing-logo {
+  width: 140px;
+  max-width: 100%;
+  height: auto;
+  padding: 6px 8px;
+  background: #fff;
+  border-radius: 4px;
+  vertical-align: middle;
+}
+
+.oikio-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.oikio-card {
+  overflow: hidden;
+  margin-bottom: 0;
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 32px;
+  }
+
+  p {
+    flex-grow: 1;
+  }
+}
+
+.oikio-card-featured {
+  background: #e6f4ff;
+}
+
+.oikio-card-label {
+  margin-bottom: 16px;
+  color: #1677ff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.oikio-art {
+  height: 160px;
+  margin: 0 24px;
+  overflow: hidden;
+  border-radius: 12px 12px 0 0;
+  background: #f2f7fd;
+
+  svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.oikio-art-community {
+  background: #d4eaff;
+}
+
+.overview-panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 32px;
+  overflow: hidden;
+  padding: 48px 56px;
+  border: 1px solid #dce9f7;
+  border-radius: 20px;
+  background: #e6f4ff;
+}
+
+.overview-copy {
+  max-width: 440px;
+
+  .oikio-card-label { display: block; }
+  h3 { line-height: 1.3; }
+  p { margin: 20px 0 24px; color: #526579; }
+}
+
+.overview-art svg {
+  display: block;
+  width: 100%;
+  max-height: 340px;
+}
+
+.cta-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 40px;
+}
+
+.cta-copy {
+  max-width: 520px;
+
+  .oikio-card-label { display: block; color: #8fc2ff; }
+  p { margin-bottom: 26px; color: #c9d3df; }
+}
+
+.cta-art {
+  display: flex;
+  justify-content: center;
+}
+
+.cta-orbit {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 260px;
+  height: 260px;
+  border: 1px solid #3c5876;
+  border-radius: 50%;
+  background: radial-gradient(circle, #203e60 0%, transparent 70%);
+}
+
+.cta-home, .cta-symbol {
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+}
+
+.cta-home {
+  width: 104px;
+  height: 104px;
+  background: #1677ff;
+  color: white;
+  font-size: 52px;
+}
+
+.cta-symbol {
+  position: absolute;
+  width: 56px;
+  height: 56px;
+  background: #e6f4ff;
+  color: #1677ff;
+  font-size: 27px;
+}
+
+.cta-symbol-message { top: 12px; right: 20px; }
+.cta-symbol-vote { bottom: 22px; right: 4px; }
+.cta-symbol-expense { top: 105px; left: -18px; }
+
+.feature-badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+}
+
+.feature-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border: 1px solid #e1eaf4;
+  border-radius: 12px;
+  background: white;
+  color: #253b53;
+  font-weight: 600;
+
+  i { color: #1677ff; font-size: 24px; line-height: 1; }
+}
+
+@media (max-width: 991.98px) {
+  .oikio-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 575.98px) {
+  .oikio-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .overview-panel, .cta-content { grid-template-columns: 1fr; }
+  .overview-panel { gap: 16px; padding: 28px 24px; }
+  .cta-content { gap: 32px; }
+  .cta-orbit { width: 210px; height: 210px; }
+  .cta-symbol-expense { top: 80px; }
+  .feature-badge { padding: 12px 14px; }
+}
+
 $i: 1;
 $delay: 0.1;
 @while $i<=6 {
@@ -258,23 +443,6 @@ header {
 .cta-block {
   position: relative;
   overflow: hidden;
-
-  &:after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 80%;
-    bottom: 0px;
-    left: 0px;
-    background: linear-gradient(transparent, rgb(20, 20, 20));
-  }
-
-  .img-cta {
-    width: auto;
-    position: absolute;
-    top: 0px;
-    right: 0px;
-  }
 
   .container {
     position: relative;
@@ -554,10 +722,6 @@ header {
     }
   }
 
-  .cta-block:after {
-    height: 100%;
-    backdrop-filter: blur(5px);
-  }
 }
 
 @media (max-width: 767.98px) {
@@ -601,6 +765,11 @@ header {
     border-top: thin solid $gray-800;
   }
   .footer-link {
+    li {
+      margin: 14px 0;
+      color: var(--bs-secondary-color);
+    }
+
     a {
       margin: 14px 0;
       display: block;
