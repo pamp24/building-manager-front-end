@@ -23,6 +23,14 @@ const routes: Routes = [
         path: '',
         loadComponent: () => import('./demo/pages/landing/landing.component').then((c) => c.LandingComponent)
       },
+      { path: 'pricing', loadComponent: () => import('./demo/pages/pricing/public-pricing.component').then((c) => c.PublicPricingComponent) },
+      { path: 'faq', loadComponent: () => import('./demo/pages/faq/faq.component').then((c) => c.FaqComponent) },
+      { path: 'contact-us', loadComponent: () => import('./demo/pages/contact-us/contact-us.component').then((c) => c.ContactUsComponent) },
+      { path: 'contact', redirectTo: '/contact-us', pathMatch: 'full' },
+      ...['about', 'features', 'support', 'terms', 'privacy', 'cookies'].map((path) => ({
+        path,
+        loadComponent: () => import('./demo/pages/public-info/public-info.component').then((c) => c.PublicInfoComponent)
+      })),
       {
         path: 'login',
         loadComponent: () => import('./demo/pages/authentication/auth-login/auth-login.component').then((c) => c.AuthLoginComponent)
@@ -296,11 +304,6 @@ const routes: Routes = [
       {
         path: 'components',
         loadChildren: () => import('./theme/layout/simple-layout/com-navigation/com-navigation.module').then((m) => m.ComNavigationModule)
-      },
-      {
-        path: 'contact-us',
-        canActivateChild: [AuthGuardChild],
-        loadComponent: () => import('./demo/pages/contact-us/contact-us.component').then((c) => c.ContactUsComponent)
       }
     ]
   },

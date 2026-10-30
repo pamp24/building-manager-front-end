@@ -76,18 +76,12 @@
                   <i class="f-16 text-secondary d-flex" antIcon type="eye" theme="outline"></i>
                 </a>
               </li>
-              <li class="list-inline-item">
-                <a
-                  href="javascript:"
-                  class="avatar avatar-xs btn-link-primary"
-                  [ngbTooltip]="hasAnyPayment(s) ? 'Δεν επιτρέπεται αλλαγή/διαγραφή μετά από πληρωμή' : 'Επεξεργασία'"
-                  [class.disabled]="hasAnyPayment(s)"
-                  (click)="hasAnyPayment(s) ? $event.preventDefault() : onEdit(s)"
-                >
-                  <i class="f-16 text-primary d-flex" antIcon type="edit" theme="outline"></i>
+              <li class="list-inline-item" *ngIf="getMyApartmentForStatement(s)">
+                <a href="javascript:" class="avatar avatar-xs btn-link-info" ngbTooltip="Προβολή Διαμερίσματος" (click)="onViewApartment(s)">
+                  <i class="f-16 text-info d-flex" antIcon type="eye" theme="outline"></i>
                 </a>
               </li>
-              <li class="list-inline-item">
+              <li class="list-inline-item" *ngIf="isManagementRole">
                 <a
                   href="javascript:"
                   class="avatar avatar-xs btn-link-danger"
@@ -99,7 +93,7 @@
                   <i class="f-16 text-danger d-flex" antIcon type="delete" theme="outline"></i>
                 </a>
               </li>
-              <li class="list-inline-item" *ngIf="isManager">
+              <li class="list-inline-item" *ngIf="isManagementRole">
                 <a
                   href="javascript:"
                   class="avatar avatar-xs btn-link-success"
@@ -119,7 +113,7 @@
         </tr>
 
         <!-- === Υποπίνακας πληρωμών === -->
-        <tr *ngIf="isManager && expandedStatementId === s.id">
+        <tr *ngIf="isManagementRole && expandedStatementId === s.id">
           <td colspan="100%">
             <div class="p-3 bg-light border rounded">
               <div *ngIf="paymentsLoading" class="text-center">

@@ -133,20 +133,41 @@
                           @if (activeConversation.type === 'BUILDING' && !message.mine) {
                             <p class="mb-0 text-sm f-w-600">{{ message.senderName }}</p>
                           }
-                          <div class="msg-content {{ message.mine ? 'bg-primary' : '' }}">
-                            @if (message.imageUrl) {
-                              <img
-                                class="msg-image"
-                                [src]="imgSrc(message.imageUrl)"
-                                alt="Photo"
-                                (load)="scrollToBottomIfNeeded()"
-                              />
-                            }
-                            @if (message.content) {
-                              <p class="mb-0">{{ message.content }}</p>
+                          <div class="msg-content {{ message.mine ? 'bg-primary' : '' }}" [class.message-editing]="editingMessageId === message.id">
+                            <div class="message-body">
+                              @if (message.deletedAt) {
+                                <p class="mb-0 fst-italic">Το μήνυμα διαγράφηκε.</p>
+                              } @else {
+                                @if (message.imageUrl) {
+                                  <img
+                                    class="msg-image"
+                                    [src]="imgSrc(message.imageUrl)"
+                                    alt="Photo"
+                                    (load)="scrollToBottomIfNeeded()"
+                                  />
+                                }
+                                @if (editingMessageId === message.id) {
+                                  <textarea class="form-control form-control-sm" rows="2" maxlength="4000" [(ngModel)]="editContent" aria-label="Επεξεργασία μηνύματος" (keydown.escape)="editingMessageId = null"></textarea>
+                                  <button type="button" class="btn btn-sm btn-light me-1 mt-1" [disabled]="actionLoading" (click)="saveEdit(message)">Αποθήκευση</button>
+                                  <button type="button" class="btn btn-sm btn-light mt-1" [disabled]="actionLoading" (click)="editingMessageId = null">Ακύρωση</button>
+                                } @else if (message.content) {
+                                  <p class="mb-0">{{ message.content }}</p>
+                                }
+                              }
+                            </div>
+                            @if (message.mine && !message.deletedAt && editingMessageId !== message.id) {
+                              <div ngbDropdown class="message-actions" placement="bottom-end">
+                                <button type="button" class="message-actions-toggle" ngbDropdownToggle aria-label="Ενέργειες μηνύματος" [disabled]="actionLoading">
+                                  <i antIcon type="more" theme="outline" aria-hidden="true"></i>
+                                </button>
+                                <div ngbDropdownMenu>
+                                  <button type="button" ngbDropdownItem (click)="beginEdit(message)">Επεξεργασία</button>
+                                  <button type="button" ngbDropdownItem class="text-danger" (click)="deleteMessage(message)">Διαγραφή</button>
+                                </div>
+                              </div>
                             }
                           </div>
-                          <p class="mb-0 text-muted text-sm">{{ formatTime(message.createdAt) }}</p>
+                          <p class="mb-0 text-muted text-sm">{{ formatTime(message.createdAt) }} @if (message.editedAt && !message.deletedAt) { · Επεξεργάστηκε }</p>
                         </div>
                         @if (message.mine) {
                           <div class="flex-shrink-0">
@@ -215,6 +236,8 @@
             </div>
           } @else {
             <div class="card-header py-3">
+              <button type="button" class="btn btn-sm btn-light d-lg-none me-2" (click)="open(userList)">Συνομιλίες</button>
+              <button type="button" class="btn btn-sm btn-primary d-lg-none me-2" (click)="openNewChat(newChat)">Νέο</button>
               <p class="mb-0 text-muted">Επέλεξε μια συνομιλία για να ξεκινήσεις.</p>
             </div>
           }
@@ -259,6 +282,10 @@
     ></button>
   </div>
   <div class="offcanvas-body p-0">
+    <div class="p-3">
+      <button type="button" class="btn btn-primary btn-sm mb-2" (click)="offcanvas.close(); openNewChat(newChat)">Νέα συνομιλία</button>
+      <input type="search" class="form-control" placeholder="Αναζήτηση συνομιλιών" [(ngModel)]="searchTerm" />
+    </div>
     <ng-container *ngTemplateOutlet="chatPersonList"></ng-container>
   </div>
 </ng-template>
@@ -335,9 +362,9 @@
           <h5 class="mb-0">Μέλη ({{ activeConversation?.members?.length }})</h5>
         </a>
         <div class="collapse show" [ngbCollapse]="membersCollapsed">
-          <div class="py-3">
+          <div class="py-3 chat-members-list" tabindex="0" aria-label="Μέλη συνομιλίας">
             @for (member of activeConversation?.members; track member.userId) {
-              <div class="d-flex align-items-center mb-3">
+              <div class="d-flex align-items-center chat-member-row">
                 <div class="chat-avatar">
                   <img
                     class="rounded-circle img-fluid wid-40"
@@ -359,13 +386,14 @@
 </ng-template>
 
 <ng-template #chatPersonList>
+  @if (errorMessage && !activeConversation) { <p class="text-danger text-sm px-3" role="alert">{{ errorMessage }}</p> }
   <div class="list-group list-group-flush">
     @for (list of filteredConversations; track list.id) {
+      <div class="conversation-row" [ngClass]="{ 'bg-light-primary': list.id === activeConversation?.id }">
       <a
         href="javascript:"
         class="list-group-item list-group-item-action user-list"
         (click)="selectConversation(list)"
-        [ngClass]="{ 'bg-light-primary': list.id === activeConversation?.id }"
       >
         <div class="media align-items-center">
           <div class="chat-avatar">
@@ -385,6 +413,10 @@
           </div>
         </div>
       </a>
+      <button type="button" class="conversation-hide" title="Απόκρυψη" [attr.aria-label]="'Απόκρυψη: ' + list.name" [disabled]="actionLoading" (click)="$event.stopPropagation(); hideConversation(list)">
+        <i antIcon type="close" theme="outline" aria-hidden="true"></i>
+      </button>
+      </div>
     } @empty {
       <p class="mb-0 text-muted text-sm p-3">Δεν υπάρχουν συνομιλίες ακόμα.</p>
     }
@@ -397,12 +429,18 @@
     <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss()"></button>
   </div>
   <div class="modal-body">
-    <div class="list-group list-group-flush">
-      @for (member of members; track member.userId) {
-        <a
-          href="javascript:"
-          class="list-group-item list-group-item-action"
-          (click)="startPrivateChat(member.userId); modal.close()"
+    <input type="search" class="form-control mb-3" placeholder="Αναζήτηση μέλους ή κτιρίου" aria-label="Αναζήτηση μέλους" [(ngModel)]="memberSearch" />
+    @if (memberError) { <p class="text-danger text-sm" role="alert">{{ memberError }}</p> }
+    @if (membersLoadError) { <p class="text-danger text-sm" role="alert">Δεν ήταν δυνατή η φόρτωση των μελών.</p> }
+    @if (membersLoading) { <p class="text-muted text-sm">Φόρτωση μελών...</p> }
+    @if (openingChat) { <p class="text-muted text-sm">Άνοιγμα συνομιλίας...</p> }
+    <div class="list-group list-group-flush chat-new-members-list" tabindex="0" aria-label="Μέλη για νέα συνομιλία">
+      @for (member of filteredMembers; track member.userId) {
+        <button
+          type="button"
+          class="list-group-item list-group-item-action text-start"
+          [disabled]="openingChat"
+          (click)="startPrivateChat(member.userId, modal)"
         >
           <div class="media align-items-center">
             <div class="chat-avatar">
@@ -418,9 +456,9 @@
               <span class="text-sm text-muted">{{ member.buildingName }}</span>
             </div>
           </div>
-        </a>
+        </button>
       } @empty {
-        <p class="mb-0 text-muted text-sm">Δεν υπάρχουν διαθέσιμα μέλη προς συνομιλία.</p>
+        @if (!membersLoading && !membersLoadError) { <p class="mb-0 text-muted text-sm">Δεν βρέθηκαν διαθέσιμα μέλη προς συνομιλία.</p> }
       }
     </div>
   </div>

@@ -15,6 +15,7 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { Validators } from 'ngx-editor';
 import { CommonExpenseStatement } from 'src/app/theme/shared/models/commonExpenseStatement';
 import { ApartmentDTO } from 'src/app/theme/shared/models/apartmentDTO';
+import { compareApartments } from 'src/app/theme/shared/models/apartment-order';
 import { ManagerDTO } from 'src/app/theme/shared/models/managerDTO';
 import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
 import { CommonExpenseStatementService } from 'src/app/theme/shared/service/commonExpensesStatement.service';
@@ -56,7 +57,7 @@ export class StatementEditComponent implements OnInit {
     { label: 'ΑΣΑΝΣΕΡ', value: 'ELEVATOR' },
     { label: 'ΑΥΤΟΝΟΜΙΑ', value: 'EQUAL' },
     { label: 'BOILER', value: 'EQUAL' },
-    { label: 'ΕΙΔΙΚΕΣ ΔΑΠΑΝΕΣ', value: 'EQUAL' },
+    { label: 'ΕΙΔΙΚΕΣ ΔΑΠΑΝΕΣ', value: 'SPECIAL' },
     { label: 'ΙΔΙΟΚΤΗΤΩΝ', value: 'EQUAL' },
     { label: 'ΔΑΠΑΝΕΣ ΣΕ ΙΣΑ ΜΕΡΗ', value: 'EQUAL' },
     { label: 'ΑΛΛΕΣ ΔΑΠΑΝΕΣ', value: 'EQUAL' }
@@ -93,7 +94,7 @@ export class StatementEditComponent implements OnInit {
 
           this.apartmentService.getApartmentsByBuilding(data.buildingId).subscribe({
             next: (allApts) => {
-              this.selectedApartments = allApts;  
+              this.selectedApartments = [...allApts].sort(compareApartments);
               console.log('Διαμερίσματα:', this.selectedApartments);
             }
           });
@@ -120,9 +121,11 @@ export class StatementEditComponent implements OnInit {
     statement.items.forEach((item) => {
       this.items.push(
         this.fb.group({
+          id: [item.id],
           category: [item.category, Validators.required],
           descriptionItem: [item.descriptionItem, Validators.required],
-          price: [item.price, Validators.required]
+          price: [item.price, Validators.required],
+          selectedApartmentIds: [item.selectedApartmentIds || []]
         })
       );
     });
@@ -159,6 +162,14 @@ export class StatementEditComponent implements OnInit {
     return this.form.get('items') as FormArray;
   }
 
+  hasCategory(category: string): boolean {
+    return this.expenseCategories.some((item) => item.value === category);
+  }
+
+  missingApartmentIds(ids: number[] | null): number[] {
+    return (ids || []).filter((id) => !this.selectedApartments.some((apartment) => apartment.id === id));
+  }
+
   get subTotal(): number {
     return this.items.controls.reduce((sum, ctrl) => {
       const price = ctrl.get('price')?.value || 0;
@@ -182,7 +193,8 @@ export class StatementEditComponent implements OnInit {
     return this.fb.group({
       category: ['', Validators.required], // <-- ΕΔΩ
       descriptionItem: ['', Validators.required],
-      price: [0, Validators.required]
+      price: [0, Validators.required],
+      selectedApartmentIds: [[]]
     });
   }
 

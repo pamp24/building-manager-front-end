@@ -1,5 +1,61 @@
 @import '../../../../scss/settings/color-variables.scss';
 
+.chat-members-list {
+  max-height: min(592px, 60vh);
+  overflow-y: auto;
+}
+
+.chat-member-row {
+  min-height: 56px;
+}
+
+.chat-new-members-list {
+  max-height: min(720px, 60vh);
+  overflow-y: auto;
+
+  .list-group-item {
+    min-height: 72px;
+  }
+}
+
+.conversation-row {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--bs-border-color);
+
+  .user-list {
+    flex: 1 1 auto;
+    min-width: 0;
+    background: transparent;
+    border: 0;
+  }
+}
+
+.conversation-hide,
+.message-actions-toggle {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.conversation-hide:focus-visible,
+.message-actions-toggle:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: -2px;
+}
+
+.message-actions {
+  flex: 0 0 auto;
+  margin: -8px -8px -8px 4px;
+  color: white;
+
+  .message-actions-toggle::after {
+    display: none;
+  }
+}
+
 ::ng-deep.chat-wrapper {
   display: flex;
 
@@ -71,6 +127,7 @@
   }
   .chat-content {
     flex: 1 1 auto;
+    min-width: 0;
 
     .card-footer {
       position: relative;
@@ -257,6 +314,8 @@
 ::ng-deep.chat-message {
   background: $gray-100;
   .msg-content {
+    display: flex;
+    align-items: flex-start;
     padding: 8px;
     border-radius: var(--bs-border-radius);
     margin-bottom: 8px;
@@ -264,6 +323,18 @@
     overflow-wrap: break-word;
     word-break: break-word;
     white-space: normal;
+
+    .message-body {
+      min-width: 0;
+    }
+
+    &.message-editing {
+      width: min(256px, 100%);
+
+      .message-body {
+        width: 100%;
+      }
+    }
 
     p {
       white-space: normal;
@@ -302,7 +373,7 @@
     }
   }
   .msg-image {
-    max-width: 260px;
+    max-width: min(260px, 100%);
     max-height: 260px;
     border-radius: var(--bs-border-radius);
     display: block;

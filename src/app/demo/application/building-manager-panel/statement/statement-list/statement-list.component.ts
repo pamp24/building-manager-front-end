@@ -1,21 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// angular import
-import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
-
-// icons
-import { IconService } from '@ant-design/icons-angular';
-import { BankOutline, CaretDownOutline, CaretUpOutline, FileDoneOutline, InfoCircleOutline } from '@ant-design/icons-angular/icons';
-
-// project import
-import { SharedModule } from 'src/app/theme/shared/shared.module';
-
-import { OnInit } from '@angular/core';
-import { TabNavigationService } from 'src/app/theme/shared/service/TabNavigation.service';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ChangeDetectorRef } from '@angular/core';
-import { ViewChild } from '@angular/core';
 import { NgbNav } from '@ng-bootstrap/ng-bootstrap';
+import { BankOutline, CaretDownOutline, CaretUpOutline, FileDoneOutline, InfoCircleOutline } from '@ant-design/icons-angular/icons';
+import { IconService } from '@ant-design/icons-angular';
 
+import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { TabNavigationService } from 'src/app/theme/shared/service/TabNavigation.service';
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
 import { ManagedBuildingDTO } from 'src/app/theme/shared/models/managedBuildingDTO';
 import { BuildingSelectorInlineComponent } from './building-selector-inline/building-selector-inline.component';
@@ -25,6 +16,10 @@ import { CommonExpenseStatementService } from 'src/app/theme/shared/service/comm
 import { PaymentService } from 'src/app/theme/shared/service/payment.service';
 import { StatementListTableComponent } from './statement-list-table/statement-list-table.component';
 import { StatementListChartComponent } from './statement-list-chart/statement-list-chart.component';
+import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
+import { ApartmentDTO } from 'src/app/theme/shared/models/apartmentDTO';
+import { ApartmentService } from 'src/app/theme/shared/service/apartment.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-statement-list',
@@ -38,7 +33,6 @@ export class StatementListComponent implements OnInit, OnChanges {
   @Input() buildingId?: number;
   @Input() pmView = false;
 
-  // Λίστες
   statements: CommonExpenseStatement[] = [];
   paidStatements: CommonExpenseStatement[] = [];
   pendingStatements: CommonExpenseStatement[] = [];
@@ -46,10 +40,10 @@ export class StatementListComponent implements OnInit, OnChanges {
   draftStatements: CommonExpenseStatement[] = [];
   expiredStatements: CommonExpenseStatement[] = [];
   managedBuildings: ManagedBuildingDTO[] = [];
+  myApartments: ApartmentDTO[] = [];
   showBuildingSelector = false;
   currentBuildingId?: number;
   currentBuildingIndex = 0;
-  // Counters
   totalCount = 0;
   paidCount = 0;
   pendingCount = 0;
@@ -57,25 +51,41 @@ export class StatementListComponent implements OnInit, OnChanges {
   closedCount = 0;
   draftCount = 0;
   totalUnpaidAmount = 0;
-
-  activeTab = 1; // default tab
+  activeTab = 1;
   summary!: CommonStatementSummaryDTO;
   widgetCards: any[] = [];
+  currentUserRole: string | null = null;
+  isManagementRole = false;
 
-  // constructor
   constructor(
     private commonExpenseStatementService: CommonExpenseStatementService,
     private tabNav: TabNavigationService,
     private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef,
+    private _cdr: ChangeDetectorRef,
     private paymentService: PaymentService,
-    private buildingService: BuildingService
+    private buildingService: BuildingService,
+    private apartmentService: ApartmentService
   ) {
     this.iconService.addIcon(...[CaretUpOutline, CaretDownOutline, FileDoneOutline, InfoCircleOutline, BankOutline]);
   }
 
   ngOnInit(): void {
-    // Αν έρχεται buildingId από parent (π.χ. PM building view tab)
+    const currentUser = localStorage.getItem('currentUser');
+    if (currentUser) {
+      const parsed = JSON.parse(currentUser);
+      this.currentUserRole = parsed.role ?? null;
+      this.isManagementRole = ['Admin', 'BuildingManager', 'PropertyManager', 'PropertyAgent', 'AdminAgent'].includes(this.currentUserRole ?? '');
+    }
+
+    this.apartmentService.getMyApartments().subscribe({
+      next: (apartments) => {
+        this.myApartments = apartments ?? [];
+      },
+      error: () => {
+        this.myApartments = [];
+      }
+    });
+
     if (this.buildingId) {
       this.currentBuildingId = this.buildingId;
       this.showBuildingSelector = false;
@@ -93,10 +103,47 @@ export class StatementListComponent implements OnInit, OnChanges {
       return;
     }
 
-    // Αλλιώς παλιά συμπεριφορά
-    this.buildingService.getMyManagedBuildings().subscribe({
-      next: (buildings) => {
-        this.managedBuildings = buildings || [];
+    this.loadAccessibleBuildings();
+
+    this.route.queryParamMap.subscribe((params) => {
+      const tab = Number(params.get('tab'));
+      if (!isNaN(tab) && tab >= 1 && tab <= 6) {
+        this.activeTab = tab;
+        setTimeout(() => {
+          this.nav?.select(tab);
+          document.getElementById('statement-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 0);
+      }
+    });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['buildingId'] && this.buildingId) {
+      this.currentBuildingId = this.buildingId;
+      this.showBuildingSelector = false;
+      this.loadStatementsAndSummary(this.buildingId);
+    }
+  }
+
+  private loadAccessibleBuildings(): void {
+    const load$: Observable<(BuildingDTO | ManagedBuildingDTO)[]> = this.currentUserRole === 'PropertyManager' || this.currentUserRole === 'AdminAgent'
+      ? this.buildingService.getMyCompanyBuildings()
+      : this.currentUserRole === 'PropertyAgent' || !this.isManagementRole
+        ? this.buildingService.getMyBuildings()
+        : this.buildingService.getMyManagedBuildings();
+
+    load$.subscribe({
+      next: (buildings: (BuildingDTO | ManagedBuildingDTO)[]) => {
+        this.managedBuildings = (buildings || []).map((building: BuildingDTO | ManagedBuildingDTO) => ({
+          id: building.id,
+          name: building.name,
+          street1: building.street1,
+          city: building.city,
+          apartmentCount: 'apartmentCount' in building ? building.apartmentCount : 0,
+          unitCount: 'unitCount' in building ? building.unitCount : 0,
+          managerId: 'managerId' in building ? Number(building.managerId ?? 0) : 0
+        }));
+
         this.showBuildingSelector = this.managedBuildings.length > 1;
 
         const storedId = Number(localStorage.getItem('buildingId'));
@@ -109,70 +156,27 @@ export class StatementListComponent implements OnInit, OnChanges {
           this.loadStatementsAndSummary(activeId);
         }
       },
-      error: (err) => console.error('Σφάλμα λήψης πολυκατοικιών:', err)
-    });
-
-    this.route.queryParamMap.subscribe((params) => {
-      const tab = Number(params.get('tab'));
-      if (!isNaN(tab) && tab >= 1 && tab <= 6) {
-        this.activeTab = tab;
-
-        setTimeout(() => {
-          this.nav?.select(tab);
-          document.getElementById('statement-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 0);
-      }
+      error: (err: unknown) => console.error('Σφάλμα λήψης πολυκατοικιών:', err)
     });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-  if (changes['buildingId'] && this.buildingId) {
-    this.currentBuildingId = this.buildingId;
-    this.showBuildingSelector = false;
-    this.loadStatementsAndSummary(this.buildingId);
-  }
-}
-
-  private loadBuildingsAndData(): void {
-    this.buildingService.getMyManagedBuildings().subscribe({
-      next: (buildings) => {
-        console.log('[DEBUG] Buildings received:', buildings);
-        this.managedBuildings = buildings || [];
-        this.showBuildingSelector = this.managedBuildings.length > 1;
-        console.log('[DEBUG] showBuildingSelector:', this.showBuildingSelector);
-
-        let buildingId = Number(localStorage.getItem('buildingId'));
-        if (!buildingId && this.managedBuildings.length > 0) {
-          buildingId = this.managedBuildings[0].id;
-          localStorage.setItem('buildingId', buildingId.toString());
-        }
-
-        if (buildingId) {
-          this.loadStatementsAndSummary(buildingId);
-        } else {
-          console.warn('Δεν βρέθηκε buildingId για φόρτωση δεδομένων.');
-        }
-      },
-      error: (err) => console.error('Σφάλμα λήψης πολυκατοικιών:', err)
-    });
-  }
   private loadStatementsAndSummary(buildingId: number): void {
-    // Φόρτωση Summary
-    this.paymentService.getBuildingSummary(buildingId).subscribe({
-      next: (data) => {
-        this.summary = {
-          ...data,
-          percentPaid: Number(data.paidPercent ?? data.percentPaid ?? 0),
-          lastDueDate: data.lastDueDate ? new Date(data.lastDueDate).toISOString() : null
-        };
-        if (data.totalPending != null) {
-          this.totalUnpaidAmount = data.totalPending;
-        }
-      },
-      error: (err) => console.error('Σφάλμα φόρτωσης summary:', err)
-    });
+    if (this.isManagementRole) {
+      this.paymentService.getBuildingSummary(buildingId).subscribe({
+        next: (data) => {
+          this.summary = {
+            ...data,
+            percentPaid: Number(data.paidPercent ?? data.percentPaid ?? 0),
+            lastDueDate: data.lastDueDate ? new Date(data.lastDueDate).toISOString() : null
+          };
+          if (data.totalPending != null) {
+            this.totalUnpaidAmount = data.totalPending;
+          }
+        },
+        error: (err) => console.error('Σφάλμα φόρτωσης summary:', err)
+      });
+    }
 
-    // Φόρτωση Statements
     this.commonExpenseStatementService.getStatementsByBuilding(buildingId).subscribe({
       next: (data) => {
         this.statements = data;
@@ -190,13 +194,6 @@ export class StatementListComponent implements OnInit, OnChanges {
     this.loadStatementsAndSummary(buildingId);
   }
 
-  private scrollToInvoices() {
-    const section = document.getElementById('statement-section');
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }
-  /** Σπάμε τα statements ανά κατηγορία */
   private splitStatements(): void {
     if (!this.statements?.length) {
       this.resetCounts();
@@ -206,8 +203,6 @@ export class StatementListComponent implements OnInit, OnChanges {
     const now = new Date();
     const isTrue = (val: any) => val === true || val === 'true';
     const isFalse = (val: any) => val === false || val === 'false';
-
-    // Αρχικοποίηση λιστών
     const paid: CommonExpenseStatement[] = [];
     const pending: CommonExpenseStatement[] = [];
     const expired: CommonExpenseStatement[] = [];
@@ -234,14 +229,11 @@ export class StatementListComponent implements OnInit, OnChanges {
       }
     }
 
-    // Ανάθεση στα properties του component
     this.paidStatements = paid;
     this.pendingStatements = pending;
     this.expiredStatements = expired;
     this.draftStatements = draft;
     this.closedStatements = closed;
-
-    // Counts
     this.totalCount = this.statements.length;
     this.paidCount = paid.length;
     this.pendingCount = pending.length;
@@ -254,7 +246,6 @@ export class StatementListComponent implements OnInit, OnChanges {
     const totalPaid = this.paidStatements.reduce((sum, s) => sum + (s.total ?? 0), 0);
     const totalPending = this.pendingStatements.reduce((sum, s) => sum + (s.total ?? 0), 0);
     const totalOverdue = this.expiredStatements.reduce((sum, s) => sum + (s.total ?? 0), 0);
-
     const grandTotal = totalPaid + totalPending + totalOverdue;
 
     this.widgetCards = [
@@ -270,7 +261,7 @@ export class StatementListComponent implements OnInit, OnChanges {
         colors: ['#52c41a']
       },
       {
-        title: 'Εκκρεμούν',
+        title: 'Τρέχοντα',
         isLoss: true,
         value: `${totalPending.toLocaleString('el-GR')} €`,
         percentage: grandTotal ? ((totalPending / grandTotal) * 100).toFixed(1) : 0,
@@ -299,7 +290,7 @@ export class StatementListComponent implements OnInit, OnChanges {
       case 'PAID':
         return 'Πληρώθηκε';
       case 'ISSUED':
-        return 'Εκκρεμεί';
+        return 'Τρέχων';
       case 'EXPIRED':
         return 'Έληξε';
       case 'CLOSED':
@@ -312,24 +303,18 @@ export class StatementListComponent implements OnInit, OnChanges {
   }
 
   updateSummaryFromStatements(): void {
-    if (!this.statements?.length) return;
+    if (!this.statements?.length || this.isManagementRole === false) return;
 
-    // Φιλτράρουμε μόνο όσα είναι ISSUED ή EXPIRED
     const unpaidStatements = this.statements.filter((s) => s.status === 'ISSUED' || s.status === 'EXPIRED');
-
-    // Υπολογισμός συνολικού ποσού (fallback αν δεν ήρθε από το summary του backend)
     const calculatedUnpaid = unpaidStatements.reduce((sum, s) => sum + (s.total ?? 0), 0);
     if (this.summary?.totalPending == null) {
       this.totalUnpaidAmount = calculatedUnpaid;
     }
 
-    // Υπολογισμός τελευταίας ημερομηνίας λήξης από τα εκκρεμή
     const lastDueDate = unpaidStatements.length
       ? new Date(Math.max(...unpaidStatements.filter((s) => !!s.endDate).map((s) => new Date(s.endDate!).getTime())))
       : null;
 
-    // Κρατάμε το ακριβές percentPaid από το backend (βασισμένο στις κατανομές),
-    // ώστε ένα ολόκληρα πληρωμένο παραστατικό να φαίνεται σωστά στη μπάρα.
     this.summary = {
       ...(this.summary ?? {}),
       lastDueDate
@@ -347,12 +332,10 @@ export class StatementListComponent implements OnInit, OnChanges {
 
   reloadStatements(): void {
     const buildingId = this.currentBuildingId || Number(localStorage.getItem('buildingId'));
-
     if (!buildingId) {
       console.warn('Δεν υπάρχει buildingId για ανανέωση statements.');
       return;
     }
-
     this.loadStatementsAndSummary(buildingId);
   }
 }

@@ -1,9 +1,74 @@
+.btn-outline-primary {
+  --bs-btn-color: var(--bs-primary);
+  --bs-btn-border-color: var(--bs-primary);
+  --bs-btn-hover-color: var(--bs-primary);
+  --bs-btn-hover-bg: var(--bs-primary-light);
+  --bs-btn-hover-border-color: var(--bs-primary);
+  --bs-btn-focus-shadow-rgb: var(--bs-primary-rgb);
+  --bs-btn-active-color: var(--bs-primary);
+  --bs-btn-active-bg: var(--bs-primary-light);
+  --bs-btn-active-border-color: var(--bs-primary);
+  --bs-btn-disabled-color: var(--bs-primary);
+  --bs-btn-disabled-border-color: var(--bs-primary);
+}
+
+.control-label {
+  display: block;
+  color: #687384;
+  font-size: .74rem;
+  letter-spacing: .14em;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.segmented {
+  display: inline-flex;
+  background: #f0f3f7;
+  border-radius: 8px;
+  padding: 4px;
+
+  button { border: 0; background: transparent; padding: 9px 16px; border-radius: 6px; color: #4f5c6b; cursor: pointer; }
+  .active { background: #fff; color: var(--bs-primary); box-shadow: 0 2px 8px #172c431a; }
+  button:focus-visible { outline: 2px solid var(--bs-primary); outline-offset: 2px; }
+}
+
+.estimator {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin: 52px 0 32px;
+  align-items: center;
+
+  .eyebrow { color: #1769d2; font-size: .74rem; letter-spacing: .14em; font-weight: 700; }
+  h2 { font-size: clamp(1.6rem, 3vw, 2.5rem); }
+  p:last-child { color: #657180; line-height: 1.7; }
+}
+
+.inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  .apartments-right { grid-column: 2; }
+  gap: 14px;
+
+  label { min-width: 0; font-weight: 600; font-size: .85rem; }
+  input[type=number] { display: block; width: 100%; margin-top: 8px; border: 1px solid #ccd4df; border-radius: 7px; padding: 10px; }
+  .range { grid-column: 1 / -1; }
+  .range input { display: block; width: 100%; accent-color: var(--bs-primary); margin-top: 10px; }
+}
+
+@media (max-width: 767px) {
+  .estimator { grid-template-columns: 1fr; gap: 15px; }
+}
+
 .price-card {
   .price-icon {
     display: flex;
     align-items: center;
     img {
       margin-right: 8px;
+      width: 48px;
+      height: auto;
+      flex: 0 0 48px;
     }
   }
 

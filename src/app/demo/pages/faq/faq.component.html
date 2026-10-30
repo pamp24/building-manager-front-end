@@ -1,0 +1,33 @@
+<app-public-header />
+<main>
+  <section class="hero"><div class="content"><p class="eyebrow">OIKIO / ΒΟΗΘΕΙΑ</p><h1>Συχνές ερωτήσεις</h1><p class="intro">Απαντήσεις για την πλατφόρμα, τις λειτουργίες και τη διαχείριση της πολυκατοικίας σας.</p></div></section>
+  <div class="content body">
+    <nav class="category-nav" aria-label="Κατηγορίες ερωτήσεων">
+      <span>ΚΑΤΗΓΟΡΙΕΣ</span>
+      @for (category of categories; track category.title; let i = $index) { <a [href]="'#category-' + i">{{ category.title }}</a> }
+    </nav>
+    <div class="questions">
+      @for (category of categories; track category.title; let i = $index) {
+        <section class="category" [id]="'category-' + i">
+          <h2>{{ category.title }}</h2>
+          @for (item of category.questions; track item.q) {
+            <details><summary>{{ item.q }}</summary><div class="answer"><p>{{ item.a }}</p>
+              @if (item.q === 'Υπάρχει ετήσια έκπτωση;' && catalog) {
+                <p>Το τρέχον προτεινόμενο ποσοστό είναι {{ catalog.annualDiscountBasisPoints / 100 }}%.</p>
+              }
+              @if (item.q === 'Τι ισχύει για το πακέτο Plus;') {
+                @if (plus; as plan) {
+                  @if (plan.monthlyBaseCents !== null && plan.extraApartmentMonthlyCents !== null) {
+                    <p>Προτεινόμενη βασική τιμή: {{ money(plan.monthlyBaseCents) }} τον μήνα, με {{ plan.includedApartments }} διαμερίσματα. Για κάθε επιπλέον διαμέρισμα: {{ money(plan.extraApartmentMonthlyCents) }} τον μήνα. Οι τιμές ιδιωτών περιλαμβάνουν φόρους.</p>
+                  }
+                } @else { <p>Η διαμόρφωση τιμολόγησης δεν είναι διαθέσιμη αυτή τη στιγμή.</p> }
+              }
+            </div></details>
+          }
+        </section>
+      }
+      <aside class="help"><h2>Χρειάζεστε περισσότερη βοήθεια;</h2><p>Δείτε τις πληροφορίες υποστήριξης ή δημιουργήστε αίτημα στο helpdesk αφού συνδεθείτε.</p><a routerLink="/support">Υποστήριξη Oikio →</a></aside>
+    </div>
+  </div>
+</main>
+<app-public-footer />

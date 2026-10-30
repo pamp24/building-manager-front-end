@@ -11,6 +11,8 @@ import { PlaceholderCard1Component } from 'src/app/theme/shared/components/place
 import { PlaceholderCard2Component } from 'src/app/theme/shared/components/placeholder-card/placeholder-2.component';
 import { AuthenticationService } from 'src/app/theme/shared/service';
 import { ThemeService } from 'src/app/theme/shared/service/customs-theme.service';
+import { PublicFooterComponent } from '../public-info/public-footer.component';
+import { PublicHeaderComponent } from '../public-info/public-header.component';
 
 // icons
 import { IconService } from '@ant-design/icons-angular';
@@ -34,7 +36,7 @@ import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
 
 @Component({
   selector: 'app-landing',
-  imports: [CommonModule, RouterModule, SharedModule, CarouselModule, PlaceholderCard1Component, PlaceholderCard2Component],
+  imports: [CommonModule, RouterModule, SharedModule, CarouselModule, PlaceholderCard1Component, PlaceholderCard2Component, PublicFooterComponent, PublicHeaderComponent],
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss']
 })
@@ -80,15 +82,6 @@ export class LandingComponent implements OnInit, OnDestroy {
   @HostListener('window:scroll', [])
   onWindowScroll() {
     // logic to check scroll position
-    if (window.pageYOffset > 0) {
-      this.isScrolled = true;
-      document.querySelector('.navbar')?.classList.add('landing-nav');
-      document.querySelector('.navbar')?.classList.remove('default');
-    } else {
-      this.isScrolled = false;
-      document.querySelector('.navbar')?.classList.add('default');
-      document.querySelector('.navbar')?.classList.remove('landing-nav');
-    }
     if (window.pageYOffset > 500) {
       document.querySelector('.pc-landing-customize')?.classList.add('active');
     } else {
@@ -227,110 +220,96 @@ export class LandingComponent implements OnInit, OnDestroy {
     {
       sub_list: [
         {
-          title: 'Auth Methods : JWT'
+          title: 'Διαχείριση πολυκατοικίας'
         },
         {
-          title: 'Code Splitting'
+          title: 'Διαμερίσματα'
         },
         {
-          title: 'RTL Support'
+          title: 'Μέλη πολυκατοικίας'
         }
       ]
     },
     {
       sub_list: [
         {
-          title: 'Internationalization Support'
+          title: 'Κοινόχρηστες δαπάνες'
         },
         {
-          title: 'Angular Forms'
+          title: 'Καταστάσεις κοινοχρήστων'
         },
         {
-          title: 'Light/Dark'
+          title: 'Πληρωμές'
         }
       ]
     },
     {
       sub_list: [
         {
-          title: 'Mock API'
+          title: 'Ανακοινώσεις'
         },
         {
-          title: 'Google Fonts'
+          title: 'Ψηφοφορίες'
         },
         {
-          title: 'Prettier Code Style'
+          title: 'Μηνύματα'
         }
       ]
     }
   ];
 
-  techList = [
-    {
-      url: 'https://mantisdashboard.io/codeignitor/default/public/',
-      img: 'assets/images/landing/technology/tech-ci.png'
-    },
-    {
-      url: 'https://mantisdashboard.io/',
-      img: 'assets/images/landing/technology/tech-react.png'
-    },
-    {
-      url: 'https://mantisdashboard.io/vue/',
-      img: 'assets/images/landing/technology/tech-vue.png'
-    },
-    {
-      url: 'https://mantisdashboard.io/bootstrap/default/',
-      img: 'assets/images/landing/technology/tech-bootstrap.png'
-    },
-    {
-      url: 'https://mantis-dotnet.azurewebsites.net/',
-      img: 'assets/images/landing/technology/tech-dot-net.png'
-    }
+  landingFeatures = [
+    { title: 'Ανακοινώσεις', icon: 'ti-speakerphone' },
+    { title: 'Ψηφοφορίες', icon: 'ti-checkbox' },
+    { title: 'Μηνύματα', icon: 'ti-message-circle' },
+    { title: 'Κοινόχρηστα', icon: 'ti-receipt' },
+    { title: 'Πολυκατοικίες', icon: 'ti-building-community' },
+    { title: 'Ημερολόγιο', icon: 'ti-calendar' }
   ];
 
   marquees = [
-    { text: 'JWt Auth' },
-    { text: '100+ Pages' },
-    { text: '6+ Preset Colors' },
-    { text: '200+ Widgets' },
-    { text: 'Best User Experience' },
-    { text: 'Live Customizer' },
-    { text: '5+ Apps' },
-    { text: 'Bootstrap v5' },
-    { text: 'Highly Flexible' },
-    { text: 'Always Updated' },
-    { text: 'Professional Design' },
-    { text: 'TypeScript Support' },
-    { text: 'Google Fonts' },
-    { text: 'Dark Layout' },
-    { text: 'RTL Support' },
-    { text: 'Retina Ready' },
-    { text: 'Prettier Code' },
-    { text: 'i18n Support' }
+    { text: 'Πολυκατοικίες' },
+    { text: 'Διαχειριστές' },
+    { text: 'Κάτοικοι' },
+    { text: 'Διαμερίσματα' },
+    { text: 'Κοινόχρηστα' },
+    { text: 'Δαπάνες' },
+    { text: 'Πληρωμές' },
+    { text: 'Ανακοινώσεις' },
+    { text: 'Ψηφοφορίες' },
+    { text: 'Μηνύματα' },
+    { text: 'Ημερολόγιο' },
+    { text: 'Μέλη' },
+    { text: 'Καταστάσεις κοινοχρήστων' },
+    { text: 'Επικοινωνία' },
+    { text: 'Οργάνωση' },
+    { text: 'Διαχείριση' },
+    { text: 'Ενημέρωση' },
+    { text: 'Oikio' }
   ];
 
   reviewers = [
     {
-      title: 'Code Quality',
-      text: 'The clean code of this template makes this package amazing. Thanks Team!',
+      title: 'Ποιότητα κώδικα',
+      text: 'Ο καθαρός κώδικας αυτού του προτύπου κάνει το πακέτο εξαιρετικό. Ευχαριστώ την ομάδα!',
       name: 'Govert',
       rating: 5
     },
     {
-      title: 'Code Quality',
-      text: 'The code quality and design are excellent.',
+      title: 'Ποιότητα κώδικα',
+      text: 'Η ποιότητα του κώδικα και ο σχεδιασμός είναι εξαιρετικά.',
       name: 'Bravo.',
       rating: 5
     },
     {
-      title: 'Customizability',
-      text: 'Reliable and well-organized with the latest libraries, and the customer support is exceptional!',
+      title: 'Δυνατότητα προσαρμογής',
+      text: 'Αξιόπιστο και καλά οργανωμένο, με τις πιο πρόσφατες βιβλιοθήκες και εξαιρετική υποστήριξη πελατών!',
       name: 'Rodrigo J.',
       rating: 5
     },
     {
-      title: 'Design Quality',
-      text: 'there is no mistake, great design and organized code, thank you ...',
+      title: 'Ποιότητα σχεδιασμού',
+      text: 'Εξαιρετικός σχεδιασμός και οργανωμένος κώδικας, ευχαριστώ ...',
       name: 'Yang Z.',
       rating: 4
     }
@@ -338,22 +317,22 @@ export class LandingComponent implements OnInit, OnDestroy {
 
   short_link = [
     {
-      title: 'Help',
+      title: 'Βοήθεια προτύπου',
       support: [
         {
           support_link: 'Blog',
           url: 'https://blog.codedthemes.com/'
         },
         {
-          support_link: 'Documentation',
+          support_link: 'Τεκμηρίωση',
           url: 'https://codedthemes.gitbook.io/mantis-angular'
         },
         {
-          support_link: 'Change Log',
+          support_link: 'Ιστορικό αλλαγών',
           url: 'https://codedthemes.gitbook.io/mantis-angular/changelog'
         },
         {
-          support_link: 'Support',
+          support_link: 'Υποστήριξη',
           url: 'https://codedthemes.support-hub.io/'
         },
         {
@@ -363,28 +342,28 @@ export class LandingComponent implements OnInit, OnDestroy {
       ]
     },
     {
-      title: 'Store Help',
+      title: 'Κατάστημα CodedThemes',
       support: [
         {
-          support_link: 'License',
+          support_link: 'Άδεια χρήσης',
           url: 'https://codedthemes.com/license'
         },
         {
-          support_link: 'Refund Policy',
+          support_link: 'Πολιτική επιστροφών',
           url: 'https://codedthemes.com/terms-and-conditions'
         },
         {
-          support_link: 'Submit a Request',
+          support_link: 'Επικοινωνία',
           url: 'https://codedthemes.com/contact'
         },
         {
-          support_link: 'Affiliate',
+          support_link: 'Συνεργάτες',
           url: 'https://codedthemes.com/affiliate'
         }
       ]
     },
     {
-      title: 'Mantis Eco-System',
+      title: 'Εκδόσεις προτύπου',
       support: [
         {
           support_link: 'CodeIgniter',
@@ -413,7 +392,7 @@ export class LandingComponent implements OnInit, OnDestroy {
       ]
     },
     {
-      title: 'More Products',
+      title: 'Προϊόντα CodedThemes',
       support: [
         {
           support_link: 'Berry Angular',

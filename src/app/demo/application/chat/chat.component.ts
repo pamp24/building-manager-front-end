@@ -79,6 +79,14 @@ export class ChatComponent implements OnInit, OnDestroy {
   message: string = '';
   errorMessage: string = '';
   searchTerm: string = '';
+  memberSearch = '';
+  memberError = '';
+  membersLoading = false;
+  membersLoadError = false;
+  openingChat = false;
+  actionLoading = false;
+  editingMessageId: number | null = null;
+  editContent = '';
   emojiPanelVisible = false;
   emojis = ['😀', '😁', '😂', '😊', '😍', '😘', '😎', '🤔', '😢', '😡', '👍', '👎', '👏', '🙏', '💪', '🔥', '❤️', '💔', '🎉', '✅', '❌', '⚠️', '☕', '🏠', '🔑', '📅', '💰', '🙂']; 
   conversations: ConversationDTO[] = [];
@@ -152,6 +160,11 @@ export class ChatComponent implements OnInit, OnDestroy {
     return this.conversations.filter((c) => c.name.toLowerCase().includes(term));
   }
 
+  get filteredMembers(): BuildingMemberDTO[] {
+    const term = this.memberSearch.trim().toLocaleLowerCase();
+    return this.members.filter((member) => `${member.fullName} ${member.buildingName || ''}`.toLocaleLowerCase().includes(term));
+  }
+
   // life cycle hook
   ngOnInit() {
     this.init();
@@ -167,7 +180,8 @@ export class ChatComponent implements OnInit, OnDestroy {
       next: (buildings) => {
         const groupChats = buildings.map((b) => firstValueFrom(this.chatService.getOrCreateBuildingConversation(b.id)));
         Promise.all(groupChats)
-          .then(() => this.chatService.getConversations().subscribe({ next: (convs) => this.setConversations(convs) }))
+          .then(() => this.loadConversationsOnly())
+          .catch(() => this.loadConversationsOnly())
           .finally(() => {
             this.loading = false;
             this.loadMembers(buildings.map((b) => b.id));
@@ -202,6 +216,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   loadMembers(buildingIds: number[]) {
+    this.membersLoading = true;
+    this.membersLoadError = false;
     const memberCalls = buildingIds.map((id) => firstValueFrom(this.buildingMemberService.getMembersByBuilding(id)));
     Promise.all(memberCalls)
       .then((lists) => {
@@ -216,11 +232,16 @@ export class ChatComponent implements OnInit, OnDestroy {
         );
         this.members = Array.from(map.values());
       })
-      .catch(() => (this.members = []));
+      .catch(() => { this.members = []; this.membersLoadError = true; })
+      .finally(() => (this.membersLoading = false));
   }
 
   selectConversation(conversation: ConversationDTO) {
+    if (this.activeConversation?.id !== conversation.id) this.message = '';
+    this.offcanvasService.dismiss();
     this.activeConversation = conversation;
+    this.messages = [];
+    this.editingMessageId = null;
     this.errorMessage = '';
     this.stickToBottom = true;
     this.loadMessages();
@@ -231,13 +252,15 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (!this.activeConversation) {
       return;
     }
-    this.chatService.getMessages(this.activeConversation.id).subscribe({
+    const id = this.activeConversation.id;
+    this.chatService.getMessages(id).subscribe({
       next: (msgs) => {
+        if (this.activeConversation?.id !== id) return;
         this.messages = msgs;
         this.bindViewportScroll();
         setTimeout(() => this.scrollToBottomIfNeeded(), 0);
       },
-      error: () => (this.messages = [])
+      error: () => { if (this.activeConversation?.id === id) this.errorMessage = 'Δεν ήταν δυνατή η φόρτωση των μηνυμάτων.'; }
     });
   }
 
@@ -260,8 +283,10 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.stopPolling();
     this.pollTimer = setInterval(() => {
       if (this.activeConversation) {
-        this.chatService.getMessages(this.activeConversation.id).subscribe({
+        const id = this.activeConversation.id;
+        this.chatService.getMessages(id).subscribe({
           next: (msgs) => {
+            if (this.activeConversation?.id !== id || this.actionLoading) return;
             this.messages = msgs;
             setTimeout(() => this.scrollToBottomIfNeeded(), 0);
           }
@@ -287,11 +312,14 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.errorMessage = 'Γράψε ένα μήνυμα για να το στείλεις.';
       return;
     }
-    this.chatService.sendMessage(this.activeConversation.id, content).subscribe({
+    const id = this.activeConversation.id;
+    this.chatService.sendMessage(id, content).subscribe({
       next: (saved) => {
-        this.messages = [...this.messages, saved];
-        this.message = '';
-        this.errorMessage = '';
+        if (this.activeConversation?.id === id) {
+          this.messages = [...this.messages.filter((m) => m.id !== saved.id), saved];
+          this.message = '';
+          this.errorMessage = '';
+        }
         setTimeout(() => this.scrollToBottomIfNeeded(), 0);
         this.refreshConversations();
       },
@@ -316,10 +344,13 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
     const caption = this.message?.trim() || '';
     this.loading = true;
-    this.chatService.sendImageMessage(this.activeConversation.id, file, caption).subscribe({
+    const id = this.activeConversation.id;
+    this.chatService.sendImageMessage(id, file, caption).subscribe({
       next: (saved) => {
-        this.messages = [...this.messages, saved];
-        this.message = '';
+        if (this.activeConversation?.id === id) {
+          this.messages = [...this.messages.filter((m) => m.id !== saved.id), saved];
+          this.message = '';
+        }
         this.loading = false;
         this.errorMessage = '';
         setTimeout(() => this.scrollToBottomIfNeeded(), 0);
@@ -332,17 +363,78 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
   }
 
-  startPrivateChat(userId: number) {
+  startPrivateChat(userId: number, modal: { close: () => void }) {
+    if (this.openingChat) return;
+    this.openingChat = true;
+    this.memberError = '';
     this.chatService.getOrCreatePrivateConversation(userId).subscribe({
       next: (conversation) => {
-        const existing = this.conversations.find((c) => c.id === conversation.id);
-        if (!existing) {
-          this.conversations = [conversation, ...this.conversations];
-        }
+        this.openingChat = false;
+        modal.close();
         this.selectConversation(conversation);
+        this.refreshConversations();
       },
-      error: () => (this.errorMessage = 'Δεν μπορείς να ξεκινήσεις συνομιλία με αυτόν τον χρήστη.')
+      error: () => { this.openingChat = false; this.memberError = 'Δεν μπορείς να ξεκινήσεις συνομιλία με αυτόν τον χρήστη.'; }
     });
+  }
+
+  hideConversation(conversation: ConversationDTO) {
+    const id = conversation.id;
+    if (!id || this.actionLoading || !confirm('Απόκρυψη αυτής της συνομιλίας για εσένα; Τα μηνύματα θα διατηρηθούν.')) return;
+    this.actionLoading = true;
+    this.errorMessage = '';
+    this.chatService.hideConversation(id).subscribe({
+      next: () => {
+        this.actionLoading = false;
+        this.conversations = this.conversations.filter((c) => c.id !== id);
+        if (this.activeConversation?.id === id) {
+          this.activeConversation = null;
+          this.messages = [];
+          this.stopPolling();
+        }
+        this.refreshConversations();
+      },
+      error: () => { this.actionLoading = false; this.errorMessage = 'Δεν ήταν δυνατή η απόκρυψη της συνομιλίας.'; }
+    });
+  }
+
+  beginEdit(message: ChatMessageDTO) {
+    this.editingMessageId = message.id;
+    this.editContent = message.content || '';
+    this.errorMessage = '';
+  }
+
+  saveEdit(message: ChatMessageDTO) {
+    const id = this.activeConversation?.id;
+    const content = this.editContent.trim();
+    if (!id || this.actionLoading) return;
+    if ((!content && !message.imageUrl) || content.length > 4000) { this.errorMessage = 'Το μήνυμα πρέπει να περιέχει έως 4000 χαρακτήρες.'; return; }
+    if (!confirm('Αποθήκευση αλλαγών στο μήνυμα;')) return;
+    this.actionLoading = true;
+    this.errorMessage = '';
+    this.chatService.editMessage(id, message.id, content).subscribe({
+      next: (saved) => { this.actionLoading = false; this.applyMessage(id, saved); },
+      error: () => { this.actionLoading = false; this.errorMessage = 'Δεν ήταν δυνατή η επεξεργασία του μηνύματος.'; }
+    });
+  }
+
+  deleteMessage(message: ChatMessageDTO) {
+    const id = this.activeConversation?.id;
+    if (!id || this.actionLoading || !confirm('Διαγραφή αυτού του μηνύματος για όλους;')) return;
+    this.actionLoading = true;
+    this.errorMessage = '';
+    this.chatService.deleteMessage(id, message.id).subscribe({
+      next: (saved) => { this.actionLoading = false; this.applyMessage(id, saved); },
+      error: () => { this.actionLoading = false; this.errorMessage = 'Δεν ήταν δυνατή η διαγραφή του μηνύματος.'; }
+    });
+  }
+
+  private applyMessage(id: number, saved: ChatMessageDTO) {
+    if (this.activeConversation?.id === id) {
+      this.messages = this.messages.map((m) => m.id === saved.id ? saved : m);
+      this.editingMessageId = null;
+    }
+    this.refreshConversations();
   }
 
   conversationAvatar(conversation: ConversationDTO): string {
@@ -426,6 +518,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.offcanvasService.open(info, { position: 'end' });
   }
   openNewChat(content: TemplateRef<string>) {
+    this.memberSearch = '';
+    this.memberError = '';
     this.modalService.open(content, { centered: true, size: 'md' });
   }
 

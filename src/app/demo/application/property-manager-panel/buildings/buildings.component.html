@@ -1,6 +1,9 @@
 <app-card cardTitle="Κτίρια υπό διαχείριση" [padding]="0">
   <ng-template #headerOptionsTemplate>
-    <a [routerLink]="['/pm/add']" class="btn btn-primary">Προσθήκη Κτιρίου</a>
+    <div class="d-flex flex-wrap gap-2">
+      <button *ngIf="isPropertyManager" type="button" class="btn btn-outline-primary" (click)="openBulk(bulkModal)">Μαζική Προσθήκη</button>
+      <a [routerLink]="['/pm/add']" class="btn btn-primary">Προσθήκη Κτιρίου</a>
+    </div>
   </ng-template>
 
   <ng-container *ngIf="loading">
@@ -76,3 +79,12 @@
     </ng-template>
   </ng-container>
 </app-card>
+
+<ng-template #bulkModal let-modal>
+  <div class="modal-header">
+    <h2 class="modal-title fs-5">Μαζική Προσθήκη Κτιρίων</h2>
+    <button type="button" class="btn-close" aria-label="Κλείσιμο" [disabled]="bulkSending" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body"><app-bulk-buildings #bulk (uploaded)="bulkRefresh = true" (sendingChange)="bulkSending = $event" /></div>
+  <div class="modal-footer"><button type="button" class="btn btn-secondary" [disabled]="bulkSending" (click)="modal.close()">Κλείσιμο</button><button type="button" class="btn btn-primary" [disabled]="!bulk.canUpload" (click)="bulk.upload()">{{ bulkSending ? 'Ανέβασμα...' : 'Ανέβασμα' }}</button></div>
+</ng-template>

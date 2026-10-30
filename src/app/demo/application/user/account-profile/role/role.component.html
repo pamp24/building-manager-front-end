@@ -145,6 +145,7 @@
               >
                 {{ getTranslatedRole(member.role) }}
               </span>
+              <span *ngIf="pmView && member.isBuildingManager" class="badge bg-warning text-dark ms-1">Διαχειριστής πολυκατοικίας</span>
             </td>
 
             <td>{{ getMemberApartmentLabel(member) }}</td>
@@ -169,7 +170,7 @@
             </td>
 
             <td class="text-end">
-              <div *ngIf="canManageMembers()" ngbDropdown container="body" class="d-inline-block">
+              <div *ngIf="member.id != null && (pmView || canManageMembers())" ngbDropdown container="body" class="d-inline-block">
                 <button
                   type="button"
                   class="avatar avatar-s btn-link-secondary border-0 bg-transparent"
@@ -183,7 +184,7 @@
                 <div ngbDropdownMenu class="dropdown-menu-end">
                   <button ngbDropdownItem type="button" (click)="openEditModal(member)">Επεξεργασία</button>
 
-                  <button ngbDropdownItem type="button" class="text-danger" (click)="openDeleteModal(member)">Διαγραφή</button>
+                  <button *ngIf="canManageMembers()" ngbDropdownItem type="button" class="text-danger" (click)="openDeleteModal(member)">Διαγραφή</button>
                 </div>
               </div>
             </td>

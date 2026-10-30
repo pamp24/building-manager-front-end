@@ -32,6 +32,14 @@ export class CommonExpenseStatementService {
     return this.http.get<CommonExpenseStatement>(`${this.baseUrl}/${id}`);
   }
 
+  downloadStatementPdf(id: number): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}/${id}/pdf`, { responseType: 'blob' });
+  }
+
+  downloadApartmentStatementPdf(statementId: number, apartmentId: number): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}/${statementId}/apartments/${apartmentId}/pdf`, { responseType: 'blob' });
+  }
+
   updateStatement(id: number, statement: CommonExpenseStatement): Observable<CommonExpenseStatement> {
     return this.http.put<CommonExpenseStatement>(`${this.baseUrl}/${id}`, statement);
   }

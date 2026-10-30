@@ -21,6 +21,7 @@ import { CommonPercentWarningModalComponent } from './common-percent-warning-mod
 import { ManagerDTO } from 'src/app/theme/shared/models/managerDTO';
 import { ManagedBuildingDTO } from '../statement-list/building-selector-inline/building-selector-inline.component';
 import { ApartmentDTO } from 'src/app/theme/shared/models/apartmentDTO';
+import { compareApartments } from 'src/app/theme/shared/models/apartment-order';
 import { CommonExpenseStatementService } from 'src/app/theme/shared/service/commonExpensesStatement.service';
 import { CommonExpenseStatement } from 'src/app/theme/shared/models/commonExpenseStatement';
 import { ApartmentService } from '../../../../../theme/shared/service/apartment.service';
@@ -59,7 +60,7 @@ export class StatementCreateComponent implements OnInit, OnChanges {
     { label: 'ΑΣΑΝΣΕΡ', value: 'ELEVATOR' },
     { label: 'ΑΥΤΟΝΟΜΙΑ', value: 'EQUAL' },
     { label: 'BOILER', value: 'EQUAL' },
-    { label: 'ΕΙΔΙΚΕΣ ΔΑΠΑΝΕΣ', value: 'EQUAL' },
+    { label: 'ΕΙΔΙΚΕΣ ΔΑΠΑΝΕΣ', value: 'SPECIAL' },
     { label: 'ΙΔΙΟΚΤΗΤΩΝ', value: 'EQUAL' },
     { label: 'ΔΑΠΑΝΕΣ ΣΕ ΙΣΑ ΜΕΡΗ', value: 'EQUAL' },
     { label: 'ΑΛΛΕΣ ΔΑΠΑΝΕΣ', value: 'EQUAL' }
@@ -128,6 +129,10 @@ export class StatementCreateComponent implements OnInit, OnChanges {
   }
 
   selectBuilding(building: ManagedBuildingDTO) {
+    if (this.selectedBuilding && this.selectedBuilding.id !== building.id) {
+      this.items.controls.forEach((item) => item.get('selectedApartmentIds')?.setValue([]));
+    }
+    this.selectedApartments = [];
     this.selectedBuilding = building;
     this.currentBuilding = building;
     this.currentBuildingIndex = this.managedBuildings.findIndex((b) => b.id === building.id);
@@ -165,7 +170,8 @@ export class StatementCreateComponent implements OnInit, OnChanges {
 
     this.ApartmentService.getApartmentsByBuilding(building.id).subscribe({
       next: (apartments) => {
-        this.selectedApartments = apartments;
+        if (this.selectedBuilding?.id !== building.id) return;
+        this.selectedApartments = [...apartments].sort(compareApartments);
         console.log('Αυτόματα διαμερίσματα:', this.selectedApartments);
       },
       error: (err) => console.error('Σφάλμα φόρτωσης διαμερισμάτων', err)
@@ -209,7 +215,8 @@ export class StatementCreateComponent implements OnInit, OnChanges {
     return this.fb.group({
       category: ['', Validators.required], // <-- ΕΔΩ
       descriptionItem: ['', Validators.required],
-      price: [0, Validators.required]
+      price: [0, Validators.required],
+      selectedApartmentIds: [[]]
     });
   }
 
@@ -297,6 +304,16 @@ export class StatementCreateComponent implements OnInit, OnChanges {
       return;
     }
 
+    const apartmentIds = new Set(this.selectedApartments.map((apartment) => apartment.id));
+    if (this.items.controls.some((item) => {
+      const ids: number[] = item.get('selectedApartmentIds')?.value || [];
+      return item.get('category')?.value === 'SPECIAL' &&
+        (!ids.length || new Set(ids).size !== ids.length || ids.some((id) => !apartmentIds.has(id)));
+    })) {
+      alert('Επιλέξτε τουλάχιστον ένα έγκυρο διαμέρισμα για κάθε ειδική δαπάνη.');
+      return;
+    }
+
     const commonPercentSum = this.selectedApartments.reduce((sum, a) => sum + (a.commonPercent || 0), 0);
 
     if (Math.abs(commonPercentSum - 1000) > 0.01) {
@@ -310,7 +327,7 @@ export class StatementCreateComponent implements OnInit, OnChanges {
               next: () => {
                 this.ApartmentService.getApartmentsByBuilding(this.selectedBuilding!.id).subscribe({
                   next: (apartments) => {
-                    this.selectedApartments = apartments;
+                    this.selectedApartments = [...apartments].sort(compareApartments);
                     console.log('Χιλιοστά αναδιανεμήθηκαν:', apartments.map((a) => a.commonPercent));
                   },
                   error: () => {}

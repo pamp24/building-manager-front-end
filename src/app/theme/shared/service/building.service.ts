@@ -25,6 +25,10 @@ export class BuildingService {
     return this.http.post<number>(`${this.apiUrl}/company`, req);
   }
 
+  createCompanyBuildingsBulk(req: unknown[]): Observable<number[]> {
+    return this.http.post<number[]>(`${this.apiUrl}/company/bulk`, req);
+  }
+
   // Building Retrieval
   getBuilding(id: number): Observable<BuildingDTO> {
     return this.http.get<BuildingDTO>(`${this.apiUrl}/${id}`);
@@ -36,6 +40,10 @@ export class BuildingService {
 
   getBuildingManager(buildingId: number): Observable<ManagerDTO> {
     return this.http.get<ManagerDTO>(`${this.apiUrl}/${buildingId}/manager`);
+  }
+
+  assignBuildingManager(buildingId: number, memberId: number): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${buildingId}/manager/${memberId}`, null);
   }
 
   getMyManagedBuildings(): Observable<ManagedBuildingDTO[]> {
