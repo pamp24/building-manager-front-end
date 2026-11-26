@@ -1,73 +1,50 @@
 <div class="modal-header">
   <h5 class="modal-title">
-    Διαγραφή Διαμερίσματος
+    {{ 'Delete Partition' | translate }}
   </h5>
 
-  <button
-    type="button"
-    class="btn-close"
-    aria-label="Κλείσιμο"
-    [disabled]="isDeleting"
-    (click)="cancel()"
-  ></button>
+  <button type="button" class="btn-close" [attr.aria-label]="'Closing' | translate" [disabled]="isDeleting" (click)="cancel()"></button>
 </div>
 
 <div class="modal-body">
-  <div
-    *ngIf="errorMessage"
-    class="alert alert-danger"
-  >
+  <div *ngIf="errorMessage" class="alert alert-danger">
     {{ errorMessage }}
   </div>
 
   <p class="mb-3">
-  Είστε σίγουρος ότι θέλετε να διαγράψετε το παρακάτω διαμέρισμα;
-</p>
+    {{ 'Are you sure you want to delete the partition below?' | translate }}
+  </p>
 
-<div class="border rounded p-3 bg-light">
-  <div class="mb-2">
-    <strong>Διαμέρισμα:</strong>
-    {{ apartment?.number }}
-  </div>
+  <div class="border rounded p-3 bg-light">
+    <div class="mb-2">
+      <strong>{{ 'Apartment:' | translate }}</strong>
+      {{ apartment?.number }}
+    </div>
 
-  <div class="mb-2" *ngIf="apartment?.floor">
-    <strong>Όροφος:</strong>
-    {{ apartment?.floor }}
-  </div>
+    <div class="mb-2" *ngIf="apartment?.floor">
+      <strong>{{ 'Floor:' | translate }}</strong>
+      {{ apartment?.floor }}
+    </div>
 
-  <div *ngIf="apartment?.ownerFirstName || apartment?.ownerLastName">
-    <strong>Ιδιοκτήτης:</strong>
-    {{ apartment?.ownerLastName }} {{ apartment?.ownerFirstName }}
+    <div *ngIf="apartment?.ownerFirstName || apartment?.ownerLastName">
+      <strong>{{ 'Owner:' | translate }}</strong>
+      {{ apartment?.ownerLastName }} {{ apartment?.ownerFirstName }}
+    </div>
   </div>
-</div>
 
   <p class="text-muted mb-0">
-    Το διαμέρισμα δεν θα εμφανίζεται πλέον στη λίστα.
+    {{ 'The partition will no longer appear in the list.' | translate }}
   </p>
 </div>
 
 <div class="modal-footer">
-  <button
-    type="button"
-    class="btn btn-secondary"
-    [disabled]="isDeleting"
-    (click)="cancel()"
-  >
-    Ακύρωση
+  <button type="button" class="btn btn-secondary" [disabled]="isDeleting" (click)="cancel()">
+    {{ 'Cancellation' | translate }}
   </button>
 
-  <button
-    type="button"
-    class="btn btn-danger"
-    [disabled]="isDeleting"
-    (click)="confirmDelete()"
-  >
-    <span
-      *ngIf="isDeleting"
-      class="spinner-border spinner-border-sm me-2"
-      aria-hidden="true"
-    ></span>
+  <button type="button" class="btn btn-danger" [disabled]="isDeleting" (click)="confirmDelete()">
+    <span *ngIf="isDeleting" class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
 
-    {{ isDeleting ? 'Διαγραφή...' : 'Διαγραφή' }}
+    {{ isDeleting ? ('Delete...' | translate) : ('Delete' | translate) }}
   </button>
 </div>

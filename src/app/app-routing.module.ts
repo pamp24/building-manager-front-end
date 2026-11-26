@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AdminLayoutComponent } from './theme/layout/admin-layout/admin-layout.component';
 import { GuestLayouts } from './theme/layout/guest-layout/guest-layout.component';
 import { AuthGuardChild } from './theme/shared/components/_helpers/auth.guard';
+import { homeGuard } from './theme/shared/components/_helpers/home.guard';
 import { SimpleLayouts } from './theme/layout/simple-layout/simple-layout.component';
 import { Role } from './theme/shared/components/_helpers/role';
 
@@ -16,11 +17,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: '',
-        pathMatch: 'full'
-      },
-      {
-        path: '',
+        pathMatch: 'full',
+        canActivate: [homeGuard],
         loadComponent: () => import('./demo/pages/landing/landing.component').then((c) => c.LandingComponent)
       },
       { path: 'pricing', loadComponent: () => import('./demo/pages/pricing/public-pricing.component').then((c) => c.PublicPricingComponent) },

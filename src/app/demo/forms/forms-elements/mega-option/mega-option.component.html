@@ -4,12 +4,12 @@
   <div class="col-sm-12">
     <div class="card">
       <div class="card-header">
-        <h5>Example</h5>
+        <h5>{{ 'Example' | translate }}</h5>
       </div>
       <div class="card-body">
         <form>
           <div class="form-group">
-            <label class="form-label">Choose Delivery Type</label>
+            <label class="form-label">{{ 'Choose Delivery Type' | translate }}</label>
             <div class="row mb-2">
               <div class="col-lg-6">
                 <div class="border card p-3">
@@ -18,13 +18,15 @@
                     <label class="form-check-label d-block" for="customCheckdef1">
                       <span>
                         <span class="h5 d-block">
-                          <strong class="float-end"><span class="badge bg-light-primary">Free</span></strong>
-                          Trial plan
+                          <strong class="float-end">
+                            <span class="badge bg-light-primary">{{ 'Free' | translate }}</span>
+                          </strong>
+                          {{ 'Trial plan' | translate }}
                         </span>
                         <span class="f-12 text-muted">
-                          Free server basic collection
+                          {{ 'Free server basic collection' | translate }}
                           <br />
-                          (5 Items are allowed to download)
+                          {{ '(5 Items are allowed to download)' | translate }}
                         </span>
                       </span>
                     </label>
@@ -39,12 +41,12 @@
                       <span>
                         <span class="h5 d-block">
                           <strong class="float-end">$&nbsp;12.46</strong>
-                          Premium plan
+                          {{ 'Premium plan' | translate }}
                         </span>
                         <span class="f-12 text-muted">
-                          Free server unlimited approx 255k+ Premium collection
+                          {{ 'Free server unlimited approx 255k+ Premium collection' | translate }}
                           <br />
-                          (Download unlimited premium items)
+                          {{ '(Download unlimited premium items)' | translate }}
                         </span>
                       </span>
                     </label>
@@ -53,15 +55,15 @@
               </div>
             </div>
             <hr />
-            <label class="form-label mb-2 pt-2">Membership Plan</label>
+            <label class="form-label mb-2 pt-2">{{ 'Membership Plan' | translate }}</label>
             <div class="row">
               <div class="col-lg-6">
                 <div class="form-check">
                   <input type="radio" checked name="radio2" class="form-check-input input-primary" id="customCheckmem1" />
                   <label class="form-check-label" for="customCheckmem1">
                     <span>
-                      <span class="h5 d-block">SUPERNET 50</span>
-                      <span class="f-12 text-muted">360 days Speed upto 50 Mbps Unlimited( Rs. 5094 )</span>
+                      <span class="h5 d-block">{{ 'SUPERNET 50' | translate }}</span>
+                      <span class="f-12 text-muted">{{ '360 days Speed upto 50 Mbps Unlimited( Rs. 5094 )' | translate }}</span>
                     </span>
                   </label>
                 </div>
@@ -71,8 +73,8 @@
                   <input type="radio" name="radio2" class="form-check-input input-primary" id="customCheckmem2" />
                   <label class="form-check-label" for="customCheckmem2">
                     <span>
-                      <span class="h5 d-block">SUPERSONIC 75</span>
-                      <span class="f-12 text-muted">360 days Speed upto 75 Mbps 6000 GB( Rs. 6042 )</span>
+                      <span class="h5 d-block">{{ 'SUPERSONIC 75' | translate }}</span>
+                      <span class="f-12 text-muted">{{ '360 days Speed upto 75 Mbps 6000 GB( Rs. 6042 )' | translate }}</span>
                     </span>
                   </label>
                 </div>
@@ -84,12 +86,12 @@
     </div>
     <div class="card">
       <div class="card-header">
-        <h5>Horizontal Form Example</h5>
+        <h5>{{ 'Horizontal Form Example' | translate }}</h5>
       </div>
       <div class="card-body">
         <form>
           <div class="form-group row">
-            <label class="col-sm-3 col-form-label">Choose Delivery Type</label>
+            <label class="col-sm-3 col-form-label">{{ 'Choose Delivery Type' | translate }}</label>
             <div class="col-sm-9">
               <div class="row">
                 <div class="col-lg-6">
@@ -99,13 +101,15 @@
                       <label class="form-check-label d-block" for="customCheckdefhor1">
                         <span>
                           <span class="h5 d-block">
-                            <strong class="float-end"><span class="badge bg-light-primary">Free</span></strong>
-                            Trial plan
+                            <strong class="float-end">
+                              <span class="badge bg-light-primary">{{ 'Free' | translate }}</span>
+                            </strong>
+                            {{ 'Trial plan' | translate }}
                           </span>
                           <span class="f-12 text-muted">
-                            Free server basic collection
+                            {{ 'Free server basic collection' | translate }}
                             <br />
-                            (5 Items are allowed to download)
+                            {{ '(5 Items are allowed to download)' | translate }}
                           </span>
                         </span>
                       </label>
@@ -120,12 +124,12 @@
                         <span>
                           <span class="h5 d-block">
                             <strong class="float-end">$&nbsp;8.00</strong>
-                            Premium plan
+                            {{ 'Premium plan' | translate }}
                           </span>
                           <span class="f-12 text-muted">
-                            Free server unlimited approx 255k+ Premium collection
+                            {{ 'Free server unlimited approx 255k+ Premium collection' | translate }}
                             <br />
-                            (Download unlimited premium items)
+                            {{ '(Download unlimited premium items)' | translate }}
                           </span>
                         </span>
                       </label>
@@ -137,7 +141,7 @@
           </div>
           <hr />
           <div class="form-group row pt-3">
-            <label class="col-sm-3 col-form-label">Membership :</label>
+            <label class="col-sm-3 col-form-label">{{ 'Membership :' | translate }}</label>
             <div class="col-sm-9">
               <div class="row">
                 <div class="col-lg-6">
@@ -145,8 +149,8 @@
                     <input type="radio" checked name="radio4" class="form-check-input input-primary" id="customCheckmemhor1" />
                     <label class="form-check-label" for="customCheckmemhor1">
                       <span>
-                        <span class="h5 d-block">SUPERNET 50</span>
-                        <span class="f-12 text-muted">360 days Speed upto 50 Mbps Unlimited( Rs. 5094 )</span>
+                        <span class="h5 d-block">{{ 'SUPERNET 50' | translate }}</span>
+                        <span class="f-12 text-muted">{{ '360 days Speed upto 50 Mbps Unlimited( Rs. 5094 )' | translate }}</span>
                       </span>
                     </label>
                   </div>
@@ -156,8 +160,8 @@
                     <input type="radio" name="radio4" class="form-check-input input-primary" id="customCheckmemhor2" />
                     <label class="form-check-label" for="customCheckmemhor2">
                       <span>
-                        <span class="h5 d-block">SUPERSONIC 75</span>
-                        <span class="f-12 text-muted">360 days Speed upto 75 Mbps 6000 GB( Rs. 6042 )</span>
+                        <span class="h5 d-block">{{ 'SUPERSONIC 75' | translate }}</span>
+                        <span class="f-12 text-muted">{{ '360 days Speed upto 75 Mbps 6000 GB( Rs. 6042 )' | translate }}</span>
                       </span>
                     </label>
                   </div>

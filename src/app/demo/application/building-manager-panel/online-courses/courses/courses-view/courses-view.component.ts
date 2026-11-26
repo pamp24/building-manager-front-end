@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // angular import
 import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -16,6 +17,8 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
   styleUrl: './courses-view.component.scss'
 })
 export class CoursesViewComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private iconService = inject(IconService);
 
   // constructor
@@ -28,7 +31,7 @@ export class CoursesViewComponent {
     {
       img: 'assets/images/admin/img-course-1.png',
       type: 'free',
-      title: 'Bootstrap 5 Beginner Course',
+      title: this.uiLocale.text('Bootstrap 5 Beginner Course'),
       duration: '10 Months',
       teacher: 'Jimmy Morris',
       students: '+120',
@@ -37,7 +40,7 @@ export class CoursesViewComponent {
     {
       img: 'assets/images/admin/img-course-2.png',
       type: 'paid',
-      title: 'PHP Training Course',
+      title: this.uiLocale.text('PHP Training Course'),
       duration: '10 Months',
       teacher: 'Nashid Martines',
       students: '+50',
@@ -46,7 +49,7 @@ export class CoursesViewComponent {
     {
       img: 'assets/images/admin/img-course-3.png',
       type: 'free',
-      title: 'MERN Stack Training Course',
+      title: this.uiLocale.text('MERN Stack Training Course'),
       duration: '10 Months',
       teacher: 'Jack Ronan',
       students: '+100',
@@ -55,7 +58,7 @@ export class CoursesViewComponent {
     {
       img: 'assets/images/admin/img-course-4.png',
       type: 'paid',
-      title: 'Python Training Course',
+      title: this.uiLocale.text('Python Training Course'),
       duration: '10 Months',
       teacher: 'Garrett Winters',
       students: '+110',
@@ -64,7 +67,7 @@ export class CoursesViewComponent {
     {
       img: 'assets/images/admin/img-course-5.png',
       type: 'paid',
-      title: 'Web Designing Course',
+      title: this.uiLocale.text('Web Designing Course'),
       duration: '10 Months',
       teacher: 'Tiger Nixon',
       students: '+110',
@@ -73,7 +76,7 @@ export class CoursesViewComponent {
     {
       img: 'assets/images/admin/img-course-6.png',
       type: 'free',
-      title: 'C Training Course',
+      title: this.uiLocale.text('C Training Course'),
       duration: '10 Months',
       teacher: 'Airi Satou',
       students: '+70',
@@ -82,7 +85,7 @@ export class CoursesViewComponent {
     {
       img: 'assets/images/admin/img-course-7.png',
       type: 'free',
-      title: 'UI/UX Designing Course',
+      title: this.uiLocale.text('UI/UX Designing Course'),
       duration: '10 Months',
       teacher: 'Sonya Frost',
       students: '+150',
@@ -91,7 +94,7 @@ export class CoursesViewComponent {
     {
       img: 'assets/images/admin/img-course-8.png',
       type: 'free',
-      title: 'SEO Training Course',
+      title: this.uiLocale.text('SEO Training Course'),
       duration: '10 Months',
       teacher: 'Cedric Kelly',
       students: '+60',

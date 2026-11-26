@@ -25,11 +25,11 @@
   <div class="col-lg-5 col-md-12">
     <app-card [showHeader]="false">
       <div class="d-flex flex-column">
-        <h5 class="mb-2">Calender</h5>
+        <h5 class="mb-2">{{ 'Calender' | translate }}</h5>
         <div class="d-flex align-items-center justify-content-between mb-3">
           <p class="mb-0">
-            Aug 10, Mon
-            <span class="badge rounded-pill bg-primary f-12">Today</span>
+            {{ 'Aug 10, Mon' | translate }}
+            <span class="badge rounded-pill bg-primary f-12">{{ 'Today' | translate }}</span>
           </p>
           <div class="d-flex align-items-center gap-2">
             <a href="javascript:" class="inline-block p-2 border rounded">
@@ -58,17 +58,17 @@
     <app-activity-chart />
   </div>
   <div class="col-lg-7 col-md-12">
-    <app-card cardTitle="Latest Signup List" cardClass="table-card" [padding]="0">
+    <app-card [cardTitle]="'Latest Signup List' | translate" cardClass="table-card" [padding]="0">
       <ng-template #headerOptionsTemplate>
-        <button class="btn btn-sm btn-link-primary">View All</button>
+        <button class="btn btn-sm btn-link-primary">{{ 'View All' | translate }}</button>
       </ng-template>
       <div class="table-responsive">
         <table class="table table-hover mb-0">
           <thead>
             <tr>
-              <th>NAME</th>
-              <th>EMAIL</th>
-              <th>JOINING DATE</th>
+              <th>{{ 'NAME' | translate }}</th>
+              <th>{{ 'EMAIL' | translate }}</th>
+              <th>{{ 'JOINING DATE' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -96,15 +96,15 @@
   <div class="col-lg-5 col-md-12">
     <app-card [showHeader]="false">
       <div class="d-flex align-items-center justify-content-between mb-3">
-        <h5 class="mb-0">Notifications</h5>
+        <h5 class="mb-0">{{ 'Notifications' | translate }}</h5>
         <div ngbDropdown placement="bottom-end">
           <a class="avtar avtar-s btn-link-secondary arrow-none" ngbDropdownToggle>
             <i class="f-18" antIcon type="more" theme="outline"></i>
           </a>
           <div ngbDropdownMenu>
-            <a ngbDropdownItem href="javascript:">Today</a>
-            <a ngbDropdownItem href="javascript:">Weekly</a>
-            <a ngbDropdownItem href="javascript:">Monthly</a>
+            <a ngbDropdownItem href="javascript:">{{ 'Today' | translate }}</a>
+            <a ngbDropdownItem href="javascript:">{{ 'Weekly' | translate }}</a>
+            <a ngbDropdownItem href="javascript:">{{ 'Monthly' | translate }}</a>
           </div>
         </div>
       </div>

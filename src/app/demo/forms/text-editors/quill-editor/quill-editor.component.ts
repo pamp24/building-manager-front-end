@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 // angular import
 import { Component } from '@angular/core';
 import { CardComponent } from 'src/app/theme/shared/components/card/card.component';
@@ -9,6 +10,6 @@ import { QuillEditorComponent as QuillEditorComponent_1 } from 'ngx-quill';
   selector: 'app-quill-editor',
   templateUrl: './quill-editor.component.html',
   styleUrls: ['./quill-editor.component.scss'],
-  imports: [CardComponent, QuillEditorComponent_1]
+  imports: [TranslateModule, CardComponent, QuillEditorComponent_1]
 })
 export class QuillEditorComponent {}

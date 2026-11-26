@@ -12,7 +12,7 @@
                 class="form-control"
                 name="searchTerm"
                 [(ngModel)]="service.searchTerm"
-                placeholder="Search..."
+                [placeholder]="'Search...' | translate"
               />
             </div>
             <div class="dataTable-search d-flex align-items-center">
@@ -23,7 +23,7 @@
                 (click)="openLg(content)"
               >
                 <i class="me-2 d-flex" antIcon type="plus" theme="outline"></i>
-                <span>Add Customer</span>
+                <span>{{ 'Add Customer' | translate }}</span>
               </a>
               <a href="javascript:">
                 <i class="ms-3 f-24 text-muted" antIcon type="download" theme="outline"></i>
@@ -34,14 +34,14 @@
             <table class="table table-hover mb-0">
               <thead>
                 <tr>
-                  <th scope="col"><input class="form-check-input" type="checkbox" title="checkbox" /></th>
+                  <th scope="col"><input class="form-check-input" type="checkbox" [title]="'checkbox' | translate" /></th>
                   <th scope="col">#</th>
-                  <th scope="col" sortable="Customer-name">User Info</th>
-                  <th scope="col" sortable="contact">CONTACT</th>
-                  <th scope="col" sortable="orders">ORDERS</th>
-                  <th scope="col" sortable="spent">SPENT</th>
-                  <th scope="col" sortable="status">STATUS</th>
-                  <th scope="col" sortable="action" class="text-center">ACTIONS</th>
+                  <th scope="col" sortable="Customer-name">{{ 'User Info' | translate }}</th>
+                  <th scope="col" sortable="contact">{{ 'CONTACT' | translate }}</th>
+                  <th scope="col" sortable="orders">{{ 'ORDERS' | translate }}</th>
+                  <th scope="col" sortable="spent">{{ 'SPENT' | translate }}</th>
+                  <th scope="col" sortable="status">{{ 'STATUS' | translate }}</th>
+                  <th scope="col" sortable="action" class="text-center">{{ 'ACTIONS' | translate }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -49,7 +49,7 @@
                   <tr>
                     <td>
                       <div class="form-check">
-                        <input class="form-check-input" type="checkbox" title="checkbox" />
+                        <input class="form-check-input" type="checkbox" [title]="'checkbox' | translate" />
                       </div>
                     </td>
                     <th scope="row">{{ customer.id }}</th>
@@ -81,20 +81,25 @@
                             href="javascript:"
                             class="avatar avatar-xs btn-link-secondary"
                             (click)="openCustomer(details)"
-                            ngbTooltip="View"
+                            [ngbTooltip]="'View' | translate"
                           >
                             <i class="f-16 text-secondary d-flex" antIcon type="eye" theme="outline"></i>
                           </a>
                         </li>
                         <li class="list-inline-item align-bottom">
-                          <a href="javascript:" class="avatar avatar-xs btn-link-primary" ngbTooltip="Edit" (click)="openLg(content)">
+                          <a
+                            href="javascript:"
+                            class="avatar avatar-xs btn-link-primary"
+                            [ngbTooltip]="'Edit' | translate"
+                            (click)="openLg(content)"
+                          >
                             <i class="f-16 text-primary d-flex" antIcon type="edit" theme="outline"></i>
                           </a>
                         </li>
                         <li class="list-inline-item align-bottom">
                           <a
                             href="javascript:"
-                            ngbTooltip="Delete"
+                            [ngbTooltip]="'Delete' | translate"
                             class="avatar avatar-xs btn-link-danger"
                             (click)="service.deleteCustomer(customer.id)"
                           >
@@ -109,10 +114,16 @@
             </table>
           </div>
           <div class="d-sm-flex align-item-center justify-content-between p-3">
-            <select class="form-select" title="select item per page" style="width: auto" name="pageSize" [(ngModel)]="service.pageSize">
-              <option [ngValue]="5">5 items per page</option>
-              <option [ngValue]="10">10 items per page</option>
-              <option [ngValue]="15">15 items per page</option>
+            <select
+              class="form-select"
+              [title]="'select item per page' | translate"
+              style="width: auto"
+              name="pageSize"
+              [(ngModel)]="service.pageSize"
+            >
+              <option [ngValue]="5">{{ '5 items per page' | translate }}</option>
+              <option [ngValue]="10">{{ '10 items per page' | translate }}</option>
+              <option [ngValue]="15">{{ '15 items per page' | translate }}</option>
             </select>
             <div class="m-sm-0 mt-3">
               <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="service.page" [pageSize]="service.pageSize"></ngb-pagination>
@@ -127,7 +138,7 @@
 <!--  customer details -->
 <ng-template #details let-modal>
   <div class="modal-header justify-content-between border-0 pb-0">
-    <h5 class="mb-0">Customer Details</h5>
+    <h5 class="mb-0">{{ 'Customer Details' | translate }}</h5>
     <a href="javascript:" class="avatar avatar-s btn-link-danger" (click)="modal.close('Close click')">
       <i class="f-20 text-danger" antIcon type="close" theme="outline"></i>
     </a>
@@ -138,7 +149,7 @@
         <div class="card">
           <div class="card-body position-relative">
             <div class="position-absolute end-0 top-0">
-              <span class="badge bg-primary text-sm">Relationship</span>
+              <span class="badge bg-primary text-sm">{{ 'Relationship' | translate }}</span>
             </div>
             <div class="text-center mt-3">
               <div class="chat-avatar d-inline-flex mx-auto">
@@ -175,7 +186,7 @@
       <div class="col-lg-8">
         <div class="card">
           <div class="card-header">
-            <h5>Personal Details</h5>
+            <h5>{{ 'Personal Details' | translate }}</h5>
           </div>
           <div class="card-body">
             <ul class="list-group list-group-flush">
@@ -190,20 +201,22 @@
                 </li>
               }
               <li class="list-group-item px-0 pb-0">
-                <p class="mb-1 text-muted">Address</p>
-                <p class="mb-0">507 Sulnek Grove, Tudzovgeh, United States - 37173</p>
+                <p class="mb-1 text-muted">{{ 'Address' | translate }}</p>
+                <p class="mb-0">{{ '507 Sulnek Grove, Tudzovgeh, United States - 37173' | translate }}</p>
               </li>
             </ul>
           </div>
         </div>
         <div class="card">
           <div class="card-header">
-            <h5>About me</h5>
+            <h5>{{ 'About me' | translate }}</h5>
           </div>
           <div class="card-body">
             <p class="mb-0">
-              Hello, I’m Aaron Poole Manufacturing Director based in international company, Void jiidki me na fep juih ced gihhiwi launke cu
-              mig tujum peodpo.
+              {{
+                'Hello, I’m Aaron Poole Manufacturing Director based in international company, Void jiidki me na fep juih ced gihhiwi launke cu mig tujum peodpo.'
+                  | translate
+              }}
             </p>
           </div>
         </div>
@@ -215,8 +228,14 @@
 <!-- customer edit details -->
 <ng-template #content let-modal>
   <div class="modal-header justify-content-between">
-    <h5 class="modal-title" id="exampleModalCenterTitle">Edit Customer</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="modal.close('Close click')"></button>
+    <h5 class="modal-title" id="exampleModalCenterTitle">{{ 'Edit Customer' | translate }}</h5>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="modal"
+      [attr.aria-label]="'Close' | translate"
+      (click)="modal.close('Close click')"
+    ></button>
   </div>
   <div class="modal-body">
     <div class="row">
@@ -227,39 +246,39 @@
       </div>
       <div class="col-sm-9">
         <div class="form-group">
-          <label class="form-label">Customer Name</label>
-          <input type="text" class="form-control" placeholder="Name" />
+          <label class="form-label">{{ 'Customer Name' | translate }}</label>
+          <input type="text" class="form-control" [placeholder]="'Name' | translate" />
         </div>
         <div class="form-group">
-          <label class="form-label">Contact Number</label>
-          <input type="number" class="form-control" placeholder="Contact Number" />
+          <label class="form-label">{{ 'Contact Number' | translate }}</label>
+          <input type="number" class="form-control" [placeholder]="'Contact Number' | translate" />
         </div>
         <div class="form-group">
-          <label class="form-label">Status</label>
+          <label class="form-label">{{ 'Status' | translate }}</label>
           <select class="form-select">
-            <option>Select Status</option>
-            <option>Complicated</option>
-            <option>Single</option>
-            <option>Relationship</option>
+            <option>{{ 'Select Status' | translate }}</option>
+            <option>{{ 'Complicated' | translate }}</option>
+            <option>{{ 'Single' | translate }}</option>
+            <option>{{ 'Relationship' | translate }}</option>
           </select>
         </div>
         <div class="row">
           <div class="col-sm-6">
             <div class="form-group">
-              <label class="form-label">Total Orders</label>
-              <input type="number" class="form-control" placeholder="Order" />
+              <label class="form-label">{{ 'Total Orders' | translate }}</label>
+              <input type="number" class="form-control" [placeholder]="'Order' | translate" />
             </div>
           </div>
           <div class="col-sm-6">
             <div class="form-group">
-              <label class="form-label">Total Spent</label>
-              <input type="number" class="form-control" placeholder="Spent" />
+              <label class="form-label">{{ 'Total Spent' | translate }}</label>
+              <input type="number" class="form-control" [placeholder]="'Spent' | translate" />
             </div>
           </div>
         </div>
         <div class="form-group">
-          <label class="form-label">Customer Address</label>
-          <textarea class="form-control" rows="3" placeholder="Enter Address"></textarea>
+          <label class="form-label">{{ 'Customer Address' | translate }}</label>
+          <textarea class="form-control" rows="3" [placeholder]="'Enter Address' | translate"></textarea>
         </div>
       </div>
     </div>
@@ -267,14 +286,18 @@
   <div class="modal-footer justify-content-between">
     <ul class="list-inline me-auto mb-0">
       <li class="list-inline-item align-bottom">
-        <a href="javascript:" class="avatar avatar-s btn-link-danger w-sm-auto" data-bs-toggle="tooltip" title="Delete">
+        <a href="javascript:" class="avatar avatar-s btn-link-danger w-sm-auto" data-bs-toggle="tooltip" [title]="'Delete' | translate">
           <i class="text-danger f-18" antIcon type="delete" theme="outline"></i>
         </a>
       </li>
     </ul>
     <div class="flex-grow-1 text-end">
-      <button type="button" class="btn btn-link-danger" data-bs-dismiss="modal" (click)="modal.close('Close click')">Cancel</button>
-      <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="modal.close('Close click')">Add</button>
+      <button type="button" class="btn btn-link-danger" data-bs-dismiss="modal" (click)="modal.close('Close click')">
+        {{ 'Cancel' | translate }}
+      </button>
+      <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="modal.close('Close click')">
+        {{ 'Add' | translate }}
+      </button>
     </div>
   </div>
 </ng-template>

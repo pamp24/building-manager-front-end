@@ -1,13 +1,15 @@
-<app-card cardTitle="Κτίρια υπό διαχείριση" [padding]="0">
+<app-card [cardTitle]="'Buildings under management' | translate" [padding]="0">
   <ng-template #headerOptionsTemplate>
     <div class="d-flex flex-wrap gap-2">
-      <button *ngIf="isPropertyManager" type="button" class="btn btn-outline-primary" (click)="openBulk(bulkModal)">Μαζική Προσθήκη</button>
-      <a [routerLink]="['/pm/add']" class="btn btn-primary">Προσθήκη Κτιρίου</a>
+      <button *ngIf="isPropertyManager" type="button" class="btn btn-outline-primary" (click)="openBulk(bulkModal)">
+        {{ 'Bulk Add' | translate }}
+      </button>
+      <a [routerLink]="['/pm/add']" class="btn btn-primary">{{ 'Add Building' | translate }}</a>
     </div>
   </ng-template>
 
   <ng-container *ngIf="loading">
-    <div class="py-4">Φόρτωση...</div>
+    <div class="py-4">{{ 'Loading...' | translate }}</div>
   </ng-container>
 
   <ng-container *ngIf="!loading && error">
@@ -20,7 +22,7 @@
         <div class="col-sm-6 col-lg-4 col-xxl-3">
           <app-card [showHeader]="false" cardClass="border" blockClass="p-2">
             <div class="position-relative">
-              <img src="assets/images/admin/img-course-1.png" alt="building" class="img-fluid w-100" />
+              <img [src]="imageUrl(b.profileImageUrl)" (error)="imageError($event)" [alt]="b.name" class="building-card-image" />
               <div class="position-absolute top-0 end-0 p-2">
                 <span class="badge text-bg-light text-uppercase">{{ b.buildingCode }}</span>
               </div>
@@ -43,7 +45,9 @@
 
               <li class="list-group-item px-0 py-2">
                 <div class="d-flex align-items-center">
-                  <div class="flex-grow-1 me-2"><p class="mb-0">Όροφοι</p></div>
+                  <div class="flex-grow-1 me-2">
+                    <p class="mb-0">{{ 'Floors' | translate }}</p>
+                  </div>
                   <div class="flex-shrink-0">
                     <p class="text-muted mb-0">{{ b.floors }}</p>
                   </div>
@@ -52,7 +56,9 @@
 
               <li class="list-group-item px-0 py-2">
                 <div class="d-flex align-items-center">
-                  <div class="flex-grow-1 me-2"><p class="mb-0">Διαμερίσματα</p></div>
+                  <div class="flex-grow-1 me-2">
+                    <p class="mb-0">{{ 'Apartments' | translate }}</p>
+                  </div>
                   <div class="flex-shrink-0">
                     <p class="text-muted mb-0">{{ b.apartmentsNum }}</p>
                   </div>
@@ -61,30 +67,45 @@
 
               <li class="list-group-item px-0 py-2" *ngIf="b.company">
                 <div class="d-flex align-items-center">
-                  <div class="flex-grow-1 me-2"><p class="mb-0">Διαχειριστής</p></div>
+                  <div class="flex-grow-1 me-2">
+                    <p class="mb-0">{{ 'Administrator' | translate }}</p>
+                  </div>
                   <div class="flex-shrink-0">
                     <p class="text-muted mb-0">{{ b.company.managerName }}</p>
                   </div>
                 </div>
               </li>
             </ul>
-            <a class="btn btn-sm btn-outline-primary mb-2" [routerLink]="['/pm/buildings', b.id]">Προβολή</a>
+            <a class="btn btn-sm btn-outline-primary mb-2" [routerLink]="['/pm/buildings', b.id]">{{ 'Projection' | translate }}</a>
           </app-card>
         </div>
       }
     </div>
 
     <ng-template #empty>
-      <div class="py-4 text-muted">Δεν βρέθηκαν πολυκατοικίες για την εταιρία.</div>
+      <div class="py-4 text-muted">{{ 'No apartment buildings were found for the company.' | translate }}</div>
     </ng-template>
   </ng-container>
 </app-card>
 
 <ng-template #bulkModal let-modal>
   <div class="modal-header">
-    <h2 class="modal-title fs-5">Μαζική Προσθήκη Κτιρίων</h2>
-    <button type="button" class="btn-close" aria-label="Κλείσιμο" [disabled]="bulkSending" (click)="modal.dismiss()"></button>
+    <h2 class="modal-title fs-5">{{ 'Mass Building Addition' | translate }}</h2>
+    <button
+      type="button"
+      class="btn-close"
+      [attr.aria-label]="'Closing' | translate"
+      [disabled]="bulkSending"
+      (click)="modal.dismiss()"
+    ></button>
   </div>
   <div class="modal-body"><app-bulk-buildings #bulk (uploaded)="bulkRefresh = true" (sendingChange)="bulkSending = $event" /></div>
-  <div class="modal-footer"><button type="button" class="btn btn-secondary" [disabled]="bulkSending" (click)="modal.close()">Κλείσιμο</button><button type="button" class="btn btn-primary" [disabled]="!bulk.canUpload" (click)="bulk.upload()">{{ bulkSending ? 'Ανέβασμα...' : 'Ανέβασμα' }}</button></div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" [disabled]="bulkSending" (click)="modal.close()">
+      {{ 'Closing' | translate }}
+    </button>
+    <button type="button" class="btn btn-primary" [disabled]="!bulk.canUpload" (click)="bulk.upload()">
+      {{ bulkSending ? ('Uploading...' | translate) : ('Upload' | translate) }}
+    </button>
+  </div>
 </ng-template>

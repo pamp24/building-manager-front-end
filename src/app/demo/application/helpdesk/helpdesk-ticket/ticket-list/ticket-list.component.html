@@ -3,8 +3,8 @@
     <div class="card">
       <div class="card-body">
         <nav class="navbar justify-content-between p-0 align-items-center">
-          <h5>Λίστα Αιτημάτων</h5>
-          <div class="btn-group btn-group-sm help-filter" role="group" aria-label="button groups sm">
+          <h5>{{ 'List of Requests' | translate }}</h5>
+          <div class="btn-group btn-group-sm help-filter" role="group" [attr.aria-label]="'button groups sm' | translate">
             <a class="btn btn-light-secondary" [ngClass]="{ active: selectedView === 'sm-view' }" (click)="selectedView = 'sm-view'">
               <i class="m-0" antIcon type="appstore" theme="outline"></i>
             </a>
@@ -26,7 +26,7 @@
         <div class="card-body">
           <div class="row align-items-end">
             <div class="col-md-6">
-              <label class="form-label">Πολυκατοικία</label>
+              <label class="form-label">{{ 'Building' | translate }}</label>
               <select class="form-select" [(ngModel)]="selectedBuildingId" (change)="onBuildingChange()">
                 @for (building of buildings; track building.id) {
                   <option [ngValue]="building.id">
@@ -37,7 +37,7 @@
             </div>
 
             <div class="col-md-6">
-              <label class="form-label">Διεύθυνση Πολυκατοικίας</label>
+              <label class="form-label">{{ 'Apartment building address' | translate }}</label>
               <input type="text" class="form-control readonly-input" [value]="getSelectedBuildingAddress()" readonly />
             </div>
           </div>
@@ -48,7 +48,7 @@
     @if (loading) {
       <div class="card">
         <div class="card-body">
-          <p class="mb-0">Φόρτωση tickets...</p>
+          <p class="mb-0">{{ 'Loading tickets...' | translate }}</p>
         </div>
       </div>
     }
@@ -62,7 +62,7 @@
     @if (!loading && ticketCards.length === 0) {
       <div class="card">
         <div class="card-body">
-          <p class="mb-0">Δεν υπάρχουν tickets για εμφάνιση.</p>
+          <p class="mb-0">{{ 'There are no tickets for the show.' | translate }}</p>
         </div>
       </div>
     }
@@ -101,16 +101,16 @@
                 <div class="help-sm-hidden">
                   <ul class="list-unstyled mt-2 mb-0 text-muted d-sm-flex d-block align-items-center flex-wrap">
                     <li class="d-sm-flex align-items-center d-block mt-1 me-2">
-                      Δημιουργήθηκε από
+                      {{ 'Created by' | translate }}
                       <b class="ms-1">{{ ticket.createdByName }}</b>
                     </li>
                     <li class="d-sm-flex align-items-center d-block mt-1 me-2">
-                      Πολυκατοικία
+                      {{ 'Building' | translate }}
                       <b class="ms-1">{{ ticket.buildingName }}</b>
                     </li>
                     @if (ticket.apartmentLabel) {
                       <li class="d-sm-flex align-items-center d-block mt-1 me-2">
-                        Διαμέρισμα
+                        {{ 'Apartment' | translate }}
                         <b class="ms-1">{{ ticket.apartmentLabel }}</b>
                       </li>
                     }
@@ -127,7 +127,7 @@
 
                 <div class="help-md-hidden">
                   <div class="comment-content mb-3 p-3">
-                    <h6>Περιγραφή</h6>
+                    <h6>{{ 'Description' | translate }}</h6>
                     <p class="mb-0">
                       {{ ticket.description }}
                     </p>
@@ -141,7 +141,7 @@
                   class="me-2 btn btn-sm btn-light-primary d-flex align-items-center"
                 >
                   <i class="mx-1 d-flex" antIcon type="eye" theme="outline"></i>
-                  Προβολή
+                  {{ 'Projection' | translate }}
                 </a>
               </div>
             </div>
@@ -155,7 +155,7 @@
     <div class="right-side">
       <div class="card mb-3">
         <div class="card-header">
-          <h5>Κατηγορίες</h5>
+          <h5>{{ 'Categories' | translate }}</h5>
         </div>
         <ul class="list-group list-group-flush pb-2">
           @for (category of categorySummary; track category.name) {
@@ -185,7 +185,7 @@
           </span>
         }
       </h5>
-      <button type="button" class="btn-close" aria-label="Close" (click)="offcanvas.dismiss('Cross click')"></button>
+      <button type="button" class="btn-close" [attr.aria-label]="'Close' | translate" (click)="offcanvas.dismiss('Cross click')"></button>
     </div>
 
     <app-scrollbar [customStyle]="'calc(100vh - 90px)'">
@@ -214,29 +214,29 @@
         <div class="row">
           <div class="col">
             <div class="mb-3">
-              <h6>Αριθμός Αιτήματος</h6>
+              <h6>{{ 'Request Number' | translate }}</h6>
               <p class="mb-0">{{ selectedTicket?.ticketNumber }}</p>
             </div>
 
             <div class="mb-3">
-              <h6>Δημιουργός</h6>
+              <h6>{{ 'Creator' | translate }}</h6>
               <p class="mb-0">{{ selectedTicket?.createdByName }}</p>
             </div>
 
             <div class="mb-3">
-              <h6>Κτήριο</h6>
+              <h6>{{ 'Building' | translate }}</h6>
               <p class="mb-0">{{ selectedTicket?.buildingName }}</p>
             </div>
 
             @if (selectedTicket?.apartmentLabel) {
               <div class="mb-3">
-                <h6>Διαμέρισμα</h6>
+                <h6>{{ 'Apartment' | translate }}</h6>
                 <p class="mb-0">{{ selectedTicket?.apartmentLabel }}</p>
               </div>
             }
 
             <div class="mb-3">
-              <h6>Περιγραφή</h6>
+              <h6>{{ 'Description' | translate }}</h6>
               <p class="mb-0">{{ selectedTicket?.description }}</p>
             </div>
           </div>

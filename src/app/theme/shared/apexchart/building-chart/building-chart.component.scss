@@ -17,3 +17,14 @@
   }
 }
 
+:host {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+:host > .card {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 0;
+}

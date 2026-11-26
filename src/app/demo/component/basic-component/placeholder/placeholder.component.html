@@ -1,19 +1,19 @@
 <div class="row">
   <div class="col-sm-124">
-    <app-card cardTitle="Custom Hight">
+    <app-card [cardTitle]="'Custom Hight' | translate">
       <div class="card" [ngClass]="customClass" aria-hidden="true">
         <p class="card-text placeholder-glow">
           <span class="placeholder w-100 rounded" style="height: {{ inputHight }}px;"></span>
         </p>
       </div>
       <div>
-        <label for="exampleFormControlInput1" class="form-label">Input Custom Hight</label>
+        <label for="exampleFormControlInput1" class="form-label">{{ 'Input Custom Hight' | translate }}</label>
         <input type="number" class="form-control" id="exampleFormControlInput1" [(ngModel)]="inputHight" />
       </div>
     </app-card>
   </div>
   <div class="col-sm-12">
-    <app-card cardTitle="Header Show And Hide">
+    <app-card [cardTitle]="'Header Show And Hide' | translate">
       <div class="mb-3">
         @if (ShowHeader === true) {
           <h1 class="placeholder-glow">
@@ -22,13 +22,13 @@
         }
         <div class="form-check">
           <input class="form-check-input" type="checkbox" id="flexCheckChecked" [(ngModel)]="ShowHeader" />
-          <label class="form-check-label" for="flexCheckChecked">Show And Hide Header Title</label>
+          <label class="form-check-label" for="flexCheckChecked">{{ 'Show And Hide Header Title' | translate }}</label>
         </div>
       </div>
     </app-card>
   </div>
   <div class="col-sm-12">
-    <app-card cardTitle="Number Of Line Show">
+    <app-card [cardTitle]="'Number Of Line Show' | translate">
       <p class="placeholder-glow">
         @for (item of lines; track item) {
           <span class="placeholder w-100 col-12 mb-2" style="height: {{ lineHight }}px;"></span>
@@ -37,13 +37,13 @@
       <div class="row">
         <div class="col-sm-6">
           <div>
-            <label for="exampleFormControlInput3" class="form-label">Number Of Line Show</label>
+            <label for="exampleFormControlInput3" class="form-label">{{ 'Number Of Line Show' | translate }}</label>
             <input type="number" class="form-control" id="exampleFormControlInput3" [(ngModel)]="numberLineShow" />
           </div>
         </div>
         <div class="col-sm-6">
           <div>
-            <label for="exampleFormControlInput4" class="form-label">Line Hight Change as per Required</label>
+            <label for="exampleFormControlInput4" class="form-label">{{ 'Line Hight Change as per Required' | translate }}</label>
             <input type="number" class="form-control" id="exampleFormControlInput4" [(ngModel)]="lineHight" />
           </div>
         </div>
@@ -71,26 +71,26 @@
         <div class="row">
           <div class="col-sm-4">
             <div>
-              <label for="exampleFormControlInput4" class="form-label">Image Height</label>
+              <label for="exampleFormControlInput4" class="form-label">{{ 'Image Height' | translate }}</label>
               <input type="number" class="form-control" id="exampleFormControlInput4" [(ngModel)]="imgHeight" />
             </div>
           </div>
           <div class="col-sm-4">
             <div>
-              <label for="exampleFormControlInput4" class="form-label">Line Show</label>
+              <label for="exampleFormControlInput4" class="form-label">{{ 'Line Show' | translate }}</label>
               <input type="number" class="form-control" id="exampleFormControlInput4" [(ngModel)]="showLine" />
             </div>
           </div>
           <div class="col-sm-4">
             <div>
-              <label for="exampleFormControlInput4" class="form-label">Show Line Hight</label>
+              <label for="exampleFormControlInput4" class="form-label">{{ 'Show Line Hight' | translate }}</label>
               <input type="number" class="form-control" id="exampleFormControlInput4" [(ngModel)]="showLineHight" />
             </div>
           </div>
           <div class="col-sm-12">
             <div class="form-check mt-3">
               <input class="form-check-input" type="checkbox" id="flexCheckChecked" [(ngModel)]="ShowHeader" />
-              <label class="form-check-label" for="flexCheckChecked">Show And Hide Header Title</label>
+              <label class="form-check-label" for="flexCheckChecked">{{ 'Show And Hide Header Title' | translate }}</label>
             </div>
           </div>
         </div>

@@ -16,7 +16,6 @@ import { NavigationItem } from 'src/app/theme/shared/models/navigation';
   styleUrls: ['./nav-item.component.scss']
 })
 export class NavItemComponent implements OnInit {
-  
   private location = inject(Location);
   private authenticationService = inject(AuthenticationService);
 
@@ -42,7 +41,7 @@ export class NavItemComponent implements OnInit {
         this.isEnabled = item.role.includes(currentUserRole);
       } else {
         this.isEnabled = item.role === currentUserRole;
-      } 
+      }
     }
     // Αν όχι, πάμε να δούμε μήπως υπάρχει περιορισμός στον parent
     else if (parentRole && parentRole.length > 0) {

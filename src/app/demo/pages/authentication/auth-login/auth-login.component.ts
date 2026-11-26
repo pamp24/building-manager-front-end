@@ -1,9 +1,10 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // Angular import
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { Router, ActivatedRoute } from '@angular/router';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
+
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 // project import
@@ -24,6 +25,8 @@ import { UserService } from 'src/app/theme/shared/service';
   styleUrls: ['./auth-login.component.scss']
 })
 export class AuthLoginComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private formBuilder = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -55,10 +58,8 @@ export class AuthLoginComponent implements OnInit {
       rememberMe: [true]
     });
 
-    if (window.location.pathname !== '/auth/login') {
-      if (this.authenticationService.currentUserValue) {
-        this.router.navigate(['/dashboard/default']);
-      }
+    if (this.authenticationService.currentUserValue && this.authenticationService.isLoggedIn()) {
+      this.router.navigateByUrl(this.authenticationService.getDefaultRouteForRole());
     }
 
     // get return url from route parameters or default to '/'
@@ -84,7 +85,7 @@ export class AuthLoginComponent implements OnInit {
     this.errorMsg = [];
 
     if (this.loginForm.invalid) {
-      this.error = 'Παρακαλώ συμπληρώστε email και κωδικό πρόσβασης.';
+      this.error = this.uiLocale.text('Please fill in email and password.');
       return;
     }
 
@@ -122,7 +123,7 @@ export class AuthLoginComponent implements OnInit {
           return;
         }
 
-        this.router.navigate(['/dashboard/default']);
+        this.router.navigateByUrl(this.authenticationService.getDefaultRouteForRole(response.user.role));
       },
       error: (err) => {
         this.loading = false;
@@ -135,7 +136,9 @@ export class AuthLoginComponent implements OnInit {
     if (typeof err === 'string') {
       try {
         const parsed = JSON.parse(err);
-        return parsed.businessErrorDescription || parsed.error || parsed.message || 'Παρουσιάστηκε σφάλμα κατά τη σύνδεση.';
+        return (
+          parsed.businessErrorDescription || parsed.error || parsed.message || this.uiLocale.text('An error occurred while connecting.')
+        );
       } catch {
         return err;
       }
@@ -151,15 +154,20 @@ export class AuthLoginComponent implements OnInit {
         }
       }
 
-      return err.error.businessErrorDescription || err.error.error || err.error.message || 'Παρουσιάστηκε σφάλμα κατά τη σύνδεση.';
+      return (
+        err.error.businessErrorDescription ||
+        err.error.error ||
+        err.error.message ||
+        this.uiLocale.text('An error occurred while connecting.')
+      );
     }
 
-    return err?.businessErrorDescription || err?.message || 'Παρουσιάστηκε σφάλμα κατά τη σύνδεση. Παρακαλώ δοκιμάστε ξανά.';
+    return err?.businessErrorDescription || err?.message || this.uiLocale.text('An error occurred while connecting. Please try again.');
   }
 
   socialMedia = [
-    { name: 'Google', logo: 'google.svg' },
-    { name: 'Twitter', logo: 'twitter.svg' },
-    { name: 'Facebook', logo: 'facebook.svg' }
+    { name: this.uiLocale.text('Google'), logo: 'google.svg' },
+    { name: this.uiLocale.text('Twitter'), logo: 'twitter.svg' },
+    { name: this.uiLocale.text('Facebook'), logo: 'facebook.svg' }
   ];
 }

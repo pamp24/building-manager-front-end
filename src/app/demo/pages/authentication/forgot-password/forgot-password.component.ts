@@ -21,17 +21,16 @@ export class ForgotPasswordComponent {
 
   constructor(private router: Router) {}
 
-sendResetEmail() {
-  this.authenticationService.sendResetPasswordEmail(this.email).subscribe({
-    next: () => {
-      console.log('Email αποστάλθηκε επιτυχώς');
-      this.emailSent = true;
-      this.router.navigate(['/auth/check-email']); 
-    },
-    error: (err) => {
-      console.error('Σφάλμα κατά την αποστολή:', err);
-    }
-  });
-}
-
+  sendResetEmail() {
+    this.authenticationService.sendResetPasswordEmail(this.email).subscribe({
+      next: () => {
+        console.log('Email αποστάλθηκε επιτυχώς');
+        this.emailSent = true;
+        this.router.navigate(['/auth/check-email']);
+      },
+      error: (err) => {
+        console.error('Σφάλμα κατά την αποστολή:', err);
+      }
+    });
+  }
 }

@@ -5,12 +5,14 @@
       <div class="row w-100">
         <div class="col-sm-6 col-xs-12">
           <div class="info-section">
-            <h2>Καλώς Ήρθατε στο Building Manager</h2>
+            <h2>{{ 'Welcome to Building Manager' | translate }}</h2>
             <h6 class="my-3 f-w-400">
-              Πάρτε τον έλεγχο των κοινοχρήστων σας με το Building Manager. Παρακολουθήστε την πρόοδο, διαχειριστείτε τις εργασίες και
-              επικοινωνήστε με τους ενοίκους εύκολα και αποτελεσματικά.
+              {{
+                'Take control of your shared users with Building Manager. Track progress, manage tasks and communicate with tenants easily and efficiently.'
+                  | translate
+              }}
             </h6>
-            <button routerLink="/dashboard/analytics" class="btn btn-outline-light">Δείτε Περισσότερα</button>
+            <button routerLink="/dashboard/analytics" class="btn btn-outline-light">{{ 'See More' | translate }}</button>
           </div>
         </div>
         <div class="col-sm-6 col-xs-12">
@@ -28,8 +30,7 @@
 
 <div class="row mt-4">
   <div class="col-sm-12">
-    <app-card cardTitle="Έλεγχος Στοιχείων">
-      
+    <app-card [cardTitle]="'Data Control' | translate">
       <ng-container *ngIf="currentStep() === 1">
         <app-role-form (actionSelected)="onActionSelected($event)"></app-role-form>
       </ng-container>

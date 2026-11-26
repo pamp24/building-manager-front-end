@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 import { Component, EventEmitter, Input, OnChanges, Output, inject } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -23,6 +24,8 @@ import { ApartmentDTO } from 'src/app/theme/shared/models/apartmentDTO';
   providers: [DecimalPipe]
 })
 export class StatementListTableComponent implements OnChanges {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private iconService = inject(IconService);
 
   @Input() statements: CommonExpenseStatement[] = [];
@@ -117,22 +120,22 @@ export class StatementListTableComponent implements OnChanges {
   }
 
   translateStatus(status: string | undefined, isPaid?: boolean): string {
-    if (isPaid) return 'Πληρώθηκε';
+    if (isPaid) return this.uiLocale.text('It was paid');
     switch (status) {
       case 'PAID':
-        return 'Πληρώθηκε';
+        return this.uiLocale.text('It was paid');
       case 'ISSUED':
-        return 'Τρέχων';
+        return this.uiLocale.text('Current');
       case 'EXPIRED':
-        return 'Έληξε';
+        return this.uiLocale.text("It's over");
       case 'CLOSED':
-        return 'Ακυρώθηκε';
+        return this.uiLocale.text('Canceled');
       case 'DRAFT':
-        return 'Πρόχειρο';
+        return this.uiLocale.text('Draft');
       case 'PARTIALLY_PAID':
-        return 'Μερικώς Πληρωμένο';
+        return this.uiLocale.text('Partially Paid');
       case 'PENDING':
-        return 'Εκκρεμεί';
+        return this.uiLocale.text('It is pending');
       default:
         return status ?? '';
     }
@@ -141,13 +144,13 @@ export class StatementListTableComponent implements OnChanges {
   translatePaymentMethod(method: string): string {
     switch (method) {
       case 'CASH':
-        return 'Μετρητά';
+        return this.uiLocale.text('Cash');
       case 'BANK_TRANSFER':
-        return 'Τραπεζική μεταφορά';
+        return this.uiLocale.text('Bank transfer');
       case 'CARD':
-        return 'Κάρτα';
+        return this.uiLocale.text('Card');
       case 'ONLINE':
-        return 'Ηλεκτρονική πληρωμή';
+        return this.uiLocale.text('Electronic payment');
       default:
         return '-';
     }
@@ -170,7 +173,7 @@ export class StatementListTableComponent implements OnChanges {
   onDelete(statement: CommonExpenseStatement) {
     if (!statement.id) return;
 
-    const confirmed = confirm(`Είσαι σίγουρος ότι θέλεις να ακυρώσεις το παραστατικό ${statement.code};`);
+    const confirmed = confirm(this.uiLocale.text('Are you sure you want to cancel the {{p0}} document?', { p0: statement.code }));
     if (!confirmed) return;
 
     this.commonStatementService.deleteStatement(statement.id).subscribe({
@@ -179,11 +182,11 @@ export class StatementListTableComponent implements OnChanges {
         statement.active = false;
         this.applyFilters();
         this.refreshRequested.emit();
-        alert('Το παραστατικό ακυρώθηκε επιτυχώς.');
+        alert(this.uiLocale.text('The document was successfully cancelled.'));
       },
       error: (err) => {
         console.error('Σφάλμα διαγραφής:', err);
-        alert('Παρουσιάστηκε σφάλμα κατά την ακύρωση του παραστατικού.');
+        alert(this.uiLocale.text('An error occurred while canceling the document.'));
       }
     });
   }
@@ -222,7 +225,7 @@ export class StatementListTableComponent implements OnChanges {
 
   onEditUser(payment: StatementUserPaymentDTO): void {
     if (payment.status === 'PAID') {
-      alert('Ο χρήστης έχει ήδη εξοφλήσει πλήρως αυτό το παραστατικό.');
+      alert(this.uiLocale.text('The user has already fully paid for this document.'));
       return;
     }
 
@@ -251,7 +254,7 @@ export class StatementListTableComponent implements OnChanges {
                   next: (updatedStatements) => {
                     this.statements = updatedStatements;
                     this.applyFilters();
-                    alert('Η πληρωμή καταχωρήθηκε με επιτυχία!');
+                    alert(this.uiLocale.text('Payment submitted successfully!'));
                   },
                   error: (err) => console.error('Σφάλμα κατά την επαναφόρτωση statements:', err),
                   complete: () => (this.paymentsLoading = false)

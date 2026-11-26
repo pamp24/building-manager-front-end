@@ -1,60 +1,60 @@
 <div class="row">
   <div class="col-lg-6">
-    <app-card cardTitle="Simple Action Bar" footerClass="border-0 pt-0">
+    <app-card [cardTitle]="'Simple Action Bar' | translate" footerClass="border-0 pt-0">
       <form>
         <div class="form-group mb-0">
-          <label class="form-label">Name:</label>
-          <input type="email" class="form-control" placeholder="Enter Name" />
-          <small class="form-text text-muted">Please enter your Name</small>
+          <label class="form-label">{{ 'Name:' | translate }}</label>
+          <input type="email" class="form-control" [placeholder]="'Enter Name' | translate" />
+          <small class="form-text text-muted">{{ 'Please enter your Name' | translate }}</small>
         </div>
       </form>
       <ng-template #footerTemplate>
-        <button class="btn btn-primary me-2">Submit</button>
-        <button class="btn btn-secondary">Clear</button>
+        <button class="btn btn-primary me-2">{{ 'Submit' | translate }}</button>
+        <button class="btn btn-secondary">{{ 'Clear' | translate }}</button>
       </ng-template>
     </app-card>
   </div>
   <div class="col-lg-6">
-    <app-card cardTitle="Right Align Action Bar" footerClass="text-end border-0 pt-0">
+    <app-card [cardTitle]="'Right Align Action Bar' | translate" footerClass="text-end border-0 pt-0">
       <form>
         <div class="form-group mb-0">
-          <label class="form-label">Name:</label>
-          <input type="email" class="form-control" placeholder="Enter Name" />
-          <small class="form-text text-muted">Please enter your Name</small>
+          <label class="form-label">{{ 'Name:' | translate }}</label>
+          <input type="email" class="form-control" [placeholder]="'Enter Name' | translate" />
+          <small class="form-text text-muted">{{ 'Please enter your Name' | translate }}</small>
         </div>
       </form>
       <ng-template #footerTemplate>
-        <button class="btn btn-primary me-2">Submit</button>
-        <button class="btn btn-secondary">Clear</button>
+        <button class="btn btn-primary me-2">{{ 'Submit' | translate }}</button>
+        <button class="btn btn-secondary">{{ 'Clear' | translate }}</button>
       </ng-template>
     </app-card>
   </div>
   <div class="col-lg-6">
-    <app-card cardTitle="Action Button with Link" footerClass="text-end border-0 pt-0">
+    <app-card [cardTitle]="'Action Button with Link' | translate" footerClass="text-end border-0 pt-0">
       <form>
         <div class="form-group mb-0">
-          <label class="form-label">Name:</label>
-          <input type="email" class="form-control" placeholder="Enter Name" />
-          <small class="form-text text-muted">Please enter your Name</small>
+          <label class="form-label">{{ 'Name:' | translate }}</label>
+          <input type="email" class="form-control" [placeholder]="'Enter Name' | translate" />
+          <small class="form-text text-muted">{{ 'Please enter your Name' | translate }}</small>
         </div>
       </form>
       <ng-template #footerTemplate>
-        <button type="reset" class="btn btn-primary">Submit</button>
+        <button type="reset" class="btn btn-primary">{{ 'Submit' | translate }}</button>
         <span class="ms-2">
-          or
-          <a href="javascript:" class="ms-2">Clear</a>
+          {{ 'or' | translate }}
+          <a href="javascript:" class="ms-2">{{ 'Clear' | translate }}</a>
         </span>
       </ng-template>
     </app-card>
   </div>
   <div class="col-lg-6">
-    <app-card cardTitle="Horizontal Form" cardClass="action-footer" footerClass="bg-gray-100 border-0">
+    <app-card [cardTitle]="'Horizontal Form' | translate" cardClass="action-footer" footerClass="bg-gray-100 border-0">
       <form>
         <div class="form-group row mb-0">
-          <label class="col-lg-4 col-form-label">Name:</label>
+          <label class="col-lg-4 col-form-label">{{ 'Name:' | translate }}</label>
           <div class="col-lg-6">
-            <input type="email" class="form-control" placeholder="Enter Name" />
-            <small class="form-text text-muted">Please enter your Name</small>
+            <input type="email" class="form-control" [placeholder]="'Enter Name' | translate" />
+            <small class="form-text text-muted">{{ 'Please enter your Name' | translate }}</small>
           </div>
         </div>
       </form>
@@ -62,30 +62,30 @@
         <div class="row">
           <label class="col-lg-4"></label>
           <div class="col-lg-8">
-            <button class="btn btn-primary me-2">Submit</button>
-            <button class="btn btn-secondary">Clear</button>
+            <button class="btn btn-primary me-2">{{ 'Submit' | translate }}</button>
+            <button class="btn btn-secondary">{{ 'Clear' | translate }}</button>
           </div>
         </div>
       </ng-template>
     </app-card>
   </div>
   <div class="col-lg-6">
-    <app-card cardTitle="Layout With Side Action Button" footerClass=" border-0 pt-0">
+    <app-card [cardTitle]="'Layout With Side Action Button' | translate" footerClass=" border-0 pt-0">
       <form>
         <div class="form-group">
-          <label class="form-label">Name:</label>
-          <input type="email" class="form-control" placeholder="Enter Name" />
-          <small class="form-text text-muted">Please enter your Name</small>
+          <label class="form-label">{{ 'Name:' | translate }}</label>
+          <input type="email" class="form-control" [placeholder]="'Enter Name' | translate" />
+          <small class="form-text text-muted">{{ 'Please enter your Name' | translate }}</small>
         </div>
       </form>
       <ng-template #footerTemplate>
         <div class="row">
           <div class="col-lg-6">
-            <button type="reset" class="btn btn-primary me-2">Save</button>
-            <button type="reset" class="btn btn-secondary">Clear</button>
+            <button type="reset" class="btn btn-primary me-2">{{ 'Save' | translate }}</button>
+            <button type="reset" class="btn btn-secondary">{{ 'Clear' | translate }}</button>
           </div>
           <div class="col-lg-6 text-end">
-            <button type="reset" class="btn btn-danger">Delete</button>
+            <button type="reset" class="btn btn-danger">{{ 'Delete' | translate }}</button>
           </div>
         </div>
       </ng-template>
@@ -93,32 +93,32 @@
   </div>
   <div class="col-lg-6">
     <app-card
-      cardTitle="Top & Bottom Actions Bars"
+      [cardTitle]="'Top &amp; Bottom Actions Bars' | translate"
       cardClass="action-footer"
       blockClass="p-0"
       footerClass="text-center bg-gray-100 border-0"
     >
       <div class="card-body border-bottom">
         <div class="row align-items-center">
-          <div class="col-lg-6">Top Actions:</div>
+          <div class="col-lg-6">{{ 'Top Actions:' | translate }}</div>
           <div class="col-lg-6 text-sm-end mt-3 mt-sm-0">
-            <button type="reset" class="btn btn-primary me-2">Submit</button>
-            <button type="reset" class="btn btn-secondary">Clear</button>
+            <button type="reset" class="btn btn-primary me-2">{{ 'Submit' | translate }}</button>
+            <button type="reset" class="btn btn-secondary">{{ 'Clear' | translate }}</button>
           </div>
         </div>
       </div>
       <div class="card-body">
         <form>
           <div class="form-group mb-0">
-            <label class="form-label">Name:</label>
-            <input type="email" class="form-control" placeholder="Enter Name" />
-            <small class="form-text text-muted">Please enter your Name</small>
+            <label class="form-label">{{ 'Name:' | translate }}</label>
+            <input type="email" class="form-control" [placeholder]="'Enter Name' | translate" />
+            <small class="form-text text-muted">{{ 'Please enter your Name' | translate }}</small>
           </div>
         </form>
       </div>
       <ng-template #footerTemplate>
-        <button class="btn btn-primary me-2">Submit</button>
-        <button class="btn btn-secondary">Clear</button>
+        <button class="btn btn-primary me-2">{{ 'Submit' | translate }}</button>
+        <button class="btn btn-secondary">{{ 'Clear' | translate }}</button>
       </ng-template>
     </app-card>
   </div>

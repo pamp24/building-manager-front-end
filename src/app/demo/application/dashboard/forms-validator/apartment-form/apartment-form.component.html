@@ -2,88 +2,88 @@
   <div formArrayName="apartments">
     <div *ngFor="let group of apartments.controls; let i = index" [formGroupName]="i" class="card shadow-sm mb-4">
       <div class="card-header bg-light d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">Διαμέρισμα {{ i + 1 }}</h5>
+        <h5 class="mb-0">{{ 'Apartment' | translate }} {{ i + 1 }}</h5>
         <button *ngIf="apartments.length > 1" type="button" class="btn btn-sm btn-outline-danger" (click)="removeApartment(i)">
           <i class="bi bi-trash"></i>
-          Αφαίρεση
+          {{ 'Removal' | translate }}
         </button>
       </div>
 
       <div class="card-body">
         <div class="row g-3">
           <div class="col-md-4">
-            <label class="form-label">Όνομα Ιδιοκτήτη</label>
+            <label class="form-label">{{ 'Name of Owner' | translate }}</label>
             <input class="form-control" formControlName="ownerFirstName" [readonly]="group.get('isManagerHouse')?.value" />
           </div>
           <div class="col-md-4">
-            <label class="form-label">Επώνυμο Ιδιοκτήτη</label>
+            <label class="form-label">{{ "Owner's Last Name" | translate }}</label>
             <input class="form-control" formControlName="ownerLastName" [readonly]="group.get('isManagerHouse')?.value" />
           </div>
 
           <div class="col-md-4">
-            <label class="form-label">Ενοικιάζεται;</label>
+            <label class="form-label">{{ 'Is it for rent?' | translate }}</label>
             <select class="form-select" formControlName="isRented">
-              <option [ngValue]="null">Επιλέξτε</option>
-              <option [ngValue]="true">Ναι</option>
-              <option [ngValue]="false">Όχι</option>
+              <option [ngValue]="null">{{ 'Choose' | translate }}</option>
+              <option [ngValue]="true">{{ 'Yes' | translate }}</option>
+              <option [ngValue]="false">{{ 'Nope' | translate }}</option>
             </select>
           </div>
 
           <ng-container *ngIf="group.get('isRented')?.value === true">
             <div class="col-md-4">
-              <label class="form-label">Όνομα Ενοικιαστή</label>
+              <label class="form-label">{{ 'Tenant Name' | translate }}</label>
               <input class="form-control" formControlName="residentFirstName" />
             </div>
             <div class="col-md-4">
-              <label class="form-label">Επώνυμο Ενοικιαστή</label>
+              <label class="form-label">{{ 'Name of Tenant' | translate }}</label>
               <input class="form-control" formControlName="residentLastName" />
             </div>
           </ng-container>
 
           <div class="col-md-4">
-            <label class="form-label">Αριθμός Διαμερίσματος</label>
+            <label class="form-label">{{ 'Apartment Number' | translate }}</label>
             <input class="form-control" formControlName="apartmentNumber" />
           </div>
           <div class="col-md-4">
-            <label class="form-label">Όροφος</label>
+            <label class="form-label">{{ 'Floor' | translate }}</label>
             <select class="form-select" formControlName="floor">
-              <option value="">Επιλέξτε</option>
+              <option value="">{{ 'Choose' | translate }}</option>
 
               <option *ngFor="let f of floorOptions; trackBy: trackByFloor" [value]="f">
-                {{ f }}
+                {{ f | translate }}
               </option>
             </select>
           </div>
           <div class="col-md-4">
-            <label class="form-label">Τετραγωνικά Μέτρα</label>
+            <label class="form-label">{{ 'Square Meters' | translate }}</label>
             <input class="form-control" type="number" formControlName="sqMetersApart" />
           </div>
 
           <div class="col-md-4">
-            <label class="form-label">Διαθέτει Parking</label>
+            <label class="form-label">{{ 'It has Parking' | translate }}</label>
             <select class="form-select" formControlName="hasParking">
-              <option [ngValue]="null">Επιλέξτε</option>
-              <option [ngValue]="true">Ναι</option>
-              <option [ngValue]="false">Όχι</option>
+              <option [ngValue]="null">{{ 'Choose' | translate }}</option>
+              <option [ngValue]="true">{{ 'Yes' | translate }}</option>
+              <option [ngValue]="false">{{ 'Nope' | translate }}</option>
             </select>
           </div>
           <ng-container *ngIf="group.get('hasParking')?.value === true">
             <div class="col-md-4">
-              <label class="form-label">Αριθμός Θέσης Parking</label>
+              <label class="form-label">{{ 'Parking Space Number' | translate }}</label>
               <input class="form-control" formControlName="parkingSlot" />
             </div>
           </ng-container>
 
           <div class="col-md-4">
-            <label class="form-label">Χιλιοστά Κοινοχρήστων</label>
+            <label class="form-label">{{ 'Thousands of Users' | translate }}</label>
             <input type="number" class="form-control" formControlName="commonPercent" />
           </div>
           <div class="col-md-4">
-            <label class="form-label">Χιλιοστά Ασανσέρ</label>
+            <label class="form-label">{{ 'Elevator kilometers' | translate }}</label>
             <input type="number" class="form-control" formControlName="elevatorPercent" />
           </div>
           <div class="col-md-4">
-            <label class="form-label">Χιλιοστά Θέρμανσης</label>
+            <label class="form-label">{{ 'Kilometers of Heating' | translate }}</label>
             <input type="number" class="form-control" formControlName="heatingPercent" />
           </div>
         </div>
@@ -97,15 +97,15 @@
                 formControlName="hasStorage"
                 [disabled]="!group.get('hasStorage')?.value && currentUsedStorages >= storageLimit"
               />
-              <label class="form-check-label">Διαθέτει Αποθήκη</label>
+              <label class="form-check-label">{{ 'It has a warehouse' | translate }}</label>
             </div>
             <small class="text-danger" *ngIf="!group.get('hasStorage')?.value && currentUsedStorages >= storageLimit">
-              Το όριο αποθηκών έχει καλυφθεί.
+              {{ 'The storage limit has been reached.' | translate }}
             </small>
           </div>
           <ng-container *ngIf="group.get('hasStorage')?.value">
             <div class="col-md-4">
-              <label class="form-label">Αριθμός Αποθήκης</label>
+              <label class="form-label">{{ 'Warehouse Number' | translate }}</label>
               <input class="form-control" formControlName="storageSlot" />
             </div>
           </ng-container>
@@ -115,7 +115,7 @@
           <div class="col-md-4 mt-3">
             <div class="form-check">
               <input type="checkbox" class="form-check-input" formControlName="isManagerHouse" />
-              <label class="form-check-label">Διαμέρισμα Διαχειριστή</label>
+              <label class="form-check-label">{{ 'Admin Apartment' | translate }}</label>
             </div>
           </div>
         </ng-container>
@@ -128,14 +128,14 @@
   </div>
 
   <div class="d-flex justify-content-end gap-2 mt-4">
-    <button type="button" class="btn btn-secondary" (click)="onBack()">Άκυρο</button>
+    <button type="button" class="btn btn-secondary" (click)="onBack()">{{ 'Invalid' | translate }}</button>
     <button type="button" class="btn btn-outline-primary" (click)="addApartment()">
       <i class="bi bi-plus-circle"></i>
-      Προσθήκη Διαμερίσματος
+      {{ 'Add Apartment' | translate }}
     </button>
     <button type="submit" class="btn btn-success">
       <i class="bi bi-check-circle"></i>
-      Ολοκλήρωση
+      {{ 'Completion' | translate }}
     </button>
   </div>
 </form>

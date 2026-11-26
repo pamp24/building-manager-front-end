@@ -7,5 +7,5 @@ export class MantisConfig {
   static isDarkMode = false; // false, true
   static isBox_container = true; // false, true
   static font_family = 'public-sans'; // public-sans, Roboto, Poppins, Inter
-  static i18n = 'gr'; // en, ro, fr, cn
+  static i18n = 'gr'; // gr, en, fr, cn, de, es, he
 }

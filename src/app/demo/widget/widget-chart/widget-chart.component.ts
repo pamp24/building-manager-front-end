@@ -1,5 +1,7 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component } from '@angular/core';
 // angular import
-import { Component } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 
 // project import
@@ -35,10 +37,12 @@ import { BuildingPendingCardComponent } from '../../../theme/shared/apexchart/bu
   styleUrls: ['./widget-chart.component.scss']
 })
 export class WidgetChartComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   // private props
   channels = [
     {
-      title: 'Top Channels',
+      title: this.uiLocale.text('Top Channels'),
       icon: 'ti ti-device-analytics',
       background: 'text-secondary bg-light-secondary',
       time: 'Today, 2:00 AM',
@@ -46,7 +50,7 @@ export class WidgetChartComponent {
       percentage: '35%'
     },
     {
-      title: 'Top Pages',
+      title: this.uiLocale.text('Top Pages'),
       icon: 'ti ti-file-text',
       background: 'text-primary bg-light-primary',
       time: 'Today, 6:00 AM',

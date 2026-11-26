@@ -1,7 +1,7 @@
 <div class="modal-header">
-  <h5 class="modal-title">Επεξεργασία Διαμερίσματος</h5>
+  <h5 class="modal-title">{{ 'Edit Apartment' | translate }}</h5>
 
-  <button type="button" class="btn-close" aria-label="Κλείσιμο" [disabled]="isSaving" (click)="cancel()"></button>
+  <button type="button" class="btn-close" [attr.aria-label]="'Closing' | translate" [disabled]="isSaving" (click)="cancel()"></button>
 </div>
 
 <form *ngIf="form" [formGroup]="form" (ngSubmit)="save()">
@@ -12,74 +12,74 @@
 
     <div class="row g-3">
       <div class="col-md-6">
-        <label class="form-label">Όνομα Ιδιοκτήτη</label>
+        <label class="form-label">{{ 'Name of Owner' | translate }}</label>
 
         <input type="text" class="form-control" formControlName="ownerFirstName" />
 
         <div class="text-danger small mt-1" *ngIf="form.get('ownerFirstName')?.touched && form.get('ownerFirstName')?.hasError('required')">
-          Το όνομα ιδιοκτήτη είναι υποχρεωτικό.
+          {{ 'Owner name is required.' | translate }}
         </div>
 
         <div
           class="text-danger small mt-1"
           *ngIf="form.get('ownerFirstName')?.touched && form.get('ownerFirstName')?.hasError('minlength')"
         >
-          Το όνομα πρέπει να έχει τουλάχιστον 3 χαρακτήρες.
+          {{ 'The name must have at least 3 characters.' | translate }}
         </div>
       </div>
 
       <div class="col-md-6">
-        <label class="form-label">Επώνυμο Ιδιοκτήτη</label>
+        <label class="form-label">{{ "Owner's Last Name" | translate }}</label>
 
         <input type="text" class="form-control" formControlName="ownerLastName" />
 
         <div class="text-danger small mt-1" *ngIf="form.get('ownerLastName')?.touched && form.get('ownerLastName')?.hasError('required')">
-          Το επώνυμο ιδιοκτήτη είναι υποχρεωτικό.
+          {{ "Owner's last name is required." | translate }}
         </div>
       </div>
 
       <div class="col-md-4">
-        <label class="form-label">Ενοικιάζεται;</label>
+        <label class="form-label">{{ 'Is it for rent?' | translate }}</label>
 
         <select class="form-select" formControlName="isRented">
-          <option value="Ναι">Ναι</option>
-          <option value="Όχι">Όχι</option>
+          <option value="Ναι">{{ 'Yes' | translate }}</option>
+          <option value="Όχι">{{ 'Nope' | translate }}</option>
         </select>
       </div>
 
       <ng-container *ngIf="form.get('isRented')?.value === 'Ναι'">
         <div class="col-md-4">
-          <label class="form-label">Όνομα Ενοικιαστή</label>
+          <label class="form-label">{{ 'Tenant Name' | translate }}</label>
 
           <input type="text" class="form-control" formControlName="residentFirstName" />
 
           <div class="text-danger small mt-1" *ngIf="form.get('residentFirstName')?.touched && form.get('residentFirstName')?.invalid">
-            Το όνομα ενοικιαστή είναι υποχρεωτικό.
+            {{ 'Tenant name is required.' | translate }}
           </div>
         </div>
 
         <div class="col-md-4">
-          <label class="form-label">Επώνυμο Ενοικιαστή</label>
+          <label class="form-label">{{ 'Name of Tenant' | translate }}</label>
 
           <input type="text" class="form-control" formControlName="residentLastName" />
 
           <div class="text-danger small mt-1" *ngIf="form.get('residentLastName')?.touched && form.get('residentLastName')?.invalid">
-            Το επώνυμο ενοικιαστή είναι υποχρεωτικό.
+            {{ "Tenant's last name is mandatory." | translate }}
           </div>
         </div>
       </ng-container>
 
       <div class="col-md-4">
-        <label class="form-label">Αριθμός Διαμερίσματος</label>
+        <label class="form-label">{{ 'Apartment Number' | translate }}</label>
 
         <input type="text" class="form-control" formControlName="apartmentNumber" />
       </div>
 
       <div class="col-md-4">
-        <label class="form-label">Όροφος</label>
+        <label class="form-label">{{ 'Floor' | translate }}</label>
 
         <select class="form-select" formControlName="floor">
-          <option value="">Επιλέξτε</option>
+          <option value="">{{ 'Choose' | translate }}</option>
 
           <option *ngFor="let floor of floorOptions" [value]="floor">
             {{ floor }}
@@ -88,66 +88,68 @@
       </div>
 
       <div class="col-md-4">
-        <label class="form-label">Τετραγωνικά Μέτρα</label>
+        <label class="form-label">{{ 'Square Meters' | translate }}</label>
 
         <input type="number" class="form-control" formControlName="sqMetersApart" />
       </div>
 
       <div class="col-md-4">
-        <label class="form-label">Διαθέτει Parking</label>
+        <label class="form-label">{{ 'It has Parking' | translate }}</label>
 
         <select class="form-select" formControlName="hasParking">
-          <option value="Ναι">Ναι</option>
-          <option value="Όχι">Όχι</option>
+          <option value="Ναι">{{ 'Yes' | translate }}</option>
+          <option value="Όχι">{{ 'Nope' | translate }}</option>
         </select>
 
-        <small class="text-danger" *ngIf="form.get('hasParking')?.disabled">Δεν υπάρχουν διαθέσιμες θέσεις parking.</small>
+        <small class="text-danger" *ngIf="form.get('hasParking')?.disabled">
+          {{ 'There are no parking spaces available.' | translate }}
+        </small>
       </div>
 
       <div class="col-md-4" *ngIf="form.get('hasParking')?.value === 'Ναι'">
-        <label class="form-label">Αριθμός Θέσης Parking</label>
+        <label class="form-label">{{ 'Parking Space Number' | translate }}</label>
 
         <input type="text" class="form-control" formControlName="parkingSlot" />
       </div>
 
       <div class="col-md-4">
-        <label class="form-label">Διαθέτει Αποθήκη</label>
+        <label class="form-label">{{ 'It has a warehouse' | translate }}</label>
 
         <div class="form-check mt-2">
           <input id="editHasStorage" type="checkbox" class="form-check-input" formControlName="hasStorage" />
 
-          <label class="form-check-label" for="editHasStorage">Ναι</label>
+          <label class="form-check-label" for="editHasStorage">{{ 'Yes' | translate }}</label>
         </div>
 
-        <small class="text-danger" *ngIf="form.get('hasStorage')?.disabled">Δεν υπάρχουν διαθέσιμες αποθήκες.</small>
+        <small class="text-danger" *ngIf="form.get('hasStorage')?.disabled">{{ 'No warehouses available.' | translate }}</small>
       </div>
 
       <div class="col-md-4" *ngIf="form.get('hasStorage')?.value">
-        <label class="form-label">Αριθμός Αποθήκης</label>
+        <label class="form-label">{{ 'Warehouse Number' | translate }}</label>
 
         <input type="text" class="form-control" formControlName="storageSlot" />
       </div>
 
       <div class="col-md-4">
-        <label class="form-label">Χιλιοστά Κοινοχρήστων</label>
+        <label class="form-label">{{ 'Thousands of Users' | translate }}</label>
 
         <input type="number" class="form-control" formControlName="commonPercent" />
       </div>
 
       <div class="col-md-4">
-        <label class="form-label">Χιλιοστά Ασανσέρ</label>
+        <label class="form-label">{{ 'Elevator kilometers' | translate }}</label>
 
         <input type="number" class="form-control" formControlName="elevatorPercent" />
       </div>
 
       <div class="col-md-4">
-        <label class="form-label">Χιλιοστά Θέρμανσης</label>
+        <label class="form-label">{{ 'Kilometers of Heating' | translate }}</label>
 
         <input type="number" class="form-control" formControlName="heatingPercent" />
       </div>
 
       <div class="col-12">
-        <label class="form-label">Περιγραφή</label>
+        <label class="form-label">{{ 'Description' | translate }}</label>
 
         <textarea class="form-control" rows="3" formControlName="apDescription"></textarea>
       </div>
@@ -155,12 +157,12 @@
   </div>
 
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" [disabled]="isSaving" (click)="cancel()">Ακύρωση</button>
+    <button type="button" class="btn btn-secondary" [disabled]="isSaving" (click)="cancel()">{{ 'Cancellation' | translate }}</button>
 
     <button type="submit" class="btn btn-primary" [disabled]="isSaving">
       <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-2"></span>
 
-      {{ isSaving ? 'Αποθήκευση...' : 'Αποθήκευση' }}
+      {{ isSaving ? ('Save...' | translate) : ('Save' | translate) }}
     </button>
   </div>
 </form>

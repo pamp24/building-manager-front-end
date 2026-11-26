@@ -1,5 +1,5 @@
-import { ModuleWithProviders } from '@angular/core';
-import { ApplicationRef, Component, HostBinding, HostListener, NgModule, OnDestroy } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { ModuleWithProviders, ApplicationRef, Component, HostBinding, HostListener, NgModule, OnDestroy } from '@angular/core';
 
 import { Subscription } from 'rxjs';
 
@@ -10,8 +10,8 @@ import { ToastrService } from './toastr.service';
   selector: 'app-toast-animation-component',
   template: `
     @if (options.closeButton) {
-      <button (click)="remove()" type="button" class="toast-close-button" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
+      <button (click)="remove()" type="button" class="toast-close-button" [attr.aria-label]="'Close' | translate">
+        <span aria-hidden="true">{{ '&amp;times;' | translate }}</span>
       </button>
     }
     @if (title) {
@@ -34,7 +34,7 @@ import { ToastrService } from './toastr.service';
       <div class="toast-progress" [style.width]="width + '%'"></div>
     }
   `,
-  imports: []
+  imports: [TranslateModule]
 })
 export class ToastNoAnimationComponent implements OnDestroy {
   message?: string | null;

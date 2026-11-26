@@ -12,13 +12,15 @@
               </div>
             </div>
             <div class="text-center">
-              <h1 class="mt-4"><b>Υπό Κατασκευή</b></h1>
+              <h1 class="mt-4">
+                <b>{{ 'Under Construction' | translate }}</b>
+              </h1>
               <p class="mt-4 text-muted">
-                Γεια! Παρακαλώ επισκεφθείτε ξανά αργότερα. Κάνουμε
+                {{ 'Hello! Please visit again later. We do' | translate }}
                 <br />
-                κάποιες εργασίες συντήρησης αυτή τη στιγμή.
+                {{ 'some maintenance work at the moment.' | translate }}
               </p>
-              <a [routerLink]="['/dashboard/default']" type="button" class="btn btn-primary mb-3">Επιστροφή στην αρχική</a>
+              <a [routerLink]="['/dashboard/default']" type="button" class="btn btn-primary mb-3">{{ 'Return to original' | translate }}</a>
             </div>
           </div>
         </div>

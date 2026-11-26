@@ -1,5 +1,7 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+
 import { FormsModule } from '@angular/forms';
 
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -27,6 +29,8 @@ import { CYPRUS_LOCATIONS, CyprusRegion } from 'src/app/theme/shared/data/cyprus
   styleUrls: ['./professionals.component.scss']
 })
 export class ProfessionalsComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private readonly countryLocations: Record<string, GreeceRegion[] | CyprusRegion[]> = {
     GR: GREECE_LOCATIONS,
     CY: CYPRUS_LOCATIONS
@@ -61,17 +65,17 @@ export class ProfessionalsComponent implements OnInit {
   readonly backendUrl = `${environment.apiUrl}/api/v1`;
 
   categories = [
-    { value: 'ELECTRICIAN', label: 'Ηλεκτρολόγος' },
-    { value: 'PLUMBER', label: 'Υδραυλικός' },
-    { value: 'ELEVATOR_TECHNICIAN', label: 'Τεχνικός Ασανσέρ' },
-    { value: 'CLEANING_SERVICE', label: 'Καθαρισμός' },
-    { value: 'HEATING_TECHNICIAN', label: 'Θέρμανση' },
-    { value: 'LOCKSMITH', label: 'Κλειδαράς' },
-    { value: 'AIR_CONDITION_TECHNICIAN', label: 'Κλιματισμός' },
-    { value: 'PAINTER', label: 'Ελαιοχρωματιστής' },
-    { value: 'PEST_CONTROL', label: 'Απεντομώσεις' },
-    { value: 'GENERAL_REPAIRS', label: 'Γενικές Επισκευές' },
-    { value: 'OTHER', label: 'Άλλο' }
+    { value: 'ELECTRICIAN', label: this.uiLocale.text('Electrician') },
+    { value: 'PLUMBER', label: this.uiLocale.text('Plumber') },
+    { value: 'ELEVATOR_TECHNICIAN', label: this.uiLocale.text('Elevator technician') },
+    { value: 'CLEANING_SERVICE', label: this.uiLocale.text('Cleaning') },
+    { value: 'HEATING_TECHNICIAN', label: this.uiLocale.text('Heating') },
+    { value: 'LOCKSMITH', label: this.uiLocale.text('Locker') },
+    { value: 'AIR_CONDITION_TECHNICIAN', label: this.uiLocale.text('Air conditioning') },
+    { value: 'PAINTER', label: this.uiLocale.text('Oil painter') },
+    { value: 'PEST_CONTROL', label: this.uiLocale.text('Exterminations') },
+    { value: 'GENERAL_REPAIRS', label: this.uiLocale.text('General Repairs') },
+    { value: 'OTHER', label: this.uiLocale.text('Other') }
   ];
 
   onRegionChange(): void {

@@ -6,45 +6,53 @@
         <div class="card-header">
           <div class="row align-items-center">
             <div class="col-sm-6">
-              <h5>Sticky Action Bar</h5>
+              <h5>{{ 'Sticky Action Bar' | translate }}</h5>
             </div>
             <div class="col-sm-6 text-sm-end mt-3 mt-sm-0">
-              <button type="reset" class="btn btn-success me-2">Submit</button>
-              <button type="reset" class="btn btn-light-secondary">Cancel</button>
+              <button type="reset" class="btn btn-success me-2">{{ 'Submit' | translate }}</button>
+              <button type="reset" class="btn btn-light-secondary">{{ 'Cancel' | translate }}</button>
             </div>
           </div>
         </div>
       </div>
       <div class="card-body">
-        <h5>Form controls</h5>
+        <h5>{{ 'Form controls' | translate }}</h5>
         <hr />
         <div class="row">
           <div class="col-md-6">
             <form>
               <div class="form-group">
-                <label class="form-label" for="exampleInputEmail1">Email address</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
-                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                <label class="form-label" for="exampleInputEmail1">{{ 'Email address' | translate }}</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="exampleInputEmail1"
+                  aria-describedby="emailHelp"
+                  [placeholder]="'Enter email' | translate"
+                />
+                <small id="emailHelp" class="form-text text-muted">
+                  {{ "We'll never share your email with anyone else." | translate }}
+                </small>
               </div>
               <div class="form-group">
-                <label class="form-label" for="exampleInputPassword1">Password</label>
-                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" />
+                <label class="form-label" for="exampleInputPassword1">{{ 'Password' | translate }}</label>
+                <input type="password" class="form-control" id="exampleInputPassword1" [placeholder]="'Password' | translate" />
               </div>
               <div class="form-group form-check">
                 <input type="checkbox" class="form-check-input" id="exampleCheck1" />
-                <label for="exampleCheck1">Check me out</label>
+                <label for="exampleCheck1">{{ 'Check me out' | translate }}</label>
               </div>
-              <button type="submit" class="btn btn-primary">Submit</button>
+              <button type="submit" class="btn btn-primary">{{ 'Submit' | translate }}</button>
             </form>
           </div>
           <div class="col-md-6">
             <form>
               <div class="form-group">
-                <label class="form-label">Text</label>
-                <input type="text" class="form-control" placeholder="Text" />
+                <label class="form-label">{{ 'Text' | translate }}</label>
+                <input type="text" class="form-control" [placeholder]="'Text' | translate" />
               </div>
               <div class="form-group">
-                <label class="form-label" for="exampleFormControlSelect1">Example select</label>
+                <label class="form-label" for="exampleFormControlSelect1">{{ 'Example select' | translate }}</label>
                 <select class="form-select" id="exampleFormControlSelect1">
                   <option>1</option>
                   <option>2</option>
@@ -54,107 +62,107 @@
                 </select>
               </div>
               <div class="form-group">
-                <label class="form-label" for="exampleFormControlTextarea1">Example textarea</label>
+                <label class="form-label" for="exampleFormControlTextarea1">{{ 'Example textarea' | translate }}</label>
                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
               </div>
             </form>
           </div>
         </div>
-        <h5 class="mt-5">Sizing</h5>
+        <h5 class="mt-5">{{ 'Sizing' | translate }}</h5>
         <hr />
         <div class="row">
           <div class="col-md-6">
-            <input class="mb-3 form-control form-control-lg" type="text" placeholder=".form-control-lg" />
-            <input class="mb-3 form-control" type="text" placeholder="Default input" />
-            <input class="mb-3 form-control form-control-sm" type="text" placeholder=".form-control-sm" />
+            <input class="mb-3 form-control form-control-lg" type="text" [placeholder]="'.form-control-lg' | translate" />
+            <input class="mb-3 form-control" type="text" [placeholder]="'Default input' | translate" />
+            <input class="mb-3 form-control form-control-sm" type="text" [placeholder]="'.form-control-sm' | translate" />
           </div>
           <div class="col-md-6">
-            <select class="mb-3 form-select form-select-lg" title="select">
-              <option>Large select</option>
+            <select class="mb-3 form-select form-select-lg" [title]="'select' | translate">
+              <option>{{ 'Large select' | translate }}</option>
             </select>
-            <select class="mb-3 form-select" title="select">
-              <option>Default select</option>
+            <select class="mb-3 form-select" [title]="'select' | translate">
+              <option>{{ 'Default select' | translate }}</option>
             </select>
           </div>
         </div>
-        <h5 class="mt-5">Inline</h5>
+        <h5 class="mt-5">{{ 'Inline' | translate }}</h5>
         <hr />
         <form class="row row-cols-md-auto g-3 align-items-center">
           <div class="col-12">
-            <label class="sr-only" for="inlineFormInputName">Name</label>
-            <input type="text" class="form-control" id="inlineFormInputName" placeholder="Jane Doe" />
+            <label class="sr-only" for="inlineFormInputName">{{ 'Name' | translate }}</label>
+            <input type="text" class="form-control" id="inlineFormInputName" [placeholder]="'Jane Doe' | translate" />
           </div>
           <div class="col-12">
-            <label class="sr-only" for="inlineFormInputGroupUsername">Username</label>
+            <label class="sr-only" for="inlineFormInputGroupUsername">{{ 'Username' | translate }}</label>
             <div class="input-group">
               <div class="input-group-text">&#64;</div>
-              <input type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="Username" />
+              <input type="text" class="form-control" id="inlineFormInputGroupUsername" [placeholder]="'Username' | translate" />
             </div>
           </div>
           <div class="col-12">
-            <label class="sr-only" for="inlineFormSelectPref">Preference</label>
+            <label class="sr-only" for="inlineFormSelectPref">{{ 'Preference' | translate }}</label>
             <select class="form-select" id="inlineFormSelectPref">
-              <option selected>Choose...</option>
-              <option value="1">One</option>
-              <option value="2">Two</option>
-              <option value="3">Three</option>
+              <option selected>{{ 'Choose...' | translate }}</option>
+              <option value="1">{{ 'One' | translate }}</option>
+              <option value="2">{{ 'Two' | translate }}</option>
+              <option value="3">{{ 'Three' | translate }}</option>
             </select>
           </div>
           <div class="col-12">
             <div class="form-check">
               <input class="form-check-input" type="checkbox" id="inlineFormCheck" />
-              <label class="form-check-label" for="inlineFormCheck">Remember me</label>
+              <label class="form-check-label" for="inlineFormCheck">{{ 'Remember me' | translate }}</label>
             </div>
           </div>
           <div class="col-12">
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">{{ 'Submit' | translate }}</button>
           </div>
         </form>
-        <h5 class="mt-5">Form Grid</h5>
+        <h5 class="mt-5">{{ 'Form Grid' | translate }}</h5>
         <hr />
         <form>
           <div class="row">
             <div class="form-group col-md-6">
-              <label class="form-label" for="inputEmail4">Email</label>
-              <input type="email" class="form-control" id="inputEmail4" placeholder="Email" />
+              <label class="form-label" for="inputEmail4">{{ 'Email' | translate }}</label>
+              <input type="email" class="form-control" id="inputEmail4" [placeholder]="'Email' | translate" />
             </div>
             <div class="form-group col-md-6">
-              <label class="form-label" for="inputPassword4">Password</label>
-              <input type="password" class="form-control" id="inputPassword4" placeholder="Password" />
+              <label class="form-label" for="inputPassword4">{{ 'Password' | translate }}</label>
+              <input type="password" class="form-control" id="inputPassword4" [placeholder]="'Password' | translate" />
             </div>
           </div>
           <div class="form-group">
-            <label class="form-label" for="inputAddress">Address</label>
-            <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" />
+            <label class="form-label" for="inputAddress">{{ 'Address' | translate }}</label>
+            <input type="text" class="form-control" id="inputAddress" [placeholder]="'1234 Main St' | translate" />
           </div>
           <div class="form-group">
-            <label class="form-label" for="inputAddress2">Address 2</label>
-            <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" />
+            <label class="form-label" for="inputAddress2">{{ 'Address 2' | translate }}</label>
+            <input type="text" class="form-control" id="inputAddress2" [placeholder]="'Apartment, studio, or floor' | translate" />
           </div>
           <div class="row">
             <div class="form-group col-md-6">
-              <label class="form-label" for="inputCity">City</label>
+              <label class="form-label" for="inputCity">{{ 'City' | translate }}</label>
               <input type="text" class="form-control" id="inputCity" />
             </div>
             <div class="form-group col-md-4">
-              <label class="form-label" for="inputState">State</label>
+              <label class="form-label" for="inputState">{{ 'State' | translate }}</label>
               <select id="inputState" class="form-select">
-                <option selected>select</option>
-                <option>Large select</option>
+                <option selected>{{ 'select' | translate }}</option>
+                <option>{{ 'Large select' | translate }}</option>
               </select>
             </div>
             <div class="form-group col-md-2">
-              <label class="form-label" for="inputZip">Zip</label>
+              <label class="form-label" for="inputZip">{{ 'Zip' | translate }}</label>
               <input type="text" class="form-control" id="inputZip" />
             </div>
           </div>
           <div class="form-group">
             <div class="form-check">
               <input class="form-check-input" type="checkbox" id="gridCheck" />
-              <label class="form-check-label" for="gridCheck">Check me out</label>
+              <label class="form-check-label" for="gridCheck">{{ 'Check me out' | translate }}</label>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary">Sign in</button>
+          <button type="submit" class="btn btn-primary">{{ 'Sign in' | translate }}</button>
         </form>
       </div>
     </div>

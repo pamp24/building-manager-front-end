@@ -1,5 +1,6 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component } from '@angular/core';
 // angular import
-import { Component } from '@angular/core';
 
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -11,6 +12,8 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
   styleUrl: './pricing.component.scss'
 })
 export class PricingComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   // public props
   selectedImage: string = 'assets/images/admin/price-regular.svg';
   selectedPackageIndex = 1;
@@ -18,7 +21,7 @@ export class PricingComponent {
   // public method
   priceList = [
     {
-      title: 'FREE',
+      title: this.uiLocale.text('FREE'),
       type: 'Basic Features',
       price: 0,
       checked: false,
@@ -26,7 +29,7 @@ export class PricingComponent {
       items: ['One End Product', 'No attribution required', 'TypeScript']
     },
     {
-      title: 'REGULAR',
+      title: this.uiLocale.text('REGULAR'),
       type: 'Trending',
       price: 99,
       checked: true,
@@ -34,7 +37,7 @@ export class PricingComponent {
       items: ['One End Product', 'No attribution required', 'TypeScript', 'Figma Design Resources', 'Create Multiple Products']
     },
     {
-      title: 'PRO',
+      title: this.uiLocale.text('PRO'),
       type: 'For advanced',
       price: 199,
       checked: false,
@@ -49,7 +52,7 @@ export class PricingComponent {
       ]
     },
     {
-      title: 'Business',
+      title: this.uiLocale.text('Business'),
       type: 'For advanced',
       price: 299,
       checked: false,

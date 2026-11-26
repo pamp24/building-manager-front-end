@@ -1,13 +1,13 @@
 <div class="card-header d-flex justify-content-between align-items-center">
   <button class="btn btn-sm btn-light-primary" (click)="goBack()">
     <i class="me-2" antIcon type="arrow-left" theme="outline"></i>
-    Πίσω στη λίστα
+    {{ 'Back to the list' | translate }}
   </button>
 </div>
 
 @if (loading) {
   <div class="card">
-    <div class="card-body">Φόρτωση ticket...</div>
+    <div class="card-body">{{ 'Loading ticket...' | translate }}</div>
   </div>
 }
 
@@ -24,7 +24,7 @@
         <div class="card-header">
           <h5>
             <i class="text-primary f-20 wid-20" antIcon type="lock" theme="outline"></i>
-            <span class="p-l-5">Ticket {{ ticket.ticketNumber }}</span>
+            <span class="p-l-5">{{ 'Ticket' | translate }} {{ ticket.ticketNumber }}</span>
           </h5>
         </div>
 
@@ -54,14 +54,16 @@
                 <div class="col">
                   <div>
                     <h4 class="d-inline-block">{{ ticket.createdByName }}</h4>
-                    <span class="badge bg-light-secondary ms-2">Δημιουργός</span>
+                    <span class="badge bg-light-secondary ms-2">{{ 'Creator' | translate }}</span>
                     <p class="text-muted">{{ formatDate(ticket.createdAt) }}</p>
                   </div>
                 </div>
               </div>
 
               <div>
-                <p><b>Περιγραφή:</b></p>
+                <p>
+                  <b>{{ 'Description:' | translate }}</b>
+                </p>
                 <p>{{ ticket.description }}</p>
               </div>
             </div>
@@ -69,16 +71,21 @@
         </div>
 
         <div class="card-body border-top">
-          <h6 class="mb-3">Σχόλια</h6>
+          <h6 class="mb-3">{{ 'Comments' | translate }}</h6>
 
           <div class="mb-3">
-            <textarea class="form-control" rows="3" [(ngModel)]="commentMessage" placeholder="Γράψε σχόλιο..."></textarea>
+            <textarea
+              class="form-control"
+              rows="3"
+              [(ngModel)]="commentMessage"
+              [placeholder]="'Write a comment...' | translate"
+            ></textarea>
           </div>
 
           <div class="d-flex gap-2 mb-4">
             <button type="button" class="btn btn-sm btn-light-success" (click)="submitComment('REPLY')" [disabled]="submittingComment">
               <i class="me-2" antIcon type="message"></i>
-              Απάντηση
+              {{ 'Answer' | translate }}
             </button>
 
             @if (canSeeInternalNote()) {
@@ -89,13 +96,13 @@
                 [disabled]="submittingComment"
               >
                 <i class="me-2" antIcon type="edit"></i>
-                Εσωτερική σημείωση
+                {{ 'Internal note' | translate }}
               </button>
             }
           </div>
 
           @if (comments.length === 0) {
-            <p class="text-muted">Δεν υπάρχουν σχόλια ακόμα.</p>
+            <p class="text-muted">{{ 'There are no comments yet.' | translate }}</p>
           }
 
           @for (comment of comments; track comment.id) {
@@ -105,9 +112,9 @@
                   <strong>{{ comment.createdByName }}</strong>
 
                   @if (comment.type === 'INTERNAL_NOTE') {
-                    <span class="badge bg-light-warning ms-2">Εσωτερική σημείωση</span>
+                    <span class="badge bg-light-warning ms-2">{{ 'Internal note' | translate }}</span>
                   } @else {
-                    <span class="badge bg-light-success ms-2">Απάντηση</span>
+                    <span class="badge bg-light-success ms-2">{{ 'Answer' | translate }}</span>
                   }
                 </div>
 
@@ -126,13 +133,13 @@
     <div class="col-lg-4">
       <div class="card">
         <div class="card-header">
-          <h5>Λεπτομέρειες</h5>
+          <h5>{{ 'Details' | translate }}</h5>
         </div>
 
         <div class="card-body">
           @if (canChangeStatus()) {
             <div class="mb-3">
-              <label class="form-label">Κατάσταση Ticket</label>
+              <label class="form-label">{{ 'Ticket status' | translate }}</label>
               <select class="form-select" [(ngModel)]="selectedStatus" (change)="onStatusChange()">
                 @for (status of statuses; track status) {
                   <option [ngValue]="status">
@@ -143,16 +150,16 @@
             </div>
           } @else {
             <div class="mb-3">
-              <label class="form-label">Κατάσταση Ticket</label>
+              <label class="form-label">{{ 'Ticket status' | translate }}</label>
               <input class="form-control" [value]="getStatusLabel(ticket.status)" readonly />
             </div>
           }
 
           @if (canAssignAgent()) {
             <div class="mb-3">
-              <label class="form-label">Ανάθεση σε Agent</label>
+              <label class="form-label">{{ 'Assignment to Agent' | translate }}</label>
               <select class="form-select" [(ngModel)]="selectedAgentId" (change)="onAssignAgent()">
-                <option [ngValue]="null">-- Επιλογή Agent --</option>
+                <option [ngValue]="null">{{ '-- Select Agent --' | translate }}</option>
                 @for (agent of agents; track agent.id) {
                   <option [ngValue]="agent.id">
                     {{ agent.fullName }}
@@ -167,7 +174,7 @@
           <li class="list-group-item">
             <div class="d-flex align-items-center">
               <div class="flex-shrink-0">
-                <label class="mb-0 wid-100">Αιτών</label>
+                <label class="mb-0 wid-100">{{ 'Applicant' | translate }}</label>
               </div>
               <div class="flex-grow-1 ms-3">
                 <a href="javascript:" class="link-secondary">{{ ticket.createdByName }}</a>
@@ -178,7 +185,7 @@
           <li class="list-group-item">
             <div class="d-flex align-items-center">
               <div class="flex-shrink-0">
-                <label class="mb-0 wid-100">Κατηγορία</label>
+                <label class="mb-0 wid-100">{{ 'Category' | translate }}</label>
               </div>
               <div class="flex-grow-1 ms-3">
                 <a href="javascript:" class="link-secondary">{{ getCategoryLabel(ticket.category) }}</a>
@@ -189,7 +196,7 @@
           <li class="list-group-item">
             <div class="d-flex align-items-center">
               <div class="flex-shrink-0">
-                <label class="mb-0 wid-100">Προτεραιότητα</label>
+                <label class="mb-0 wid-100">{{ 'Priority' | translate }}</label>
               </div>
               <div class="flex-grow-1 ms-3">
                 <label class="mb-0">{{ getPriorityLabel(ticket.priority) }}</label>
@@ -200,7 +207,7 @@
           <li class="list-group-item">
             <div class="d-flex align-items-center">
               <div class="flex-shrink-0">
-                <label class="mb-0 wid-100">Αποδέκτης</label>
+                <label class="mb-0 wid-100">{{ 'Receiver' | translate }}</label>
               </div>
               <div class="flex-grow-1 ms-3">
                 <label class="mb-0">{{ getTargetRoleLabel(ticket.targetRole) }}</label>
@@ -211,7 +218,7 @@
           <li class="list-group-item">
             <div class="d-flex align-items-center">
               <div class="flex-shrink-0">
-                <label class="mb-0 wid-100">Agent</label>
+                <label class="mb-0 wid-100">{{ 'Agent' | translate }}</label>
               </div>
               <div class="flex-grow-1 ms-3">
                 <label class="mb-0">{{ ticket.assignedAgentName || '-' }}</label>
@@ -222,7 +229,7 @@
           <li class="list-group-item">
             <div class="d-flex align-items-center">
               <div class="flex-shrink-0">
-                <label class="mb-0 wid-100">Πολυκατοικία</label>
+                <label class="mb-0 wid-100">{{ 'Building' | translate }}</label>
               </div>
               <div class="flex-grow-1 ms-3">
                 <label class="mb-0">{{ ticket.buildingName }}</label>
@@ -234,7 +241,7 @@
             <li class="list-group-item">
               <div class="d-flex align-items-center">
                 <div class="flex-shrink-0">
-                  <label class="mb-0 wid-100">Διαμέρισμα</label>
+                  <label class="mb-0 wid-100">{{ 'Apartment' | translate }}</label>
                 </div>
                 <div class="flex-grow-1 ms-3">
                   <label class="mb-0">{{ ticket.apartmentLabel }}</label>
@@ -246,7 +253,7 @@
           <li class="list-group-item">
             <div class="d-flex align-items-center">
               <div class="flex-shrink-0">
-                <label class="mb-0 wid-100">Δημιουργία</label>
+                <label class="mb-0 wid-100">{{ 'Creation' | translate }}</label>
               </div>
               <div class="flex-grow-1 ms-3">
                 <div class="d-flex align-items-center gap-1">
@@ -260,7 +267,7 @@
           <li class="list-group-item">
             <div class="d-flex align-items-center">
               <div class="flex-shrink-0">
-                <label class="mb-0 wid-100">Τελευταία ενημέρωση</label>
+                <label class="mb-0 wid-100">{{ 'Latest update' | translate }}</label>
               </div>
               <div class="flex-grow-1 ms-3">
                 <div class="d-flex align-items-center gap-1">
@@ -274,7 +281,7 @@
           <li class="list-group-item py-3">
             <button type="button" class="btn btn-sm btn-light-danger" (click)="onDeleteTicket()" [disabled]="deleting">
               <i class="me-2" antIcon type="delete" theme="outline"></i>
-              Διαγραφή
+              {{ 'Delete' | translate }}
             </button>
           </li>
         </ul>

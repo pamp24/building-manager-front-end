@@ -2,10 +2,10 @@
   {{ message }}
 </div>
 <form form *ngIf="form" [formGroup]="form" (ngSubmit)="onUpdate()">
-  <app-card *ngIf="buildings.length > 0" cardTitle="Πολυκατοικία" [padding]="24">
+  <app-card *ngIf="buildings.length > 0" [cardTitle]="'Building' | translate" [padding]="24">
     <div class="row">
       <div class="col-md-6">
-        <label>Όνομα Πολυκατοικίας</label>
+        <label>{{ 'Name of Apartment Building' | translate }}</label>
 
         <!-- Dropdown -->
         <select
@@ -21,7 +21,7 @@
       </div>
 
       <div class="col-md-6">
-        <label>Διεύθυνση Πολυκατοικίας</label>
+        <label>{{ 'Apartment building address' | translate }}</label>
         <input
           type="text"
           class="form-control readonly-input"
@@ -41,90 +41,90 @@
   <div class="row">
     <!-- Αριστερά: Φόρμα Διαμερίσματος -->
     <div class="col-lg-6">
-      <app-card cardTitle="Πληροφορίες Διαμερίσματος" [padding]="24">
+      <app-card [cardTitle]="'Apartment Information' | translate" [padding]="24">
         <div class="row g-3">
           <!-- Όνομα / Επίθετο -->
           <div class="col-md-6">
-            <label>Όνομα Ιδιοκτήτη</label>
+            <label>{{ 'Name of Owner' | translate }}</label>
             <input type="text" class="form-control" formControlName="ownerFirstName" />
           </div>
           <div class="col-md-6">
-            <label>Επίθετο Ιδιοκτήτη</label>
+            <label>{{ 'Owner Surname' | translate }}</label>
             <input type="text" class="form-control" formControlName="ownerLastName" />
           </div>
 
           <!-- Ενοικιαζόμενο -->
           <div class="col-md-6">
-            <label>Ενοικιαζόμενο</label>
+            <label>{{ 'Tenant' | translate }}</label>
             <select class="form-control" formControlName="isRented">
-              <option value="">Επιλογή</option>
-              <option value="true">Ναι</option>
-              <option value="false">Όχι</option>
+              <option value="">{{ 'Choice' | translate }}</option>
+              <option value="true">{{ 'Yes' | translate }}</option>
+              <option value="false">{{ 'Nope' | translate }}</option>
             </select>
           </div>
 
           <!-- Ενοικιαστής -->
           <div class="col-md-6" *ngIf="form.get('isRented')?.value === 'true'">
-            <label>Όνομα Ενοικιαστή</label>
+            <label>{{ 'Tenant Name' | translate }}</label>
             <input type="text" class="form-control" formControlName="residentFirstName" />
           </div>
           <div class="col-md-6" *ngIf="form.get('isRented')?.value === 'true'">
-            <label>Επώνυμο Ενοικιαστή</label>
+            <label>{{ 'Name of Tenant' | translate }}</label>
             <input type="text" class="form-control" formControlName="residentLastName" />
           </div>
 
           <!-- Στοιχεία Διαμερίσματος -->
           <div class="col-md-6">
-            <label>Αρ. Διαμερίσματος</label>
+            <label>{{ 'No. Apartment' | translate }}</label>
             <input type="text" class="form-control" formControlName="apartmentNumber" />
           </div>
           <div class="col-md-6">
-            <label>Όροφος</label>
+            <label>{{ 'Floor' | translate }}</label>
             <input type="text" class="form-control" formControlName="floor" />
           </div>
           <div class="col-md-6">
-            <label>Τετραγωνικά</label>
+            <label>{{ 'Square' | translate }}</label>
             <input type="number" class="form-control" formControlName="sqMetersApart" />
           </div>
 
           <!-- Parking -->
           <div class="col-md-6">
-            <label>Διαθέτει Parking</label>
+            <label>{{ 'It has Parking' | translate }}</label>
             <select class="form-control" formControlName="hasParking">
-              <option value="true">Ναι</option>
-              <option value="false">Όχι</option>
+              <option value="true">{{ 'Yes' | translate }}</option>
+              <option value="false">{{ 'Nope' | translate }}</option>
             </select>
           </div>
           <div class="col-md-6" *ngIf="form.get('hasParking')?.value === 'true'">
-            <label>Αρ. Parking</label>
+            <label>{{ 'No. Parking' | translate }}</label>
             <input type="text" class="form-control" formControlName="parkingSlot" />
           </div>
 
           <!-- Αποθήκη -->
           <div class="col-md-6">
-            <label>Διαθέτει Αποθήκη</label>
+            <label>{{ 'It has a warehouse' | translate }}</label>
             <select class="form-control" formControlName="hasStorage">
-              <option value="true">Ναι</option>
-              <option value="false">Όχι</option>
+              <option value="true">{{ 'Yes' | translate }}</option>
+              <option value="false">{{ 'Nope' | translate }}</option>
             </select>
           </div>
           <div class="col-md-6" *ngIf="form.get('hasStorage')?.value === 'true'">
-            <label>Αρ. Αποθήκης</label>
+            <label>{{ 'No. Warehouse' | translate }}</label>
             <input type="text" class="form-control" formControlName="storageSlot" />
           </div>
 
           <!-- Χιλιοστά -->
           <div class="row g-3 mt-2">
             <div class="col-md-4">
-              <label>Χιλ. Κοινοχρήστων</label>
+              <label>{{ 'Thousand Common user' | translate }}</label>
               <input type="number" class="form-control" formControlName="commonPercent" />
             </div>
             <div class="col-md-4">
-              <label>Χιλ. Ασανσέρ</label>
+              <label>{{ 'Thousand Elevator' | translate }}</label>
               <input type="number" class="form-control" formControlName="elevatorPercent" />
             </div>
             <div class="col-md-4">
-              <label>Χιλ. Θέρμανσης</label>
+              <label>{{ 'Thousand Heating' | translate }}</label>
               <input type="number" class="form-control" formControlName="heatingPercent" />
             </div>
           </div>
@@ -134,18 +134,23 @@
 
     <!-- Δεξιά: Περιγραφή & επικοινωνία -->
     <div class="col-lg-6">
-      <app-card cardTitle="Περιγραφή" [padding]="24">
-        <textarea rows="3" class="form-control" formControlName="apDescription" placeholder="Περιγραφή Διαμερίσματος"></textarea>
+      <app-card [cardTitle]="'Description' | translate" [padding]="24">
+        <textarea
+          rows="3"
+          class="form-control"
+          formControlName="apDescription"
+          [placeholder]="'Apartment Description' | translate"
+        ></textarea>
       </app-card>
 
-      <app-card cardTitle="Πληροφορίες Ιδιοκτήτη" [padding]="24">
+      <app-card [cardTitle]="'Owner Information' | translate" [padding]="24">
         <div class="row">
           <div class="col-md-6">
-            <label>Τηλέφωνο</label>
+            <label>{{ 'Telephone' | translate }}</label>
             <input type="text" class="form-control" [value]="userPhone" readonly />
           </div>
           <div class="col-md-6">
-            <label>Email</label>
+            <label>{{ 'Email' | translate }}</label>
             <input type="email" class="form-control" [value]="userEmail" readonly />
           </div>
         </div>
@@ -155,9 +160,9 @@
     <!-- Κουμπιά -->
     <div class="mt-4 text-end">
       <button type="button" class="btn btn-secondary me-2" (click)="toggleEdit()">
-        {{ isEditing ? 'Ακύρωση' : 'Επεξεργασία' }}
+        {{ isEditing ? ('Cancellation' | translate) : ('Processing' | translate) }}
       </button>
-      <button type="submit" class="btn btn-success" [disabled]="!isEditing">Αποθήκευση</button>
+      <button type="submit" class="btn btn-success" [disabled]="!isEditing">{{ 'Save' | translate }}</button>
     </div>
   </div>
 

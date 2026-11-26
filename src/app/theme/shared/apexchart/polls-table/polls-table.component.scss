@@ -1,0 +1,38 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+:host > .card {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+.table-wrapper {
+  flex: 1;
+  max-height: 290px;
+  overflow-y: auto;
+}
+
+.is-empty .table-wrapper {
+  min-height: 180px;
+  max-height: none;
+
+  table {
+    height: 100%;
+  }
+
+  thead {
+    height: 1px;
+  }
+
+  tbody td {
+    vertical-align: middle;
+  }
+}
+
+.card-footer {
+  flex-shrink: 0;
+}

@@ -163,13 +163,11 @@ export class AuthenticationService {
     return sessionStorage;
   }
 
-  private getDefaultRouteForRole(role: string | undefined): string {
+  getDefaultRouteForRole(role: string | undefined = this.currentUserValue?.role): string {
     switch (role) {
       case 'Admin':
         return '/admin/dashboard';
       case 'PropertyManager':
-      case 'PropertyAgent':
-      case 'AdminAgent':
         return '/pm/pm-dashboard';
       case 'BuildingManager':
         return '/statement/dashboard';

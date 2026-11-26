@@ -1,6 +1,6 @@
 @if (loading) {
   <div class="card">
-    <div class="card-body">Φόρτωση υπαλλήλων...</div>
+    <div class="card-body">{{ 'Loading employees...' | translate }}</div>
   </div>
 }
 
@@ -9,21 +9,21 @@
 }
 
 <div class="d-flex justify-content-between align-items-center mb-3">
-  <h4>Υπάλληλοι Υποστήριξης</h4>
+  <h4>{{ 'Support Staff' | translate }}</h4>
 
-  <button class="btn btn-primary" (click)="openInviteModal()">Πρόσκληση Υπαλληλού Υποστήριξης</button>
+  <button class="btn btn-primary" (click)="openInviteModal()">{{ 'Invitation of a Support Officer' | translate }}</button>
 </div>
 
-<app-card cardTitle="Υπάλληλοι" cardClass="table-card">
+<app-card [cardTitle]="'Employees' | translate" cardClass="table-card">
   <div class="table-responsive">
     <table class="table table-hover align-middle">
       <thead>
         <tr>
-          <th>Όνομα</th>
-          <th>Email</th>
-          <th>Πολυκατοικίες</th>
-          <th>Πλήθος</th>
-          <th class="text-end">Ενέργειες</th>
+          <th>{{ 'Name' | translate }}</th>
+          <th>{{ 'Email' | translate }}</th>
+          <th>{{ 'Apartment buildings' | translate }}</th>
+          <th>{{ 'Crowd' | translate }}</th>
+          <th class="text-end">{{ 'Actions' | translate }}</th>
         </tr>
       </thead>
 
@@ -36,9 +36,11 @@
             <td>{{ agent.assignedBuildings.length }}</td>
 
             <td class="text-end">
-              <button class="btn btn-sm btn-outline-primary me-2" (click)="openAssignModal(agent)">Ανάθεση</button>
+              <button class="btn btn-sm btn-outline-primary me-2" (click)="openAssignModal(agent)">
+                {{ 'Assignment' | translate }}
+              </button>
 
-              <button class="btn btn-sm btn-outline-danger" (click)="removeAgent(agent.id)">Αφαίρεση</button>
+              <button class="btn btn-sm btn-outline-danger" (click)="removeAgent(agent.id)">{{ 'Removal' | translate }}</button>
             </td>
           </tr>
         }
@@ -52,7 +54,7 @@
   <div class="modal-backdrop-custom">
     <div class="modal-card">
       <h5 class="mb-3">
-        Ανάθεση Πολυκατοικιών
+        {{ 'Assignment of Apartment Buildings' | translate }}
         <br />
         <small class="text-muted">{{ selectedAgent.fullName }}</small>
       </h5>
@@ -69,8 +71,8 @@
       </div>
 
       <div class="d-flex justify-content-end mt-3">
-        <button class="btn btn-light me-2" (click)="closeAssignModal()">Ακύρωση</button>
-        <button class="btn btn-primary" (click)="saveAssignments()">Αποθήκευση</button>
+        <button class="btn btn-light me-2" (click)="closeAssignModal()">{{ 'Cancellation' | translate }}</button>
+        <button class="btn btn-primary" (click)="saveAssignments()">{{ 'Save' | translate }}</button>
       </div>
     </div>
   </div>
@@ -80,7 +82,7 @@
   <div class="modal-backdrop-custom">
     <div class="modal-card">
       <h5 class="mb-3">
-        Ανάθεση Πολυκατοικιών
+        {{ 'Assignment of Apartment Buildings' | translate }}
         <br />
         <small class="text-muted">{{ selectedAgent.fullName }}</small>
       </h5>
@@ -97,8 +99,8 @@
       </div>
 
       <div class="d-flex justify-content-end mt-3">
-        <button class="btn btn-light me-2" (click)="closeAssignModal()">Ακύρωση</button>
-        <button class="btn btn-primary" (click)="saveAssignments()">Αποθήκευση</button>
+        <button class="btn btn-light me-2" (click)="closeAssignModal()">{{ 'Cancellation' | translate }}</button>
+        <button class="btn btn-primary" (click)="saveAssignments()">{{ 'Save' | translate }}</button>
       </div>
     </div>
   </div>
@@ -107,7 +109,7 @@
 @if (showInviteModal) {
   <div class="modal-backdrop-custom">
     <div class="modal-card">
-      <h5 class="mb-3">Πρόσκληση Υπαλληλού Υποστήριξης</h5>
+      <h5 class="mb-3">{{ 'Invitation of a Support Officer' | translate }}</h5>
 
       @if (inviteErrorMessage) {
         <div class="alert alert-danger py-2">
@@ -122,15 +124,15 @@
       }
 
       <div class="mb-3">
-        <label class="form-label">Email</label>
-        <input type="email" class="form-control" [(ngModel)]="inviteEmail" placeholder="agent@example.com" />
+        <label class="form-label">{{ 'Email' | translate }}</label>
+        <input type="email" class="form-control" [(ngModel)]="inviteEmail" [placeholder]="'agent@example.com' | translate" />
       </div>
 
       <div class="d-flex justify-content-end mt-3">
-        <button class="btn btn-light me-2" (click)="closeInviteModal()">Ακύρωση</button>
+        <button class="btn btn-light me-2" (click)="closeInviteModal()">{{ 'Cancellation' | translate }}</button>
 
         <button class="btn btn-primary" (click)="sendInvite()" [disabled]="inviteLoading">
-          {{ inviteLoading ? 'Αποστολή...' : 'Αποστολή Πρόσκλησης' }}
+          {{ inviteLoading ? ('Sending...' | translate) : ('Send Invitation' | translate) }}
         </button>
       </div>
     </div>

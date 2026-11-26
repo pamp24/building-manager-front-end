@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h5 class="modal-title">Καταχώριση Επιχείρησης</h5>
+  <h5 class="modal-title">{{ 'Business Registration' | translate }}</h5>
   <button type="button" class="btn-close" (click)="activeModal.dismiss()"></button>
 </div>
 
@@ -13,27 +13,27 @@
   <form [formGroup]="form">
     <div class="row">
       <div class="col-md-6 mb-3">
-        <label class="form-label">Επωνυμία Επιχείρησης*</label>
+        <label class="form-label">{{ 'Business Name*' | translate }}</label>
         <input class="form-control" formControlName="businessName" />
 
         @if (submitted && f.businessName.errors) {
-          <small class="text-danger">Η επωνυμία είναι υποχρεωτική.</small>
+          <small class="text-danger">{{ 'Brand name is required.' | translate }}</small>
         }
       </div>
 
       <div class="col-md-6 mb-3">
-        <label class="form-label">Ονοματεπώνυμο Υπευθύνου*</label>
+        <label class="form-label">{{ 'Name of Person in Charge*' | translate }}</label>
         <input class="form-control" formControlName="ownerFullName" />
 
         @if (submitted && f.ownerFullName.errors) {
-          <small class="text-danger">Το ονοματεπώνυμο είναι υποχρεωτικό.</small>
+          <small class="text-danger">{{ 'Full name is mandatory.' | translate }}</small>
         }
       </div>
 
       <div class="col-md-6 mb-3">
-        <label class="form-label">Κατηγορία*</label>
+        <label class="form-label">{{ 'Category*' | translate }}</label>
         <select class="form-select" formControlName="category">
-          <option [ngValue]="null">Επιλέξτε κατηγορία</option>
+          <option [ngValue]="null">{{ 'Select a category' | translate }}</option>
 
           @for (category of categories; track category.value) {
             <option [ngValue]="category.value">
@@ -43,46 +43,46 @@
         </select>
 
         @if (submitted && f.category.errors) {
-          <small class="text-danger">Η κατηγορία είναι υποχρεωτική.</small>
+          <small class="text-danger">{{ 'The category is mandatory.' | translate }}</small>
         }
       </div>
 
       <div class="col-md-6 mb-3">
-        <label class="form-label">Τηλέφωνο*</label>
+        <label class="form-label">{{ 'Telephone*' | translate }}</label>
         <input class="form-control" formControlName="phone" />
 
         @if (submitted && f.phone.errors) {
           @if (f.phone.errors['required']) {
-            <small class="text-danger">Το τηλέφωνο είναι υποχρεωτικό.</small>
+            <small class="text-danger">{{ 'Phone is mandatory.' | translate }}</small>
           }
           @if (f.phone.errors['pattern']) {
-            <small class="text-danger">Παρακαλώ εισάγετε έγκυρο τηλέφωνο.</small>
+            <small class="text-danger">{{ 'Please enter a valid phone number.' | translate }}</small>
           }
         }
       </div>
 
       <div class="col-md-6 mb-3">
-        <label class="form-label">Email</label>
+        <label class="form-label">{{ 'Email' | translate }}</label>
         <input class="form-control" formControlName="email" />
 
         @if (submitted && f.email.errors) {
-          <small class="text-danger">Παρακαλώ εισάγετε έγκυρο email.</small>
+          <small class="text-danger">{{ 'Please enter a valid email.' | translate }}</small>
         }
       </div>
 
       <div class="col-md-6 mb-3">
-        <label class="form-label">Website</label>
+        <label class="form-label">{{ 'Website' | translate }}</label>
         <input class="form-control" formControlName="website" />
 
         @if (submitted && f.website.errors) {
-          <small class="text-danger">Παρακαλώ εισάγετε έγκυρο website.</small>
+          <small class="text-danger">{{ 'Please enter a valid website.' | translate }}</small>
         }
       </div>
 
       <div class="col-md-4 mb-3">
-        <label class="form-label">Χώρα*</label>
+        <label class="form-label">{{ 'Country*' | translate }}</label>
         <select class="form-select" formControlName="country" (change)="onCountryChange()">
-          <option value="">Επιλέξτε Χώρα</option>
+          <option value="">{{ 'Select Country' | translate }}</option>
           @for (country of countries; track country.code) {
             <option [value]="country.code">{{ country.name }}</option>
           }
@@ -90,9 +90,9 @@
       </div>
 
       <div class="col-md-4 mb-3">
-        <label class="form-label">Νομός*</label>
+        <label class="form-label">{{ 'County*' | translate }}</label>
         <select class="form-select" formControlName="region" [disabled]="availableRegions.length === 0" (change)="onRegionChange()">
-          <option value="">Επιλέξτε νομό</option>
+          <option value="">{{ 'Select county' | translate }}</option>
 
           @for (item of availableRegions; track item.region) {
             <option [value]="item.region">{{ item.region }}</option>
@@ -100,14 +100,14 @@
         </select>
 
         @if (submitted && f.region.errors) {
-          <small class="text-danger">Ο νομός είναι υποχρεωτικός.</small>
+          <small class="text-danger">{{ 'County is mandatory.' | translate }}</small>
         }
       </div>
 
       <div class="col-md-4 mb-3">
-        <label class="form-label">Πόλη*</label>
+        <label class="form-label">{{ 'City*' | translate }}</label>
         <select class="form-select" formControlName="city" [disabled]="availableCities.length === 0" (change)="onCityChange()">
-          <option value="">Επιλέξτε πόλη</option>
+          <option value="">{{ 'Choose a city' | translate }}</option>
 
           @for (city of availableCities; track city.city) {
             <option [value]="city.city">{{ city.city }}</option>
@@ -115,15 +115,15 @@
         </select>
 
         @if (submitted && f.city.errors) {
-          <small class="text-danger">Η πόλη είναι υποχρεωτική.</small>
+          <small class="text-danger">{{ 'City is mandatory.' | translate }}</small>
         }
       </div>
 
       <div class="col-md-4 mb-3">
-        <label class="form-label">Περιοχή</label>
+        <label class="form-label">{{ 'Area' | translate }}</label>
 
         <select class="form-select" formControlName="area" [disabled]="availableAreas.length === 0">
-          <option value="">Επιλέξτε περιοχή</option>
+          <option value="">{{ 'Select area' | translate }}</option>
 
           @for (area of availableAreas; track area) {
             <option [value]="area">{{ area }}</option>
@@ -132,43 +132,43 @@
       </div>
 
       <div class="col-md-8 mb-3">
-        <label class="form-label">Διεύθυνση</label>
+        <label class="form-label">{{ 'Address' | translate }}</label>
         <input class="form-control" formControlName="address" />
       </div>
 
       <div class="col-md-4 mb-3">
-        <label class="form-label">ΑΦΜ</label>
+        <label class="form-label">{{ 'VAT number' | translate }}</label>
         <input class="form-control" formControlName="taxNumber" />
 
         @if (submitted && f.taxNumber.errors) {
-          <small class="text-danger">Παρακαλώ εισάγετε έγκυρο ΑΦΜ.</small>
+          <small class="text-danger">{{ 'Please enter a valid VAT number.' | translate }}</small>
         }
       </div>
 
       <div class="col-12 mb-3">
-        <label class="form-label">Ωράριο Λειτουργίας</label>
+        <label class="form-label">{{ 'Hours of Operation' | translate }}</label>
         <textarea
           rows="3"
           class="form-control"
           formControlName="workingHours"
-          placeholder="πχ Δευτέρα - Παρασκευή: 09:00 - 18:00"
+          [placeholder]="'eg Monday - Friday: 09:00 - 18:00' | translate"
         ></textarea>
       </div>
 
       <div class="col-12 mb-3">
-        <label class="form-label">Περιγραφή</label>
+        <label class="form-label">{{ 'Description' | translate }}</label>
         <textarea rows="4" class="form-control" formControlName="description"></textarea>
       </div>
     </div>
   </form>
 
-  <div class="alert alert-info mb-0">Η επιχείρηση θα εμφανιστεί δημόσια μετά από έγκριση διαχειριστή.</div>
+  <div class="alert alert-info mb-0">{{ 'Business will appear publicly after admin approval.' | translate }}</div>
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-outline-secondary" (click)="activeModal.dismiss()">Άκυρο</button>
+  <button class="btn btn-outline-secondary" (click)="activeModal.dismiss()">{{ 'Invalid' | translate }}</button>
 
   <button class="btn btn-primary" [disabled]="loading" (click)="submit()">
-    {{ loading ? 'Αποθήκευση...' : 'Υποβολή Αίτησης' }}
+    {{ loading ? ('Save...' | translate) : ('Submit an Application' | translate) }}
   </button>
 </div>

@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -19,6 +20,8 @@ import { BuildingDocumentDTO } from 'src/app/theme/shared/models/building-docume
   styleUrl: './building.component.scss'
 })
 export class BuildingComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   @Input() buildingId?: number;
   @Output() companyPresenceChange = new EventEmitter<boolean>();
   @Input() pmView = false;
@@ -113,7 +116,9 @@ export class BuildingComponent implements OnInit {
   }
 
   get buildingCoverUrl(): string {
-    return this.buildingData?.profileImageUrl ? this.resolveDocumentUrl(this.buildingData.profileImageUrl) : 'assets/images/admin/img-course-1.png';
+    return this.buildingData?.profileImageUrl
+      ? this.resolveDocumentUrl(this.buildingData.profileImageUrl)
+      : 'assets/images/admin/img-course-1.png';
   }
 
   private loadBuildingById(id: number): void {
@@ -137,11 +142,11 @@ export class BuildingComponent implements OnInit {
         this.buildingData = data;
         this.toggleEdit();
         this.loadBuildingDocuments(data.id);
-        alert('Οι αλλαγές αποθηκεύτηκαν με επιτυχία!');
+        alert(this.uiLocale.text('Changes saved successfully!'));
       },
       error: (err) => {
         console.error('Σφάλμα αποθήκευσης:', err);
-        alert('Αποτυχία αποθήκευσης αλλαγών.');
+        alert(this.uiLocale.text('Failed to save changes.'));
       }
     });
   }
@@ -157,17 +162,17 @@ export class BuildingComponent implements OnInit {
     }
 
     this.details = [
-      { icon: 'mail', text: building?.managerEmail || 'Δεν έχει οριστεί' },
-      { icon: 'phone', text: building?.managerPhone || 'Μη διαθέσιμο' },
-      { icon: 'environment', text: building?.managerCity || 'Άγνωστη περιοχή' },
-      { icon: 'aim', text: building?.managerAddress1 || 'Άγνωστη περιοχή' }
+      { icon: 'mail', text: building?.managerEmail || this.uiLocale.text('Not defined') },
+      { icon: 'phone', text: building?.managerPhone || this.uiLocale.text('Not available') },
+      { icon: 'environment', text: building?.managerCity || this.uiLocale.text('Unknown area') },
+      { icon: 'aim', text: building?.managerAddress1 || this.uiLocale.text('Unknown area') }
     ];
 
     this.heating = [
       {
-        title: 'Τύπος Θέρμανσης',
+        title: this.uiLocale.text('Heating Type'),
         name: this.getTranslatedHeatingType(building?.heatingType),
-        sub_title: 'Χωρητικότητα (Λίτρα)',
+        sub_title: this.uiLocale.text('Capacity (Liters)'),
         f_name: building?.heatingCapacityLitres ? building.heatingCapacityLitres.toString() : '—'
       }
     ];
@@ -186,17 +191,17 @@ export class BuildingComponent implements OnInit {
   getTranslatedHeatingType(type?: string): string {
     switch (type) {
       case 'OIL':
-        return 'Πετρέλαιο';
+        return this.uiLocale.text('Oil');
       case 'NATURAL_GAS':
-        return 'Φυσικό Αέριο';
+        return this.uiLocale.text('Natural Gas');
       case 'ELECTRIC':
-        return 'Ηλεκτρικό';
+        return this.uiLocale.text('Electric');
       case 'HEAT_PUMP':
-        return 'Αντλία Θερμότητας';
+        return this.uiLocale.text('Heat Pump');
       case 'NONE':
-        return 'Καθόλου θέρμανση';
+        return this.uiLocale.text('No heating at all');
       default:
-        return 'Δεν έχει οριστεί';
+        return this.uiLocale.text('Not defined');
     }
   }
 
@@ -231,17 +236,17 @@ export class BuildingComponent implements OnInit {
       }
 
       if (!this.isAllowedDocument(file)) {
-        alert(`Το αρχείο "${file.name}" δεν υποστηρίζεται.`);
+        alert(this.uiLocale.text('The file "{{p0}}" is not supported.', { p0: file.name }));
         continue;
       }
 
       if (file.size > this.maxUploadFileSizeMb * 1024 * 1024) {
-        alert(`Το αρχείο "${file.name}" ξεπερνά το όριο των ${this.maxUploadFileSizeMb}MB.`);
+        alert(this.uiLocale.text('The file "{{p0}}" exceeds the limit of {{p1}}MB.', { p0: file.name, p1: this.maxUploadFileSizeMb }));
         continue;
       }
 
       if (nextFiles.length >= this.maxUploadFiles) {
-        alert(`Μπορείτε να επιλέξετε έως ${this.maxUploadFiles} αρχεία.`);
+        alert(this.uiLocale.text('You can select up to {{p0}} files.', { p0: this.maxUploadFiles }));
         break;
       }
 
@@ -263,22 +268,20 @@ export class BuildingComponent implements OnInit {
 
     this.isUploadingDocuments = true;
 
-    this.buildingService
-      .uploadBuildingDocuments(this.buildingData.id, this.selectedUploadFiles, this.selectedDocumentCategory)
-      .subscribe({
-        next: () => {
-          this.selectedUploadFiles = [];
-          this.selectedDocumentCategory = 'OTHER';
-          this.loadBuildingDocuments(this.buildingData.id);
-          this.isUploadingDocuments = false;
-          alert('Τα αρχεία ανέβηκαν με επιτυχία!');
-        },
-        error: (err) => {
-          console.error('Σφάλμα ανεβάσματος αρχείων:', err);
-          this.isUploadingDocuments = false;
-          alert(err?.error?.message || 'Η μεταφόρτωση αρχείων απέτυχε.');
-        }
-      });
+    this.buildingService.uploadBuildingDocuments(this.buildingData.id, this.selectedUploadFiles, this.selectedDocumentCategory).subscribe({
+      next: () => {
+        this.selectedUploadFiles = [];
+        this.selectedDocumentCategory = 'OTHER';
+        this.loadBuildingDocuments(this.buildingData.id);
+        this.isUploadingDocuments = false;
+        alert(this.uiLocale.text('Files uploaded successfully!'));
+      },
+      error: (err) => {
+        console.error('Σφάλμα ανεβάσματος αρχείων:', err);
+        this.isUploadingDocuments = false;
+        alert(err?.error?.message || this.uiLocale.text('File upload failed.'));
+      }
+    });
   }
 
   onBuildingImageSelected(event: Event): void {
@@ -290,13 +293,13 @@ export class BuildingComponent implements OnInit {
     const file = input.files[0];
 
     if (!this.isAllowedBuildingImage(file)) {
-      alert('Η εικόνα δεν υποστηρίζεται. Επιλέξτε JPG, PNG ή WEBP.');
+      alert(this.uiLocale.text('The image is not supported. Choose JPG, PNG or WEBP.'));
       input.value = '';
       return;
     }
 
     if (file.size > this.maxBuildingImageSizeMb * 1024 * 1024) {
-      alert(`Η εικόνα ξεπερνά το όριο των ${this.maxBuildingImageSizeMb}MB.`);
+      alert(this.uiLocale.text('The image exceeds the {{p0}}MB limit.', { p0: this.maxBuildingImageSizeMb }));
       input.value = '';
       return;
     }
@@ -317,12 +320,12 @@ export class BuildingComponent implements OnInit {
         this.buildingData = { ...this.buildingData, profileImageUrl: res.imageUrl };
         this.selectedBuildingImage = undefined;
         this.isUploadingBuildingImage = false;
-        alert('Η φωτογραφία ανέβηκε με επιτυχία!');
+        alert(this.uiLocale.text('Photo uploaded successfully!'));
       },
       error: (err) => {
         console.error('Σφάλμα ανεβάσματος φωτογραφίας:', err);
         this.isUploadingBuildingImage = false;
-        alert(err?.error?.message || 'Η μεταφόρτωση της φωτογραφίας απέτυχε.');
+        alert(err?.error?.message || this.uiLocale.text('Failed to upload photo.'));
       }
     });
   }
@@ -336,11 +339,11 @@ export class BuildingComponent implements OnInit {
   getDocumentTypeLabel(document: BuildingDocumentDTO): string {
     const value = `${document.contentType ?? ''} ${document.fileName}`.toLowerCase();
 
-    if (value.includes('pdf')) return 'PDF';
-    if (value.match(/\.(jpg|jpeg|png|webp)\b/) || value.includes('image/')) return 'IMG';
-    if (value.match(/\.(xls|xlsx)\b/) || value.includes('sheet')) return 'XLS';
-    if (value.match(/\.(doc|docx)\b/) || value.includes('word')) return 'DOC';
-    return 'FILE';
+    if (value.includes('pdf')) return this.uiLocale.text('PDF');
+    if (value.match(/\.(jpg|jpeg|png|webp)\b/) || value.includes('image/')) return this.uiLocale.text('IMG');
+    if (value.match(/\.(xls|xlsx)\b/) || value.includes('sheet')) return this.uiLocale.text('XLS');
+    if (value.match(/\.(doc|docx)\b/) || value.includes('word')) return this.uiLocale.text('DOC');
+    return this.uiLocale.text('FILE');
   }
 
   getDocumentCategoryKey(category?: string | null): string {
@@ -349,7 +352,7 @@ export class BuildingComponent implements OnInit {
 
   getDocumentSizeLabel(sizeBytes?: number | null): string {
     if (sizeBytes == null) {
-      return 'Άγνωστο μέγεθος';
+      return this.uiLocale.text('Unknown size');
     }
 
     if (sizeBytes < 1024) return `${sizeBytes} B`;
@@ -360,11 +363,11 @@ export class BuildingComponent implements OnInit {
   getSelectedUploadFileTypeLabel(file: File): string {
     const value = `${file.type} ${file.name}`.toLowerCase();
 
-    if (value.includes('pdf')) return 'PDF';
-    if (value.match(/\.(jpg|jpeg|png|webp)\b/) || value.includes('image/')) return 'IMG';
-    if (value.match(/\.(xls|xlsx)\b/) || value.includes('sheet')) return 'XLS';
-    if (value.match(/\.(doc|docx)\b/) || value.includes('word')) return 'DOC';
-    return 'FILE';
+    if (value.includes('pdf')) return this.uiLocale.text('PDF');
+    if (value.match(/\.(jpg|jpeg|png|webp)\b/) || value.includes('image/')) return this.uiLocale.text('IMG');
+    if (value.match(/\.(xls|xlsx)\b/) || value.includes('sheet')) return this.uiLocale.text('XLS');
+    if (value.match(/\.(doc|docx)\b/) || value.includes('word')) return this.uiLocale.text('DOC');
+    return this.uiLocale.text('FILE');
   }
 
   resolveDocumentUrl(fileUrl: string): string {

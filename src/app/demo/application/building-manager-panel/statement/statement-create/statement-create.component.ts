@@ -1,10 +1,11 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
-import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, inject, Input, OnChanges, SimpleChanges, OnInit } from '@angular/core';
 
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { GreekDatepickerI18n } from 'src/app/theme/shared/service/greek-datepicker-i18n';
+import { AppDatepickerI18n } from 'src/app/theme/shared/service/datepicker-i18n.service';
 
 // icons
 import { IconService } from '@ant-design/icons-angular';
@@ -13,7 +14,6 @@ import { CloseOutline, DeleteOutline, EditOutline, PlusOutline, CalendarOutline 
 import { NgbModal, NgbDate, NgbDatepickerI18n } from '@ng-bootstrap/ng-bootstrap';
 
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
-import { OnInit } from '@angular/core';
 
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
 import { ManagerModalComponent } from './manager-modal/manager-modal.component';
@@ -32,9 +32,11 @@ import { Observable } from 'rxjs';
   imports: [SharedModule],
   templateUrl: './statement-create.component.html',
   styleUrl: './statement-create.component.scss',
-  providers: [{ provide: NgbDatepickerI18n, useClass: GreekDatepickerI18n }]
+  providers: [{ provide: NgbDatepickerI18n, useClass: AppDatepickerI18n }]
 })
 export class StatementCreateComponent implements OnInit, OnChanges {
+  private readonly uiLocale = inject(UiLocaleService);
+
   startDateModel: NgbDate | null = null;
   endDateModel: NgbDate | null = null;
   @Input() buildingId?: number;
@@ -55,15 +57,15 @@ export class StatementCreateComponent implements OnInit, OnChanges {
   userRole: string | null = null;
 
   expenseCategories = [
-    { label: 'ΚΟΙΝΟΧΡΗΣΤΑ', value: 'COMMON' },
-    { label: 'ΘΕΡΜΑΝΣΗ', value: 'HEATING' },
-    { label: 'ΑΣΑΝΣΕΡ', value: 'ELEVATOR' },
-    { label: 'ΑΥΤΟΝΟΜΙΑ', value: 'EQUAL' },
-    { label: 'BOILER', value: 'EQUAL' },
-    { label: 'ΕΙΔΙΚΕΣ ΔΑΠΑΝΕΣ', value: 'SPECIAL' },
-    { label: 'ΙΔΙΟΚΤΗΤΩΝ', value: 'EQUAL' },
-    { label: 'ΔΑΠΑΝΕΣ ΣΕ ΙΣΑ ΜΕΡΗ', value: 'EQUAL' },
-    { label: 'ΑΛΛΕΣ ΔΑΠΑΝΕΣ', value: 'EQUAL' }
+    { label: this.uiLocale.text('SHARE USERS'), value: 'COMMON' },
+    { label: this.uiLocale.text('HEATING'), value: 'HEATING' },
+    { label: this.uiLocale.text('ELEVATOR'), value: 'ELEVATOR' },
+    { label: this.uiLocale.text('AUTONOMY'), value: 'EQUAL' },
+    { label: this.uiLocale.text('BOILER'), value: 'EQUAL' },
+    { label: this.uiLocale.text('SPECIAL EXPENSES'), value: 'SPECIAL' },
+    { label: this.uiLocale.text('OWNERS'), value: 'EQUAL' },
+    { label: this.uiLocale.text('EXPENDITURE IN EQUAL PARTS'), value: 'EQUAL' },
+    { label: this.uiLocale.text('OTHER EXPENSES'), value: 'EQUAL' }
   ];
 
   // constructor
@@ -257,13 +259,13 @@ export class StatementCreateComponent implements OnInit, OnChanges {
   onSaveDraft() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      alert('Παρακαλώ συμπληρώστε την φόρμα!');
+      alert(this.uiLocale.text('Please fill out the form!'));
       console.warn('Η φόρμα είναι άκυρη:', this.form.value);
       return;
     }
 
     if (!this.selectedBuilding) {
-      alert('Δεν έχει επιλεγεί πολυκατοικία');
+      alert(this.uiLocale.text('No apartment building has been selected'));
       return;
     }
 
@@ -278,7 +280,7 @@ export class StatementCreateComponent implements OnInit, OnChanges {
 
     this.commonExpenseStatementService.saveDraft(this.selectedBuilding.id, payload).subscribe({
       next: (saved) => {
-        alert('Το προσχέδιο αποθηκεύτηκε!');
+        alert(this.uiLocale.text('Draft saved!'));
         console.log('Draft:', saved);
         this.form.reset(); // μηδενίζει τη φόρμα
         this.items.clear(); // καθαρίζει και τα items
@@ -286,7 +288,7 @@ export class StatementCreateComponent implements OnInit, OnChanges {
       },
       error: (err) => {
         console.error('Σφάλμα API:', err);
-        alert('Σφάλμα κατά την αποθήκευση draft!');
+        alert(this.uiLocale.text('Error saving draft!'));
       }
     });
   }
@@ -294,23 +296,27 @@ export class StatementCreateComponent implements OnInit, OnChanges {
   onCreateAndSend() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      alert('Παρακαλώ συμπληρώστε την φόρμα!');
+      alert(this.uiLocale.text('Please fill out the form!'));
       console.warn('Η φόρμα είναι άκυρη:', this.form.value);
       return;
     }
 
     if (!this.selectedBuilding) {
-      alert('Δεν έχει επιλεγεί πολυκατοικία');
+      alert(this.uiLocale.text('No apartment building has been selected'));
       return;
     }
 
     const apartmentIds = new Set(this.selectedApartments.map((apartment) => apartment.id));
-    if (this.items.controls.some((item) => {
-      const ids: number[] = item.get('selectedApartmentIds')?.value || [];
-      return item.get('category')?.value === 'SPECIAL' &&
-        (!ids.length || new Set(ids).size !== ids.length || ids.some((id) => !apartmentIds.has(id)));
-    })) {
-      alert('Επιλέξτε τουλάχιστον ένα έγκυρο διαμέρισμα για κάθε ειδική δαπάνη.');
+    if (
+      this.items.controls.some((item) => {
+        const ids: number[] = item.get('selectedApartmentIds')?.value || [];
+        return (
+          item.get('category')?.value === 'SPECIAL' &&
+          (!ids.length || new Set(ids).size !== ids.length || ids.some((id) => !apartmentIds.has(id)))
+        );
+      })
+    ) {
+      alert(this.uiLocale.text('Select at least one valid compartment for each special expense.'));
       return;
     }
 
@@ -328,7 +334,10 @@ export class StatementCreateComponent implements OnInit, OnChanges {
                 this.ApartmentService.getApartmentsByBuilding(this.selectedBuilding!.id).subscribe({
                   next: (apartments) => {
                     this.selectedApartments = [...apartments].sort(compareApartments);
-                    console.log('Χιλιοστά αναδιανεμήθηκαν:', apartments.map((a) => a.commonPercent));
+                    console.log(
+                      'Χιλιοστά αναδιανεμήθηκαν:',
+                      apartments.map((a) => a.commonPercent)
+                    );
                   },
                   error: () => {}
                 });
@@ -336,7 +345,7 @@ export class StatementCreateComponent implements OnInit, OnChanges {
               },
               error: (err) => {
                 console.error('Σφάλμα αναδιανομής χιλιοστών', err);
-                alert('Σφάλμα κατά την αναδιανομή των χιλιοστών!');
+                alert(this.uiLocale.text('Error redistributing millimeters!'));
               }
             });
           }
@@ -366,7 +375,7 @@ export class StatementCreateComponent implements OnInit, OnChanges {
 
     this.commonExpenseStatementService.createStatement(this.selectedBuilding.id, payload).subscribe({
       next: (saved) => {
-        alert('Η κατάσταση κοινοχρήστων δημιουργήθηκε!');
+        alert(this.uiLocale.text('User status created!'));
         console.log('Απάντηση API:', saved);
 
         // Μηδενισμός φόρμας
@@ -388,7 +397,7 @@ export class StatementCreateComponent implements OnInit, OnChanges {
       },
       error: (err) => {
         console.error('Σφάλμα API:', err);
-        alert('Σφάλμα κατά τη δημιουργία!');
+        alert(this.uiLocale.text('Error creating!'));
       }
     });
   }

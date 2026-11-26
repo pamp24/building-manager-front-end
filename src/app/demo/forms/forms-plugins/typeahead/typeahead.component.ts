@@ -8,8 +8,8 @@ import { catchError, debounceTime, distinctUntilChanged, filter, map, switchMap,
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 
 // bootstrap import
-import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbTypeahead, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 import { WikipediaService } from './wikipedia.service';
 
 @Component({

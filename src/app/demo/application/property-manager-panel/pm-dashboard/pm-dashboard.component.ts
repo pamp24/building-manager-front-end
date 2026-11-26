@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 import { Component, inject, OnInit } from '@angular/core';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import {
@@ -18,7 +19,12 @@ import {
 import { NgbCalendar, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { IconService } from '@ant-design/icons-angular';
 import { PmDashboardService } from 'src/app/theme/shared/service/pm-dashboard.service';
-import { PmBuildingManagerRowDTO, PmDashboardDTO, PmFinancialChartDTO, PmMembershipStatsDTO } from 'src/app/theme/shared/models/pmDashboardDTO';
+import {
+  PmBuildingManagerRowDTO,
+  PmDashboardDTO,
+  PmFinancialChartDTO,
+  PmMembershipStatsDTO
+} from 'src/app/theme/shared/models/pmDashboardDTO';
 import { ExpenseCollectionRateChartComponent } from './expense-collection-rate-chart/expense-collection-rate-chart.component';
 import { AttentionBuildingsTableComponent } from './attention-buildings-table/attention-buildings-table.component';
 import { RecentActivityComponent } from './recent-activity/recent-activity.component';
@@ -48,21 +54,59 @@ import { PmStatisticsChartComponent } from 'src/app/theme/shared/apexchart/pm-st
   styleUrl: './pm-dashboard.component.scss'
 })
 export class PmDashboardComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private iconService = inject(IconService);
   private ngbCalendar = inject(NgbCalendar);
   private dateAdapter = inject<NgbDateAdapter<string>>(NgbDateAdapter);
 
   private pmDashboardService = inject(PmDashboardService);
-  dashboardData!: PmDashboardDTO;
+  dashboardData: PmDashboardDTO = {
+    summary: { totalBuildings: 0, totalApartments: 0, pendingAmount: 0, overdueAmount: 0 },
+    attentionBuildings: [],
+    recentActivity: [],
+    notifications: []
+  };
+  loading = false;
+  loadError = false;
 
-  dashboard_summary: {
-    icon: string;
-    background: string;
-    title: string;
-    value: number | string;
-    percentage: string;
-    color: string;
-  }[] = [];
+  get dashboard_summary() {
+    const summary = this.dashboardData?.summary;
+    return [
+      {
+        icon: 'home',
+        background: 'bg-light-primary',
+        title: this.uiLocale.text('Apartment buildings'),
+        value: summary?.totalBuildings ?? 0,
+        percentage: '',
+        color: 'text-primary'
+      },
+      {
+        icon: 'apartment',
+        background: 'bg-light-success',
+        title: this.uiLocale.text('Apartments'),
+        value: summary?.totalApartments ?? 0,
+        percentage: '',
+        color: 'text-success'
+      },
+      {
+        icon: 'credit-card',
+        background: 'bg-light-warning',
+        title: this.uiLocale.text('Outstanding Debts'),
+        value: (summary?.pendingAmount ?? 0) + ' €',
+        percentage: '',
+        color: 'text-warning'
+      },
+      {
+        icon: 'fall',
+        background: 'bg-light-danger',
+        title: this.uiLocale.text('Overdue'),
+        value: (summary?.overdueAmount ?? 0) + ' €',
+        percentage: '',
+        color: 'text-danger'
+      }
+    ];
+  }
 
   financialChart?: PmFinancialChartDTO;
   chartPeriod = 'month';
@@ -98,58 +142,19 @@ export class PmDashboardComponent implements OnInit {
     this.loadFinancialChart();
     this.loadMembershipStats();
     this.loadBuildingManagers();
-    this.pmDashboardService.getDashboard().subscribe({
-      next: (data) => {
-        this.dashboardData = data;
-
-        this.dashboard_summary = [
-          {
-            icon: 'home',
-            background: 'bg-light-primary',
-            title: 'Πολυκατοικίες',
-            value: data.summary.totalBuildings,
-            percentage: '',
-            color: 'text-primary'
-          },
-          {
-            icon: 'apartment',
-            background: 'bg-light-success',
-            title: 'Διαμερίσματα',
-            value: data.summary.totalApartments,
-            percentage: '',
-            color: 'text-success'
-          },
-          {
-            icon: 'credit-card',
-            background: 'bg-light-warning',
-            title: 'Εκκρεμείς Οφειλές',
-            value: data.summary.pendingAmount + '€',
-            percentage: '',
-            color: 'text-warning'
-          },
-          {
-            icon: 'fall',
-            background: 'bg-light-danger',
-            title: 'Ληξιπρόθεσμα',
-            value: data.summary.overdueAmount + '€',
-            percentage: '',
-            color: 'text-danger'
-          }
-        ];
-      }
-    });
+    this.loadDashboard();
   }
 
   loadBuildingManagers(): void {
-  this.pmDashboardService.getBuildingManagers().subscribe({
-    next: (res) => {
-      this.buildingManagers = res;
-    },
-    error: (err) => {
-      console.error('Failed to load building managers', err);
-    }
-  });
-}
+    this.pmDashboardService.getBuildingManagers().subscribe({
+      next: (res) => {
+        this.buildingManagers = res ?? [];
+      },
+      error: (err) => {
+        console.error('Failed to load building managers', err);
+      }
+    });
+  }
 
   loadMembershipStats(): void {
     this.pmDashboardService.getMembershipStats().subscribe({
@@ -177,11 +182,16 @@ export class PmDashboardComponent implements OnInit {
   }
 
   loadDashboard(): void {
+    this.loading = true;
+    this.loadError = false;
     this.pmDashboardService.getDashboard().subscribe({
       next: (res) => {
-        this.dashboardData = res;
+        this.dashboardData = res ?? this.dashboardData;
+        this.loading = false;
       },
       error: (err) => {
+        this.loading = false;
+        this.loadError = true;
         console.error('Failed to load PM dashboard', err);
       }
     });

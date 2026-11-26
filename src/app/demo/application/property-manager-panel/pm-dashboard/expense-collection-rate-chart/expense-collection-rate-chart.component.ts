@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // angular import
 import { Component, OnInit, effect, inject } from '@angular/core';
 
@@ -20,6 +21,8 @@ import { PmDashboardService } from 'src/app/theme/shared/service/pm-dashboard.se
   styleUrl: './expense-collection-rate-chart.component.scss'
 })
 export class ExpenseCollectionRateChartComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private iconService = inject(IconService);
   private themeService = inject(ThemeService);
   private pmDashboardService = inject(PmDashboardService);
@@ -100,10 +103,10 @@ export class ExpenseCollectionRateChartComponent implements OnInit {
   private loadExpenseCollectionRate(): void {
     this.pmDashboardService.getExpenseCollectionRate(this.selectedPeriod).subscribe({
       next: (res) => {
-        this.collectionRate = res.collectionRate;
-        this.issuedAmount = res.issuedAmount;
-        this.paidAmount = res.paidAmount;
-        this.overdueAmount = res.overdueAmount;
+        this.collectionRate = res?.collectionRate ?? 0;
+        this.issuedAmount = res?.issuedAmount ?? 0;
+        this.paidAmount = res?.paidAmount ?? 0;
+        this.overdueAmount = res?.overdueAmount ?? 0;
 
         this.chartOptions = {
           ...this.chartOptions,
@@ -154,7 +157,7 @@ export class ExpenseCollectionRateChartComponent implements OnInit {
   }
 
   formatCurrency(value: number): string {
-    return new Intl.NumberFormat('el-GR', {
+    return new Intl.NumberFormat(this.uiLocale.locale, {
       style: 'currency',
       currency: 'EUR',
       minimumFractionDigits: 2,

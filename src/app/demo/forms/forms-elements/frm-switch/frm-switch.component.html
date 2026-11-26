@@ -4,13 +4,13 @@
   <div class="col-sm-12">
     <div class="card">
       <div class="card-header">
-        <h5>Switch [ v1 ]</h5>
+        <h5>{{ 'Switch [ v1 ]' | translate }}</h5>
       </div>
       <div class="card-body">
         <div class="row switch-demo">
           <div class="col-md-4">
             <div class="form-group">
-              <h5>Default Switch</h5>
+              <h5>{{ 'Default Switch' | translate }}</h5>
               <hr />
               @for (item of switches; track item; let i = $index) {
                 <div class="form-check form-switch mb-2">
@@ -19,17 +19,17 @@
                 </div>
               }
               <small class="form-text text-muted">
-                Use class
-                <code>input-[color name]</code>
-                in
-                <code>&lt;input&gt;</code>
-                tag
+                {{ 'Use class' | translate }}
+                <code>{{ 'input-[color name]' | translate }}</code>
+                {{ 'in' | translate }}
+                <code>{{ '&lt;input&gt;' | translate }}</code>
+                {{ 'tag' | translate }}
               </small>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <h5>Custom Switch</h5>
+              <h5>{{ 'Custom Switch' | translate }}</h5>
               <hr />
               @for (item of switches; track item; let i = $index) {
                 <div class="form-check form-switch custom-switch-v1 mb-2">
@@ -38,17 +38,17 @@
                 </div>
               }
               <small class="form-text text-muted">
-                Use class
-                <code>custom-switch-v1</code>
-                in
-                <code>&lt;div&gt;</code>
-                tag
+                {{ 'Use class' | translate }}
+                <code>{{ 'custom-switch-v1' | translate }}</code>
+                {{ 'in' | translate }}
+                <code>{{ '&lt;div&gt;' | translate }}</code>
+                {{ 'tag' | translate }}
               </small>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <h5>Color States</h5>
+              <h5>{{ 'Color States' | translate }}</h5>
               <hr />
               @for (item of switches_light; track item; let i = $index) {
                 <div class="form-check form-switch custom-switch-v1 mb-2">
@@ -57,8 +57,8 @@
                 </div>
               }
               <small class="form-text text-muted">
-                Use class
-                <code>input-light-[color name]</code>
+                {{ 'Use class' | translate }}
+                <code>{{ 'input-light-[color name]' | translate }}</code>
               </small>
             </div>
           </div>
@@ -69,42 +69,42 @@
   <div class="col-lg-6">
     <div class="card">
       <div class="card-header">
-        <h5>Inline Switch</h5>
+        <h5>{{ 'Inline Switch' | translate }}</h5>
       </div>
       <div class="card-body">
         <form>
           <div class="form-group">
             <div class="form-check form-switch custom-switch-v1 form-check-inline">
               <input type="checkbox" class="form-check-input input-primary" id="customCheckinl1" />
-              <label class="form-check-label" for="customCheckinl1">Inline 1</label>
+              <label class="form-check-label" for="customCheckinl1">{{ 'Inline 1' | translate }}</label>
             </div>
             <div class="form-check form-switch custom-switch-v1 form-check-inline">
               <input type="checkbox" class="form-check-input input-primary" id="customCheckinl2" />
-              <label class="form-check-label" for="customCheckinl2">Inline 2</label>
+              <label class="form-check-label" for="customCheckinl2">{{ 'Inline 2' | translate }}</label>
             </div>
             <div class="form-check form-switch custom-switch-v1 form-check-inline">
               <input type="checkbox" class="form-check-input input-primary" id="customCheckinl3" />
-              <label class="form-check-label" for="customCheckinl3">Inline 3</label>
+              <label class="form-check-label" for="customCheckinl3">{{ 'Inline 3' | translate }}</label>
             </div>
           </div>
           <div class="form-group">
-            <label class="d-block text-muted mb-3">With Checked State</label>
+            <label class="d-block text-muted mb-3">{{ 'With Checked State' | translate }}</label>
             <div class="form-check form-switch custom-switch-v1 form-check-inline">
               <input type="checkbox" class="form-check-input input-primary" id="customCheckinl4" checked />
-              <label class="form-check-label" for="customCheckinl4">Inline 1</label>
+              <label class="form-check-label" for="customCheckinl4">{{ 'Inline 1' | translate }}</label>
             </div>
             <div class="form-check form-switch custom-switch-v1 form-check-inline">
               <input type="checkbox" class="form-check-input input-primary" id="customCheckinl5" />
-              <label class="form-check-label" for="customCheckinl5">Inline 2</label>
+              <label class="form-check-label" for="customCheckinl5">{{ 'Inline 2' | translate }}</label>
             </div>
             <div class="form-check form-switch custom-switch-v1 form-check-inline">
               <input type="checkbox" class="form-check-input input-primary" id="customCheckinl6" checked />
-              <label class="form-check-label" for="customCheckinl6">Inline 3</label>
+              <label class="form-check-label" for="customCheckinl6">{{ 'Inline 3' | translate }}</label>
             </div>
             <br />
             <small class="form-text text-muted">
-              Use class
-              <code>form-check-inline</code>
+              {{ 'Use class' | translate }}
+              <code>{{ 'form-check-inline' | translate }}</code>
             </small>
           </div>
         </form>
@@ -112,62 +112,62 @@
     </div>
     <div class="card">
       <div class="card-header">
-        <h5>Switch in Horizontal Form</h5>
+        <h5>{{ 'Switch in Horizontal Form' | translate }}</h5>
       </div>
       <div class="card-body">
         <form>
           <div class="form-group row">
-            <label class="col-3 col-form-label p-t-0 p-b-0">Switches</label>
+            <label class="col-3 col-form-label p-t-0 p-b-0">{{ 'Switches' | translate }}</label>
             <div class="col-9">
               <div class="form-check form-switch custom-switch-v1 mb-2">
                 <input type="checkbox" class="form-check-input input-primary" id="customCheckdefh1" />
-                <label class="form-check-label" for="customCheckdefh1">Default</label>
+                <label class="form-check-label" for="customCheckdefh1">{{ 'Default' | translate }}</label>
               </div>
               <div class="form-check form-switch custom-switch-v1 mb-2">
                 <input type="checkbox" class="form-check-input input-primary" id="customCheckdefh2" />
-                <label class="form-check-label" for="customCheckdefh2">Option 2</label>
+                <label class="form-check-label" for="customCheckdefh2">{{ 'Option 2' | translate }}</label>
               </div>
               <div class="form-check form-switch custom-switch-v1 mb-2">
                 <input type="checkbox" class="form-check-input input-primary" id="customCheckdefh3" disabled />
-                <label class="form-check-label" for="customCheckdefh3">Disabled</label>
+                <label class="form-check-label" for="customCheckdefh3">{{ 'Disabled' | translate }}</label>
               </div>
               <div class="form-check form-switch custom-switch-v1 mb-2">
                 <input type="checkbox" class="form-check-input input-primary" id="customCheckdefh4" checked />
-                <label class="form-check-label" for="customCheckdefh4">Checked</label>
+                <label class="form-check-label" for="customCheckdefh4">{{ 'Checked' | translate }}</label>
               </div>
             </div>
           </div>
           <div class="form-group row">
-            <label class="col-3 col-form-label p-t-0 p-b-0">Inline Switches</label>
+            <label class="col-3 col-form-label p-t-0 p-b-0">{{ 'Inline Switches' | translate }}</label>
             <div class="col-9">
               <div class="form-check form-switch custom-switch-v1 form-check-inline">
                 <input type="checkbox" class="form-check-input input-primary" id="customCheckinlh1" />
-                <label class="form-check-label" for="customCheckinlh1">Inline 1</label>
+                <label class="form-check-label" for="customCheckinlh1">{{ 'Inline 1' | translate }}</label>
               </div>
               <div class="form-check form-switch custom-switch-v1 form-check-inline">
                 <input type="checkbox" class="form-check-input input-primary" id="customCheckinlh2" />
-                <label class="form-check-label" for="customCheckinlh2">Inline 2</label>
+                <label class="form-check-label" for="customCheckinlh2">{{ 'Inline 2' | translate }}</label>
               </div>
               <div class="form-check form-switch custom-switch-v1 form-check-inline">
                 <input type="checkbox" class="form-check-input input-primary" id="customCheckinlh3" />
-                <label class="form-check-label" for="customCheckinlh3">Inline 3</label>
+                <label class="form-check-label" for="customCheckinlh3">{{ 'Inline 3' | translate }}</label>
               </div>
             </div>
           </div>
           <div class="form-group row">
-            <label class="col-3 col-form-label p-t-0 p-b-0">Inline States</label>
+            <label class="col-3 col-form-label p-t-0 p-b-0">{{ 'Inline States' | translate }}</label>
             <div class="col-9">
               <div class="form-check form-switch custom-switch-v1 form-check-inline">
                 <input type="checkbox" class="form-check-input input-primary" id="customCheckinlh4" checked />
-                <label class="form-check-label" for="customCheckinlh4">Inline 1</label>
+                <label class="form-check-label" for="customCheckinlh4">{{ 'Inline 1' | translate }}</label>
               </div>
               <div class="form-check form-switch custom-switch-v1 form-check-inline">
                 <input type="checkbox" class="form-check-input input-primary" id="customCheckinlh5" />
-                <label class="form-check-label" for="customCheckinlh5">Inline 2</label>
+                <label class="form-check-label" for="customCheckinlh5">{{ 'Inline 2' | translate }}</label>
               </div>
               <div class="form-check form-switch custom-switch-v1 form-check-inline">
                 <input type="checkbox" class="form-check-input input-primary" id="customCheckinlh6" checked />
-                <label class="form-check-label" for="customCheckinlh6">Inline 3</label>
+                <label class="form-check-label" for="customCheckinlh6">{{ 'Inline 3' | translate }}</label>
               </div>
             </div>
           </div>
@@ -178,69 +178,69 @@
   <div class="col-lg-6">
     <div class="card">
       <div class="card-header">
-        <h5>Sizing</h5>
+        <h5>{{ 'Sizing' | translate }}</h5>
       </div>
       <div class="card-body">
         <form>
           <div class="form-group">
-            <label>Small Switches</label>
+            <label>{{ 'Small Switches' | translate }}</label>
             <div class="form-check form-switch switch-sm">
               <input type="checkbox" class="form-check-input input-primary" id="customCheckdefcol1" />
-              <label class="form-check-label" for="customCheckdefcol1">Default</label>
+              <label class="form-check-label" for="customCheckdefcol1">{{ 'Default' | translate }}</label>
             </div>
             <div class="form-check form-switch switch-sm">
               <input type="checkbox" class="form-check-input input-primary" id="customCheckdefcol2" />
-              <label class="form-check-label" for="customCheckdefcol2">Option 2</label>
+              <label class="form-check-label" for="customCheckdefcol2">{{ 'Option 2' | translate }}</label>
             </div>
             <div class="form-check form-switch switch-sm">
               <input type="checkbox" class="form-check-input input-primary" id="customCheckdefcol3" disabled />
-              <label class="form-check-label" for="customCheckdefcol3">Disabled</label>
+              <label class="form-check-label" for="customCheckdefcol3">{{ 'Disabled' | translate }}</label>
             </div>
             <div class="form-check form-switch switch-sm">
               <input type="checkbox" class="form-check-input input-primary" id="customCheckdefcol4" checked />
-              <label class="form-check-label" for="customCheckdefcol4">Checked</label>
+              <label class="form-check-label" for="customCheckdefcol4">{{ 'Checked' | translate }}</label>
             </div>
-            <small class="form-text text-muted">Some help text goes here</small>
+            <small class="form-text text-muted">{{ 'Some help text goes here' | translate }}</small>
           </div>
           <div class="form-group">
-            <label>Large Switches</label>
+            <label>{{ 'Large Switches' | translate }}</label>
             <div class="form-check form-switch switch-lg">
               <input type="checkbox" class="form-check-input input-primary" id="customCheckdefout1" />
-              <label class="form-check-label" for="customCheckdefout1">Default</label>
+              <label class="form-check-label" for="customCheckdefout1">{{ 'Default' | translate }}</label>
             </div>
             <div class="form-check form-switch switch-lg">
               <input type="checkbox" class="form-check-input input-primary" id="customCheckdefout2" />
-              <label class="form-check-label" for="customCheckdefout2">Option 2</label>
+              <label class="form-check-label" for="customCheckdefout2">{{ 'Option 2' | translate }}</label>
             </div>
             <div class="form-check form-switch switch-lg">
               <input type="checkbox" class="form-check-input input-primary" id="customCheckdefout3" disabled />
-              <label class="form-check-label" for="customCheckdefout3">Disabled</label>
+              <label class="form-check-label" for="customCheckdefout3">{{ 'Disabled' | translate }}</label>
             </div>
             <div class="form-check form-switch switch-lg">
               <input type="checkbox" class="form-check-input input-primary" id="customCheckdefout4" checked />
-              <label class="form-check-label" for="customCheckdefout4">Checked</label>
+              <label class="form-check-label" for="customCheckdefout4">{{ 'Checked' | translate }}</label>
             </div>
-            <small class="form-text text-muted">Some help text goes here</small>
+            <small class="form-text text-muted">{{ 'Some help text goes here' | translate }}</small>
           </div>
           <div class="form-group">
-            <label>Color States</label>
+            <label>{{ 'Color States' | translate }}</label>
             @for (item of switches; track item; let i = $index) {
               <div class="form-check form-switch">
                 <input type="checkbox" class="form-check-input {{ item.class }}" id="customswitchv{{ i }}" checked />
                 <label class="form-check-label" for="customswitchv{{ i }}">{{ item.label }}</label>
               </div>
             }
-            <small class="form-text text-muted">Some help text goes here</small>
+            <small class="form-text text-muted">{{ 'Some help text goes here' | translate }}</small>
           </div>
           <div class="form-group">
-            <label>Color States</label>
+            <label>{{ 'Color States' | translate }}</label>
             @for (item of switches_light; track item; let i = $index) {
               <div class="form-check form-switch">
                 <input type="checkbox" class="form-check-input {{ item.class }}" id="customswitchv{{ i }}" checked />
                 <label class="form-check-label" for="customswitchv{{ i }}">{{ item.label }}</label>
               </div>
             }
-            <small class="form-text text-muted">Some help text goes here</small>
+            <small class="form-text text-muted">{{ 'Some help text goes here' | translate }}</small>
           </div>
         </form>
       </div>

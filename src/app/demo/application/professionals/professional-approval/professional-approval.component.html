@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-12">
-    <app-card cardTitle="Έγκριση Επαγγελματιών">
+    <app-card [cardTitle]="'Professional Approval' | translate">
       @if (success) {
         <div class="alert alert-success">
           {{ success }}
@@ -14,11 +14,11 @@
       }
 
       @if (loading) {
-        <div class="py-4 text-center">Φόρτωση αιτήσεων...</div>
+        <div class="py-4 text-center">{{ 'Loading applications...' | translate }}</div>
       }
 
       @if (!loading && pendingBusinesses.length === 0) {
-        <div class="alert alert-info mb-0">Δεν υπάρχουν επιχειρήσεις σε αναμονή έγκρισης.</div>
+        <div class="alert alert-info mb-0">{{ 'There are no businesses pending approval.' | translate }}</div>
       }
 
       @if (!loading && pendingBusinesses.length > 0) {
@@ -26,13 +26,13 @@
           <table class="table table-hover align-middle">
             <thead>
               <tr>
-                <th>Επιχείρηση</th>
-                <th>Κατηγορία</th>
-                <th>Υπεύθυνος</th>
-                <th>Πόλη</th>
-                <th>Τηλέφωνο</th>
-                <th>Email</th>
-                <th class="text-end">Ενέργειες</th>
+                <th>{{ 'Business' | translate }}</th>
+                <th>{{ 'Category' | translate }}</th>
+                <th>{{ 'Responsible' | translate }}</th>
+                <th>{{ 'City' | translate }}</th>
+                <th>{{ 'Telephone' | translate }}</th>
+                <th>{{ 'Email' | translate }}</th>
+                <th class="text-end">{{ 'Actions' | translate }}</th>
               </tr>
             </thead>
 
@@ -42,7 +42,7 @@
                   <td>
                     <strong>{{ business.businessName }}</strong>
                     <div class="text-muted small">
-                      {{ business.description || 'Χωρίς περιγραφή' }}
+                      {{ business.description || ('No description' | translate) }}
                     </div>
                   </td>
 
@@ -67,9 +67,13 @@
                   </td>
 
                   <td class="text-end">
-                    <button class="btn btn-sm btn-success me-2" (click)="approve(business.id)">Έγκριση</button>
+                    <button class="btn btn-sm btn-success me-2" (click)="approve(business.id)">
+                      {{ 'Approval' | translate }}
+                    </button>
 
-                    <button class="btn btn-sm btn-outline-danger" (click)="reject(business.id)">Απόρριψη</button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="reject(business.id)">
+                      {{ 'Rejection' | translate }}
+                    </button>
                   </td>
                 </tr>
               }
@@ -83,7 +87,7 @@
       <div class="col-md-3 mb-3">
         <div class="card border shadow-sm">
           <div class="card-body">
-            <p class="text-muted mb-1">Εκκρεμείς</p>
+            <p class="text-muted mb-1">{{ 'Pending' | translate }}</p>
             <h3 class="mb-0">{{ stats?.pendingBusinesses || 0 }}</h3>
           </div>
         </div>
@@ -92,7 +96,7 @@
       <div class="col-md-3 mb-3">
         <div class="card border shadow-sm">
           <div class="card-body">
-            <p class="text-muted mb-1">Εγκεκριμένες</p>
+            <p class="text-muted mb-1">{{ 'Approved' | translate }}</p>
             <h3 class="mb-0">{{ stats?.approvedBusinesses || 0 }}</h3>
           </div>
         </div>
@@ -101,7 +105,7 @@
       <div class="col-md-3 mb-3">
         <div class="card border shadow-sm">
           <div class="card-body">
-            <p class="text-muted mb-1">Ανενεργές</p>
+            <p class="text-muted mb-1">{{ 'Inactive' | translate }}</p>
             <h3 class="mb-0">{{ stats?.inactiveBusinesses || 0 }}</h3>
           </div>
         </div>
@@ -110,7 +114,7 @@
       <div class="col-md-3 mb-3">
         <div class="card border shadow-sm">
           <div class="card-body">
-            <p class="text-muted mb-1">Σύνολο</p>
+            <p class="text-muted mb-1">{{ 'Total' | translate }}</p>
             <h3 class="mb-0">{{ stats?.totalBusinesses || 0 }}</h3>
           </div>
         </div>
@@ -120,8 +124,8 @@
     <div class="card border mt-4">
       <div class="card-header d-flex justify-content-between align-items-center">
         <div>
-          <h5 class="mb-0">Διαχείριση Επιχειρήσεων</h5>
-          <small class="text-muted">Σύνολο: {{ totalElements }}</small>
+          <h5 class="mb-0">{{ 'Business Management' | translate }}</h5>
+          <small class="text-muted">{{ 'Total:' | translate }} {{ totalElements }}</small>
         </div>
 
         <select class="form-select w-auto" [value]="pageSize" (change)="changePageSize($event)">
@@ -132,7 +136,7 @@
       </div>
 
       @if (businessesLoading) {
-        <div class="py-4 text-center">Φόρτωση επιχειρήσεων...</div>
+        <div class="py-4 text-center">{{ 'Loading Businesses...' | translate }}</div>
       }
 
       @if (!businessesLoading && businesses.length > 0) {
@@ -140,12 +144,12 @@
           <table class="table table-hover align-middle mb-0">
             <thead>
               <tr>
-                <th>Επιχείρηση</th>
-                <th>Κατηγορία</th>
-                <th>Πόλη</th>
-                <th>Κατάσταση</th>
-                <th>Αξιολογήσεις</th>
-                <th class="text-end">Ενέργειες</th>
+                <th>{{ 'Business' | translate }}</th>
+                <th>{{ 'Category' | translate }}</th>
+                <th>{{ 'City' | translate }}</th>
+                <th>{{ 'Status' | translate }}</th>
+                <th>{{ 'Evaluations' | translate }}</th>
+                <th class="text-end">{{ 'Actions' | translate }}</th>
               </tr>
             </thead>
 
@@ -163,11 +167,11 @@
 
                   <td>
                     @if (business.active && business.verified) {
-                      <span class="badge bg-success">Ενεργή</span>
+                      <span class="badge bg-success">{{ 'Active' | translate }}</span>
                     } @else if (!business.verified) {
-                      <span class="badge bg-warning text-dark">Εκκρεμεί</span>
+                      <span class="badge bg-warning text-dark">{{ 'It is pending' | translate }}</span>
                     } @else {
-                      <span class="badge bg-secondary">Ανενεργή</span>
+                      <span class="badge bg-secondary">{{ 'Inactive' | translate }}</span>
                     }
                   </td>
 
@@ -182,10 +186,12 @@
                       [ngClass]="business.active ? 'btn-outline-warning' : 'btn-outline-success'"
                       (click)="toggleBusinessActive(business)"
                     >
-                      {{ business.active ? 'Απενεργοποίηση' : 'Ενεργοποίηση' }}
+                      {{ business.active ? ('Disable' | translate) : ('Activation' | translate) }}
                     </button>
 
-                    <button class="btn btn-sm btn-outline-danger" (click)="deleteBusiness(business.id)">Διαγραφή</button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="deleteBusiness(business.id)">
+                      {{ 'Delete' | translate }}
+                    </button>
                   </td>
                 </tr>
               }
@@ -195,20 +201,25 @@
       }
 
       @if (!businessesLoading && businesses.length === 0) {
-        <div class="alert alert-info m-3">Δεν υπάρχουν επιχειρήσεις.</div>
+        <div class="alert alert-info m-3">{{ 'There are no businesses.' | translate }}</div>
       }
 
       <div class="card-footer d-flex justify-content-between align-items-center">
-        <button class="btn btn-outline-secondary btn-sm" [disabled]="currentPage === 0" (click)="previousPage()">Προηγούμενη</button>
+        <button class="btn btn-outline-secondary btn-sm" [disabled]="currentPage === 0" (click)="previousPage()">
+          {{ 'Previous' | translate }}
+        </button>
 
-        <span class="small text-muted">Σελίδα {{ totalPages === 0 ? 0 : currentPage + 1 }} από {{ totalPages }}</span>
+        <span class="small text-muted">
+          {{ 'Page' | translate }} {{ totalPages === 0 ? 0 : currentPage + 1 }} {{ 'from' | translate }}
+          {{ totalPages }}
+        </span>
 
         <button
           class="btn btn-outline-secondary btn-sm"
           [disabled]="totalPages === 0 || currentPage >= totalPages - 1"
           (click)="nextPage()"
         >
-          Επόμενη
+          {{ 'Next' | translate }}
         </button>
       </div>
     </div>

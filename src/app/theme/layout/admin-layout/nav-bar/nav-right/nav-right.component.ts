@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
 import { Component, Input, OnInit, output, inject } from '@angular/core';
@@ -9,9 +10,9 @@ import { AuthenticationService } from 'src/app/theme/shared/service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { MantisConfig } from 'src/app/app-config';
 import { ScrollbarComponent } from 'src/app/theme/shared/components/scrollbar/scrollbar.component';
+import { ThemeService } from 'src/app/theme/shared/service/customs-theme.service';
 
 // third party
-import { TranslateService } from '@ngx-translate/core';
 import screenfull from 'screenfull';
 
 // icon
@@ -23,6 +24,8 @@ import {
   MailOutline,
   FullscreenOutline,
   SettingOutline,
+  MoonOutline,
+  SunOutline,
   FullscreenExitOutline,
   GiftOutline,
   MessageOutline,
@@ -50,10 +53,17 @@ import { NotificationDropdownComponent } from './notification-dropdown/notificat
   styleUrls: ['./nav-right.component.scss']
 })
 export class NavRightComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+  readonly themeService = inject(ThemeService);
+
   authenticationService = inject(AuthenticationService);
-  private translate = inject(TranslateService);
   private iconService = inject(IconService);
   notifications: any[] = [];
+
+  readonly languages = this.uiLocale.languages;
+  get currentLanguage() {
+    return this.uiLocale.currentLanguage;
+  }
 
   // public props
   @Input() styleSelectorToggle!: boolean;
@@ -73,6 +83,8 @@ export class NavRightComponent implements OnInit {
         MailOutline,
         FullscreenOutline,
         SettingOutline,
+        MoonOutline,
+        SunOutline,
         FullscreenExitOutline,
         GiftOutline,
         MessageOutline,
@@ -104,7 +116,7 @@ export class NavRightComponent implements OnInit {
   // public method
   // user according language change of sidebar menu item
   useLanguage(language: string) {
-    this.translate.use(language);
+    void this.uiLocale.setLanguage(language);
   }
 
   getUserAvatar(): string {
@@ -122,73 +134,73 @@ export class NavRightComponent implements OnInit {
 
   megaMenus = [
     {
-      name: 'Authentication',
+      name: this.uiLocale.text('Authentication'),
       children: [
         {
-          title: 'Login',
+          title: this.uiLocale.text('Login'),
           url: '/auth/login'
         },
         {
-          title: 'Register',
+          title: this.uiLocale.text('Register'),
           url: '/auth/register'
         },
         {
-          title: 'Reset Password',
+          title: this.uiLocale.text('Reset Password'),
           url: '/auth/reset-password'
         },
         {
-          title: 'Forgot Password',
+          title: this.uiLocale.text('Forgot Password'),
           url: '/auth/forgot-password'
         },
         {
-          title: 'Verification Code',
+          title: this.uiLocale.text('Verification Code'),
           url: '/auth/code-verify'
         }
       ]
     },
     {
-      name: 'Other Pages',
+      name: this.uiLocale.text('Other Pages'),
       children: [
         {
-          title: 'About Us',
+          title: this.uiLocale.text('About Us'),
           url: '/',
           target: '_blank'
         },
         {
-          title: 'Contact Us',
+          title: this.uiLocale.text('Contact Us'),
           url: '/contact-us',
           target: '_blank'
         },
         {
-          title: 'Pricing',
+          title: this.uiLocale.text('Pricing'),
           url: '/price'
         },
         {
-          title: 'Payment',
+          title: this.uiLocale.text('Payment'),
           url: '/user/user-profile'
         },
         {
-          title: 'Landing',
+          title: this.uiLocale.text('Landing'),
           url: '/',
           target: '_blank'
         }
       ]
     },
     {
-      name: 'MainTenance Pages',
+      name: this.uiLocale.text('MainTenance Pages'),
       children: [
         {
-          title: 'Construction',
+          title: this.uiLocale.text('Construction'),
           url: '/maintenance/under-construct',
           target: '_blank'
         },
         {
-          title: 'Coming Soon',
+          title: this.uiLocale.text('Coming Soon'),
           url: '/maintenance/coming-soon',
           target: '_blank'
         },
         {
-          title: '404 Error',
+          title: this.uiLocale.text('404 Error'),
           url: '/maintenance/error-404'
         }
       ]
@@ -198,12 +210,12 @@ export class NavRightComponent implements OnInit {
   profile = [
     {
       icon: 'profile',
-      title: 'Προφιλ Πολυκατοικίας',
+      title: this.uiLocale.text('Apartment Building Profile'),
       url: '/user/account-profile'
     },
     {
       icon: 'user',
-      title: 'Προσωπικό προφίλ',
+      title: this.uiLocale.text('Personal profile'),
       url: '/user/user-profile'
     },
     // {
@@ -212,17 +224,17 @@ export class NavRightComponent implements OnInit {
     // },
     {
       icon: 'calendar',
-      title: 'Ημερολόγιο',
+      title: this.uiLocale.text('Calendar'),
       url: '/calendar'
     },
     {
       icon: 'line-chart',
-      title: 'Ψηφοφορίες',
+      title: this.uiLocale.text('Votes'),
       url: '/polls'
     },
     {
       icon: 'wallet',
-      title: 'Τιμολόγηση',
+      title: this.uiLocale.text('Pricing'),
       url: '/price'
     }
   ];
@@ -230,24 +242,24 @@ export class NavRightComponent implements OnInit {
   setting = [
     {
       icon: 'question-circle',
-      title: 'Υποστήριξη',
+      title: this.uiLocale.text('Support'),
       url: '/helpdesk/ticket/create'
     },
     {
       icon: 'user',
-      title: 'Ρυθμίσεις λογαριασμού'
+      title: this.uiLocale.text('Account Settings')
     },
     {
       icon: 'lock',
-      title: 'Privacy Center'
+      title: this.uiLocale.text('Privacy Center')
     },
     {
       icon: 'comment',
-      title: 'Feedback'
+      title: this.uiLocale.text('Feedback')
     },
     {
       icon: 'unordered-list',
-      title: 'Ιστορικό'
+      title: this.uiLocale.text('History')
     }
   ];
 
@@ -283,6 +295,10 @@ export class NavRightComponent implements OnInit {
   customize() {
     this.styleSelectorToggle = !this.styleSelectorToggle;
     this.Customize.emit();
+  }
+
+  toggleTheme(): void {
+    this.themeService.setDarkMode(!this.themeService.isDarkMode());
   }
 
   logout() {

@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 import { Component, Input, OnChanges, OnInit, SimpleChanges, effect, inject } from '@angular/core';
 import { SharedModule } from '../../shared.module';
 import { ThemeService } from '../../service/customs-theme.service';
@@ -13,12 +14,17 @@ import { UserDashboardService } from '../../service/userDashboard.service';
   styleUrl: './building-chart.component.scss'
 })
 export class BuildingChartComponent implements OnInit, OnChanges {
+  private readonly uiLocale = inject(UiLocaleService);
+
   @Input() isVisible = false;
   private themeService = inject(ThemeService);
   private iconService = inject(IconService);
   private userDashboardService = inject(UserDashboardService);
 
-  chartOptions!: ApexOptions;
+  chartOptions: ApexOptions = {};
+  hasData = false;
+  loading = false;
+  loadError = false;
   isDarkThemes!: boolean;
   selectedView: 'building' | 'apartment' = 'building';
   // filters
@@ -36,9 +42,10 @@ export class BuildingChartComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.initializeChart();
+    this.loadChartData();
   }
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['isVisible'] && this.isVisible) {
+    if (changes['isVisible'] && !changes['isVisible'].firstChange && this.isVisible) {
       this.loadChartData();
 
       setTimeout(() => {
@@ -49,26 +56,34 @@ export class BuildingChartComponent implements OnInit, OnChanges {
 
   //FROM BACKEND
   loadChartData() {
+    this.loading = true;
+    this.loadError = false;
     this.userDashboardService.getChartData(this.selectedView, this.selectedPeriod).subscribe({
       next: (data) => {
+        this.loading = false;
+        this.hasData = !!data?.values?.length;
         this.chartOptions = {
           ...this.chartOptions,
           series: [
             {
-              name: this.selectedView === 'building' ? 'Πολυκατοικία' : 'Διαμέρισμα',
-              data: data.values
+              name: this.selectedView === 'building' ? this.uiLocale.text('Building') : this.uiLocale.text('Apartment'),
+              data: data?.values ?? []
             }
           ],
           xaxis: {
             ...this.chartOptions.xaxis,
-            categories: data.labels.map((l: string) => (this.selectedPeriod === 'month' ? this.formatMonthLabel(l) : l))
+            categories: (data?.labels ?? []).map((l: string) => (this.selectedPeriod === 'month' ? this.formatMonthLabel(l) : l))
           }
         };
         setTimeout(() => {
           window.dispatchEvent(new Event('resize'));
         }, 150);
       },
-      error: (error) => console.error(error)
+      error: () => {
+        this.loading = false;
+        this.loadError = true;
+        this.hasData = false;
+      }
     });
   }
 
@@ -95,7 +110,7 @@ export class BuildingChartComponent implements OnInit, OnChanges {
         theme: 'light',
         y: {
           formatter: (val: number) => {
-            return val.toLocaleString('el-GR', {
+            return val.toLocaleString(this.uiLocale.locale, {
               style: 'currency',
               currency: 'EUR',
               maximumFractionDigits: 2
@@ -139,7 +154,7 @@ export class BuildingChartComponent implements OnInit, OnChanges {
         labels: {
           style: { colors: '#8C8C8C' },
           formatter: (val: number) => {
-            return val.toLocaleString('el-GR', {
+            return val.toLocaleString(this.uiLocale.locale, {
               maximumFractionDigits: 2
             });
           }
@@ -176,7 +191,20 @@ export class BuildingChartComponent implements OnInit, OnChanges {
 
   private formatMonthLabel(iso: string) {
     const [y, m] = iso.split('-').map(Number);
-    const names = ['Ιαν', 'Φεβ', 'Μαρ', 'Απρ', 'Μαι', 'Ιουν', 'Ιουλ', 'Αυγ', 'Σεπ', 'Οκτ', 'Νοε', 'Δεκ'];
+    const names = [
+      this.uiLocale.text('Jan'),
+      this.uiLocale.text('Feb'),
+      this.uiLocale.text('Mar'),
+      this.uiLocale.text('Apr'),
+      this.uiLocale.text('May'),
+      this.uiLocale.text('Jun'),
+      this.uiLocale.text('Jul'),
+      this.uiLocale.text('Aug'),
+      this.uiLocale.text('Sep'),
+      this.uiLocale.text('Oct'),
+      this.uiLocale.text('Nov'),
+      this.uiLocale.text('Dec')
+    ];
     return `${names[m - 1]} ${y}`;
   }
 }

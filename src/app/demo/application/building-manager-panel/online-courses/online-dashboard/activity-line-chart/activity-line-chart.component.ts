@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // angular import
 import { Component, OnInit, effect, inject } from '@angular/core';
 
@@ -15,6 +16,8 @@ import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
   styleUrl: './activity-line-chart.component.scss'
 })
 export class ActivityLineChartComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private themeService = inject(ThemeService);
 
   // public props
@@ -68,11 +71,11 @@ export class ActivityLineChartComponent implements OnInit {
       },
       series: [
         {
-          name: 'Free Course',
+          name: this.uiLocale.text('Free Course'),
           data: [20, 90, 65, 85, 20, 80, 30]
         },
         {
-          name: 'Subscription',
+          name: this.uiLocale.text('Subscription'),
           data: [70, 30, 40, 15, 60, 40, 95]
         }
       ],
@@ -143,11 +146,11 @@ export class ActivityLineChartComponent implements OnInit {
       case 'today':
         this.chartOptions.series = [
           {
-            name: 'Free Course',
+            name: this.uiLocale.text('Free Course'),
             data: [20, 90, 65, 85, 20, 80, 30]
           },
           {
-            name: 'Subscription',
+            name: this.uiLocale.text('Subscription'),
             data: [70, 30, 40, 15, 60, 40, 95]
           }
         ];
@@ -155,11 +158,11 @@ export class ActivityLineChartComponent implements OnInit {
       case 'week':
         this.chartOptions.series = [
           {
-            name: 'Free Course',
+            name: this.uiLocale.text('Free Course'),
             data: [30, 50, 65, 80, 35, 55, 20]
           },
           {
-            name: 'Subscription',
+            name: this.uiLocale.text('Subscription'),
             data: [95, 80, 55, 10, 25, 50, 60]
           }
         ];
@@ -167,11 +170,11 @@ export class ActivityLineChartComponent implements OnInit {
       case 'month':
         this.chartOptions.series = [
           {
-            name: 'Free Course',
+            name: this.uiLocale.text('Free Course'),
             data: [55, 75, 25, 40, 65, 95, 20]
           },
           {
-            name: 'Subscription',
+            name: this.uiLocale.text('Subscription'),
             data: [10, 65, 85, 45, 20, 10, 35]
           }
         ];

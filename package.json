@@ -12,7 +12,9 @@
     "test": "ng test",
     "lint": "ng lint",
     "lint:fix": "ng lint --fix",
-    "prettier": "npx prettier . --write src"
+    "prettier": "npx prettier . --write src",
+    "check:i18n": "node scripts/check-i18n.mjs",
+    "check:i18n:browser": "node scripts/check-i18n-browser.cjs"
   },
   "private": true,
   "dependencies": {

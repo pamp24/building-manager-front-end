@@ -1,19 +1,15 @@
 <div class="scrollable-payments">
   <ul class="list-group list-group-flush border-top-0">
-    <li class="list-group-item border-0" *ngFor="let payment of recentPayments | slice:0:5">
+    <li class="list-group-item border-0" *ngFor="let payment of recentPayments | slice: 0 : 5">
       <div class="d-flex align-items-center">
         <div class="flex-shrink-0">
-          <img
-            src="assets/images/user/avatar-10.jpg"
-            alt="user-image"
-            class="user-avatar rounded-circle wid-40 hie-40"
-          />
+          <img src="assets/images/user/avatar-10.jpg" alt="user-image" class="user-avatar rounded-circle wid-40 hie-40" />
         </div>
 
         <div class="flex-grow-1 mx-2">
           <h6 class="mb-1">
             {{ payment.userFullName || '—' }}
-            <span class="text-muted"> - {{ payment.paymentMethod || 'Χωρίς αναφορά' }} </span>
+            <span class="text-muted">- {{ payment.paymentMethod || ('No reference' | translate) }}</span>
           </h6>
           <p class="mb-0 text-primary">
             {{ payment.amount | currency: 'EUR' : 'symbol' : '1.2-2' }}
@@ -29,12 +25,12 @@
     </li>
 
     <li class="list-group-item border-0" *ngIf="recentPayments.length === 0">
-      <p class="text-center text-muted mb-0">Δεν υπάρχουν πληρωμές.</p>
+      <p class="text-center text-muted mb-0">{{ 'There are no payments.' | translate }}</p>
     </li>
 
     <li class="list-group-item border-0" *ngIf="recentPayments.length > 0">
       <div class="d-grid">
-        <button class="btn btn-outline-secondary" (click)="goToInvoiceList()">Προβολή Όλων</button>
+        <button class="btn btn-outline-secondary" (click)="goToInvoiceList()">{{ 'View All' | translate }}</button>
       </div>
     </li>
   </ul>

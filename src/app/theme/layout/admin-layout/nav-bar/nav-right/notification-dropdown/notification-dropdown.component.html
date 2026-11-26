@@ -13,16 +13,15 @@
     <div class="dropdown-header p-0 text-wrap header-notification-scroll">
       <div *ngIf="notifications.length === 0" class="p-3 text-center text-muted">
         <i antIcon type="bell" theme="outline" class="mb-2"></i>
-        <div>Δεν υπάρχουν ειδοποιήσεις</div>
+        <div>{{ 'There are no notifications' | translate }}</div>
       </div>
 
       <div *ngIf="notifications.length > 0" class="list-group list-group-flush w-100">
         @for (item of notifications; track item.id) {
           <a class="list-group-item list-group-item-action" (click)="openNotification(item)">
-            
             <div class="d-flex">
               <div class="flex-shrink-0">
-                <div [ngClass]="item.avatarClass">  
+                <div [ngClass]="item.avatarClass">
                   <i class="d-flex" antIcon theme="outline" [type]="item.iconClass"></i>
                 </div>
               </div>

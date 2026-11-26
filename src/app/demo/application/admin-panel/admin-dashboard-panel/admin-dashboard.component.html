@@ -1,6 +1,6 @@
 @if (loading) {
   <div class="card">
-    <div class="card-body">Φόρτωση dashboard...</div>
+    <div class="card-body">{{ 'Loading dashboard...' | translate }}</div>
   </div>
 }
 
@@ -12,13 +12,27 @@
 
 @if (dashboard) {
   <div class="mb-4">
-    <h4 class="mb-1">Admin Dashboard</h4>
-    <p class="text-muted mb-0">Συνολική εικόνα της πλατφόρμας, της χρήσης και των βασικών εκκρεμοτήτων.</p>
+    <h4 class="mb-1">{{ 'Admin Dashboard' | translate }}</h4>
+    <p class="text-muted mb-0">{{ 'Overview of the platform, usage and key backlogs.' | translate }}</p>
   </div>
 
+  <div
+    *ngIf="
+      !loading &&
+      !errorMessage &&
+      !dashboard.overview.totalBuildings &&
+      !dashboard.overview.totalUsers &&
+      !dashboard.overview.totalCompanies &&
+      !dashboard.overview.totalManagers
+    "
+    class="alert alert-info"
+    role="status"
+  >
+    {{ 'There is no data for the dashboard.' | translate }}
+  </div>
   <div class="row g-3 mb-4">
     <div class="col-xl-12">
-      <app-card cardTitle="Ανάπτυξη Πλατφόρμας">
+      <app-card [cardTitle]="'Platform Development' | translate">
         <!-- OVERVIEW CARDS -->
         <div class="row g-3 mb-4">
           @for (summary of overviewCards; track summary.title) {
@@ -86,25 +100,25 @@
         <div class="row g-3">
           <div class="col-md-4">
             <div class="growth-box">
-              <div class="growth-label">Νέοι χρήστες 30 ημερών</div>
+              <div class="growth-label">{{ 'New users 30 days' | translate }}</div>
               <div class="growth-value text-primary">{{ usersGrowthTotal }}</div>
-              <div class="growth-desc">εγγραφές τον τελευταίο μήνα</div>
+              <div class="growth-desc">{{ 'registrations in the last month' | translate }}</div>
             </div>
           </div>
 
           <div class="col-md-4">
             <div class="growth-box">
-              <div class="growth-label">Νέες πολυκατοικίες 30 ημερών</div>
+              <div class="growth-label">{{ 'New apartment buildings 30 days old' | translate }}</div>
               <div class="growth-value text-success">{{ buildingsGrowthTotal }}</div>
-              <div class="growth-desc">νέες καταχωρήσεις πολυκατοικιών</div>
+              <div class="growth-desc">{{ 'new apartment building listings' | translate }}</div>
             </div>
           </div>
 
           <div class="col-md-4">
             <div class="growth-box">
-              <div class="growth-label">Νέες προσκλήσεις 30 ημερών</div>
+              <div class="growth-label">{{ 'New 30 day invitations' | translate }}</div>
               <div class="growth-value text-warning">{{ invitesGrowthTotal }}</div>
-              <div class="growth-desc">προσκλήσεις που στάλθηκαν</div>
+              <div class="growth-desc">{{ 'invitations sent' | translate }}</div>
             </div>
           </div>
         </div>
@@ -115,12 +129,12 @@
   <!-- BUILDINGS / APARTMENTS -->
   <div class="row g-3 mb-4">
     <div class="col-xl-6">
-      <app-card cardTitle="Κατάσταση Πολυκατοικιών" cardClass="h-100">
+      <app-card [cardTitle]="'Status of Apartment Buildings' | translate" cardClass="h-100">
         <div class="building-health-wrap">
           <div class="health-item">
             <div>
-              <div class="health-label">Νέες πολυκατοικίες</div>
-              <div class="health-subtext">τρέχων μήνας</div>
+              <div class="health-label">{{ 'New apartment buildings' | translate }}</div>
+              <div class="health-subtext">{{ 'current month' | translate }}</div>
             </div>
             <div class="health-value text-primary">
               {{ dashboard.buildingActivity.newBuildingsThisMonth }}
@@ -129,8 +143,8 @@
 
           <div class="health-item">
             <div>
-              <div class="health-label">Χωρίς διαχειριστή</div>
-              <div class="health-subtext">χρειάζονται άμεση ενέργεια</div>
+              <div class="health-label">{{ 'No admin' | translate }}</div>
+              <div class="health-subtext">{{ 'they need immediate action' | translate }}</div>
             </div>
             <div class="health-value text-danger">
               {{ dashboard.buildingActivity.buildingsWithoutManager }}
@@ -139,8 +153,8 @@
 
           <div class="health-item border-0 pb-0 mb-0">
             <div>
-              <div class="health-label">Χωρίς διαμερίσματα</div>
-              <div class="health-subtext">μη ολοκληρωμένη καταχώριση</div>
+              <div class="health-label">{{ 'No apartments' | translate }}</div>
+              <div class="health-subtext">{{ 'incomplete registration' | translate }}</div>
             </div>
             <div class="health-value text-warning">
               {{ dashboard.buildingActivity.buildingsWithoutApartments }}
@@ -149,7 +163,7 @@
 
           <div class="mt-4">
             <div class="d-flex justify-content-between mb-2">
-              <span class="text-muted">Πολυκατοικίες με διαχειριστή</span>
+              <span class="text-muted">{{ 'Apartment buildings with manager' | translate }}</span>
               <span class="fw-semibold">{{ managedBuildingsPercent }}%</span>
             </div>
             <ngb-progressbar type="success" [value]="managedBuildingsPercent" height="8px" />
@@ -157,7 +171,7 @@
 
           <div class="mt-3">
             <div class="d-flex justify-content-between mb-2">
-              <span class="text-muted">Πολυκατοικίες με διαμερίσματα</span>
+              <span class="text-muted">{{ 'Apartment buildings' | translate }}</span>
               <span class="fw-semibold">{{ buildingsWithApartmentsPercent }}%</span>
             </div>
             <ngb-progressbar type="primary" [value]="buildingsWithApartmentsPercent" height="8px" />
@@ -167,10 +181,11 @@
     </div>
 
     <div class="col-xl-6">
-      <app-card cardTitle="Χρήση Διαμερισμάτων" cardClass="h-100">
+      <app-card [cardTitle]="'Use of Apartments' | translate" cardClass="h-100">
         <div class="row align-items-center">
           <div class="col-md-7">
             <apx-chart
+              *ngIf="dashboard.apartmentUsage.totalApartments > 0; else noApartments"
               [series]="apartmentUsageChart.series"
               [chart]="apartmentUsageChart.chart"
               [labels]="apartmentUsageChart.labels"
@@ -180,6 +195,9 @@
               [colors]="apartmentUsageChart.colors"
               [stroke]="apartmentUsageChart.stroke"
             ></apx-chart>
+            <ng-template #noApartments>
+              <div class="dashboard-empty-state" style="--empty-state-height: 280px">{{ 'There is no apartment data.' | translate }}</div>
+            </ng-template>
           </div>
 
           <div class="col-md-5">
@@ -187,7 +205,7 @@
               <div class="apartment-summary-item">
                 <span class="dot dot-success"></span>
                 <div>
-                  <div class="summary-title">Κατειλημμένα</div>
+                  <div class="summary-title">{{ 'Busy' | translate }}</div>
                   <div class="summary-value">
                     {{ dashboard.apartmentUsage.assignedApartments }}
                   </div>
@@ -197,7 +215,7 @@
               <div class="apartment-summary-item">
                 <span class="dot dot-secondary"></span>
                 <div>
-                  <div class="summary-title">Κενά</div>
+                  <div class="summary-title">{{ 'Empty' | translate }}</div>
                   <div class="summary-value">
                     {{ dashboard.apartmentUsage.vacantApartments }}
                   </div>
@@ -206,7 +224,7 @@
 
               <div class="apartment-summary-item total">
                 <div>
-                  <div class="summary-title">Σύνολο Διαμερισμάτων</div>
+                  <div class="summary-title">{{ 'Total Apartments' | translate }}</div>
                   <div class="summary-value">
                     {{ dashboard.apartmentUsage.totalApartments }}
                   </div>
@@ -215,7 +233,7 @@
 
               <div class="mt-3">
                 <div class="d-flex justify-content-between mb-2">
-                  <span class="text-muted">Πληρότητα</span>
+                  <span class="text-muted">{{ 'Fullness' | translate }}</span>
                   <span class="fw-semibold">{{ apartmentOccupancyPercent }}%</span>
                 </div>
                 <ngb-progressbar type="success" [value]="apartmentOccupancyPercent" height="8px" />
@@ -230,7 +248,7 @@
   <!-- ISSUES -->
   <div class="row g-3">
     <div class="col-xl-12">
-      <app-card cardTitle="Προβλήματα / Εκκρεμότητες" cardClass="issues-card">
+      <app-card [cardTitle]="'Problems / Pending' | translate" cardClass="issues-card">
         <div class="row g-3">
           <div class="col-lg-4 col-md-6">
             <div class="issue-alert-card danger">
@@ -238,14 +256,14 @@
                 <div class="issue-alert-icon bg-light-danger">
                   <i class="text-danger f-22" antIcon type="warning" theme="outline"></i>
                 </div>
-                <span class="issue-status">Υψηλή Προτεραιότητα</span>
+                <span class="issue-status">{{ 'High Priority' | translate }}</span>
               </div>
 
-              <div class="issue-alert-title">Πολυκατοικίες χωρίς διαχειριστή</div>
+              <div class="issue-alert-title">{{ 'Apartment buildings without a manager' | translate }}</div>
               <div class="issue-alert-value text-danger">
                 {{ dashboard.operationalIssues.buildingsWithoutManager }}
               </div>
-              <div class="issue-alert-desc">Χρειάζονται άμεσα ανάθεση υπεύθυνου διαχείρισης.</div>
+              <div class="issue-alert-desc">{{ 'They need to assign a manager immediately.' | translate }}</div>
             </div>
           </div>
 
@@ -255,14 +273,14 @@
                 <div class="issue-alert-icon bg-light-warning">
                   <i class="text-warning f-22" antIcon type="home" theme="outline"></i>
                 </div>
-                <span class="issue-status">Έλεγχος Δεδομένων</span>
+                <span class="issue-status">{{ 'Data Control' | translate }}</span>
               </div>
 
-              <div class="issue-alert-title">Διαμερίσματα χωρίς ιδιοκτήτη</div>
+              <div class="issue-alert-title">{{ 'Apartments without owners' | translate }}</div>
               <div class="issue-alert-value text-warning">
                 {{ dashboard.operationalIssues.apartmentsWithoutOwner }}
               </div>
-              <div class="issue-alert-desc">Υπάρχουν διαμερίσματα που δεν έχουν ακόμα συσχετιστεί με ιδιοκτήτη.</div>
+              <div class="issue-alert-desc">{{ 'There are apartments that are not yet associated with an owner.' | translate }}</div>
             </div>
           </div>
 
@@ -272,14 +290,14 @@
                 <div class="issue-alert-icon bg-light-primary">
                   <i class="text-primary f-22" antIcon type="mail" theme="outline"></i>
                 </div>
-                <span class="issue-status">Σε Αναμονή</span>
+                <span class="issue-status">{{ 'On Waiting' | translate }}</span>
               </div>
 
-              <div class="issue-alert-title">Εκκρεμή invites</div>
+              <div class="issue-alert-title">{{ 'Pending invites' | translate }}</div>
               <div class="issue-alert-value text-primary">
                 {{ dashboard.operationalIssues.pendingInvites }}
               </div>
-              <div class="issue-alert-desc">Προσκλήσεις που έχουν σταλεί αλλά δεν έχουν ακόμα αποδεχθεί.</div>
+              <div class="issue-alert-desc">{{ 'Invitations that have been sent but not yet accepted.' | translate }}</div>
             </div>
           </div>
         </div>
@@ -289,16 +307,16 @@
 
   <div class="row g-3 mb-4">
     <div class="col-xl-6">
-      <app-card cardTitle="Συμμετοχή & Επικοινωνία" cardClass="h-100">
+      <app-card [cardTitle]="'Participation &amp; Communication' | translate" cardClass="h-100">
         <div class="engagement-grid">
           <div class="engagement-box primary">
             <div class="engagement-icon bg-light-primary">
               <i class="text-primary f-22" antIcon type="notification" theme="outline"></i>
             </div>
             <div class="engagement-content">
-              <div class="engagement-title">Ανακοινώσεις</div>
+              <div class="engagement-title">{{ 'Announcements' | translate }}</div>
               <div class="engagement-value">{{ dashboard.engagementStats.announcementsCount }}</div>
-              <div class="engagement-desc">συνολικές δημοσιεύσεις στην πλατφόρμα</div>
+              <div class="engagement-desc">{{ 'total posts on the platform' | translate }}</div>
             </div>
           </div>
 
@@ -307,9 +325,9 @@
               <i class="text-success f-22" antIcon type="check-circle" theme="outline"></i>
             </div>
             <div class="engagement-content">
-              <div class="engagement-title">Ψηφοφορίες</div>
+              <div class="engagement-title">{{ 'Votes' | translate }}</div>
               <div class="engagement-value">{{ dashboard.engagementStats.votingsCount }}</div>
-              <div class="engagement-desc">δημιουργημένες διαδικασίες ψηφοφορίας</div>
+              <div class="engagement-desc">{{ 'created voting procedures' | translate }}</div>
             </div>
           </div>
 
@@ -319,11 +337,11 @@
             </div>
             <div class="engagement-content w-100">
               <div class="d-flex justify-content-between align-items-center">
-                <div class="engagement-title">Participation Rate</div>
+                <div class="engagement-title">{{ 'Participation Rate' | translate }}</div>
                 <div class="engagement-value small">{{ dashboard.engagementStats.participationRate }}%</div>
               </div>
 
-              <div class="engagement-desc mb-2">ποσοστό συμμετοχής χρηστών σε ψηφοφορίες</div>
+              <div class="engagement-desc mb-2">{{ 'user participation rate in polls' | translate }}</div>
 
               <ngb-progressbar type="warning" [value]="dashboard.engagementStats.participationRate" height="8px" />
             </div>
@@ -333,10 +351,10 @@
     </div>
 
     <div class="col-xl-6">
-      <app-card cardTitle="Στατιστικά Προσκλήσεων" cardClass="h-100">
+      <app-card [cardTitle]="'Invitational Statistics' | translate" cardClass="h-100">
         <div class="invite-summary-wrap">
           <div class="invite-total-box">
-            <div class="invite-total-label">Συνολικές Προσκλήσεις</div>
+            <div class="invite-total-label">{{ 'Total Invitations' | translate }}</div>
             <div class="invite-total-value text-primary">
               {{ dashboard.engagementStats.invitesSent }}
             </div>
@@ -344,28 +362,28 @@
 
           <div class="invite-metric-row">
             <div class="invite-metric-label">
-              <span>Σταλμένες</span>
+              <span>{{ 'Sent' | translate }}</span>
             </div>
             <div class="invite-metric-value">{{ dashboard.engagementStats.invitesSent }}</div>
           </div>
 
           <div class="invite-metric-row">
             <div class="invite-metric-label">
-              <span>Αποδεκτές</span>
+              <span>{{ 'Acceptable' | translate }}</span>
             </div>
             <div class="invite-metric-value">{{ dashboard.engagementStats.invitesAccepted }}</div>
           </div>
 
           <div class="invite-metric-row">
             <div class="invite-metric-label">
-              <span>Σε Αναμονή</span>
+              <span>{{ 'On Waiting' | translate }}</span>
             </div>
             <div class="invite-metric-value">{{ dashboard.engagementStats.pendingInvites }}</div>
           </div>
 
           <div class="mt-4">
             <div class="d-flex justify-content-between mb-2">
-              <span class="text-muted">Ποσοστό αποδοχής</span>
+              <span class="text-muted">{{ 'Acceptance rate' | translate }}</span>
               <span class="fw-semibold">{{ inviteAcceptancePercent }}%</span>
             </div>
             <ngb-progressbar type="success" [value]="inviteAcceptancePercent" height="8px" />
@@ -373,7 +391,7 @@
 
           <div class="mt-3">
             <div class="d-flex justify-content-between mb-2">
-              <span class="text-muted">Ποσοστό εκκρεμών</span>
+              <span class="text-muted">{{ 'Outstanding rate' | translate }}</span>
               <span class="fw-semibold">{{ invitePendingPercent }}%</span>
             </div>
             <ngb-progressbar type="danger" [value]="invitePendingPercent" height="8px" />

@@ -1,5 +1,6 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { BuildingMeta } from 'src/app/theme/shared/models/buildingMeta';
@@ -12,11 +13,18 @@ import { MultipleBuildingFormComponent } from '../multiple-building-form/multipl
 @Component({
   selector: 'app-building-setup',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, BuildingFormComponent, ExistingBuildingFormComponent, MultipleBuildingFormComponent],
+  imports: [
+    TranslateModule,
+    CommonModule,
+    ReactiveFormsModule,
+    BuildingFormComponent,
+    ExistingBuildingFormComponent,
+    MultipleBuildingFormComponent
+  ],
   templateUrl: './building-setup.component.html',
   styleUrls: ['./building-setup.component.scss']
 })
-export class BuildingSetupComponent implements OnInit {
+export class BuildingSetupComponent {
   @Input() action!: 'many' | 'new' | 'existing';
   @Output() completed = new EventEmitter<BuildingSetupResult>();
   @Output() back = new EventEmitter<void>();
@@ -55,8 +63,6 @@ export class BuildingSetupComponent implements OnInit {
       heatingCapacityLitres: [0]
     });
   }
-
-  ngOnInit(): void {}
 
   onBuildingCreated(event: BuildingFormSubmission): void {
     this.completed.emit({

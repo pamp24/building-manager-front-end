@@ -1,10 +1,10 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // Angular import
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // third party
-import { ClipboardService } from 'ngx-clipboard';
-import { ClipboardModule } from 'ngx-clipboard';
+import { ClipboardService, ClipboardModule } from 'ngx-clipboard';
 
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -16,6 +16,8 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
   styleUrls: ['./clipboard.component.scss']
 })
 export class ClipboardComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private _clipboardService = inject(ClipboardService);
 
   // private props
@@ -31,7 +33,7 @@ export class ClipboardComponent implements OnInit {
   ngOnInit(): void {
     this._clipboardService.copyResponse$.subscribe((re) => {
       if (re.isSuccess) {
-        alert('copy success!');
+        alert(this.uiLocale.text('copy success!'));
       }
     });
     this._clipboardService.configure({ cleanUpAfterCopy: true });
@@ -43,6 +45,6 @@ export class ClipboardComponent implements OnInit {
   }
 
   onCopyFailure() {
-    alert('copy fail!');
+    alert(this.uiLocale.text('copy fail!'));
   }
 }

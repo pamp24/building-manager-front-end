@@ -96,3 +96,14 @@ body.mantis-rtl {
 @import 'scss/theme/layouts/dark-mode/dark.scss';
 
 @import 'scss/theme/style-preset.scss';
+
+// Preserve the footprint of dashboard sections without data.
+.dashboard-empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--empty-state-height, 220px);
+  padding: 24px;
+  text-align: center;
+  color: var(--bs-secondary-color, #667085);
+}

@@ -9,3 +9,11 @@
   --bs-btn-disabled-border-color: var(--bs-primary);
   --bs-btn-focus-shadow-rgb: var(--bs-primary-rgb);
 }
+
+.building-card-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  object-position: center;
+}

@@ -1,14 +1,21 @@
 // Angular Import
-import { enableProdMode, importProvidersFrom } from '@angular/core';
+import { APP_INITIALIZER, LOCALE_ID, enableProdMode, importProvidersFrom } from '@angular/core';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { registerLocaleData } from '@angular/common';
 import localeEl from '@angular/common/locales/el';
+import localeFr from '@angular/common/locales/fr';
+import localeDe from '@angular/common/locales/de';
+import localeEs from '@angular/common/locales/es';
+import localeHe from '@angular/common/locales/he';
+import localeZh from '@angular/common/locales/zh';
+import { UiLocaleService, UI_LOCALES, savedUiLanguage } from './app/theme/shared/service/ui-locale.service';
 import { environment } from './environments/environment';
 
 // register EL locale data (used by the calendar for Greek month/day names)
 registerLocaleData(localeEl);
+[localeFr, localeDe, localeEs, localeHe, localeZh].forEach((locale) => registerLocaleData(locale));
 
 // project import
 import { AppComponent } from './app/app.component';
@@ -29,6 +36,8 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
   providers: [
+    { provide: APP_INITIALIZER, multi: true, useFactory: (locale: UiLocaleService) => () => locale.initialize(), deps: [UiLocaleService] },
+    { provide: LOCALE_ID, useFactory: () => UI_LOCALES[savedUiLanguage()] },
     importProvidersFrom(
       BrowserModule,
       AppRoutingModule,

@@ -1,15 +1,15 @@
 <div class="card">
   <div class="card-header d-flex align-items-center justify-content-between">
     <div>
-      <h5 class="mb-0">Ειδοποιήσεις</h5>
-      <small class="text-muted">Τελευταίες ενημερώσεις για εσάς</small>
+      <h5 class="mb-0">{{ 'Notifications' | translate }}</h5>
+      <small class="text-muted">{{ 'Latest updates for you' | translate }}</small>
     </div>
   </div>
 
   <div class="card-body px-0 py-2">
     @if (notifications.length === 0) {
       <div class="text-center text-muted py-4">
-        Δεν υπάρχουν ειδοποιήσεις.
+        {{ 'There are no notifications.' | translate }}
       </div>
     } @else {
       <ul class="list-group list-group-flush">
@@ -28,7 +28,7 @@
 
                   @if (!item.read) {
                     <span class="badge bg-light-primary text-primary rounded-pill px-2 py-1 small-badge">
-                      Νέα
+                      {{ 'News' | translate }}
                     </span>
                   }
                 </div>
@@ -51,7 +51,7 @@
 
   <div class="card-footer text-center">
     <a class="btn btn-sm btn-outline-primary" [routerLink]="['/notifications']">
-      Προβολή όλων
+      {{ 'View all' | translate }}
     </a>
   </div>
 </div>

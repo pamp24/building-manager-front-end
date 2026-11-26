@@ -26,7 +26,6 @@ import { AuthenticationService } from 'src/app/theme/shared/service';
     ])
   ]
 })
-
 export class NavCollapseComponent implements OnInit {
   private location = inject(Location);
   private authenticationService = inject(AuthenticationService);
@@ -41,30 +40,29 @@ export class NavCollapseComponent implements OnInit {
   isEnabled: boolean = false;
 
   ngOnInit() {
-  this.themeLayout = MantisConfig.layout;
+    this.themeLayout = MantisConfig.layout;
 
-  const currentUserRole = this.authenticationService.currentUserValue?.role || '';
-  const item = this.item();
-  const parentRole = this.parentRole();
+    const currentUserRole = this.authenticationService.currentUserValue?.role || '';
+    const item = this.item();
+    const parentRole = this.parentRole();
 
-  const hasAccess = (roles: string[] | undefined, role: string): boolean => {
-    return roles?.includes(role) ?? false;
-  };
+    const hasAccess = (roles: string[] | undefined, role: string): boolean => {
+      return roles?.includes(role) ?? false;
+    };
 
-  // Προτεραιότητα στα roles του item
-  if (item.role && item.role.length > 0) {
-    this.isEnabled = hasAccess(item.role, currentUserRole);
+    // Προτεραιότητα στα roles του item
+    if (item.role && item.role.length > 0) {
+      this.isEnabled = hasAccess(item.role, currentUserRole);
+    }
+    // Αν δεν έχει το item role, τσεκάρουμε του parent
+    else if (parentRole && parentRole.length > 0) {
+      this.isEnabled = hasAccess(parentRole, currentUserRole);
+    }
+    // Αν δεν υπάρχουν καθόλου περιορισμοί, δείχνουμε πάντα
+    else {
+      this.isEnabled = true;
+    }
   }
-  // Αν δεν έχει το item role, τσεκάρουμε του parent
-  else if (parentRole && parentRole.length > 0) {
-    this.isEnabled = hasAccess(parentRole, currentUserRole);
-  }
-  // Αν δεν υπάρχουν καθόλου περιορισμοί, δείχνουμε πάντα
-  else {
-    this.isEnabled = true;
-  }
-}
-
 
   // Method to handle the collapse of the navigation menu
   navCollapse(e: MouseEvent) {

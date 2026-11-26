@@ -1,6 +1,8 @@
+import { inject, Component, EventEmitter, Output } from '@angular/core';
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { CompanyDTO } from 'src/app/theme/shared/models/companyDTO';
@@ -18,6 +20,8 @@ import { LOCATION_COUNTRIES, SupportedLocationRegion, resolveCountryLocations } 
   styleUrl: './multiple-building-form.component.scss'
 })
 export class MultipleBuildingFormComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   @Output() companyCreated = new EventEmitter<number>();
   @Output() backClicked = new EventEmitter<void>();
 
@@ -126,7 +130,7 @@ export class MultipleBuildingFormComponent {
 
         if (!id) {
           this.loading = false;
-          this.apiError = 'Η εταιρεία δημιουργήθηκε αλλά δεν επιστράφηκε id.';
+          this.apiError = this.uiLocale.text('The company was created but no id was returned.');
           return;
         }
 
@@ -144,7 +148,7 @@ export class MultipleBuildingFormComponent {
       error: (err) => {
         this.loading = false;
         console.error('Σφάλμα δημιουργίας εταιρείας:', err);
-        this.apiError = err?.error?.message || 'Αποτυχία δημιουργίας εταιρείας. Δοκιμάστε ξανά.';
+        this.apiError = err?.error?.message || this.uiLocale.text('Failed to create a company. Try again.');
       }
     });
   }

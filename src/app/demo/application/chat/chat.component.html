@@ -9,19 +9,19 @@
                 <div class="card-body px-4">
                   <div class="d-flex align-items-center justify-content-between mb-3">
                     <h5 class="mb-0">
-                      Messages
+                      {{ 'Messages' | translate }}
                       <span class="badge d-inline-flex align-items-center justify-content-center wid-20 hei-20 bg-secondary rounded-circle">
                         {{ conversations.length }}
                       </span>
                     </h5>
                     <button type="button" class="btn btn-primary btn-sm" (click)="openNewChat(newChat)">
                       <i antIcon type="plus" theme="outline"></i>
-                      Νέο
+                      {{ 'New' | translate }}
                     </button>
                   </div>
                   <div class="form-search">
                     <i antIcon type="search" theme="outline"></i>
-                    <input type="search" class="form-control" placeholder="Αναζήτηση" [(ngModel)]="searchTerm" />
+                    <input type="search" class="form-control" [placeholder]="'Search' | translate" [(ngModel)]="searchTerm" />
                   </div>
                 </div>
                 <app-scrollbar [customStyle]="'calc(100vh - 412px)'">
@@ -71,11 +71,7 @@
                   <li class="list-inline-item">
                     <div class="media align-items-center">
                       <div class="chat-avatar position-relative">
-                        <img
-                          class="rounded-circle img-fluid wid-40"
-                          [src]="conversationAvatar(activeConversation)"
-                          alt="User image"
-                        />
+                        <img class="rounded-circle img-fluid wid-40" [src]="conversationAvatar(activeConversation)" alt="User image" />
                         @if (activeConversation.type === 'BUILDING') {
                           <i class="text-success me-2" antIcon type="check-circle" theme="fill"></i>
                         }
@@ -112,7 +108,7 @@
                 <div class="card-body">
                   @if (messages.length === 0) {
                     <div class="text-center text-muted py-5">
-                      <p class="mb-0">Δεν υπάρχουν μηνύματα ακόμα. Στείλε το πρώτο!</p>
+                      <p class="mb-0">{{ 'There are no messages yet. Send the first one!' | translate }}</p>
                     </div>
                   }
                   @for (message of messages; track message.id) {
@@ -133,23 +129,42 @@
                           @if (activeConversation.type === 'BUILDING' && !message.mine) {
                             <p class="mb-0 text-sm f-w-600">{{ message.senderName }}</p>
                           }
-                          <div class="msg-content {{ message.mine ? 'bg-primary' : '' }}" [class.message-editing]="editingMessageId === message.id">
+                          <div
+                            class="msg-content {{ message.mine ? 'bg-primary' : '' }}"
+                            [class.message-editing]="editingMessageId === message.id"
+                          >
                             <div class="message-body">
                               @if (message.deletedAt) {
-                                <p class="mb-0 fst-italic">Το μήνυμα διαγράφηκε.</p>
+                                <p class="mb-0 fst-italic">{{ 'The message was deleted.' | translate }}</p>
                               } @else {
                                 @if (message.imageUrl) {
-                                  <img
-                                    class="msg-image"
-                                    [src]="imgSrc(message.imageUrl)"
-                                    alt="Photo"
-                                    (load)="scrollToBottomIfNeeded()"
-                                  />
+                                  <img class="msg-image" [src]="imgSrc(message.imageUrl)" alt="Photo" (load)="scrollToBottomIfNeeded()" />
                                 }
                                 @if (editingMessageId === message.id) {
-                                  <textarea class="form-control form-control-sm" rows="2" maxlength="4000" [(ngModel)]="editContent" aria-label="Επεξεργασία μηνύματος" (keydown.escape)="editingMessageId = null"></textarea>
-                                  <button type="button" class="btn btn-sm btn-light me-1 mt-1" [disabled]="actionLoading" (click)="saveEdit(message)">Αποθήκευση</button>
-                                  <button type="button" class="btn btn-sm btn-light mt-1" [disabled]="actionLoading" (click)="editingMessageId = null">Ακύρωση</button>
+                                  <textarea
+                                    class="form-control form-control-sm"
+                                    rows="2"
+                                    maxlength="4000"
+                                    [(ngModel)]="editContent"
+                                    [attr.aria-label]="'Edit message' | translate"
+                                    (keydown.escape)="editingMessageId = null"
+                                  ></textarea>
+                                  <button
+                                    type="button"
+                                    class="btn btn-sm btn-light me-1 mt-1"
+                                    [disabled]="actionLoading"
+                                    (click)="saveEdit(message)"
+                                  >
+                                    {{ 'Save' | translate }}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    class="btn btn-sm btn-light mt-1"
+                                    [disabled]="actionLoading"
+                                    (click)="editingMessageId = null"
+                                  >
+                                    {{ 'Cancellation' | translate }}
+                                  </button>
                                 } @else if (message.content) {
                                   <p class="mb-0">{{ message.content }}</p>
                                 }
@@ -157,17 +172,32 @@
                             </div>
                             @if (message.mine && !message.deletedAt && editingMessageId !== message.id) {
                               <div ngbDropdown class="message-actions" placement="bottom-end">
-                                <button type="button" class="message-actions-toggle" ngbDropdownToggle aria-label="Ενέργειες μηνύματος" [disabled]="actionLoading">
+                                <button
+                                  type="button"
+                                  class="message-actions-toggle"
+                                  ngbDropdownToggle
+                                  [attr.aria-label]="'Message actions' | translate"
+                                  [disabled]="actionLoading"
+                                >
                                   <i antIcon type="more" theme="outline" aria-hidden="true"></i>
                                 </button>
                                 <div ngbDropdownMenu>
-                                  <button type="button" ngbDropdownItem (click)="beginEdit(message)">Επεξεργασία</button>
-                                  <button type="button" ngbDropdownItem class="text-danger" (click)="deleteMessage(message)">Διαγραφή</button>
+                                  <button type="button" ngbDropdownItem (click)="beginEdit(message)">
+                                    {{ 'Processing' | translate }}
+                                  </button>
+                                  <button type="button" ngbDropdownItem class="text-danger" (click)="deleteMessage(message)">
+                                    {{ 'Delete' | translate }}
+                                  </button>
                                 </div>
                               </div>
                             }
                           </div>
-                          <p class="mb-0 text-muted text-sm">{{ formatTime(message.createdAt) }} @if (message.editedAt && !message.deletedAt) { · Επεξεργάστηκε }</p>
+                          <p class="mb-0 text-muted text-sm">
+                            {{ formatTime(message.createdAt) }}
+                            @if (message.editedAt && !message.deletedAt) {
+                              {{ '· Edited' | translate }}
+                            }
+                          </p>
                         </div>
                         @if (message.mine) {
                           <div class="flex-shrink-0">
@@ -185,7 +215,7 @@
             <div class="card-footer py-2">
               <textarea
                 class="form-control border-0 shadow-none px-0"
-                placeholder="Γράψε ένα μήνυμα..."
+                [placeholder]="'Write a message...' | translate"
                 rows="2"
                 [(ngModel)]="message"
                 (keyup.enter)="sendMessage()"
@@ -197,17 +227,32 @@
               <div class="d-sm-flex align-items-center">
                 <ul class="list-inline me-auto mb-0">
                   <li class="list-inline-item">
-                    <a href="javascript:" class="avatar avatar-xs btn-link-secondary" title="Emoji" (click)="toggleEmojiPanel()">
+                    <a
+                      href="javascript:"
+                      class="avatar avatar-xs btn-link-secondary"
+                      [title]="'Emoji' | translate"
+                      (click)="toggleEmojiPanel()"
+                    >
                       <i class="f-16 text-muted" antIcon type="smile" theme="outline"></i>
                     </a>
                   </li>
                   <li class="list-inline-item">
-                    <a href="javascript:" class="avatar avatar-xs btn-link-secondary" title="Φωτογραφία" (click)="fileInput.click()">
+                    <a
+                      href="javascript:"
+                      class="avatar avatar-xs btn-link-secondary"
+                      [title]="'Photograph' | translate"
+                      (click)="fileInput.click()"
+                    >
                       <i class="f-16 text-muted" antIcon type="picture" theme="outline"></i>
                     </a>
                   </li>
                   <li class="list-inline-item">
-                    <a href="javascript:" class="avatar avatar-xs btn-link-secondary" title="Συνημμένο" (click)="fileInput.click()">
+                    <a
+                      href="javascript:"
+                      class="avatar avatar-xs btn-link-secondary"
+                      [title]="'Attached' | translate"
+                      (click)="fileInput.click()"
+                    >
                       <i class="f-16 text-muted" antIcon type="paper-clip" theme="outline"></i>
                     </a>
                   </li>
@@ -215,12 +260,7 @@
                 <input #fileInput type="file" accept="image/*" class="d-none" (change)="onFileSelected($event)" />
                 <ul class="list-inline ms-auto mb-0">
                   <li class="list-inline-item">
-                    <a
-                      href="javascript:"
-                      class="avatar avatar-s btn-link-primary"
-                      title="Αποστολή"
-                      (click)="sendMessage()"
-                    >
+                    <a href="javascript:" class="avatar avatar-s btn-link-primary" [title]="'Shipping' | translate" (click)="sendMessage()">
                       <i class="f-20 text-primary" antIcon type="send" theme="outline"></i>
                     </a>
                   </li>
@@ -236,9 +276,13 @@
             </div>
           } @else {
             <div class="card-header py-3">
-              <button type="button" class="btn btn-sm btn-light d-lg-none me-2" (click)="open(userList)">Συνομιλίες</button>
-              <button type="button" class="btn btn-sm btn-primary d-lg-none me-2" (click)="openNewChat(newChat)">Νέο</button>
-              <p class="mb-0 text-muted">Επέλεξε μια συνομιλία για να ξεκινήσεις.</p>
+              <button type="button" class="btn btn-sm btn-light d-lg-none me-2" (click)="open(userList)">
+                {{ 'Conversations' | translate }}
+              </button>
+              <button type="button" class="btn btn-sm btn-primary d-lg-none me-2" (click)="openNewChat(newChat)">
+                {{ 'New' | translate }}
+              </button>
+              <p class="mb-0 text-muted">{{ 'Choose a chat to start.' | translate }}</p>
             </div>
           }
         </div>
@@ -272,19 +316,21 @@
 <!-- for media -->
 <ng-template #userList let-offcanvas>
   <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Συνομιλίες</h5>
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel">{{ 'Conversations' | translate }}</h5>
     <button
       type="button"
       class="btn-close text-reset"
       data-bs-dismiss="offcanvas"
-      aria-label="Close"
+      [attr.aria-label]="'Close' | translate"
       (click)="offcanvas.close('Close click')"
     ></button>
   </div>
   <div class="offcanvas-body p-0">
     <div class="p-3">
-      <button type="button" class="btn btn-primary btn-sm mb-2" (click)="offcanvas.close(); openNewChat(newChat)">Νέα συνομιλία</button>
-      <input type="search" class="form-control" placeholder="Αναζήτηση συνομιλιών" [(ngModel)]="searchTerm" />
+      <button type="button" class="btn btn-primary btn-sm mb-2" (click)="offcanvas.close(); openNewChat(newChat)">
+        {{ 'New conversation' | translate }}
+      </button>
+      <input type="search" class="form-control" [placeholder]="'Search conversations' | translate" [(ngModel)]="searchTerm" />
     </div>
     <ng-container *ngTemplateOutlet="chatPersonList"></ng-container>
   </div>
@@ -292,12 +338,12 @@
 
 <ng-template #userInfo let-offcanvas>
   <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Πληροφορίες</h5>
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel">{{ 'Information' | translate }}</h5>
     <button
       type="button"
       class="btn-close text-reset"
       data-bs-dismiss="offcanvas"
-      aria-label="Close"
+      [attr.aria-label]="'Close' | translate"
       (click)="offcanvas.close('Close click')"
     ></button>
   </div>
@@ -322,10 +368,10 @@
   <div class="d-flex align-items-center justify-content-center mb-4">
     @if (activeConversation?.type === 'BUILDING') {
       <i class="text-success me-2" antIcon type="check-circle" theme="fill"></i>
-      <span class="badge bg-light-success text-capitalize">Ομαδική συνομιλία</span>
+      <span class="badge bg-light-success text-capitalize">{{ 'Group chat' | translate }}</span>
     } @else {
       <i class="text-secondary me-2" antIcon type="check-circle" theme="fill"></i>
-      <span class="badge bg-light-secondary text-capitalize">Προσωπική συνομιλία</span>
+      <span class="badge bg-light-secondary text-capitalize">{{ 'Personal chat' | translate }}</span>
     }
   </div>
 </ng-template>
@@ -340,12 +386,12 @@
         [attr.aria-expanded]="!infoCollapsed"
       >
         <div class="float-end"><i antIcon type="down" theme="outline"></i></div>
-        <h5 class="mb-0">Πληροφορίες</h5>
+        <h5 class="mb-0">{{ 'Information' | translate }}</h5>
       </a>
       <div class="collapse show" [ngbCollapse]="infoCollapsed">
         <div class="py-3">
           <div class="d-flex align-items-center justify-content-between mb-2">
-            <p class="mb-0">Τύπος</p>
+            <p class="mb-0">{{ 'Press' | translate }}</p>
             <p class="mb-0 text-muted">{{ activeConversation ? conversationTypeLabel(activeConversation) : '' }}</p>
           </div>
         </div>
@@ -359,10 +405,10 @@
           [attr.aria-expanded]="!membersCollapsed"
         >
           <div class="float-end"><i antIcon type="down" theme="outline"></i></div>
-          <h5 class="mb-0">Μέλη ({{ activeConversation?.members?.length }})</h5>
+          <h5 class="mb-0">{{ 'Members (' | translate }}{{ activeConversation?.members?.length }})</h5>
         </a>
         <div class="collapse show" [ngbCollapse]="membersCollapsed">
-          <div class="py-3 chat-members-list" tabindex="0" aria-label="Μέλη συνομιλίας">
+          <div class="py-3 chat-members-list" tabindex="0" [attr.aria-label]="'Chat members' | translate">
             @for (member of activeConversation?.members; track member.userId) {
               <div class="d-flex align-items-center chat-member-row">
                 <div class="chat-avatar">
@@ -386,55 +432,76 @@
 </ng-template>
 
 <ng-template #chatPersonList>
-  @if (errorMessage && !activeConversation) { <p class="text-danger text-sm px-3" role="alert">{{ errorMessage }}</p> }
+  @if (errorMessage && !activeConversation) {
+    <p class="text-danger text-sm px-3" role="alert">{{ errorMessage }}</p>
+  }
   <div class="list-group list-group-flush">
     @for (list of filteredConversations; track list.id) {
       <div class="conversation-row" [ngClass]="{ 'bg-light-primary': list.id === activeConversation?.id }">
-      <a
-        href="javascript:"
-        class="list-group-item list-group-item-action user-list"
-        (click)="selectConversation(list)"
-      >
-        <div class="media align-items-center">
-          <div class="chat-avatar">
-            <img class="rounded-circle img-fluid wid-40" [src]="conversationAvatar(list)" alt="User image" />
-            @if (list.type === 'BUILDING') {
-              <i class="text-success chat-user-status" antIcon type="check-circle" theme="fill"></i>
-            }
-          </div>
-          <div class="media-body">
-            <div class="d-flex align-items-center justify-content-between">
-              <h5 class="mb-0 text-truncate">{{ list.name }}</h5>
+        <a href="javascript:" class="list-group-item list-group-item-action user-list" (click)="selectConversation(list)">
+          <div class="media align-items-center">
+            <div class="chat-avatar">
+              <img class="rounded-circle img-fluid wid-40" [src]="conversationAvatar(list)" alt="User image" />
+              @if (list.type === 'BUILDING') {
+                <i class="text-success chat-user-status" antIcon type="check-circle" theme="fill"></i>
+              }
             </div>
-            <div class="d-flex align-items-center justify-content-between">
-              <span class="text-sm text-muted text-truncate" style="flex: 1 1 auto; min-width: 0">{{ truncatePreview(list.lastMessage || conversationTypeLabel(list)) }}</span>
-              <span class="text-sm text-muted f-w-400 ms-2 text-nowrap">{{ conversationTypeLabel(list) }}</span>
+            <div class="media-body">
+              <div class="d-flex align-items-center justify-content-between">
+                <h5 class="mb-0 text-truncate">{{ list.name }}</h5>
+              </div>
+              <div class="d-flex align-items-center justify-content-between">
+                <span class="text-sm text-muted text-truncate" style="flex: 1 1 auto; min-width: 0">
+                  {{ truncatePreview(list.lastMessage || conversationTypeLabel(list)) }}
+                </span>
+                <span class="text-sm text-muted f-w-400 ms-2 text-nowrap">{{ conversationTypeLabel(list) }}</span>
+              </div>
             </div>
           </div>
-        </div>
-      </a>
-      <button type="button" class="conversation-hide" title="Απόκρυψη" [attr.aria-label]="'Απόκρυψη: ' + list.name" [disabled]="actionLoading" (click)="$event.stopPropagation(); hideConversation(list)">
-        <i antIcon type="close" theme="outline" aria-hidden="true"></i>
-      </button>
+        </a>
+        <button
+          type="button"
+          class="conversation-hide"
+          [title]="'Hiding' | translate"
+          [attr.aria-label]="('Hide:' | translate) + list.name"
+          [disabled]="actionLoading"
+          (click)="$event.stopPropagation(); hideConversation(list)"
+        >
+          <i antIcon type="close" theme="outline" aria-hidden="true"></i>
+        </button>
       </div>
     } @empty {
-      <p class="mb-0 text-muted text-sm p-3">Δεν υπάρχουν συνομιλίες ακόμα.</p>
+      <p class="mb-0 text-muted text-sm p-3">{{ 'There are no conversations yet.' | translate }}</p>
     }
   </div>
 </ng-template>
 
 <ng-template #newChat let-modal>
   <div class="modal-header">
-    <h5 class="modal-title">Νέα συνομιλία</h5>
+    <h5 class="modal-title">{{ 'New conversation' | translate }}</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss()"></button>
   </div>
   <div class="modal-body">
-    <input type="search" class="form-control mb-3" placeholder="Αναζήτηση μέλους ή κτιρίου" aria-label="Αναζήτηση μέλους" [(ngModel)]="memberSearch" />
-    @if (memberError) { <p class="text-danger text-sm" role="alert">{{ memberError }}</p> }
-    @if (membersLoadError) { <p class="text-danger text-sm" role="alert">Δεν ήταν δυνατή η φόρτωση των μελών.</p> }
-    @if (membersLoading) { <p class="text-muted text-sm">Φόρτωση μελών...</p> }
-    @if (openingChat) { <p class="text-muted text-sm">Άνοιγμα συνομιλίας...</p> }
-    <div class="list-group list-group-flush chat-new-members-list" tabindex="0" aria-label="Μέλη για νέα συνομιλία">
+    <input
+      type="search"
+      class="form-control mb-3"
+      [placeholder]="'Search for a member or building' | translate"
+      [attr.aria-label]="'Member search' | translate"
+      [(ngModel)]="memberSearch"
+    />
+    @if (memberError) {
+      <p class="text-danger text-sm" role="alert">{{ memberError }}</p>
+    }
+    @if (membersLoadError) {
+      <p class="text-danger text-sm" role="alert">{{ 'Could not load members.' | translate }}</p>
+    }
+    @if (membersLoading) {
+      <p class="text-muted text-sm">{{ 'Loading members...' | translate }}</p>
+    }
+    @if (openingChat) {
+      <p class="text-muted text-sm">{{ 'Open chat...' | translate }}</p>
+    }
+    <div class="list-group list-group-flush chat-new-members-list" tabindex="0" [attr.aria-label]="'Members for new chat' | translate">
       @for (member of filteredMembers; track member.userId) {
         <button
           type="button"
@@ -458,7 +525,9 @@
           </div>
         </button>
       } @empty {
-        @if (!membersLoading && !membersLoadError) { <p class="mb-0 text-muted text-sm">Δεν βρέθηκαν διαθέσιμα μέλη προς συνομιλία.</p> }
+        @if (!membersLoading && !membersLoadError) {
+          <p class="mb-0 text-muted text-sm">{{ 'No members were found available to chat.' | translate }}</p>
+        }
       }
     </div>
   </div>

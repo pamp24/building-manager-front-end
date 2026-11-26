@@ -1,5 +1,7 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -17,6 +19,8 @@ import { GREECE_LOCATIONS, GreeceRegion } from 'src/app/theme/shared/data/greece
   templateUrl: './professional-register-modal.component.html'
 })
 export class ProfessionalRegisterModalComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private readonly phonePattern = /^\+?[0-9()\-\s]{8,20}$/;
   private readonly websitePattern = /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[^\s]*)?$/i;
   private readonly taxNumberPattern = /^[A-Za-z0-9-]{8,15}$/;
@@ -37,17 +41,17 @@ export class ProfessionalRegisterModalComponent {
   availableAreas: string[] = [];
 
   categories: { value: ProfessionalCategory; label: string }[] = [
-    { value: 'ELECTRICIAN', label: 'Ηλεκτρολόγος' },
-    { value: 'PLUMBER', label: 'Υδραυλικός' },
-    { value: 'ELEVATOR_TECHNICIAN', label: 'Τεχνικός Ασανσέρ' },
-    { value: 'CLEANING_SERVICE', label: 'Καθαρισμός' },
-    { value: 'HEATING_TECHNICIAN', label: 'Θέρμανση' },
-    { value: 'LOCKSMITH', label: 'Κλειδαράς' },
-    { value: 'AIR_CONDITION_TECHNICIAN', label: 'Κλιματισμός' },
-    { value: 'PAINTER', label: 'Ελαιοχρωματιστής' },
-    { value: 'PEST_CONTROL', label: 'Απεντομώσεις' },
-    { value: 'GENERAL_REPAIRS', label: 'Γενικές Επισκευές' },
-    { value: 'OTHER', label: 'Άλλο' }
+    { value: 'ELECTRICIAN', label: this.uiLocale.text('Electrician') },
+    { value: 'PLUMBER', label: this.uiLocale.text('Plumber') },
+    { value: 'ELEVATOR_TECHNICIAN', label: this.uiLocale.text('Elevator technician') },
+    { value: 'CLEANING_SERVICE', label: this.uiLocale.text('Cleaning') },
+    { value: 'HEATING_TECHNICIAN', label: this.uiLocale.text('Heating') },
+    { value: 'LOCKSMITH', label: this.uiLocale.text('Locker') },
+    { value: 'AIR_CONDITION_TECHNICIAN', label: this.uiLocale.text('Air conditioning') },
+    { value: 'PAINTER', label: this.uiLocale.text('Oil painter') },
+    { value: 'PEST_CONTROL', label: this.uiLocale.text('Exterminations') },
+    { value: 'GENERAL_REPAIRS', label: this.uiLocale.text('General Repairs') },
+    { value: 'OTHER', label: this.uiLocale.text('Other') }
   ];
 
   form = this.fb.group({
@@ -120,7 +124,7 @@ export class ProfessionalRegisterModalComponent {
     this.error = '';
 
     if (this.form.invalid) {
-      this.error = 'Παρακαλώ συμπληρώστε σωστά τα υποχρεωτικά πεδία.';
+      this.error = this.uiLocale.text('Please fill in the mandatory fields correctly.');
       return;
     }
 
@@ -141,7 +145,7 @@ export class ProfessionalRegisterModalComponent {
           (typeof err?.error === 'string' ? err.error : '') ||
           err?.businessErrorDescription ||
           err?.message ||
-          'Αποτυχία καταχώρισης επιχείρησης.';
+          this.uiLocale.text('Business registration failure.');
       }
     });
   }

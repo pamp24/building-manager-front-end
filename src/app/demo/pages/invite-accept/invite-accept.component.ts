@@ -1,3 +1,5 @@
+import { TranslateModule } from '@ngx-translate/core';
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -5,11 +7,15 @@ import { AuthenticationService } from 'src/app/theme/shared/service/authenticati
 import { UserService } from 'src/app/theme/shared/service';
 
 @Component({
+  imports: [TranslateModule],
+
   selector: 'app-invite-accept',
   styleUrls: ['./invite-accept.component.scss'],
   templateUrl: './invite-accept.component.html'
 })
 export class InviteAcceptComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private authService = inject(AuthenticationService);
@@ -23,7 +29,7 @@ export class InviteAcceptComponent implements OnInit {
     this.inviteCode = this.route.snapshot.queryParamMap.get('code');
 
     if (!this.inviteCode) {
-      this.message = 'Μη έγκυρη πρόσκληση.';
+      this.message = this.uiLocale.text('Invalid invitation.');
       this.loading = false;
       return;
     }
@@ -39,12 +45,12 @@ export class InviteAcceptComponent implements OnInit {
 
     this.userService.acceptInvite(this.inviteCode).subscribe({
       next: () => {
-        this.message = 'Η πρόσκληση έγινε αποδεκτή με επιτυχία!';
+        this.message = this.uiLocale.text('Invitation successfully accepted!');
         this.loading = false;
         this.authService.refreshCurrentUserAndReload();
       },
       error: (err) => {
-        this.message = err.error?.message || 'Σφάλμα κατά την αποδοχή της πρόσκλησης.';
+        this.message = err.error?.message || this.uiLocale.text('Error accepting invitation.');
         console.error(err);
         this.loading = false;
       }

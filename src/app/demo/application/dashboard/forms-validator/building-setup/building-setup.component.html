@@ -7,23 +7,19 @@
 
 <!-- MANY: 2) Create ONE Building (one-by-one) -->
 <ng-container *ngIf="action === 'many' && companyCompleted">
-  <app-card cardTitle="Πολυκατοικία Εταιρίας">
+  <app-card [cardTitle]="'Company apartment building' | translate">
     <div class="d-flex align-items-center justify-content-between mb-3">
       <div>
-        <div class="fw-bold">Εταιρία ID: {{ companyId }}</div>
-        <small class="text-muted">Προσθέστε μία πολυκατοικία, αποθήκευση, και μετά θα περάσετε στα διαμερίσματα.</small>
+        <div class="fw-bold">{{ 'Company ID:' | translate }} {{ companyId }}</div>
+        <small class="text-muted">{{ "Add an apartment building, storage, and then you'll move on to apartments." | translate }}</small>
       </div>
 
       <button class="btn btn-outline-secondary" type="button" (click)="changeCompany()">
-        Αλλαγή Εταιρίας
+        {{ 'Change of Company' | translate }}
       </button>
     </div>
 
-    <app-building-form
-      [form]="buildingForm"
-      (formSubmitted)="onManyBuildingCreated($event)"
-      (backClicked)="onBack()"
-    ></app-building-form>
+    <app-building-form [form]="buildingForm" (formSubmitted)="onManyBuildingCreated($event)" (backClicked)="onBack()"></app-building-form>
   </app-card>
 </ng-container>
 
@@ -34,7 +30,6 @@
   (formSubmitted)="onBuildingCreated($event)"
   (backClicked)="back.emit()"
 ></app-building-form>
-
 
 <!-- EXISTING -->
 <app-existing-building-form

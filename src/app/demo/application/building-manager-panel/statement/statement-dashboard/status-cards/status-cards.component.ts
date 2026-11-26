@@ -24,14 +24,17 @@ export class StatusCardsComponent implements OnChanges {
   totalAll = 0;
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['dashboardData'] && this.dashboardData) {
+    if (changes['dashboardData']) {
       this.calculateCounts();
     }
   }
 
   private calculateCounts(): void {
     const data = this.dashboardData;
-    if (!data) return;
+    if (!data) {
+      this.totalCount = this.paidCount = this.pendingCount = this.expiredCount = this.closedCount = this.draftCount = this.totalAll = 0;
+      return;
+    }
 
     if (data.monthlyStats && data.monthlyStats.length > 0) {
       const totalIssued = data.monthlyStats.reduce((sum, m) => sum + (m.issued || 0), 0);

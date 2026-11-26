@@ -37,10 +37,7 @@ export class ApartmentPendingCardComponent {
       plotOptions: { bar: { columnWidth: '80%' } },
       series: [
         {
-          data: [
-            1800, 1500, 1800, 1700, 1400, 1200, 1000, 800, 600, 500,
-            600, 800, 500, 700, 400, 600, 500, 600
-          ]
+          data: [1800, 1500, 1800, 1700, 1400, 1200, 1000, 800, 600, 500, 600, 800, 500, 700, 400, 600, 500, 600]
         }
       ],
       xaxis: { crosshairs: { width: 1 } },

@@ -4,15 +4,15 @@
     <div class="dataTable-dropdown">
       <select
         class="form-select"
-        title="select item per page"
+        [title]="'select item per page' | translate"
         style="width: auto"
         name="pageSize"
         [(ngModel)]="pageSize"
         (ngModelChange)="applyFilters()"
       >
-        <option [ngValue]="5">5 εγγραφές ανά σελίδα</option>
-        <option [ngValue]="10">10 εγγραφές ανά σελίδα</option>
-        <option [ngValue]="15">15 εγγραφές ανά σελίδα</option>
+        <option [ngValue]="5">{{ '5 entries per page' | translate }}</option>
+        <option [ngValue]="10">{{ '10 entries per page' | translate }}</option>
+        <option [ngValue]="15">{{ '15 entries per page' | translate }}</option>
       </select>
     </div>
 
@@ -24,7 +24,7 @@
         name="searchTerm"
         [(ngModel)]="searchTerm"
         (ngModelChange)="onSearchChange()"
-        placeholder="Αναζήτηση..."
+        [placeholder]="'Search...' | translate"
       />
     </div>
   </div>
@@ -38,13 +38,13 @@
   <table class="table table-hover mb-0" *ngIf="!loading">
     <thead>
       <tr>
-        <th (click)="onSort('code')" style="cursor: pointer">ID Παραστατικού {{ getSortIcon('code') }}</th>
-        <th (click)="onSort('month')" style="cursor: pointer">Μήνας/Έτος {{ getSortIcon('month') }}</th>
-        <th (click)="onSort('startDate')" style="cursor: pointer">Ημ. Δημιουργίας {{ getSortIcon('startDate') }}</th>
-        <th (click)="onSort('endDate')" style="cursor: pointer">Ημ. Λήξης {{ getSortIcon('endDate') }}</th>
-        <th (click)="onSort('total')" style="cursor: pointer">Ποσό {{ getSortIcon('total') }}</th>
-        <th (click)="onSort('status')" style="cursor: pointer">Κατάσταση {{ getSortIcon('status') }}</th>
-        <th class="text-center">Ενέργειες</th>
+        <th (click)="onSort('code')" style="cursor: pointer">{{ 'Document ID' | translate }} {{ getSortIcon('code') }}</th>
+        <th (click)="onSort('month')" style="cursor: pointer">{{ 'Month/Year' | translate }} {{ getSortIcon('month') }}</th>
+        <th (click)="onSort('startDate')" style="cursor: pointer">{{ 'Date Creation' | translate }} {{ getSortIcon('startDate') }}</th>
+        <th (click)="onSort('endDate')" style="cursor: pointer">{{ 'Date Expiration' | translate }} {{ getSortIcon('endDate') }}</th>
+        <th (click)="onSort('total')" style="cursor: pointer">{{ 'Amount' | translate }} {{ getSortIcon('total') }}</th>
+        <th (click)="onSort('status')" style="cursor: pointer">{{ 'Status' | translate }} {{ getSortIcon('status') }}</th>
+        <th class="text-center">{{ 'Actions' | translate }}</th>
       </tr>
     </thead>
     <tbody>
@@ -72,12 +72,22 @@
           <td class="text-center">
             <ul class="list-inline me-auto mb-0">
               <li class="list-inline-item">
-                <a href="javascript:" class="avatar avatar-xs btn-link-secondary" ngbTooltip="Προβολή" (click)="onView(s)">
+                <a
+                  href="javascript:"
+                  class="avatar avatar-xs btn-link-secondary"
+                  [ngbTooltip]="'Projection' | translate"
+                  (click)="onView(s)"
+                >
                   <i class="f-16 text-secondary d-flex" antIcon type="eye" theme="outline"></i>
                 </a>
               </li>
               <li class="list-inline-item" *ngIf="getMyApartmentForStatement(s)">
-                <a href="javascript:" class="avatar avatar-xs btn-link-info" ngbTooltip="Προβολή Διαμερίσματος" (click)="onViewApartment(s)">
+                <a
+                  href="javascript:"
+                  class="avatar avatar-xs btn-link-info"
+                  [ngbTooltip]="'Apartment View' | translate"
+                  (click)="onViewApartment(s)"
+                >
                   <i class="f-16 text-info d-flex" antIcon type="eye" theme="outline"></i>
                 </a>
               </li>
@@ -85,7 +95,7 @@
                 <a
                   href="javascript:"
                   class="avatar avatar-xs btn-link-danger"
-                  ngbTooltip="Διαγραφή"
+                  [ngbTooltip]="'Delete' | translate"
                   [class.disabled]="hasAnyPayment(s)"
                   [attr.aria-disabled]="hasAnyPayment(s)"
                   (click)="hasAnyPayment(s) ? $event.preventDefault() : onDelete(s)"
@@ -97,7 +107,7 @@
                 <a
                   href="javascript:"
                   class="avatar avatar-xs btn-link-success"
-                  ngbTooltip="Πληρωμές Χρηστών"
+                  [ngbTooltip]="'User Payments' | translate"
                   (click)="togglePayments(s.id)"
                 >
                   <i
@@ -124,14 +134,14 @@
                 <table class="table table-sm table-striped align-middle mb-0">
                   <thead>
                     <tr>
-                      <th>Χρήστης</th>
-                      <th>Διαμέρισμα</th>
-                      <th>Οφειλή</th>
-                      <th>Πληρωμένο</th>
-                      <th>Ημερομηνία</th>
-                      <th>Τρόπος</th>
-                      <th>Κατάσταση</th>
-                      <th>Ενέργειες</th>
+                      <th>{{ 'User' | translate }}</th>
+                      <th>{{ 'Apartment' | translate }}</th>
+                      <th>{{ 'Due' | translate }}</th>
+                      <th>{{ 'Paid' | translate }}</th>
+                      <th>{{ 'Date' | translate }}</th>
+                      <th>{{ 'Way' | translate }}</th>
+                      <th>{{ 'Status' | translate }}</th>
+                      <th>{{ 'Actions' | translate }}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -162,7 +172,7 @@
                             'btn-link-primary': p.status !== 'PAID',
                             'btn-link-secondary disabled': p.status === 'PAID'
                           }"
-                          ngbTooltip="{{ p.status === 'PAID' ? 'Έχει εξοφληθεί' : 'Επεξεργασία' }}"
+                          ngbTooltip="{{ p.status === 'PAID' ? ('It has been paid off' | translate) : ('Processing' | translate) }}"
                           (click)="p.status !== 'PAID' && onEditUser(p)"
                         >
                           <i
@@ -179,7 +189,7 @@
                       </td>
                     </tr>
                     <tr *ngIf="!statementUserPayments.length && !paymentsLoading">
-                      <td colspan="8" class="text-center text-muted">Δεν υπάρχουν δεδομένα χρηστών για αυτό το παραστατικό</td>
+                      <td colspan="8" class="text-center text-muted">{{ 'There is no user data for this document' | translate }}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -194,7 +204,8 @@
   <!-- === Pagination Info === -->
   <div class="p-3 d-sm-flex align-items-center justify-content-between" *ngIf="!loading">
     <div class="datatable-info">
-      Δείχνει {{ (page - 1) * pageSize + 1 }} έως {{ Math.min(page * pageSize, total) }} από {{ total }} εγγραφές
+      {{ 'It shows' | translate }} {{ (page - 1) * pageSize + 1 }} {{ 'up to' | translate }} {{ Math.min(page * pageSize, total) }}
+      {{ 'from' | translate }} {{ total }} {{ 'registrations' | translate }}
     </div>
     <ngb-pagination
       [collectionSize]="total"

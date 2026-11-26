@@ -1,4 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, Input } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -8,11 +11,13 @@ import { ApartmentService } from 'src/app/theme/shared/service/apartment.service
 @Component({
   selector: 'app-delete-apartment',
   standalone: true,
-  imports: [CommonModule],
+  imports: [TranslateModule, CommonModule],
   templateUrl: './delete-apartment.component.html',
   styleUrls: ['./delete-apartment.component.scss']
 })
 export class DeleteApartmentComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   @Input() apartment!: ApartmentDTO;
 
   isDeleting = false;
@@ -41,7 +46,7 @@ export class DeleteApartmentComponent {
       error: (err) => {
         console.error('Σφάλμα διαγραφής διαμερίσματος:', err);
 
-        this.errorMessage = err?.error?.message || 'Η διαγραφή του διαμερίσματος απέτυχε.';
+        this.errorMessage = err?.error?.message || this.uiLocale.text('Failed to delete partition.');
 
         this.isDeleting = false;
       }

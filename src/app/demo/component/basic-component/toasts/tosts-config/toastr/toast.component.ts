@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, HostBinding, HostListener, NgZone, OnDestroy, ChangeDetectionStrategy, WritableSignal, signal } from '@angular/core';
 
@@ -9,8 +10,8 @@ import { ToastrService } from './toastr.service';
   selector: 'app-toast-component',
   template: `
     @if (options.closeButton) {
-      <button (click)="remove()" type="button" class="toast-close-button" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
+      <button (click)="remove()" type="button" class="toast-close-button" [attr.aria-label]="'Close' | translate">
+        <span aria-hidden="true">{{ '&amp;times;' | translate }}</span>
       </button>
     }
     @if (title) {
@@ -43,7 +44,7 @@ import { ToastrService } from './toastr.service';
     ])
   ],
   preserveWhitespaces: false,
-  imports: [],
+  imports: [TranslateModule],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastComponent implements OnDestroy {

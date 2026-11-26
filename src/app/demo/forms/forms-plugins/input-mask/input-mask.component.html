@@ -1,57 +1,57 @@
 <div class="row">
   <div class="col-md-6">
-    <app-card cardTitle="Date">
+    <app-card [cardTitle]="'Date' | translate">
       <div class="row form-group">
         <div class="col-form-label col-lg-3 col-sm-12 text-lg-end">
-          <label>Date</label>
+          <label>{{ 'Date' | translate }}</label>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12">
-          <input matInput mask="00/00/0000" class="form-control" placeholder="DD/MM/YYYY" />
+          <input matInput mask="00/00/0000" class="form-control" [placeholder]="'DD/MM/YYYY' | translate" />
         </div>
       </div>
       <div class="row">
         <div class="col-form-label col-lg-3 col-sm-12 text-lg-end">
-          <label>Valid Date And Month</label>
+          <label>{{ 'Valid Date And Month' | translate }}</label>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12">
-          <input matInput mask="d0/M0/0000" class="form-control" placeholder="DD/MM/YYYY" />
+          <input matInput mask="d0/M0/0000" class="form-control" [placeholder]="'DD/MM/YYYY' | translate" />
         </div>
       </div>
     </app-card>
   </div>
   <div class="col-md-6">
-    <app-card cardTitle="Time">
+    <app-card [cardTitle]="'Time' | translate">
       <div class="row form-group">
         <div class="col-form-label col-lg-3 col-sm-12 text-lg-end">
-          <label>Date And Hour</label>
+          <label>{{ 'Date And Hour' | translate }}</label>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12">
-          <input matInput mask="00/00/00 00:00:00" class="form-control" placeholder="DD/MM/YYYY HH:MM:SS" />
+          <input matInput mask="00/00/00 00:00:00" class="form-control" [placeholder]="'DD/MM/YYYY HH:MM:SS' | translate" />
         </div>
       </div>
       <div class="row">
         <div class="col-form-label col-lg-3 col-sm-12 text-lg-end">
-          <label>Valid 24 Hour Format</label>
+          <label>{{ 'Valid 24 Hour Format' | translate }}</label>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12">
-          <input matInput mask="Hh:m0:s0" class="form-control" placeholder="HH:MM:SS" />
+          <input matInput mask="Hh:m0:s0" class="form-control" [placeholder]="'HH:MM:SS' | translate" />
         </div>
       </div>
     </app-card>
   </div>
   <div class="col-md-6">
-    <app-card cardTitle="Mixed Type">
+    <app-card [cardTitle]="'Mixed Type' | translate">
       <div class="row form-group">
         <div class="col-form-label col-lg-3 col-sm-12 text-lg-end">
-          <label>MIXED</label>
+          <label>{{ 'MIXED' | translate }}</label>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12">
-          <input matInput mask="AAA 000-S0S" class="form-control" placeholder="AAA 000-S0S" />
+          <input matInput mask="AAA 000-S0S" class="form-control" [placeholder]="'AAA 000-S0S' | translate" />
         </div>
       </div>
       <div class="row form-group">
         <div class="col-form-label col-lg-3 col-sm-12 text-lg-end">
-          <label>Mask With Special Characters</label>
+          <label>{{ 'Mask With Special Characters' | translate }}</label>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12">
           <input
@@ -65,7 +65,7 @@
       </div>
       <div class="row">
         <div class="col-form-label col-lg-3 col-sm-12 text-lg-end">
-          <label>Dynamic Mask</label>
+          <label>{{ 'Dynamic Mask' | translate }}</label>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12">
           <input type="text" mask="(00) 00000000||+00 (00) 00000000" class="form-control" placeholder="(00) 00000000||+00 (00) 00000000" />
@@ -74,10 +74,10 @@
     </app-card>
   </div>
   <div class="col-md-6">
-    <app-card cardTitle="Multi Options">
+    <app-card [cardTitle]="'Multi Options' | translate">
       <div class="row form-group">
         <div class="col-form-label col-lg-3 col-sm-12 text-lg-end">
-          <label>Prefix</label>
+          <label>{{ 'Prefix' | translate }}</label>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12">
           <input type="text" prefix="+7 " mask="(000) 000 00 00" class="form-control" placeholder="(00) 000 000" />
@@ -85,7 +85,7 @@
       </div>
       <div class="row form-group">
         <div class="col-form-label col-lg-3 col-sm-12 text-lg-end">
-          <label>Suffix</label>
+          <label>{{ 'Suffix' | translate }}</label>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12">
           <input matInput type="text" suffix=" $" mask="0000" class="form-control" placeholder="0 000" />
@@ -93,7 +93,7 @@
       </div>
       <div class="row form-group">
         <div class="col-form-label col-lg-3 col-sm-12 text-lg-end">
-          <label>Drop Special Characters</label>
+          <label>{{ 'Drop Special Characters' | translate }}</label>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12">
           <input type="text" [dropSpecialCharacters]="false" mask="000-000.00" class="form-control" placeholder="000-000.00" />
@@ -101,7 +101,7 @@
       </div>
       <div class="row">
         <div class="col-form-label col-lg-3 col-sm-12 text-lg-end">
-          <label>Show Mask Type</label>
+          <label>{{ 'Show Mask Type' | translate }}</label>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12">
           <input mask="(000) 000-0000" [showMaskTyped]="true" class="form-control" placeholder="(000) 000-0000" />
@@ -110,29 +110,29 @@
     </app-card>
   </div>
   <div class="col-md-12">
-    <app-card cardTitle="Separators">
+    <app-card [cardTitle]="'Separators' | translate">
       <div class="row form-group">
         <div class="col-form-label col-lg-3 col-sm-12 text-lg-end">
-          <label>Thousand Separator</label>
+          <label>{{ 'Thousand Separator' | translate }}</label>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12">
-          <input type="text" mask="separator" class="form-control" placeholder="separator" />
+          <input type="text" mask="separator" class="form-control" [placeholder]="'separator' | translate" />
         </div>
       </div>
       <div class="row form-group">
         <div class="col-form-label col-lg-3 col-sm-12 text-lg-end">
-          <label>Thousand Separator</label>
+          <label>{{ 'Thousand Separator' | translate }}</label>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12">
-          <input type="text" mask="separator" thousandSeparator="." class="form-control" placeholder="Dot Separator" />
+          <input type="text" mask="separator" thousandSeparator="." class="form-control" [placeholder]="'Dot Separator' | translate" />
         </div>
       </div>
       <div class="row form-group">
         <div class="col-form-label col-lg-3 col-sm-12 text-lg-end">
-          <label>Comma Separator</label>
+          <label>{{ 'Comma Separator' | translate }}</label>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12">
-          <input type="text" mask="separator.0" thousandSeparator="," class="form-control" placeholder="Comma Separator" />
+          <input type="text" mask="separator.0" thousandSeparator="," class="form-control" [placeholder]="'Comma Separator' | translate" />
         </div>
       </div>
     </app-card>

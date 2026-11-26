@@ -1,4 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, Input, OnInit } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
@@ -18,11 +20,13 @@ import { ApartmentUpdateRequest } from 'src/app/theme/shared/models/apartmentUpd
 @Component({
   selector: 'app-edit-apartment',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [TranslateModule, CommonModule, ReactiveFormsModule],
   templateUrl: './edit-apartment.component.html',
   styleUrls: ['./edit-apartment.component.scss']
 })
 export class EditApartmentComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   @Input() apartment!: ApartmentDTO;
 
   form!: FormGroup;
@@ -48,7 +52,7 @@ export class EditApartmentComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.apartment?.id) {
-      this.errorMessage = 'Δεν βρέθηκαν στοιχεία διαμερίσματος.';
+      this.errorMessage = this.uiLocale.text('No apartment details found.');
       return;
     }
 
@@ -61,13 +65,13 @@ export class EditApartmentComponent implements OnInit {
     this.form = this.fb.group({
       ownerFirstName: [this.apartment.ownerFirstName ?? '', [Validators.required, Validators.minLength(3)]],
       ownerLastName: [this.apartment.ownerLastName ?? '', [Validators.required, Validators.minLength(3)]],
-      isRented: [this.apartment.isRented ? 'Ναι' : 'Όχι', Validators.required],
+      isRented: [this.apartment.isRented ? this.uiLocale.text('Yes') : this.uiLocale.text('Nope'), Validators.required],
       residentFirstName: [this.apartment.residentFirstName ?? ''],
       residentLastName: [this.apartment.residentLastName ?? ''],
       apartmentNumber: [this.apartment.number ?? '', Validators.required],
       floor: [this.apartment.floor ?? '', Validators.required],
       sqMetersApart: [this.apartment.sqMetersApart ?? '', [Validators.required, Validators.min(1)]],
-      hasParking: [this.apartment.parkingSpace ? 'Ναι' : 'Όχι', Validators.required],
+      hasParking: [this.apartment.parkingSpace ? this.uiLocale.text('Yes') : this.uiLocale.text('Nope'), Validators.required],
       parkingSlot: [this.apartment.parkingSlot ?? ''],
       commonPercent: [this.apartment.commonPercent ?? 0, [Validators.required, Validators.min(0), Validators.max(100)]],
       elevatorPercent: [this.apartment.elevatorPercent ?? 0, [Validators.required, Validators.min(0), Validators.max(100)]],
@@ -91,7 +95,7 @@ export class EditApartmentComponent implements OnInit {
       error: (err) => {
         console.error('Σφάλμα φόρτωσης πολυκατοικίας:', err);
 
-        this.errorMessage = 'Δεν ήταν δυνατή η φόρτωση της πολυκατοικίας.';
+        this.errorMessage = this.uiLocale.text('The apartment building could not be loaded.');
       }
     });
   }
@@ -116,7 +120,7 @@ export class EditApartmentComponent implements OnInit {
     const parkingUnavailable = this.currentUsedParking >= this.parkingLimit;
     const storageUnavailable = this.currentUsedStorages >= this.storageLimit;
     if (parkingUnavailable && !this.apartment.parkingSpace) {
-      parkingControl?.setValue('Όχι', { emitEvent: false });
+      parkingControl?.setValue(this.uiLocale.text('Nope'), { emitEvent: false });
 
       parkingControl?.disable({
         emitEvent: false
@@ -213,7 +217,7 @@ export class EditApartmentComponent implements OnInit {
       },
       error: (err) => {
         console.error('Update apartment error:', err);
-        this.errorMessage = err?.error?.message || 'Η ενημέρωση του διαμερίσματος απέτυχε.';
+        this.errorMessage = err?.error?.message || this.uiLocale.text('Failed to update partition.');
         this.isSaving = false;
       }
     });

@@ -1,4 +1,6 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
 import { MonthlyAmountStatsDTO } from 'src/app/theme/shared/models/monthlyAmountStatsDTO';
@@ -11,6 +13,8 @@ import { MonthlyAmountStatsDTO } from 'src/app/theme/shared/models/monthlyAmount
   styleUrls: ['./statement-chart.component.scss']
 })
 export class StatementChartComponent implements OnChanges {
+  private readonly uiLocale = inject(UiLocaleService);
+
   @Input() monthlyAmountStats: MonthlyAmountStatsDTO[] = [];
 
   chartOptions!: Partial<ApexOptions>;
@@ -45,14 +49,14 @@ export class StatementChartComponent implements OnChanges {
       },
       dataLabels: { enabled: false },
       series: [
-        { name: 'Πληρωμένα', data: paid },
-        { name: 'Εκκρεμή', data: pending },
-        { name: 'Ληξιπρόθεσμα', data: expired }
+        { name: this.uiLocale.text('Paid'), data: paid },
+        { name: this.uiLocale.text('Pendulum'), data: pending },
+        { name: this.uiLocale.text('Overdue'), data: expired }
       ],
       colors: ['#52c41a', '#fcb023', '#ff4d4f'],
       xaxis: { categories: months },
       yaxis: {
-        title: { text: 'Ποσό (€)' },
+        title: { text: this.uiLocale.text('Amount (€)') },
         labels: {
           formatter: (val: number) => `${val.toFixed(0)}€`
         }
@@ -60,7 +64,7 @@ export class StatementChartComponent implements OnChanges {
       tooltip: {
         theme: 'light',
         y: {
-          formatter: (val: number) => val.toLocaleString('el-GR', { style: 'currency', currency: 'EUR' })
+          formatter: (val: number) => val.toLocaleString(this.uiLocale.locale, { style: 'currency', currency: 'EUR' })
         }
       }
     };

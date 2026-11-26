@@ -22,17 +22,17 @@
                 } @else {
                   <img src="assets/images/oikio-logo.png" width="117" class="img-fluid logo-lg" alt="Oikio" />
                 }
-                <span class="badge bg-outline-success rounded ms-2">Paid</span>
+                <span class="badge bg-outline-success rounded ms-2">{{ 'Paid' | translate }}</span>
               </div>
-              <p class="mb-0">INV - 000457</p>
+              <p class="mb-0">{{ 'INV - 000457' | translate }}</p>
             </div>
             <div class="col-sm-6 text-sm-end">
               <h6>
-                Date
+                {{ 'Date' | translate }}
                 <span class="text-muted f-w-400">03/8/2023</span>
               </h6>
               <h6>
-                Due Date
+                {{ 'Due Date' | translate }}
                 <span class="text-muted f-w-400">10/8/2023</span>
               </h6>
             </div>
@@ -55,11 +55,11 @@
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>NAME</th>
-                  <th>DESCRIPTION</th>
-                  <th class="text-end">QTY</th>
-                  <th class="text-end">PRICE</th>
-                  <th class="text-end">AMOUNT</th>
+                  <th>{{ 'NAME' | translate }}</th>
+                  <th>{{ 'DESCRIPTION' | translate }}</th>
+                  <th class="text-end">{{ 'QTY' | translate }}</th>
+                  <th class="text-end">{{ 'PRICE' | translate }}</th>
+                  <th class="text-end">{{ 'AMOUNT' | translate }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -80,25 +80,38 @@
         <div class="col-12">
           <div class="invoice-total ms-auto">
             <div class="row">
-              <div class="col-6"><p class="text-muted mb-1 text-start">Sub Total :</p></div>
+              <div class="col-6">
+                <p class="text-muted mb-1 text-start">{{ 'Sub Total :' | translate }}</p>
+              </div>
               <div class="col-6"><p class="mb-1 text-end">$20.00</p></div>
-              <div class="col-6"><p class="text-muted mb-1 text-start">Discount :</p></div>
+              <div class="col-6">
+                <p class="text-muted mb-1 text-start">{{ 'Discount :' | translate }}</p>
+              </div>
               <div class="col-6"><p class="mb-1 text-end text-success">$10.00</p></div>
-              <div class="col-6"><p class="text-muted mb-1 text-start">Taxes :</p></div>
+              <div class="col-6">
+                <p class="text-muted mb-1 text-start">{{ 'Taxes :' | translate }}</p>
+              </div>
               <div class="col-6"><p class="mb-1 text-end">$5.000</p></div>
-              <div class="col-6"><p class="f-w-600 mb-1 text-start">Grand Total :</p></div>
+              <div class="col-6">
+                <p class="f-w-600 mb-1 text-start">{{ 'Grand Total :' | translate }}</p>
+              </div>
               <div class="col-6"><p class="f-w-600 mb-1 text-end">$25.00</p></div>
             </div>
           </div>
         </div>
         <div class="col-12">
-          <label class="form-label">Note</label>
+          <label class="form-label">{{ 'Note' | translate }}</label>
           <p class="mb-0">
-            It was a pleasure working with you and your team. We hope you will keep us in mind for future freelance projects. Thank You!
+            {{
+              'It was a pleasure working with you and your team. We hope you will keep us in mind for future freelance projects. Thank You!'
+                | translate
+            }}
           </p>
         </div>
         <div class="col-12 text-end d-print-none">
-          <button [useExistingCss]="true" printSectionId="print-section" ngxPrint class="btn btn-primary">Download</button>
+          <button [useExistingCss]="true" printSectionId="print-section" ngxPrint class="btn btn-primary">
+            {{ 'Download' | translate }}
+          </button>
         </div>
       </div>
     </app-card>

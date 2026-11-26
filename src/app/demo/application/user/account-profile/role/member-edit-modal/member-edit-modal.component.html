@@ -1,12 +1,18 @@
 <div class="modal-header">
-  <h5 class="modal-title">Ανάθεση Ρόλου & Διαμερίσματος</h5>
+  <h5 class="modal-title">{{ 'Role &amp; Apartment Assignment' | translate }}</h5>
   <button type="button" class="btn-close" (click)="activeModal.dismiss()" [disabled]="isSending"></button>
 </div>
 
 <div class="modal-body">
   <div class="mb-2">
-    <div><b>Ονοματεπώνυμο:</b> {{ displayFullName }}</div>
-    <div><b>Email:</b> {{ member?.email || '—' }}</div>
+    <div>
+      <b>{{ 'Name:' | translate }}</b>
+      {{ displayFullName }}
+    </div>
+    <div>
+      <b>{{ 'Email:' | translate }}</b>
+      {{ member?.email || '—' }}
+    </div>
   </div>
 
   <hr />
@@ -14,40 +20,45 @@
   <div class="row g-3 align-items-end">
     <!-- Role dropdown -->
     <div class="col">
-      <label class="form-label">Ρόλος</label>
+      <label class="form-label">{{ 'Role' | translate }}</label>
       <select class="form-select" [(ngModel)]="roleToInvite" (change)="onRoleChange()" [disabled]="isSending">
-        <option value="" disabled>Επιλέξτε Ρόλο</option>
-        <option value="Owner">Ιδιοκτήτης</option>
-        <option value="Resident">Ένοικος</option>
+        <option value="" disabled>{{ 'Select Role' | translate }}</option>
+        <option value="Owner">{{ 'Owner' | translate }}</option>
+        <option value="Resident">{{ 'Tenant' | translate }}</option>
       </select>
     </div>
 
     <!-- Apartment dropdown -->
     <div class="col">
-      <label class="form-label">Διαμέρισμα</label>
+      <label class="form-label">{{ 'Apartment' | translate }}</label>
       <select class="form-select" [(ngModel)]="apartmentToInvite" [disabled]="isSending">
-        <option [ngValue]="null" disabled>Επιλέξτε Διαμέρισμα</option>
-        <option *ngIf="filteredApartments.length === 0" disabled>Δεν υπάρχουν διαθέσιμα διαμερίσματα</option>
-        <option *ngFor="let ap of filteredApartments" [ngValue]="ap.id">
-          Διαμέρισμα {{ ap.floor }}{{ ap.number }}
-        </option>
+        <option [ngValue]="null" disabled>{{ 'Select Apartment' | translate }}</option>
+        <option *ngIf="filteredApartments.length === 0" disabled>{{ 'There are no apartments available' | translate }}</option>
+        <option *ngFor="let ap of filteredApartments" [ngValue]="ap.id">{{ 'Apartment' | translate }} {{ ap.floor }}{{ ap.number }}</option>
       </select>
     </div>
   </div>
 
   <div *ngIf="pmView" class="mt-4 border-top pt-3">
-    <div *ngIf="member.isBuildingManager" class="text-success">Τρέχων διαχειριστής πολυκατοικίας</div>
-    <button *ngIf="!member.isBuildingManager && member.status === 'JOINED' && member.id != null" type="button"
-      class="btn btn-outline-primary" (click)="designateManager()" [disabled]="isSending || buildingId == null">
+    <div *ngIf="member.isBuildingManager" class="text-success">{{ 'Current apartment building manager' | translate }}</div>
+    <button
+      *ngIf="!member.isBuildingManager && member.status === 'JOINED' && member.id !== null && member.id !== undefined"
+      type="button"
+      class="btn btn-outline-primary"
+      (click)="designateManager()"
+      [disabled]="isSending || buildingId === null || buildingId === undefined"
+    >
       <span *ngIf="isSending" class="spinner-border spinner-border-sm me-2"></span>
-      Ορισμός ως διαχειριστή πολυκατοικίας
+      {{ 'Designation as an apartment building manager' | translate }}
     </button>
-    <p class="text-muted mb-0 mt-2">Ο ρόλος και το διαμέρισμα του μέλους δεν αλλάζουν.</p>
+    <p class="text-muted mb-0 mt-2">{{ "The member's role and apartment do not change." | translate }}</p>
   </div>
   <div class="text-danger mt-3" *ngIf="errorMsg" role="alert">{{ errorMsg }}</div>
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-outline-secondary" (click)="activeModal.dismiss()" [disabled]="isSending">Ακύρωση</button>
-  <button class="btn btn-primary" (click)="save()" [disabled]="isSending">Ανάθεση</button>
+  <button class="btn btn-outline-secondary" (click)="activeModal.dismiss()" [disabled]="isSending">
+    {{ 'Cancellation' | translate }}
+  </button>
+  <button class="btn btn-primary" (click)="save()" [disabled]="isSending">{{ 'Assignment' | translate }}</button>
 </div>

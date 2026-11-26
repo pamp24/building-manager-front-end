@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-12">
-    <app-card cardTitle="Setting" headerClass="py-3">
+    <app-card [cardTitle]="'Setting' | translate" headerClass="py-3">
       <ng-template #headerOptionsTemplate>
         <a class="avatar avatar-s btn-link-secondary" href="javascript:">
           <i class="d-flex f-18" antIcon type="copy" theme="outline"></i>
@@ -15,13 +15,13 @@
               </div>
             </div>
             <div class="flex-grow-1 mx-3">
-              <h6 class="mb-0">Airi Satou</h6>
-              <p class="mb-0">Maiduguri, Borno State</p>
+              <h6 class="mb-0">{{ 'Airi Satou' | translate }}</h6>
+              <p class="mb-0">{{ 'Maiduguri, Borno State' | translate }}</p>
             </div>
             <div class="flex-shrink-0">
               <button class="btn btn-sm btn-light-secondary d-flex align-items-center">
                 <i class="d-flex f-14 me-2" antIcon type="edit" theme="outline"></i>
-                Edit
+                {{ 'Edit' | translate }}
               </button>
             </div>
           </div>
@@ -32,43 +32,43 @@
               <app-card [showHeader]="false" cardClass="shadow-none border mb-0 h-100">
                 <div class="d-flex align-items-center">
                   <div class="flex-grow-1 me-3">
-                    <h6 class="mb-0">Email Address</h6>
+                    <h6 class="mb-0">{{ 'Email Address' | translate }}</h6>
                   </div>
                   <div class="flex-shrink-0">
                     <button class="btn btn-sm btn-light-secondary d-flex align-items-center">
                       <i class="d-flex f-14 me-2" antIcon type="edit" theme="outline"></i>
-                      Edit
+                      {{ 'Edit' | translate }}
                     </button>
                   </div>
                 </div>
                 <div class="mb-3 mt-3">
-                  <label class="form-label">Your email address is</label>
-                  <input type="email" class="form-control" placeholder="Enter email" value="emailis@private.com" />
+                  <label class="form-label">{{ 'Your email address is' | translate }}</label>
+                  <input type="email" class="form-control" [placeholder]="'Enter email' | translate" value="emailis@private.com" />
                 </div>
               </app-card>
             </div>
             <div class="col-md-6">
               <app-card [showHeader]="false" cardClass="shadow-none border mb-0 h-100">
-                <h6 class="mb-2">Password</h6>
+                <h6 class="mb-2">{{ 'Password' | translate }}</h6>
                 <div class="row">
                   <div class="col-sm-6">
                     <div class="mb-3">
-                      <label class="form-label">New Password</label>
-                      <input type="password" class="form-control" placeholder="Enter New Password" value="Emails" />
+                      <label class="form-label">{{ 'New Password' | translate }}</label>
+                      <input type="password" class="form-control" [placeholder]="'Enter New Password' | translate" value="Emails" />
                     </div>
                   </div>
                   <div class="col-sm-6">
                     <div class="mb-3">
-                      <label class="form-label">Current Password</label>
-                      <input type="password" class="form-control" placeholder="Enter Current Password" value="Emails" />
+                      <label class="form-label">{{ 'Current Password' | translate }}</label>
+                      <input type="password" class="form-control" [placeholder]="'Enter Current Password' | translate" value="Emails" />
                     </div>
                   </div>
                 </div>
                 <p>
-                  Can’t Remember your current password?
-                  <a href="javascript:" class="link-primary text-decoration-underline">Reset your password</a>
+                  {{ 'Can’t Remember your current password?' | translate }}
+                  <a href="javascript:" class="link-primary text-decoration-underline">{{ 'Reset your password' | translate }}</a>
                 </p>
-                <button class="btn btn-primary">Save Password</button>
+                <button class="btn btn-primary">{{ 'Save Password' | translate }}</button>
               </app-card>
             </div>
           </div>
@@ -92,13 +92,13 @@
         <div class="col-12">
           <div class="card shadow-none border mb-0">
             <div class="card-body">
-              <h6 class="mb-3">Delete Account</h6>
+              <h6 class="mb-3">{{ 'Delete Account' | translate }}</h6>
               <p class="mb-3">
-                Would you like to delete your account?
+                {{ 'Would you like to delete your account?' | translate }}
                 <br />
-                Deleting your account will remove all the content associated with it.
+                {{ 'Deleting your account will remove all the content associated with it.' | translate }}
               </p>
-              <button class="btn btn-danger">Delete Account</button>
+              <button class="btn btn-danger">{{ 'Delete Account' | translate }}</button>
             </div>
           </div>
         </div>

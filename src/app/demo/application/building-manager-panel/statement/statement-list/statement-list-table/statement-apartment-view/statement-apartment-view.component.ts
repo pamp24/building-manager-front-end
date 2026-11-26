@@ -35,9 +35,7 @@ export class StatementApartmentViewComponent implements OnInit, OnDestroy {
     this.commonExpenseStatementService.downloadApartmentStatementPdf(this.statement.id, this.apartmentId).subscribe({
       next: (blob) => {
         this.objectUrl = URL.createObjectURL(blob);
-        this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-          `${this.objectUrl}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`
-        );
+        this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`${this.objectUrl}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`);
         this.loading = false;
       },
       error: (err) => {

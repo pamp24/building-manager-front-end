@@ -1,14 +1,20 @@
 // Angular imports
-import { NgModule } from '@angular/core';
+import { NgModule, inject } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 // project import
 import { Role } from 'src/app/theme/shared/components/_helpers/role';
+import { AuthenticationService } from 'src/app/theme/shared/service/authentication.service';
 
 const routes: Routes = [
   {
     path: '',
     children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: () => inject(AuthenticationService).getDefaultRouteForRole()
+      },
       {
         path: 'default',
         loadComponent: () => import('./default/default.component').then((c) => c.DefaultComponent),

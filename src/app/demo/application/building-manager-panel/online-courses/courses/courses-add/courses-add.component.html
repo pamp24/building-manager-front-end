@@ -1,62 +1,62 @@
 <div class="row">
   <div class="col-12">
-    <app-card cardTitle="Course Add">
+    <app-card [cardTitle]="'Course Add' | translate">
       <div class="row">
         <div class="col-md-6">
           <div class="mb-3">
-            <label class="form-label">Course Name</label>
-            <input type="text" class="form-control" placeholder="Enter first name" />
+            <label class="form-label">{{ 'Course Name' | translate }}</label>
+            <input type="text" class="form-control" [placeholder]="'Enter first name' | translate" />
           </div>
         </div>
         <div class="col-md-6">
           <div class="mb-3">
-            <label class="form-label">Course Code</label>
-            <input type="text" class="form-control" placeholder="Enter Course Code" />
+            <label class="form-label">{{ 'Course Code' | translate }}</label>
+            <input type="text" class="form-control" [placeholder]="'Enter Course Code' | translate" />
           </div>
         </div>
         <div class="col-md-6">
           <div class="mb-3">
-            <label class="form-label">Start Form</label>
+            <label class="form-label">{{ 'Start Form' | translate }}</label>
             <input type="date" class="form-control" />
           </div>
         </div>
         <div class="col-md-6">
           <div class="mb-3">
-            <label class="form-label">Course Duration</label>
-            <input type="text" class="form-control" placeholder="Enter Course Duration" />
+            <label class="form-label">{{ 'Course Duration' | translate }}</label>
+            <input type="text" class="form-control" [placeholder]="'Enter Course Duration' | translate" />
           </div>
         </div>
         <div class="col-md-6">
           <div class="mb-3">
-            <label class="form-label">Course Price</label>
-            <input type="number" class="form-control" placeholder="Enter course price" />
+            <label class="form-label">{{ 'Course Price' | translate }}</label>
+            <input type="number" class="form-control" [placeholder]="'Enter course price' | translate" />
           </div>
         </div>
         <div class="col-md-6">
           <div class="mb-3">
-            <label class="form-label">Teacher Name</label>
-            <input type="text" class="form-control" placeholder="Enter Teacher name" />
+            <label class="form-label">{{ 'Teacher Name' | translate }}</label>
+            <input type="text" class="form-control" [placeholder]="'Enter Teacher name' | translate" />
           </div>
         </div>
         <div class="col-md-6">
           <div class="mb-3">
-            <label class="form-label">Maximum Students</label>
-            <input type="number" class="form-control" placeholder="Enter maximum students" />
+            <label class="form-label">{{ 'Maximum Students' | translate }}</label>
+            <input type="number" class="form-control" [placeholder]="'Enter maximum students' | translate" />
           </div>
         </div>
         <div class="col-md-6">
           <div class="mb-3">
-            <label class="form-label">Course Status</label>
+            <label class="form-label">{{ 'Course Status' | translate }}</label>
             <select class="form-select">
-              <option>Deactive</option>
-              <option>Active</option>
+              <option>{{ 'Deactive' | translate }}</option>
+              <option>{{ 'Active' | translate }}</option>
             </select>
           </div>
         </div>
         <div class="col-md-6">
           <div class="mb-3">
-            <label class="form-label">Course Details</label>
-            <textarea class="form-control" rows="3" placeholder="Enter course details"></textarea>
+            <label class="form-label">{{ 'Course Details' | translate }}</label>
+            <textarea class="form-control" rows="3" [placeholder]="'Enter course details' | translate"></textarea>
           </div>
         </div>
         <div class="col-md-6">
@@ -70,9 +70,9 @@
                     </div>
                     <div class="upload-text">
                       @if (isFileDragDropAvailable) {
-                        <ng-container>Drag and drop Template or click here</ng-container>
+                        <ng-container>{{ 'Drag and drop Template or click here' | translate }}</ng-container>
                       } @else {
-                        <ng-template>Click here to choose a Template</ng-template>
+                        <ng-template>{{ 'Click here to choose a Template' | translate }}</ng-template>
                       }
                     </div>
                   </div>
@@ -92,7 +92,7 @@
           </div>
         </div>
         <div class="col-md-12 text-end">
-          <button class="btn btn-primary">Create Course</button>
+          <button class="btn btn-primary">{{ 'Create Course' | translate }}</button>
         </div>
       </div>
     </app-card>

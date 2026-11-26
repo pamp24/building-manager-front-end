@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -39,17 +40,13 @@ interface AgentWorkloadRow {
 @Component({
   selector: 'app-helpdesk-dashboard',
   standalone: true,
-  imports: [
-    CommonModule,
-    SharedModule,
-    RouterModule,
-    TicketRecentActivityTableComponent,
-    TicketActionTableComponent,
-  ],
+  imports: [CommonModule, SharedModule, RouterModule, TicketRecentActivityTableComponent, TicketActionTableComponent],
   templateUrl: './helpdesk-dashboard.component.html',
   styleUrl: './helpdesk-dashboard.component.scss'
 })
 export class HelpdeskDashboardComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private iconService = inject(IconService);
   private supportTicketService = inject(SupportTicketService);
   private authenticationService = inject(AuthenticationService);
@@ -106,7 +103,7 @@ export class HelpdeskDashboardComponent implements OnInit {
           this.buildDashboard();
         },
         error: (error) => {
-          this.errorMessage = error?.error?.message || 'Αποτυχία φόρτωσης dashboard.';
+          this.errorMessage = error?.error?.message || this.uiLocale.text('Failed to load dashboard.');
           this.tickets = [];
           this.buildDashboard();
         }
@@ -144,7 +141,7 @@ export class HelpdeskDashboardComponent implements OnInit {
 
       const existing = map.get(ticket.assignedAgentId) ?? {
         agentId: ticket.assignedAgentId,
-        agentName: ticket.assignedAgentName || 'Άγνωστος agent',
+        agentName: ticket.assignedAgentName || this.uiLocale.text('Unknown agent'),
         activeTickets: 0,
         completedTickets: 0,
         totalTickets: 0
@@ -183,17 +180,17 @@ export class HelpdeskDashboardComponent implements OnInit {
   getStatusLabel(status: SupportTicketStatus): string {
     switch (status) {
       case 'OPEN':
-        return 'Ανοιχτό';
+        return this.uiLocale.text('Open');
       case 'IN_PROGRESS':
-        return 'Σε εξέλιξη';
+        return this.uiLocale.text('In progress');
       case 'WAITING_FOR_RESIDENT':
-        return 'Αναμονή από κάτοικο';
+        return this.uiLocale.text('Waiting by a resident');
       case 'RESOLVED':
-        return 'Επιλύθηκε';
+        return this.uiLocale.text('It has been resolved');
       case 'CLOSED':
-        return 'Κλειστό';
+        return this.uiLocale.text('Closed');
       case 'REJECTED':
-        return 'Απορρίφθηκε';
+        return this.uiLocale.text('It was rejected');
       default:
         return status;
     }
@@ -202,25 +199,25 @@ export class HelpdeskDashboardComponent implements OnInit {
   getCategoryLabel(category: SupportTicketCategory): string {
     switch (category) {
       case 'MAINTENANCE':
-        return 'Συντήρηση';
+        return this.uiLocale.text('Maintenance');
       case 'PAYMENTS':
-        return 'Πληρωμές';
+        return this.uiLocale.text('Payments');
       case 'DOCUMENTS':
-        return 'Έγγραφα';
+        return this.uiLocale.text('Documents');
       case 'COMPLAINT':
-        return 'Παράπονο';
+        return this.uiLocale.text('Complaint');
       case 'CLEANING':
-        return 'Καθαριότητα';
+        return this.uiLocale.text('Cleanliness');
       case 'HEATING':
-        return 'Θέρμανση';
+        return this.uiLocale.text('Heating');
       case 'ELEVATOR':
-        return 'Ασανσέρ';
+        return this.uiLocale.text('Elevator');
       case 'PLUMBING':
-        return 'Υδραυλικά';
+        return this.uiLocale.text('Plumbing');
       case 'ELECTRICAL':
-        return 'Ηλεκτρολογικά';
+        return this.uiLocale.text('Electrically');
       case 'OTHER':
-        return 'Λοιπά';
+        return this.uiLocale.text('So');
       default:
         return category;
     }
@@ -229,13 +226,13 @@ export class HelpdeskDashboardComponent implements OnInit {
   getPriorityLabel(priority: string): string {
     switch (priority) {
       case 'LOW':
-        return 'Χαμηλή';
+        return this.uiLocale.text('Low');
       case 'MEDIUM':
-        return 'Μεσαία';
+        return this.uiLocale.text('Medium');
       case 'HIGH':
-        return 'Υψηλή';
+        return this.uiLocale.text('High');
       case 'URGENT':
-        return 'Επείγον';
+        return this.uiLocale.text('urgent');
       default:
         return priority;
     }
@@ -280,7 +277,7 @@ export class HelpdeskDashboardComponent implements OnInit {
       return '-';
     }
 
-    return new Date(dateString).toLocaleString('el-GR');
+    return new Date(dateString).toLocaleString(this.uiLocale.locale);
   }
 
   trackByTicketId(_: number, ticket: SupportTicketResponse): number {

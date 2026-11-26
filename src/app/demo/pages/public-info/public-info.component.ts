@@ -1,3 +1,5 @@
+import { TranslateModule } from '@ngx-translate/core';
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Meta, Title } from '@angular/platform-browser';
@@ -13,109 +15,496 @@ interface InfoPage {
 
 @Component({
   selector: 'app-public-info',
-  imports: [RouterLink, PublicFooterComponent, PublicHeaderComponent],
+  imports: [TranslateModule, RouterLink, PublicFooterComponent, PublicHeaderComponent],
   template: `
     <app-public-header />
     <main>
-      <section class="hero"><div class="content"><p class="eyebrow">OIKIO / ΠΛΗΡΟΦΟΡΙΕΣ</p><h1>{{ page.title }}</h1><p class="intro">{{ page.intro }}</p></div></section>
-      <section class="body"><div class="content body-grid">
-        <div class="body-label">{{ page.draft ? 'ΕΝΗΜΕΡΩΤΙΚΟ ΠΡΟΣΧΕΔΙΟ' : 'OIKIO' }}</div>
-        <div>
-          @if (page.draft) { <p class="notice"><strong>Ενημερωτικό προσχέδιο, όχι ισχύον νομικό κείμενο.</strong> Πριν από την επίσημη δημοσίευση απαιτούνται η συμπλήρωση της νομικής οντότητας του Oikio, του ΑΦΜ, της έδρας και των στοιχείων επικοινωνίας της, καθώς και νομικός έλεγχος.</p> }
-          @for (section of page.sections; track section.title) { <article><h2>{{ section.title }}</h2><p>{{ section.text }}</p></article> }
-          <a class="back" routerLink="/">← Επιστροφή στην αρχική</a>
+      <section class="hero">
+        <div class="content">
+          <p class="eyebrow">{{ 'OIKIO / INFORMATION' | translate }}</p>
+          <h1>{{ page.title }}</h1>
+          <p class="intro">{{ page.intro }}</p>
         </div>
-      </div></section>
+      </section>
+      <section class="body">
+        <div class="content body-grid">
+          <div class="body-label">{{ page.draft ? ('INFORMATION DRAFT' | translate) : 'OIKIO' }}</div>
+          <div>
+            @if (page.draft) {
+              <p class="notice">
+                <strong>{{ 'Draft information, not actual legal text.' | translate }}</strong>
+                {{
+                  "Before official publication, Oikio's legal entity, VAT number, registered office and contact details must be completed, as well as a legal check."
+                    | translate
+                }}
+              </p>
+            }
+            @for (section of page.sections; track section.title) {
+              <article>
+                <h2>{{ section.title }}</h2>
+                <p>{{ section.text }}</p>
+              </article>
+            }
+            <a class="back" routerLink="/">{{ '← Back to original' | translate }}</a>
+          </div>
+        </div>
+      </section>
     </main>
     <app-public-footer />
   `,
-  styles: [`
-    .public-header { background: #141414; } .header-inner, .content { max-width: 1266px; margin: auto; padding-left: 24px; padding-right: 24px; }
-    .header-inner { min-height: 82px; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
-    .header-inner img { width: 140px; background: #fff; border-radius: 4px; padding: 6px 8px; }
-    nav { display: flex; align-items: center; gap: 24px; } nav a { color: #fff; text-decoration: none; } nav a:hover { text-decoration: underline; }
-    .register { border: 1px solid #777; border-radius: 4px; padding: 9px 14px; }
-    .hero { background: #141414; color: #fff; padding: 100px 0 110px; } .eyebrow, .body-label { color: #70aaff; font-size: .75rem; font-weight: 600; letter-spacing: .14em; }
-    h1 { color: #fff; font-size: clamp(2.5rem, 5vw, 4.5rem); margin: 18px 0; font-weight: 600; } .intro { color: #c5c5c5; max-width: 650px; font-size: 1.2rem; line-height: 1.7; margin: 0; }
-    .body { background: #fbfbfb; padding: 80px 0 100px; } .body-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 60px; } .body-label { color: #1677ff; }
-    article { padding-bottom: 28px; margin-bottom: 28px; border-bottom: 1px solid #e5e5e5; } h2 { font-size: 1.4rem; margin-bottom: 14px; } article p, .notice { max-width: 680px; color: #555; line-height: 1.8; margin: 0; }
-    .notice { background: #eef5ff; border-left: 3px solid #1677ff; padding: 18px 20px; margin-bottom: 36px; } .back { color: #1677ff; text-decoration: none; } .back:hover { text-decoration: underline; }
-    @media (max-width: 767px) { .header-inner, .content { padding-left: 20px; padding-right: 20px; } .header-inner img { width: 108px; } nav { gap: 12px; font-size: .85rem; } .register { padding: 7px; } .hero { padding: 65px 0 75px; } .body { padding: 55px 0 70px; } .body-grid { grid-template-columns: 1fr; gap: 24px; } }
-  `]
+  styles: [
+    `
+      .public-header {
+        background: #141414;
+      }
+      .header-inner,
+      .content {
+        max-width: 1266px;
+        margin: auto;
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+      .header-inner {
+        min-height: 82px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+      }
+      .header-inner img {
+        width: 140px;
+        background: #fff;
+        border-radius: 4px;
+        padding: 6px 8px;
+      }
+      nav {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+      }
+      nav a {
+        color: #fff;
+        text-decoration: none;
+      }
+      nav a:hover {
+        text-decoration: underline;
+      }
+      .register {
+        border: 1px solid #777;
+        border-radius: 4px;
+        padding: 9px 14px;
+      }
+      .hero {
+        background: #141414;
+        color: #fff;
+        padding: 100px 0 110px;
+      }
+      .eyebrow,
+      .body-label {
+        color: #70aaff;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+      }
+      h1 {
+        color: #fff;
+        font-size: clamp(2.5rem, 5vw, 4.5rem);
+        margin: 18px 0;
+        font-weight: 600;
+      }
+      .intro {
+        color: #c5c5c5;
+        max-width: 650px;
+        font-size: 1.2rem;
+        line-height: 1.7;
+        margin: 0;
+      }
+      .body {
+        background: #fbfbfb;
+        padding: 80px 0 100px;
+      }
+      .body-grid {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 60px;
+      }
+      .body-label {
+        color: #1677ff;
+      }
+      article {
+        padding-bottom: 28px;
+        margin-bottom: 28px;
+        border-bottom: 1px solid #e5e5e5;
+      }
+      h2 {
+        font-size: 1.4rem;
+        margin-bottom: 14px;
+      }
+      article p,
+      .notice {
+        max-width: 680px;
+        color: #555;
+        line-height: 1.8;
+        margin: 0;
+      }
+      .notice {
+        background: #eef5ff;
+        border-left: 3px solid #1677ff;
+        padding: 18px 20px;
+        margin-bottom: 36px;
+      }
+      .back {
+        color: #1677ff;
+        text-decoration: none;
+      }
+      .back:hover {
+        text-decoration: underline;
+      }
+      @media (max-width: 767px) {
+        .header-inner,
+        .content {
+          padding-left: 20px;
+          padding-right: 20px;
+        }
+        .header-inner img {
+          width: 108px;
+        }
+        nav {
+          gap: 12px;
+          font-size: 0.85rem;
+        }
+        .register {
+          padding: 7px;
+        }
+        .hero {
+          padding: 65px 0 75px;
+        }
+        .body {
+          padding: 55px 0 70px;
+        }
+        .body-grid {
+          grid-template-columns: 1fr;
+          gap: 24px;
+        }
+      }
+    `
+  ]
 })
 export class PublicInfoComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private route = inject(ActivatedRoute);
   private pages: Record<string, InfoPage> = {
-    about: { title: 'Σχετικά με το Oikio', intro: 'Μια κοινή αφετηρία για την οργάνωση της πολυκατοικίας.', sections: [
-      { title: 'Η καθημερινότητα, οργανωμένη', text: 'Το Oikio συγκεντρώνει εργαλεία για διαχειριστές και κατοίκους, ώστε οι πληροφορίες της πολυκατοικίας να βρίσκονται σε ένα μέρος.' },
-      { title: 'Για όλους στην πολυκατοικία', text: 'Από τη διαχείριση κοινοχρήστων έως την επικοινωνία μεταξύ μελών, η πλατφόρμα υποστηρίζει διαφορετικές ανάγκες και ρόλους.' }
-    ] },
-    features: { title: 'Λειτουργίες', intro: 'Εργαλεία για τις εργασίες και την επικοινωνία της πολυκατοικίας.', sections: [
-      { title: 'Διαχείριση και κοινόχρηστα', text: 'Οργανώστε πολυκατοικίες, διαμερίσματα και μέλη, καθώς και δαπάνες, καταστάσεις κοινοχρήστων και πληρωμές.' },
-      { title: 'Επικοινωνία και συμμετοχή', text: 'Ανακοινώσεις, μηνύματα, ψηφοφορίες και ημερολόγιο βοηθούν τα μέλη να παραμένουν ενημερωμένα.' }
-    ] },
-    pricing: { title: 'Τιμολόγηση', intro: 'Πληροφορίες για την τιμολόγηση του Oikio.', sections: [
-      { title: 'Στοιχεία τιμολόγησης', text: 'Δεν υπάρχουν διαθέσιμες πληροφορίες τιμολόγησης σε αυτή τη σελίδα. Πριν επιλέξετε υπηρεσία, αναζητήστε τους ισχύοντες όρους και τις σχετικές χρεώσεις.' }
-    ] },
-    support: { title: 'Υποστήριξη', intro: 'Χρήσιμα πρώτα βήματα για τη χρήση του Oikio.', sections: [
-      { title: 'Πρόσβαση στον λογαριασμό', text: 'Από τη σελίδα σύνδεσης μπορείτε να συνδεθείτε ή να ακολουθήσετε τη διαδικασία ανάκτησης κωδικού.' },
-      { title: 'Βρείτε απαντήσεις', text: 'Δείτε τις συχνές ερωτήσεις για μια σύντομη εισαγωγή στην πλατφόρμα και στους ρόλους των μελών.' }
-    ] },
-    faq: { title: 'Συχνές ερωτήσεις', intro: 'Μια σύντομη εισαγωγή στο Oikio.', sections: [
-      { title: 'Τι είναι το Oikio;', text: 'Είναι μια πλατφόρμα για την οργάνωση πληροφοριών και εργασιών που αφορούν την πολυκατοικία.' },
-      { title: 'Ποιοι μπορούν να το χρησιμοποιήσουν;', text: 'Η πλατφόρμα απευθύνεται σε διαχειριστές και μέλη πολυκατοικιών. Οι διαθέσιμες ενέργειες εξαρτώνται από τον ρόλο του κάθε μέλους.' },
-      { title: 'Πώς αποκτώ πρόσβαση;', text: 'Χρησιμοποιήστε την εγγραφή ή τη σύνδεση από το επάνω μέρος της σελίδας.' }
-    ] },
-    contact: { title: 'Επικοινωνία', intro: 'Πληροφορίες επικοινωνίας με το Oikio.', sections: [
-      { title: 'Στοιχεία επικοινωνίας', text: 'Δεν έχουν δημοσιευτεί στοιχεία επικοινωνίας σε αυτή τη σελίδα. Για βοήθεια με τη χρήση της πλατφόρμας, ανατρέξτε στην υποστήριξη και στις συχνές ερωτήσεις.' }
-    ] },
-    terms: { title: 'Όροι χρήσης', intro: 'Προσχέδιο για τη χρήση των ψηφιακών εργαλείων του Oikio και τις ευθύνες των συμμετεχόντων.', draft: true, sections: [
-      { title: '1. Αντικείμενο και φορέας', text: 'Το Oikio παρέχει ψηφιακά εργαλεία οργάνωσης και επικοινωνίας για πολυκατοικίες. Ο φορέας λειτουργίας του, η νομική του μορφή, το ΑΦΜ, η έδρα και τα στοιχεία επικοινωνίας δεν έχουν ακόμη συμπληρωθεί. Το παρόν είναι σχέδιο προς επεξεργασία και δεν αποτελεί τελική συμφωνία ή δημοσιευμένους ισχύοντες όρους.' },
-      { title: '2. Χρήστες και πρόσβαση', text: 'Η πλατφόρμα απευθύνεται σε διαχειριστές, ιδιοκτήτες, ενοίκους, εταιρείες διαχείρισης και τους συνεργάτες τους. Οι ενέργειες και οι πληροφορίες που είναι διαθέσιμες εξαρτώνται από τον λογαριασμό, τον ρόλο, την πρόσκληση και τη σύνδεση με την αντίστοιχη πολυκατοικία. Όποιος ενεργεί για εταιρεία ή πολυκατοικία οφείλει να διαθέτει την κατάλληλη εξουσιοδότηση.' },
-      { title: '3. Λογαριασμός και ασφάλεια', text: 'Ο χρήστης οφείλει να παρέχει ακριβή στοιχεία, να τα ενημερώνει και να προστατεύει τους κωδικούς του. Δεν πρέπει να επιτρέπει μη εξουσιοδοτημένη πρόσβαση ή να χρησιμοποιεί λογαριασμό άλλου. Αν υποψιαστεί παραβίαση, πρέπει να αλλάξει τον κωδικό του και να αναζητήσει βοήθεια από τα διαθέσιμα κανάλια υποστήριξης.' },
-      { title: '4. Εργαλεία πολυκατοικίας', text: 'Ανάλογα με τον ρόλο, το Oikio υποστηρίζει την καταχώριση κτιρίων, διαμερισμάτων και μελών, δαπανών και καταστάσεων κοινοχρήστων, καθώς και επικοινωνία, ανακοινώσεις, ψηφοφορίες και ημερολόγιο. Η διαθεσιμότητα και η μορφή των εργαλείων μπορεί να μεταβάλλονται. Η χρήση τους δεν αναθέτει από μόνη της στο Oikio τη φυσική, οικονομική ή νόμιμη διαχείριση της πολυκατοικίας.' },
-      { title: '5. Δαπάνες και υπολογισμοί', text: 'Οι καταστάσεις και οι κατανομές βασίζονται στα στοιχεία και στις επιλογές που εισάγουν οι εξουσιοδοτημένοι χρήστες, όπως δαπάνες, χιλιοστά και δεδομένα διαμερισμάτων. Ο διαχειριστής ή η εταιρεία οφείλει να ελέγχει την ορθότητα των καταχωρίσεων και των αποτελεσμάτων, τον κανονισμό της πολυκατοικίας και τις σχετικές αποφάσεις πριν από την κοινοποίηση ή είσπραξη. Το εργαλείο δεν αντικαθιστά λογιστική ή νομική συμβουλή.' },
-      { title: '6. Περιεχόμενο και επιτρεπτή χρήση', text: 'Οι χρήστες ευθύνονται για τα στοιχεία, τα έγγραφα και τα μηνύματα που καταχωρίζουν ή κοινοποιούν και πρέπει να έχουν δικαίωμα να τα χρησιμοποιούν. Δεν επιτρέπεται χρήση για παραπλάνηση, παρενόχληση, παράνομο περιεχόμενο, μη εξουσιοδοτημένη πρόσβαση ή διατάραξη της υπηρεσίας. Τα μέλη οφείλουν να σέβονται την ιδιωτικότητα των άλλων και να περιορίζουν την κοινοποίηση στα αναγκαία στοιχεία.' },
-      { title: '7. Προσωπικά δεδομένα', text: 'Η χρήση μπορεί να περιλαμβάνει στοιχεία λογαριασμών, μελών, διαμερισμάτων και οικονομικών καταχωρίσεων. Οι χρήστες που εισάγουν δεδομένα τρίτων οφείλουν να εξετάζουν την αρμοδιότητα και τις υποχρεώσεις τους. Οι ρόλοι, οι σκοποί, οι αποδέκτες, η διατήρηση και τα δικαιώματα σχετικά με τα δεδομένα πρέπει να προσδιοριστούν στην τελική πολιτική απορρήτου, η οποία σήμερα αποτελεί επίσης προσχέδιο.' },
-      { title: '8. Συνδρομές και χρεώσεις', text: 'Τα πακέτα και οι τιμές που παρουσιάζονται είναι προτεινόμενα. Η αγορά ή ενεργοποίηση συνδρομής και η επιβολή ορίων ή δικαιωμάτων ανά πακέτο δεν είναι ακόμη διαθέσιμες. Αν προσφερθούν στο μέλλον υπηρεσίες με χρέωση, οι εφαρμοστέοι όροι, το κόστος και η διαδικασία θα πρέπει να γνωστοποιηθούν πριν από τη σχετική συναλλαγή.' },
-      { title: '9. Πληρωμές κοινοχρήστων', text: 'Η πλατφόρμα περιλαμβάνει δυνατότητες καταγραφής πληρωμών και, όπου προσφέρεται στη συγκεκριμένη διαδικασία, επιλογές ηλεκτρονικής πληρωμής μέσω τρίτου παρόχου. Η διαθεσιμότητα, τα ποσά και τυχόν όροι του παρόχου εμφανίζονται κατά τη συναλλαγή. Η καταχώριση ή η έναρξη πληρωμής δεν υποκαθιστά τον έλεγχο της επιτυχούς ολοκλήρωσής της.' },
-      { title: '10. Επαγγελματίες και εξωτερικές υπηρεσίες', text: 'Η προβολή ή επικοινωνία με επαγγελματία δεν σημαίνει ανάθεση υπηρεσίας από το Oikio ούτε εγγύηση για την εργασία του. Το αντικείμενο, η αμοιβή και οι λοιποί όροι τυχόν εργασίας συμφωνούνται χωριστά με τον αντίστοιχο πάροχο. Ο χρήστης οφείλει να ελέγχει την καταλληλότητα και τα στοιχεία του πριν από την ανάθεση.' },
-      { title: '11. Διαθεσιμότητα και ευθύνη', text: 'Η πρόσβαση μπορεί να επηρεαστεί από συντήρηση, βλάβες, δίκτυα ή υπηρεσίες τρίτων. Οι χρήστες οφείλουν να ελέγχουν τις κρίσιμες πληροφορίες και να διατηρούν τα απαραίτητα αρχεία τους. Τυχόν όρια ευθύνης, καθώς και οι διαδικασίες περιορισμού ή λήξης πρόσβασης, πρέπει να καθοριστούν στους τελικούς όρους χωρίς να περιορίζονται δικαιώματα που προστατεύονται από την εφαρμοστέα νομοθεσία.' },
-      { title: '12. Διαφορές και αλλαγές', text: 'Για ζητήματα μεταξύ μελών ή με εξωτερικούς παρόχους, οι ενδιαφερόμενοι καλούνται να απευθύνονται καταρχάς στα αντίστοιχα μέρη. Η διαδικασία επικοινωνίας με τον φορέα του Oikio, η διαχείριση διαφορών, το εφαρμοστέο δίκαιο και τυχόν αλλαγές των όρων πρέπει να οριστούν μετά τη συμπλήρωση των στοιχείων του φορέα και τον νομικό έλεγχο, με σεβασμό στα νόμιμα δικαιώματα των χρηστών.' }
-    ] },
-    cookies: { title: 'Πολιτική cookies', intro: 'Ενημερωτικό προσχέδιο για τα cookies και την αποθήκευση στον browser κατά τη χρήση του Oikio.', draft: true, sections: [
-      { title: '1. Cookies και τοπική αποθήκευση', text: 'Τα cookies είναι μικρά δεδομένα που αποθηκεύονται στον browser και μπορούν να αποστέλλονται με αιτήματα προς τον αντίστοιχο ιστότοπο. Το localStorage και το sessionStorage είναι διαφορετικοί μηχανισμοί αποθήκευσης στον browser και δεν αποστέλλονται αυτόματα με κάθε αίτημα. Το localStorage συνήθως παραμένει μέχρι να διαγραφεί, ενώ το sessionStorage συνδέεται με τη συνεδρία της καρτέλας.' },
-      { title: '2. Σύνδεση και προτιμήσεις', text: 'Από τον στατικό έλεγχο του κώδικα της εφαρμογής προκύπτει ότι τα token και currentUser, για τη σύνδεση και τα στοιχεία χρήστη, αποθηκεύονται στο localStorage όταν επιλεγεί η διατήρηση σύνδεσης και διαφορετικά στο sessionStorage. Διαγράφονται κατά την αποσύνδεση. Το buildingId, για την επιλογή πολυκατοικίας, χρησιμοποιεί και τους δύο μηχανισμούς και διαγράφεται από αυτούς κατά την αποσύνδεση. Το theme-mode, για την προτίμηση εμφάνισης, αποθηκεύεται και στους δύο μηχανισμούς και δεν διαγράφεται κατά την αποσύνδεση.' },
-      { title: '3. Πρόοδος και προσκλήσεις', text: 'Το wizardState_v1 αποθηκεύεται στο localStorage για την πρόοδο της σχετικής διαδικασίας και περιλαμβάνει ενέργεια, βήμα και αναγνωριστικό πολυκατοικίας. Παραμένει μετά την αποσύνδεση. Τα inviteCode και redirectAfterLogin αποθηκεύονται στο localStorage για τη διαδικασία πρόσκλησης και ανακατεύθυνσης και διαγράφονται σε επιτυχή ή αποτυχημένη αποδοχή, όχι κατά την αποσύνδεση. Σε ξεχωριστό τμήμα του κώδικα προβλέπεται επίσης η αποθήκευση των inviteEmail, inviteApartmentId και inviteRole στο localStorage για στοιχεία πρόσκλησης. Δεν έχει επιβεβαιωθεί αν η συγκεκριμένη διαδικασία είναι προσβάσιμη κατά τη χρήση και δεν εντοπίστηκε διαγραφή τους στον έλεγχο του κώδικα.' },
-      { title: '4. Cookies και υπηρεσίες τρίτων', text: 'Στον στατικό έλεγχο του πηγαίου κώδικα δεν εντοπίστηκε άμεση χρήση του document.cookie. Αυτό δεν αποδεικνύει ότι δεν τίθενται cookies από τον διακομιστή, ενδιάμεσες υποδομές ή βιβλιοθήκες κατά την πραγματική λειτουργία. Η εφαρμογή φορτώνει εξωτερικό stylesheet από το Google Fonts και περιλαμβάνει ενσωματωμένα βίντεο επίδειξης YouTube. Αν χρησιμοποιηθούν διαδικασίες πληρωμής, ενδέχεται να εμπλακούν οι πάροχοι Stripe ή Viva σε ξεχωριστό περιβάλλον. Δεν έχουν ταυτοποιηθεί συγκεκριμένα cookies των υπηρεσιών αυτών και η πραγματική συμπεριφορά τους χρειάζεται έλεγχο.' },
-      { title: '5. Έλεγχος από τον browser', text: 'Μπορείτε μέσω των ρυθμίσεων του browser να ελέγξετε ή να διαγράψετε cookies και δεδομένα ιστοτόπων, καθώς και να περιορίσετε την αποθήκευσή τους, ανάλογα με τις δυνατότητές του. Η διαγραφή ή ο αποκλεισμός μπορεί να επηρεάσει τη σύνδεση, την επιλογή πολυκατοικίας, τις προτιμήσεις, την πρόοδο και τις προσκλήσεις. Οι επιλογές και τα βήματα διαφέρουν ανά browser και συσκευή.' },
-      { title: '6. Συγκατάθεση και εκκρεμής έλεγχος', text: 'Οι απαιτήσεις ενημέρωσης και τυχόν συγκατάθεσης εξαρτώνται από τον σκοπό, τις πραγματικές συνθήκες και την εφαρμοστέα νομοθεσία και χρειάζονται νομική αξιολόγηση. Το προσχέδιο δεν περιγράφει υλοποιημένο μηχανισμό επιλογών ή συγκατάθεσης. Πριν από την οριστικοποίηση απαιτούνται έλεγχος κατά την πραγματική λειτουργία, πλήρης καταγραφή των cookies και λοιπών τεχνολογιών, των σκοπών, των παρόχων και της διάρκειάς τους, καθώς και συμπλήρωση των στοιχείων του φορέα και νομικός έλεγχος.' }
-    ] },
-    privacy: { title: 'Πολιτική απορρήτου', intro: 'Προσχέδιο ενημέρωσης για τα προσωπικά δεδομένα κατά τη χρήση του Oikio.', draft: true, sections: [
-      { title: '1. Πεδίο και υπεύθυνος επεξεργασίας', text: 'Το παρόν είναι προσχέδιο και όχι τελική ενημέρωση απορρήτου. Η επωνυμία, η νομική μορφή, η έδρα και τα στοιχεία επικοινωνίας του φορέα του Oikio, καθώς και τυχόν στοιχεία υπευθύνου προστασίας δεδομένων, δεν έχουν επιβεβαιωθεί. Οι ρόλοι του φορέα, των διαχειριστών και των εταιρειών διαχείρισης ως υπευθύνων ή εκτελούντων την επεξεργασία πρέπει να αξιολογηθούν ανά χρήση πριν από την οριστικοποίηση.' },
-      { title: '2. Ποια δεδομένα μπορεί να χρησιμοποιούνται', text: 'Ανάλογα με τη χρήση, τα δεδομένα μπορεί να περιλαμβάνουν στοιχεία λογαριασμού και επικοινωνίας, όπως όνομα, email, τηλέφωνο και εικόνα προφίλ, καθώς και στοιχεία σύνδεσης. Οι κωδικοί πρόσβασης αποθηκεύονται σε κατακερματισμένη μορφή. Μπορεί επίσης να καταχωρίζονται στοιχεία πολυκατοικιών, διαμερισμάτων, ιδιοκτητών, ενοίκων, διαχειριστών, ρόλων και προσκλήσεων.' },
-      { title: '3. Περιεχόμενο και οικονομικά στοιχεία', text: 'Η χρήση των εργαλείων μπορεί να περιλαμβάνει μηνύματα, ανακοινώσεις, ψηφοφορίες, γεγονότα ημερολογίου, δαπάνες, κατανομές κοινοχρήστων και καταγραφές πληρωμών, καθώς και εικόνες ή άλλα αρχεία που ανεβαίνουν στην πλατφόρμα. Αιτήματα υποστήριξης και σχόλια μπορεί επίσης να περιέχουν προσωπικά δεδομένα. Το περιεχόμενο εξαρτάται από τις καταχωρίσεις των χρηστών· αποφεύγετε την εισαγωγή περιττών ή ευαίσθητων πληροφοριών.' },
-      { title: '4. Πηγές και σκοποί', text: 'Τα στοιχεία μπορεί να παρέχονται απευθείας από εσάς ή να καταχωρίζονται από διαχειριστή, εταιρεία διαχείρισης ή άλλο εξουσιοδοτημένο χρήστη, για παράδειγμα κατά την πρόσκληση ή τη διαχείριση πολυκατοικίας. Χρησιμοποιούνται στο πλαίσιο δημιουργίας και πρόσβασης στον λογαριασμό, οργάνωσης πολυκατοικιών και κοινοχρήστων, επικοινωνίας, ειδοποιήσεων, υποστήριξης και λειτουργίας ή προστασίας της υπηρεσίας. Όποιος εισάγει στοιχεία τρίτων οφείλει να εξετάζει τη νόμιμη βάση και την ενημέρωσή τους.' },
-      { title: '5. Νομικές βάσεις', text: 'Ανάλογα με τον υπεύθυνο, τον σκοπό και τις πραγματικές συνθήκες, ενδέχεται να εξεταστούν η εκτέλεση σύμβασης ή προσυμβατικά μέτρα, η συμμόρφωση με νομική υποχρέωση ή έννομα συμφέροντα, εφόσον συντρέχουν οι προϋποθέσεις του ΓΚΠΔ. Όπου απαιτείται ή επιλέγεται νόμιμα συγκατάθεση, αυτή πρέπει να λαμβάνεται κατάλληλα και μπορεί να ανακληθεί χωρίς να θίγεται η νομιμότητα της προηγούμενης επεξεργασίας. Η βάση για κάθε συγκεκριμένη επεξεργασία παραμένει προς επιβεβαίωση.' },
-      { title: '6. Πρόσβαση και αποδέκτες', text: 'Πληροφορίες πολυκατοικίας και περιεχόμενο μπορεί να είναι διαθέσιμα σε χρήστες της σχετικής πολυκατοικίας ανάλογα με τον ρόλο και τις λειτουργίες. Ενδέχεται επίσης να εμπλέκονται πάροχοι υποδομής, αποστολής μηνυμάτων ή πληρωμών και αρμόδιες αρχές όπου απαιτείται από τον νόμο. Οι πραγματικοί αποδέκτες, οι πάροχοι, οι ρόλοι και οι συμβάσεις τους δεν έχουν επιβεβαιωθεί και πρέπει να προσδιοριστούν στην τελική πολιτική.' },
-      { title: '7. Διατήρηση και διαβιβάσεις', text: 'Οι περίοδοι διατήρησης και διαγραφής, συμπεριλαμβανομένων αντιγράφων ασφαλείας, δεν έχουν επιβεβαιωθεί. Πρέπει να καθοριστούν ανά κατηγορία με βάση τον σκοπό, τις εφαρμοστέες υποχρεώσεις και τυχόν νόμιμη ανάγκη διατήρησης. Οι χώρες αποθήκευσης ή πρόσβασης και τυχόν διαβιβάσεις εκτός ΕΟΧ, μαζί με τις απαιτούμενες εγγυήσεις, παραμένουν επίσης προς επιβεβαίωση.' },
-      { title: '8. Αποθήκευση στον browser και cookies', text: 'Η εφαρμογή χρησιμοποιεί localStorage ή sessionStorage του browser για στοιχεία σύνδεσης και χρήστη, επιλογή πολυκατοικίας και άλλες λειτουργικές επιλογές, όπως το θέμα εμφάνισης. Η πλήρης καταγραφή των cookies και λοιπών τεχνολογιών, των σκοπών, της διάρκειας και τυχόν τρίτων δεν έχει επιβεβαιωθεί. Οι απαιτήσεις ενημέρωσης και τυχόν συγκατάθεσης πρέπει να εξεταστούν πριν από την τελική δημοσίευση.' },
-      { title: '9. Ασφάλεια', text: 'Η εφαρμογή διαθέτει μηχανισμούς λογαριασμού και ελέγχου πρόσβασης και κατακερματίζει τους κωδικούς πρόσβασης. Τα οργανωτικά και τεχνικά μέτρα της πραγματικής εγκατάστασης πρέπει να επιβεβαιωθούν· καμία μέθοδος δεν παρέχει απόλυτη ασφάλεια. Οι χρήστες πρέπει να προστατεύουν τα στοιχεία σύνδεσής τους και τις συσκευές τους.' },
-      { title: '10. Τα δικαιώματά σας', text: 'Υπό τις προϋποθέσεις του ΓΚΠΔ, μπορείτε να ζητήσετε πρόσβαση, διόρθωση, διαγραφή ή περιορισμό της επεξεργασίας, να αντιταχθείτε σε αυτήν και να ζητήσετε φορητότητα των δεδομένων σας. Όπου η επεξεργασία βασίζεται στη συγκατάθεση, μπορείτε να την ανακαλέσετε. Τα δικαιώματα υπόκεινται σε νόμιμες προϋποθέσεις και εξαιρέσεις. Το αρμόδιο σημείο επικοινωνίας για αιτήματα πρέπει να συμπληρωθεί· ανάλογα με την επεξεργασία μπορεί να αρμόζει και ο διαχειριστής ή η εταιρεία διαχείρισης.' },
-      { title: '11. Καταγγελία και ολοκλήρωση', text: 'Έχετε δικαίωμα καταγγελίας στην αρμόδια εποπτική αρχή. Στην Ελλάδα, αρμόδια είναι η Αρχή Προστασίας Δεδομένων Προσωπικού Χαρακτήρα (www.dpa.gr). Πριν το παρόν γίνει ισχύουσα πολιτική απαιτούνται επιβεβαίωση των πραγματικών πρακτικών, συμπλήρωση των ελλείψεων και νομικός έλεγχος.' }
-    ] }
+    about: {
+      title: this.uiLocale.text('About Oikio'),
+      intro: this.uiLocale.text('A common starting point for organizing the apartment building.'),
+      sections: [
+        {
+          title: this.uiLocale.text('Everyday life, organized'),
+          text: this.uiLocale.text(
+            'Oikio brings together tools for managers and residents so apartment building information is in one place.'
+          )
+        },
+        {
+          title: this.uiLocale.text('For everyone in the apartment building'),
+          text: this.uiLocale.text(
+            'From user management to member-to-member communication, the platform supports different needs and roles.'
+          )
+        }
+      ]
+    },
+    features: {
+      title: this.uiLocale.text('Operations'),
+      intro: this.uiLocale.text('Tools for the work and communication of the apartment building.'),
+      sections: [
+        {
+          title: this.uiLocale.text('Management and utilities'),
+          text: this.uiLocale.text(
+            'Organize apartment buildings, apartments and members, as well as expenses, communal statements and payments.'
+          )
+        },
+        {
+          title: this.uiLocale.text('Communication and participation'),
+          text: this.uiLocale.text('Announcements, messages, polls and a calendar help members stay informed.')
+        }
+      ]
+    },
+    pricing: {
+      title: this.uiLocale.text('Pricing'),
+      intro: this.uiLocale.text('Information on Oikio pricing.'),
+      sections: [
+        {
+          title: this.uiLocale.text('Pricing information'),
+          text: this.uiLocale.text(
+            'No pricing information available on this page. Before choosing a service, look for the applicable terms and fees.'
+          )
+        }
+      ]
+    },
+    support: {
+      title: this.uiLocale.text('Support'),
+      intro: this.uiLocale.text('Useful first steps for using Oikio.'),
+      sections: [
+        {
+          title: this.uiLocale.text('Account access'),
+          text: this.uiLocale.text('From the login page you can login or follow the password recovery process.')
+        },
+        {
+          title: this.uiLocale.text('Find answers'),
+          text: this.uiLocale.text('See the FAQ for a brief introduction to the platform and member roles.')
+        }
+      ]
+    },
+    faq: {
+      title: this.uiLocale.text('Frequently asked questions'),
+      intro: this.uiLocale.text('A brief introduction to Oikio.'),
+      sections: [
+        {
+          title: this.uiLocale.text('What is Oikio?'),
+          text: this.uiLocale.text('It is a platform for organizing information and tasks related to the apartment building.')
+        },
+        {
+          title: this.uiLocale.text('Who can use it?'),
+          text: this.uiLocale.text(
+            "The platform is aimed at managers and members of apartment buildings. The available actions depend on each member's role."
+          )
+        },
+        {
+          title: this.uiLocale.text('How do I get access?'),
+          text: this.uiLocale.text('Use registration or login from the top of the page.')
+        }
+      ]
+    },
+    contact: {
+      title: this.uiLocale.text('Communication'),
+      intro: this.uiLocale.text('Contact information with Oikio.'),
+      sections: [
+        {
+          title: this.uiLocale.text('Contact details'),
+          text: this.uiLocale.text(
+            'No contact information has been published on this page. For help using the platform, see support and FAQs.'
+          )
+        }
+      ]
+    },
+    terms: {
+      title: this.uiLocale.text('Terms of use'),
+      intro: this.uiLocale.text("Draft on the use of Oikio's digital tools and participants' responsibilities."),
+      draft: true,
+      sections: [
+        {
+          title: this.uiLocale.text('1. Object and carrier'),
+          text: this.uiLocale.text(
+            'Oikio provides digital organization and communication tools for apartment buildings. Its operating entity, legal form, VAT number, registered office and contact details have not yet been completed. This is a draft and does not constitute a final agreement or published current terms.'
+          )
+        },
+        {
+          title: this.uiLocale.text('2. Users and Access'),
+          text: this.uiLocale.text(
+            'The platform is aimed at managers, owners, tenants, management companies and their partners. The actions and information available depend on the account, role, invitation, and connection to the respective apartment building. Anyone acting for a company or apartment building must have the appropriate authorization.'
+          )
+        },
+        {
+          title: this.uiLocale.text('3. Account and Security'),
+          text: this.uiLocale.text(
+            "The user must provide accurate information, update it and protect their passwords. Must not allow unauthorized access or use another's account. If a breach is suspected, they should change their password and seek help from the available support channels."
+          )
+        },
+        {
+          title: this.uiLocale.text('4. Apartment building tools'),
+          text: this.uiLocale.text(
+            'Depending on the role, Oikio supports the registration of buildings, apartments and members, expenses and statements of common users, as well as communication, announcements, votes and calendar. Availability and format of tools may change. Their use does not in itself entrust Oikio with the physical, financial or legal management of the apartment building.'
+          )
+        },
+        {
+          title: this.uiLocale.text('5. Costs and calculations'),
+          text: this.uiLocale.text(
+            'Statements and allocations are based on the data and options entered by authorized users, such as costs, millimeters and apartment data. The administrator or company must check the correctness of the entries and results, the regulation of the apartment building and the related decisions before notification or collection. The tool is not a substitute for accounting or legal advice.'
+          )
+        },
+        {
+          title: this.uiLocale.text('6. Content and Permissible Use'),
+          text: this.uiLocale.text(
+            'Users are responsible for the information, documents and messages they post or share and must have the right to use them. No use for deception, harassment, illegal content, unauthorized access or disruption of the service is allowed. Members must respect the privacy of others and limit sharing to what is necessary.'
+          )
+        },
+        {
+          title: this.uiLocale.text('7. Personal data'),
+          text: this.uiLocale.text(
+            'Use may include account, membership, apartment, and financial record information. Users entering third-party data should review their authority and obligations. The roles, purposes, recipients, retention and rights regarding the data must be defined in the final privacy policy, which is currently also a draft.'
+          )
+        },
+        {
+          title: this.uiLocale.text('8. Subscriptions and Fees'),
+          text: this.uiLocale.text(
+            'The packages and prices shown are suggested. Purchasing or activating a subscription and enforcing per-package limits or entitlements are not yet available. If fee-based services are offered in the future, the applicable terms, costs and process should be disclosed prior to the relevant transaction.'
+          )
+        },
+        {
+          title: this.uiLocale.text('9. User Fees'),
+          text: this.uiLocale.text(
+            "The platform includes payment recording capabilities and, where offered in the specific process, electronic payment options through a third party provider. The provider's availability, amounts and any terms are displayed during the transaction. Registering or initiating a payment is not a substitute for verification of its successful completion."
+          )
+        },
+        {
+          title: this.uiLocale.text('10. Professionals and external services'),
+          text: this.uiLocale.text(
+            'Viewing or communicating with a professional does not constitute an assignment of service by Oikio or a guarantee of their work. The subject matter, remuneration and other terms of any work are agreed separately with the respective provider. The user must check his suitability and details before the assignment.'
+          )
+        },
+        {
+          title: this.uiLocale.text('11. Availability and Liability'),
+          text: this.uiLocale.text(
+            'Access may be affected by maintenance, failures, networks or third party services. Users should check critical information and maintain their necessary records. Any limits of liability, as well as the procedures for limiting or terminating access, must be set out in the final terms without limiting rights protected by applicable law.'
+          )
+        },
+        {
+          title: this.uiLocale.text('12. Differences and Changes'),
+          text: this.uiLocale.text(
+            "For issues between members or with external providers, interested parties should first contact the respective parties. The procedure for communicating with the operator of Oikio, dispute management, applicable law and any changes to the terms must be defined after the operator's details have been completed and the legal review has been completed, respecting the legal rights of users."
+          )
+        }
+      ]
+    },
+    cookies: {
+      title: this.uiLocale.text('Cookies policy'),
+      intro: this.uiLocale.text('Informative draft about cookies and browser storage when using Oikio.'),
+      draft: true,
+      sections: [
+        {
+          title: this.uiLocale.text('1. Cookies and local storage'),
+          text: this.uiLocale.text(
+            "Cookies are small data that are stored in the browser and can be sent with requests to the respective website. localStorage and sessionStorage are different storage mechanisms in the browser and are not automatically sent with every request. localStorage usually persists until deleted, while sessionStorage is associated with the tab's session."
+          )
+        },
+        {
+          title: this.uiLocale.text('2. Login and preferences'),
+          text: this.uiLocale.text(
+            'Static inspection of the application code shows that token and currentUser, for login and user data, are stored in localStorage when keep-login is selected, and in sessionStorage otherwise. They are deleted on logout. The buildingId, for the apartment building option, uses both mechanisms and is deleted from them on logout. The theme-mode, for display preference, is saved in both engines and is not deleted on logout.'
+          )
+        },
+        {
+          title: this.uiLocale.text('3. Progress and invitations'),
+          text: this.uiLocale.text(
+            'The wizardState_v1 is stored in localStorage for the progress of the associated process and includes action, step and apartment ID. Remains after disconnection. The inviteCode and redirectAfterLogin are stored in localStorage for the invite and redirect process and are deleted on successful or failed acceptance, not on logout. A separate part of the code also provides for storing inviteEmail, inviteApartmentId and inviteRole in localStorage for invite elements. It has not been confirmed that this procedure is accessible in use and no deletion of them was detected in the code review.'
+          )
+        },
+        {
+          title: this.uiLocale.text('4. Cookies and third party services'),
+          text: this.uiLocale.text(
+            'No direct use of document.cookie was detected in the static source code check. This does not prove that no cookies are set by the server, middleware or libraries during actual operation. The app loads external stylesheets from Google Fonts and includes embedded YouTube demo videos. If payment processes are used, Stripe or Viva providers may be involved in a separate environment. No specific cookies of these services have been identified and their actual behavior needs to be checked.'
+          )
+        },
+        {
+          title: this.uiLocale.text('5. Control from the browser'),
+          text: this.uiLocale.text(
+            'You can check or delete cookies and website data through the browser settings, as well as limit their storage, depending on its capabilities. Deleting or blocking may affect your login, apartment selection, preferences, progress and invitations. Options and steps vary by browser and device.'
+          )
+        },
+        {
+          title: this.uiLocale.text('6. Consent and Pending Review'),
+          text: this.uiLocale.text(
+            "Information and consent requirements depend on purpose, factual circumstances and applicable law and require legal assessment. The draft does not describe an implemented choice or consent mechanism. Prior to finalization, a check during the actual operation, a full record of cookies and other technologies, their purposes, providers and duration, as well as completion of the operator's details and a legal check are required."
+          )
+        }
+      ]
+    },
+    privacy: {
+      title: this.uiLocale.text('Privacy policy'),
+      intro: this.uiLocale.text('Draft update on personal data when using Oikio.'),
+      draft: true,
+      sections: [
+        {
+          title: this.uiLocale.text('1. Field and controller'),
+          text: this.uiLocale.text(
+            "This is a draft and not a final privacy update. The name, legal form, registered office and contact details of Oikio's operator, as well as any details of a data protection officer, have not been confirmed. The roles of the operator, administrators and management companies as controllers or processors must be assessed on a per-use basis prior to finalisation."
+          )
+        },
+        {
+          title: this.uiLocale.text('2. What data may be used'),
+          text: this.uiLocale.text(
+            'Depending on usage, the data may include account and contact information such as name, email, phone and profile picture, as well as login information. Passwords are stored in hashed form. Details of apartment buildings, apartments, owners, tenants, managers, roles and invitations may also be listed.'
+          )
+        },
+        {
+          title: this.uiLocale.text('3. Content and financial data'),
+          text: this.uiLocale.text(
+            'Use of the Tools may include messages, announcements, polls, calendar events, spending, share allocations and payment records, as well as images or other files uploaded to the Platform. Support requests and comments may also contain personal data. Content depends on user entries; avoid entering unnecessary or sensitive information.'
+          )
+        },
+        {
+          title: this.uiLocale.text('4. Sources and purposes'),
+          text: this.uiLocale.text(
+            'The information may be provided directly by you or entered by an administrator, management company or other authorized user, for example when inviting or managing an apartment building. They are used in the context of creating and accessing the account, organizing apartment buildings and shared users, communication, notifications, support and operation or protection of the service. Whoever enters third-party data must examine the legal basis and update them.'
+          )
+        },
+        {
+          title: this.uiLocale.text('5. Legal bases'),
+          text: this.uiLocale.text(
+            'Depending on the controller, the purpose and the actual circumstances, the performance of a contract or pre-contractual measures, compliance with a legal obligation or legitimate interests may be considered, if the conditions of the GDPR are met. Where consent is legally required or chosen, it must be obtained appropriately and may be withdrawn without prejudice to the lawfulness of previous processing. The basis for any specific processing remains to be confirmed.'
+          )
+        },
+        {
+          title: this.uiLocale.text('6. Access and Recipients'),
+          text: this.uiLocale.text(
+            'Building information and content may be available to users of the relevant building depending on the role and functions. Infrastructure, messaging or payment providers and competent authorities where required by law may also be involved. The actual recipients, providers, roles and their contracts have not been confirmed and must be determined in the final policy.'
+          )
+        },
+        {
+          title: this.uiLocale.text('7. Retention and Transfers'),
+          text: this.uiLocale.text(
+            'Retention and deletion periods, including backups, have not been confirmed. They must be determined by category based on purpose, applicable obligations and any legal need to retain. Countries of storage or access and any transfers outside the EEA, along with the required safeguards, also remain to be confirmed.'
+          )
+        },
+        {
+          title: this.uiLocale.text('8. Storage in the browser and cookies'),
+          text: this.uiLocale.text(
+            "The application uses the browser's localStorage or sessionStorage for login and user information, multi-tenant selection, and other functional options such as display theme. The full record of cookies and other technologies, purposes, duration and any third parties has not been confirmed. Information and consent requirements must be considered prior to final publication."
+          )
+        },
+        {
+          title: this.uiLocale.text('9. Security'),
+          text: this.uiLocale.text(
+            'The application has account and access control mechanisms and hashes passwords. The organizational and technical measures of the actual installation must be confirmed; no method provides absolute security. Users must protect their credentials and devices.'
+          )
+        },
+        {
+          title: this.uiLocale.text('10. Your Rights'),
+          text: this.uiLocale.text(
+            'Under the terms of the GDPR, you can request access, rectification, erasure or restriction of processing, object to it and request portability of your data. Where processing is based on consent, you can withdraw it. Rights are subject to statutory conditions and exclusions. The appropriate point of contact for requests must be filled in; depending on the processing, the administrator or management company may also be appropriate.'
+          )
+        },
+        {
+          title: this.uiLocale.text('11. Termination and Termination'),
+          text: this.uiLocale.text(
+            'You have the right to complain to the competent supervisory authority. In Greece, the Personal Data Protection Authority (www.dpa.gr) is responsible. Confirmation of actual practices, completion of deficiencies and legal review are required before this becomes a valid policy.'
+          )
+        }
+      ]
+    }
   };
   constructor() {
     if (this.route.snapshot.url[0]?.path === 'terms') {
-      inject(Title).setTitle('Όροι χρήσης | Oikio');
-      inject(Meta).updateTag({ name: 'description', content: 'Ενημερωτικό προσχέδιο όρων χρήσης του Oikio για διαχειριστές, κατοίκους και εταιρείες διαχείρισης.' });
+      inject(Title).setTitle(this.uiLocale.text('Terms of Use | Oikio'));
+      inject(Meta).updateTag({
+        name: 'description',
+        content: this.uiLocale.text("Informative draft of Oikio's terms of use for administrators, residents, and management companies.")
+      });
     } else if (this.route.snapshot.url[0]?.path === 'privacy') {
-      inject(Title).setTitle('Πολιτική απορρήτου | Oikio');
-      inject(Meta).updateTag({ name: 'description', content: 'Ενημερωτικό προσχέδιο πολιτικής απορρήτου του Oikio και δικαιωμάτων προσωπικών δεδομένων.' });
+      inject(Title).setTitle(this.uiLocale.text('Privacy Policy | Oikio'));
+      inject(Meta).updateTag({
+        name: 'description',
+        content: this.uiLocale.text("Informative draft of Oikio's privacy policy and personal data rights.")
+      });
     } else if (this.route.snapshot.url[0]?.path === 'cookies') {
-      inject(Title).setTitle('Πολιτική cookies | Oikio');
-      inject(Meta).updateTag({ name: 'description', content: 'Ενημερωτικό προσχέδιο για τα cookies και την αποθήκευση στον browser κατά τη χρήση του Oikio.' });
+      inject(Title).setTitle(this.uiLocale.text('Cookie Policy | Oikio'));
+      inject(Meta).updateTag({
+        name: 'description',
+        content: this.uiLocale.text('Informative draft about cookies and browser storage when using Oikio.')
+      });
     }
   }
-  get page(): InfoPage { return this.pages[this.route.snapshot.url[0].path]; }
+  get page(): InfoPage {
+    return this.pages[this.route.snapshot.url[0].path];
+  }
 }

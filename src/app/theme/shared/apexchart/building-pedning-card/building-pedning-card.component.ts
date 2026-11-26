@@ -1,5 +1,5 @@
 // angular import
-import { Component, effect, inject } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 
 // project import
 import { SharedModule } from '../../shared.module';
@@ -12,7 +12,6 @@ import { RiseOutline } from '@ant-design/icons-angular/icons';
 // third party
 import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
 import { UserDashboardService } from '../../service/userDashboard.service';
-import { OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-building-pedning-card',

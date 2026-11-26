@@ -1,14 +1,49 @@
-<p>Κατεβάστε το πρότυπο, αντικαταστήστε την ενδεικτική γραμμή με τα στοιχεία σας και διατηρήστε τις επικεφαλίδες. Μία γραμμή ανά κτίριο. Γίνονται δεκτές και οι αγγλικές επικεφαλίδες παλαιότερων προτύπων, αλλά κάθε πεδίο πρέπει να εμφανίζεται μόνο μία φορά.</p>
-<button type="button" class="btn btn-outline-primary mb-3" (click)="download()">Λήψη προτύπου Excel</button>
-<p>Η χώρα είναι Ελλάδα και ο νομός πρέπει να αντιστοιχεί στις επιλογές της φόρμας. Γράψτε τον Τ.Κ. ως κείμενο με 5 ψηφία. Για τις επιλογές χρησιμοποιήστε Ναι ή Όχι (κενό σημαίνει Όχι).</p>
-<p>Χρησιμοποιήστε τις αναπτυσσόμενες λίστες για χώρα, νομό, επιλογές Ναι/Όχι και τύπο θέρμανσης. Αν υπάρχει πάρκινγκ ή αποθήκη, συμπληρώστε πλήθος τουλάχιστον 1. Για κεντρική θέρμανση συμπληρώστε τύπο και λίτρα από 0. Διαφορετικά αφήστε τα σχετικά πεδία κενά ή στο 0 / Καθόλου. Γίνονται δεκτοί και οι παλαιότεροι αγγλικοί κωδικοί θέρμανσης.</p>
-<p class="text-muted">Έως 500 κτίρια και 2 MB. Ο αρχικός έλεγχος γίνεται στη συσκευή σας. Εντοπίζονται διπλότυπα διεύθυνσης μέσα στο αρχείο, όχι στη βάση δεδομένων. Η εισαγωγή γίνεται μόνο με το Ανέβασμα.</p>
-<label for="bulk-file" class="form-label">Αρχείο Excel (.xlsx)</label>
-<input id="bulk-file" type="file" class="form-control mb-3" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" [disabled]="sending || !!uploadedCount" (change)="select($event)" />
-<button type="button" class="btn btn-primary" [disabled]="busy || sending || !!uploadedCount" (click)="check()">{{ busy ? 'Έλεγχος...' : 'Έλεγχος αρχείου' }}</button>
-<div *ngIf="success" class="alert alert-success mt-3" role="status">Ο έλεγχος του αρχείου ολοκληρώθηκε επιτυχώς. Δεν έγινε εισαγωγή και δεν ελέγχθηκαν διπλότυπα στη βάση.</div>
-<div *ngIf="uploadedCount" class="alert alert-success mt-3" role="status">Η εισαγωγή ολοκληρώθηκε: {{ uploadedCount }} κτίρια δημιουργήθηκαν.</div>
+<p>
+  {{
+    'Download the template, replace the guide line with your details and keep the headings. One line per building. Older standard English headings are also accepted, but each field must appear only once.'
+      | translate
+  }}
+</p>
+<button type="button" class="btn btn-outline-primary mb-3" (click)="download()">{{ 'Download Excel template' | translate }}</button>
+<p>
+  {{
+    'The country is Greece and the prefecture must correspond to the options in the form. Write the postal code. as text with 5 digits. For options use Yes or No (blank means No).'
+      | translate
+  }}
+</p>
+<p>
+  {{
+    'Use the drop-down lists for country, county, Yes/No options and heating type. If there is a parking lot or warehouse, fill in a quantity of at least 1. For central heating, fill in type and liters from 0. Otherwise, leave the relevant fields blank or at 0 / None. Older English heating codes are also accepted.'
+      | translate
+  }}
+</p>
+<p class="text-muted">
+  {{
+    'Up to 500 buildings and 2 MB. The initial check is done on your device. Address duplicates are detected within the file, not in the database. Entry is by Upload only.'
+      | translate
+  }}
+</p>
+<label for="bulk-file" class="form-label">{{ 'Excel file (.xlsx)' | translate }}</label>
+<input
+  id="bulk-file"
+  type="file"
+  class="form-control mb-3"
+  accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  [disabled]="sending || !!uploadedCount"
+  (change)="select($event)"
+/>
+<button type="button" class="btn btn-primary" [disabled]="busy || sending || !!uploadedCount" (click)="check()">
+  {{ busy ? ('Check...' | translate) : ('File check' | translate) }}
+</button>
+<div *ngIf="success" class="alert alert-success mt-3" role="status">
+  {{ 'File check completed successfully. No entry was made and no duplicates were checked in the database.' | translate }}
+</div>
+<div *ngIf="uploadedCount" class="alert alert-success mt-3" role="status">
+  {{ 'Import complete:' | translate }} {{ uploadedCount }} {{ 'buildings were created.' | translate }}
+</div>
 <div *ngIf="errors.length" class="alert alert-danger mt-3" role="alert">
-  <strong>Βρέθηκαν προβλήματα:</strong>
-  <ul class="mb-0"><li *ngFor="let error of errors">{{ error }}</li></ul>
+  <strong>{{ 'Problems found:' | translate }}</strong>
+  <ul class="mb-0">
+    <li *ngFor="let error of errors">{{ error }}</li>
+  </ul>
 </div>

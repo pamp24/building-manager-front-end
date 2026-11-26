@@ -1,66 +1,175 @@
 <div class="d-flex justify-content-center mb-4">
   <div class="btn-group">
-    <button type="button" class="btn" [ngClass]="selectedType === 'individual' ? 'btn-primary' : 'btn-outline-primary'" [attr.aria-pressed]="selectedType === 'individual'" (click)="selectedType = 'individual'; buildings = 1">Μεμονωμένοι Διαχειριστές</button>
-    <button type="button" class="btn" [ngClass]="selectedType === 'company' ? 'btn-primary' : 'btn-outline-primary'" [attr.aria-pressed]="selectedType === 'company'" (click)="selectedType = 'company'">Εταιρίες Διαχείρισης</button>
+    <button
+      type="button"
+      class="btn"
+      [ngClass]="selectedType === 'individual' ? 'btn-primary' : 'btn-outline-primary'"
+      [attr.aria-pressed]="selectedType === 'individual'"
+      (click)="selectedType = 'individual'; buildings = 1"
+    >
+      {{ 'Individual Administrators' | translate }}
+    </button>
+    <button
+      type="button"
+      class="btn"
+      [ngClass]="selectedType === 'company' ? 'btn-primary' : 'btn-outline-primary'"
+      [attr.aria-pressed]="selectedType === 'company'"
+      (click)="selectedType = 'company'"
+    >
+      {{ 'Management Companies' | translate }}
+    </button>
   </div>
 </div>
-<div class="card"><div class="card-body">
-  <div class="mb-3">
-    <span class="control-label">ΧΡΕΩΣΗ</span>
-    <div class="segmented" role="group" aria-label="Χρέωση">
-      <button type="button" [class.active]="!annual" [attr.aria-pressed]="!annual" (click)="annual = false">Μηνιαία</button>
-      <button type="button" [class.active]="annual" [attr.aria-pressed]="annual" (click)="annual = true">Ετήσια @if (catalog) { −{{ catalog.annualDiscountBasisPoints / 100 }}% }</button>
+<div class="card">
+  <div class="card-body">
+    <div class="mb-3">
+      <span class="control-label">{{ 'CHARGE' | translate }}</span>
+      <div class="segmented" role="group" [attr.aria-label]="'Charge' | translate">
+        <button type="button" [class.active]="!annual" [attr.aria-pressed]="!annual" (click)="annual = false">
+          {{ 'Monthly' | translate }}
+        </button>
+        <button type="button" [class.active]="annual" [attr.aria-pressed]="annual" (click)="annual = true">
+          {{ 'Annually' | translate }}
+          @if (catalog) {
+            −{{ catalog.annualDiscountBasisPoints / 100 }}%
+          }
+        </button>
+      </div>
     </div>
-  </div>
-  <div class="estimator">
-    <div><p class="eyebrow">ΥΠΟΛΟΓΙΣΜΟΣ</p><h2>Πείτε μας το μέγεθός σας</h2><p>Προσαρμόστε τα στοιχεία για να δείτε την επιλεξιμότητα και την εκτιμώμενη χρέωση.</p></div>
-    <div class="inputs">
-      @if (selectedType === 'company') {
-        <label>Πολυκατοικίες <input type="number" min="1" max="100000" [(ngModel)]="buildings" /></label>
-      }
-      <label [class.apartments-right]="selectedType === 'individual'">Διαμερίσματα <input type="number" min="1" max="100000" [(ngModel)]="apartments" /></label>
-      <label class="range">Διαμερίσματα (1–250) <input type="range" min="1" max="250" [ngModel]="sliderApartments" (ngModelChange)="apartments = $event" /></label>
+    <div class="estimator">
+      <div>
+        <p class="eyebrow">{{ 'CALCULATION' | translate }}</p>
+        <h2>{{ 'Please tell us your size' | translate }}</h2>
+        <p>{{ 'Adjust details to see eligibility and estimated fee.' | translate }}</p>
+      </div>
+      <div class="inputs">
+        @if (selectedType === 'company') {
+          <label>
+            {{ 'Apartment buildings' | translate }}
+            <input type="number" min="1" max="100000" [(ngModel)]="buildings" />
+          </label>
+        }
+        <label [class.apartments-right]="selectedType === 'individual'">
+          {{ 'Apartments' | translate }}
+          <input type="number" min="1" max="100000" [(ngModel)]="apartments" />
+        </label>
+        <label class="range">
+          {{ 'Apartments (1–250)' | translate }}
+          <input type="range" min="1" max="250" [ngModel]="sliderApartments" (ngModelChange)="apartments = $event" />
+        </label>
+      </div>
     </div>
+    @if (!validCounts) {
+      <p class="text-danger mt-2" role="alert">{{ 'Enter whole numbers from 1 to 100,000.' | translate }}</p>
+    }
   </div>
-  @if (!validCounts) { <p class="text-danger mt-2" role="alert">Εισάγετε ακέραιους αριθμούς από 1 έως 100.000.</p> }
-</div></div>
-@if (error) { <div class="alert alert-warning">Ο κατάλογος τιμών δεν είναι διαθέσιμος. <button class="btn btn-link" (click)="load()">Δοκιμάστε ξανά</button></div> }
-@else if (!catalog) { <p>Φόρτωση τιμών...</p> }
-@else {
+</div>
+@if (error) {
+  <div class="alert alert-warning">
+    {{ 'Price list not available.' | translate }}
+    <button class="btn btn-link" (click)="load()">{{ 'Please try again' | translate }}</button>
+  </div>
+} @else if (!catalog) {
+  <p>{{ 'Loading prices...' | translate }}</p>
+} @else {
   <div class="row">
     @for (plan of plans; track plan.id; let tier = $index) {
-      <div class="col-md-6 col-lg-4"><div class="card price-card"><div class="card-body">
-        <div class="price-icon"><img [src]="tierImages[tier]" alt="" class="img-fluid" /><h4 class="mb-0">{{ planName(plan.id) }}</h4></div>
-        <div class="price-price my-4">
-          @if (plan.quoteOnly) { Κατόπιν προσφοράς }
-          @else if (validCounts && eligible(plan, buildings, apartments)) {
-            @if (price(plan, catalog, apartments, annual); as amount) { {{ amount.total / 100 | currency:catalog.currency }} <span class="text-muted">/ {{ annual ? 'έτος' : 'μήνα' }}</span> }
-          } @else { Μη επιλέξιμο }
+      <div class="col-md-6 col-lg-4">
+        <div class="card price-card">
+          <div class="card-body">
+            <div class="price-icon">
+              <img [src]="tierImages[tier]" alt="" class="img-fluid" />
+              <h4 class="mb-0">{{ planName(plan.id) }}</h4>
+            </div>
+            <div class="price-price my-4">
+              @if (plan.quoteOnly) {
+                {{ 'Upon offer' | translate }}
+              } @else if (validCounts && eligible(plan, buildings, apartments)) {
+                @if (price(plan, catalog, apartments, annual); as amount) {
+                  {{ amount.total / 100 | currency: catalog.currency }}
+                  <span class="text-muted">/ {{ annual ? ('year' | translate) : ('month' | translate) }}</span>
+                }
+              } @else {
+                {{ 'Not eligible' | translate }}
+              }
+            </div>
+            @if (!plan.quoteOnly && plan.taxTreatment === 'INCLUSIVE') {
+              <p>{{ 'The price includes VAT.' | translate }}</p>
+            } @else if (!plan.quoteOnly && validCounts && eligible(plan, buildings, apartments)) {
+              @if (price(plan, catalog, apartments, annual); as amount) {
+                @if (amount.vat !== null) {
+                  <p>
+                    {{ 'Net worth' | translate }} {{ amount.amount / 100 | currency: catalog.currency }} {{ '+ VAT' | translate }}
+                    {{ catalog.businessVatBasisPoints / 100 }}% ({{ amount.vat / 100 | currency: catalog.currency }})
+                  </p>
+                }
+              }
+            }
+            <ul class="list-group list-group-flush product-list">
+              <li class="list-group-item">
+                {{
+                  plan.maxBuildings === null
+                    ? ('Apartment limit by offer' | translate)
+                    : plan.id === 'INDIVIDUAL_FREE' && plan.maxBuildings === 1
+                      ? plan.maxBuildings + ('apartment building' | translate)
+                      : ('Until' | translate) + plan.maxBuildings + ('apartment buildings' | translate)
+                }}
+              </li>
+              <li class="list-group-item">
+                {{
+                  plan.maxApartments === null
+                    ? plan.quoteOnly
+                      ? ('Limit of apartments upon offer' | translate)
+                      : ('No apartment limit' | translate)
+                    : ('Until' | translate) + plan.maxApartments + ('apartments' | translate)
+                }}
+              </li>
+              @if (plan.id === 'INDIVIDUAL_PLUS') {
+                <li class="list-group-item">{{ 'All features of Free' | translate }}</li>
+                @if (plan.includedApartments !== null) {
+                  <li class="list-group-item">{{ plan.includedApartments }} {{ 'apartments at the base price' | translate }}</li>
+                }
+                @if (plan.extraApartmentMonthlyCents !== null) {
+                  <li class="list-group-item">
+                    +{{ plan.extraApartmentMonthlyCents / 100 | currency: catalog.currency }}
+                    {{ '/ month per additional apartment' | translate }}
+                  </li>
+                }
+                @for (feature of plusFeatures; track feature) {
+                  <li class="list-group-item">{{ feature | translate }}</li>
+                }
+              } @else if (plan.extraApartmentMonthlyCents && plan.includedApartments !== null) {
+                <li class="list-group-item">
+                  {{ plan.includedApartments }} {{ 'apartments included, extra' | translate }}
+                  {{ plan.extraApartmentMonthlyCents / 100 | currency: catalog.currency }} {{ '/ month per apartment' | translate }}
+                </li>
+              }
+              @if (plan.id === 'INDIVIDUAL_FREE') {
+                @for (feature of freeFeatures; track feature) {
+                  <li class="list-group-item">{{ feature | translate }}</li>
+                }
+              }
+              @if (plan.id === 'INDIVIDUAL_EXTENDED') {
+                @for (feature of extendedFeatures; track feature) {
+                  <li class="list-group-item">{{ feature | translate }}</li>
+                }
+              }
+            </ul>
+            @if (plan.quoteOnly) {
+              <a routerLink="/contact-us" class="btn btn-outline-primary mt-3">{{ 'Contact for offer' | translate }}</a>
+            } @else {
+              <button
+                type="button"
+                class="btn btn-outline-primary mt-3"
+                [disabled]="!validCounts || !eligible(plan, buildings, apartments) || !price(plan, catalog, apartments, annual)"
+                (click)="selectPlan(plan)"
+              >
+                {{ 'Choice' | translate }} {{ planName(plan.id) }}
+              </button>
+            }
+          </div>
         </div>
-        @if (!plan.quoteOnly && plan.taxTreatment === 'INCLUSIVE') {
-          <p>Η τιμή περιλαμβάνει ΦΠΑ.</p>
-        } @else if (!plan.quoteOnly && validCounts && eligible(plan, buildings, apartments)) {
-          @if (price(plan, catalog, apartments, annual); as amount) {
-            @if (amount.vat !== null) { <p>Καθαρή αξία {{ amount.amount / 100 | currency:catalog.currency }} + ΦΠΑ {{ catalog.businessVatBasisPoints / 100 }}% ({{ amount.vat / 100 | currency:catalog.currency }})</p> }
-          }
-        }
-        <ul class="list-group list-group-flush product-list">
-          <li class="list-group-item">{{ plan.maxBuildings === null ? 'Όριο πολυκατοικιών κατόπιν προσφοράς' : plan.id === 'INDIVIDUAL_FREE' && plan.maxBuildings === 1 ? plan.maxBuildings + ' πολυκατοικία' : 'Έως ' + plan.maxBuildings + ' πολυκατοικίες' }}</li>
-          <li class="list-group-item">{{ plan.maxApartments === null ? (plan.quoteOnly ? 'Όριο διαμερισμάτων κατόπιν προσφοράς' : 'Χωρίς όριο διαμερισμάτων') : 'Έως ' + plan.maxApartments + ' διαμερίσματα' }}</li>
-          @if (plan.id === 'INDIVIDUAL_PLUS') {
-            <li class="list-group-item">Όλες οι λειτουργίες του Free</li>
-            @if (plan.includedApartments !== null) { <li class="list-group-item">{{ plan.includedApartments }} διαμερίσματα στη βασική τιμή</li> }
-            @if (plan.extraApartmentMonthlyCents !== null) { <li class="list-group-item">+{{ plan.extraApartmentMonthlyCents / 100 | currency:catalog.currency }} / μήνα ανά επιπλέον διαμέρισμα</li> }
-            @for (feature of plusFeatures; track feature) { <li class="list-group-item">{{ feature }}</li> }
-          } @else if (plan.extraApartmentMonthlyCents && plan.includedApartments !== null) { <li class="list-group-item">{{ plan.includedApartments }} διαμερίσματα περιλαμβάνονται, επιπλέον {{ plan.extraApartmentMonthlyCents / 100 | currency:catalog.currency }} / μήνα ανά διαμέρισμα</li> }
-          @if (plan.id === 'INDIVIDUAL_FREE') { @for (feature of freeFeatures; track feature) { <li class="list-group-item">{{ feature }}</li> } }
-          @if (plan.id === 'INDIVIDUAL_EXTENDED') { @for (feature of extendedFeatures; track feature) { <li class="list-group-item">{{ feature }}</li> } }
-        </ul>
-        @if (plan.quoteOnly) { <a routerLink="/contact-us" class="btn btn-outline-primary mt-3">Επικοινωνία για προσφορά</a> }
-        @else {
-          <button type="button" class="btn btn-outline-primary mt-3" [disabled]="!validCounts || !eligible(plan, buildings, apartments) || !price(plan, catalog, apartments, annual)" (click)="selectPlan(plan)">Επιλογή {{ planName(plan.id) }}</button>
-        }
-      </div></div></div>
+      </div>
     }
   </div>
 }

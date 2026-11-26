@@ -3,7 +3,7 @@
 import { Component, inject, Input, OnInit, OnChanges, SimpleChanges, LOCALE_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import {
   CalendarEvent,
   CalendarEventTimesChangedEvent,
@@ -19,12 +19,18 @@ import { CalendarService } from 'src/app/theme/shared/service/calendarService.se
 import { isSameDay, isSameMonth } from 'date-fns';
 import { CalendarEventModalComponent } from './calendar-event-modal/calendar-event-modal.component';
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
-import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+
 import { IconService } from '@ant-design/icons-angular';
 import { EditOutline, DeleteOutline, PushpinOutline, PushpinFill } from '@ant-design/icons-angular/icons';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 
-type UiCalendarEvent = CalendarEvent & { pinned?: boolean; description?: string; active?: boolean; buildingId?: number; createdDate?: string };
+type UiCalendarEvent = CalendarEvent & {
+  pinned?: boolean;
+  description?: string;
+  active?: boolean;
+  buildingId?: number;
+  createdDate?: string;
+};
 
 @Component({
   selector: 'app-calendar',
@@ -41,10 +47,10 @@ type UiCalendarEvent = CalendarEvent & { pinned?: boolean; description?: string;
     DatePipe,
     NgbTooltipModule,
     SharedModule
-  ],
-  providers: [{ provide: LOCALE_ID, useValue: 'el' }]
+  ]
 })
 export class CalenderComponent implements OnInit, OnChanges {
+  readonly locale = inject(LOCALE_ID);
   private iconService = inject(IconService);
   @Input() buildingId!: number;
   @Input() isEdit = false;

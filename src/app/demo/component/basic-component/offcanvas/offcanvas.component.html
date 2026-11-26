@@ -2,122 +2,155 @@
   <div class="col-sm-12">
     <div class="card">
       <div class="card-header">
-        <h5>Live demo</h5>
+        <h5>{{ 'Live demo' | translate }}</h5>
       </div>
       <div class="card-body btn-page">
         <div class="bd-example-modal mb-4">
           <div class="offcanvas offcanvas-start" tabindex="-1">
             <div class="offcanvas-header">
-              <h5 class="offcanvas-title" id="offcanvasLabel">Offcanvas</h5>
-              <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+              <h5 class="offcanvas-title" id="offcanvasLabel">{{ 'Offcanvas' | translate }}</h5>
+              <button
+                type="button"
+                class="btn-close text-reset"
+                data-bs-dismiss="offcanvas"
+                [attr.aria-label]="'Close' | translate"
+              ></button>
             </div>
             <div class="offcanvas-body">
-              Content for the offcanvas goes here. You can place just about any Bootstrap component or custom elements here.
+              {{
+                'Content for the offcanvas goes here. You can place just about any Bootstrap component or custom elements here.' | translate
+              }}
             </div>
           </div>
         </div>
         <div class="card-body btn-page pc-component">
           <a class="btn btn-primary me-2" data-bs-toggle="offcanvas" href="javascript:" role="button" (click)="open(content)">
-            Link with href
+            {{ 'Link with href' | translate }}
           </a>
           <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" (click)="open(content)">
-            Button with data-bs-target
+            {{ 'Button with data-bs-target' | translate }}
           </button>
         </div>
         <ng-template #content let-offcanvas>
           <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Offcanvas</h5>
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel">{{ 'Offcanvas' | translate }}</h5>
             <button
               type="button"
               class="btn-close text-reset"
               data-bs-dismiss="offcanvas"
-              aria-label="Close"
+              [attr.aria-label]="'Close' | translate"
               (click)="offcanvas.close('Close click')"
             ></button>
           </div>
           <div class="offcanvas-body">
-            <h4 class="mb-4">Main Title</h4>
-            <h6>Some Title</h6>
+            <h4 class="mb-4">{{ 'Main Title' | translate }}</h4>
+            <h6>{{ 'Some Title' | translate }}</h6>
             <p class="mb-4">
-              Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.
+              {{
+                'Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.'
+                  | translate
+              }}
             </p>
-            <h6>Some Title</h6>
+            <h6>{{ 'Some Title' | translate }}</h6>
             <p class="mb-4">
-              Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.
+              {{
+                'Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.'
+                  | translate
+              }}
             </p>
-            <h6>Some Title</h6>
+            <h6>{{ 'Some Title' | translate }}</h6>
             <p class="mb-4">
-              Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.
+              {{
+                'Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.'
+                  | translate
+              }}
             </p>
             <div class="dropdown d-inline-block me-2" ngbDropdown>
-              <button class="btn btn-light-secondary btn-sm dropdown-toggle" type="button" ngbDropdownToggle>Dropdown button</button>
+              <button class="btn btn-light-secondary btn-sm dropdown-toggle" type="button" ngbDropdownToggle>
+                {{ 'Dropdown button' | translate }}
+              </button>
               <ul class="dropdown-menu" ngbDropdownMenu>
-                <li><a class="dropdown-item" href="javascript:">Action</a></li>
-                <li><a class="dropdown-item" href="javascript:">Another action</a></li>
-                <li><a class="dropdown-item" href="javascript:">Something else here</a></li>
+                <li>
+                  <a class="dropdown-item" href="javascript:">{{ 'Action' | translate }}</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="javascript:">{{ 'Another action' | translate }}</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="javascript:">{{ 'Something else here' | translate }}</a>
+                </li>
               </ul>
             </div>
-            <button class="btn btn-light-danger btn-sm" data-bs-dismiss="offcanvas">Close</button>
+            <button class="btn btn-light-danger btn-sm" data-bs-dismiss="offcanvas">{{ 'Close' | translate }}</button>
           </div>
         </ng-template>
       </div>
     </div>
   </div>
   <div class="col-sm-12">
-    <app-card cardTitle="Placement" blockClass="pc-component btn-page">
+    <app-card [cardTitle]="'Placement' | translate" blockClass="pc-component btn-page">
       <button class="btn btn-light-secondary" type="button" data-bs-toggle="offcanvas" (click)="openTop(content1)">
-        Top offcanvas
+        {{ 'Top offcanvas' | translate }}
         <i data-feather="chevrons-up"></i>
       </button>
       <button class="btn btn-light-secondary me-2" type="button" data-bs-toggle="offcanvas" (click)="openEnd(content)">
-        Right offcanvas
+        {{ 'Right offcanvas' | translate }}
         <i data-feather="chevrons-right"></i>
       </button>
       <button class="btn btn-light-secondary" type="button" data-bs-toggle="offcanvas" (click)="openBottom(content1)">
-        Bottom offcanvas
+        {{ 'Bottom offcanvas' | translate }}
         <i data-feather="chevrons-down"></i>
       </button>
       <ng-template #content1 let-offcanvas>
         <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="offcanvasBottomLabel">Offcanvas bottom</h5>
+          <h5 class="offcanvas-title" id="offcanvasBottomLabel">{{ 'Offcanvas bottom' | translate }}</h5>
           <button
             type="button"
             class="btn-close text-reset"
             data-bs-dismiss="offcanvas"
-            aria-label="Close"
+            [attr.aria-label]="'Close' | translate"
             (click)="offcanvas.close('Close click')"
           ></button>
         </div>
         <div class="offcanvas-body">
-          <h6>Some Title</h6>
+          <h6>{{ 'Some Title' | translate }}</h6>
           <p class="mb-4">
-            Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.
+            {{
+              'Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.'
+                | translate
+            }}
           </p>
           <div class="dropdown d-inline-block me-2" ngbDropdown>
-            <button class="btn btn-light-secondary btn-sm dropdown-toggle" ngbDropdownToggle>Dropdown button</button>
+            <button class="btn btn-light-secondary btn-sm dropdown-toggle" ngbDropdownToggle>{{ 'Dropdown button' | translate }}</button>
             <ul class="dropdown-menu" ngbDropdownMenu>
-              <li><a class="dropdown-item" href="javascript:">Action</a></li>
-              <li><a class="dropdown-item" href="javascript:">Another action</a></li>
               <li>
-                <a class="dropdown-item" href="javascript:">Something else here</a>
+                <a class="dropdown-item" href="javascript:">{{ 'Action' | translate }}</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="javascript:">{{ 'Another action' | translate }}</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="javascript:">{{ 'Something else here' | translate }}</a>
               </li>
             </ul>
           </div>
-          <button class="btn btn-light-danger btn-sm" data-bs-dismiss="offcanvas" (click)="offcanvas.close('Close click')">Close</button>
+          <button class="btn btn-light-danger btn-sm" data-bs-dismiss="offcanvas" (click)="offcanvas.close('Close click')">
+            {{ 'Close' | translate }}
+          </button>
         </div>
       </ng-template>
     </app-card>
   </div>
   <div class="col-sm-12">
-    <app-card cardTitle="Backdrop" blockClass="pc-component btn-page">
+    <app-card [cardTitle]="'Backdrop' | translate" blockClass="pc-component btn-page">
       <button class="btn btn-light-secondary" type="button" data-bs-toggle="offcanvas" (click)="openScroll(content)">
-        Enable body scrolling
+        {{ 'Enable body scrolling' | translate }}
       </button>
       <button class="btn btn-light-secondary me-2" type="button" data-bs-toggle="offcanvas" (click)="openBackdrop(content)">
-        Enable backdrop (default)
+        {{ 'Enable backdrop (default)' | translate }}
       </button>
       <button class="btn btn-light-secondary" type="button" data-bs-toggle="offcanvas" (click)="openBothOptions(content)">
-        Enable both scrolling & backdrop
+        {{ 'Enable both scrolling &amp; backdrop' | translate }}
       </button>
     </app-card>
   </div>

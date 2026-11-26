@@ -1,40 +1,40 @@
 <div class="row">
   <div class="col-sm-12">
-    <app-card cardTitle="Notification">
+    <app-card [cardTitle]="'Notification' | translate">
       <button class="btn btn-primary me-2 mb-2" (click)="showNotification('default', 'Good evening, you lovely person!')">
-        Default me!
+        {{ 'Default me!' | translate }}
       </button>
       <button class="btn btn-primary me-2 mb-2" (click)="showNotification('info', 'This library is built on top of Angular 2.')">
-        Info me!
+        {{ 'Info me!' | translate }}
       </button>
       <button class="btn btn-primary me-2 mb-2" (click)="showNotification('success', 'Notification successfully opened.')">
-        Success me!
+        {{ 'Success me!' | translate }}
       </button>
       <button class="btn btn-primary me-2 mb-2" (click)="showNotification('warning', 'Warning! But not an error! Just a warning!')">
-        Warning me!
+        {{ 'Warning me!' | translate }}
       </button>
       <button class="btn btn-primary me-2 mb-2" (click)="showNotification('error', 'Whoops, something went wrong. Probably.')">
-        Error me!
+        {{ 'Error me!' | translate }}
       </button>
     </app-card>
   </div>
 </div>
 
 <div class="col-sm-12">
-  <app-card cardTitle="Hide Notification" blockClass="pc-component">
-    <button class="btn btn-primary me-2 mb-2" (click)="hideAllNotifications()">Hide all notifications!</button>
-    <button class="btn btn-primary me-2 mb-2" (click)="hideOldestNotification()">Hide oldest notification!</button>
-    <button class="btn btn-primary me-2 mb-2" (click)="hideNewestNotification()">Hide newest notification!</button>
+  <app-card [cardTitle]="'Hide Notification' | translate" blockClass="pc-component">
+    <button class="btn btn-primary me-2 mb-2" (click)="hideAllNotifications()">{{ 'Hide all notifications!' | translate }}</button>
+    <button class="btn btn-primary me-2 mb-2" (click)="hideOldestNotification()">{{ 'Hide oldest notification!' | translate }}</button>
+    <button class="btn btn-primary me-2 mb-2" (click)="hideNewestNotification()">{{ 'Hide newest notification!' | translate }}</button>
   </app-card>
 </div>
 
 <div class="col-sm-12">
-  <app-card cardTitle="Show & hide a specific notification" blockClass="pc-component">
+  <app-card [cardTitle]="'Show &amp; hide a specific notification' | translate" blockClass="pc-component">
     <button class="btn btn-primary me-2 mb-2" (click)="showSpecificNotification('default', 'Hello, you lovely person!', 'ID_TEST')">
-      Show notification with ID named 'ID_TEST'
+      {{ "Show notification with ID named 'ID_TEST'" | translate }}
     </button>
     <button class="btn btn-secondary me-2 mb-2" (click)="hideSpecificNotification('ID_TEST')">
-      Hide notification with ID named 'ID_TEST'
+      {{ "Hide notification with ID named 'ID_TEST'" | translate }}
     </button>
   </app-card>
 </div>

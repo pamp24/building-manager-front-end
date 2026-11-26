@@ -1,8 +1,8 @@
 <div class="row">
   <div class="col-sm-12">
-    <app-card cardTitle="Δημιουργία Αιτήματος Υποστήριξης">
+    <app-card [cardTitle]="'Create a Support Request' | translate">
       @if (submitSuccess) {
-        <div class="alert alert-success">Το αίτημα υποβλήθηκε με επιτυχία.</div>
+        <div class="alert alert-success">{{ 'The request was successfully submitted.' | translate }}</div>
       }
 
       @if (errorMessage) {
@@ -14,42 +14,42 @@
       <form [formGroup]="form" (ngSubmit)="submit()">
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label class="form-label">Αποδέκτης Αιτήματος</label>
+            <label class="form-label">{{ 'Request Recipient' | translate }}</label>
             <select class="form-select" formControlName="targetRole">
-              <option [ngValue]="null">Επιλέξτε αποδέκτη</option>
+              <option [ngValue]="null">{{ 'Select a recipient' | translate }}</option>
               @for (target of availableTargetRoles; track target.value) {
                 <option [value]="target.value">{{ target.label | translate }}</option>
               }
             </select>
             @if (targetRole?.invalid && targetRole?.touched) {
-              <small class="text-danger">Ο αποδέκτης είναι υποχρεωτικός.</small>
+              <small class="text-danger">{{ 'Recipient is required.' | translate }}</small>
             }
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label">Όνομα Αποδέκτη</label>
+            <label class="form-label">{{ 'Recipient Name' | translate }}</label>
             <input type="text" class="form-control" [value]="getSelectedRecipientName()" readonly />
           </div>
         </div>
 
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label class="form-label">Πολυκατοικία</label>
+            <label class="form-label">{{ 'Building' | translate }}</label>
             <select class="form-select" formControlName="buildingId" [disabled]="!form.get('targetRole')?.value">
-              <option [ngValue]="null">Επιλέξτε πολυκατοικία</option>
+              <option [ngValue]="null">{{ 'Select apartment building' | translate }}</option>
               @for (building of buildings; track building.id) {
                 <option [ngValue]="building.id">{{ building.name }}</option>
               }
             </select>
             @if (buildingId?.invalid && buildingId?.touched) {
-              <small class="text-danger">Η πολυκατοικία είναι υποχρεωτική.</small>
+              <small class="text-danger">{{ 'The apartment building is mandatory.' | translate }}</small>
             }
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label">Διαμέρισμα (προαιρετικό)</label>
+            <label class="form-label">{{ 'Apartment (optional)' | translate }}</label>
             <select class="form-select" formControlName="apartmentId" [disabled]="!form.get('buildingId')?.value || loadingApartments">
-              <option [ngValue]="null">Επιλέξτε διαμέρισμα</option>
+              <option [ngValue]="null">{{ 'Select an apartment' | translate }}</option>
               @for (apartment of apartments; track apartment.id) {
                 <option [ngValue]="apartment.id">{{ apartment.label }}</option>
               }
@@ -57,7 +57,7 @@
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label">Κατηγορία</label>
+            <label class="form-label">{{ 'Category' | translate }}</label>
             <select class="form-select" formControlName="category">
               @for (category of categories; track category.value) {
                 <option [value]="category.value">{{ category.label }}</option>
@@ -66,7 +66,7 @@
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label">Προτεραιότητα</label>
+            <label class="form-label">{{ 'Priority' | translate }}</label>
             <select class="form-select" formControlName="priority">
               @for (priority of priorities; track priority.value) {
                 <option [value]="priority.value">{{ priority.label }}</option>
@@ -76,26 +76,31 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label">Θέμα</label>
-          <input type="text" class="form-control" formControlName="title" placeholder="Εισάγετε θέμα" />
+          <label class="form-label">{{ 'Subject' | translate }}</label>
+          <input type="text" class="form-control" formControlName="title" [placeholder]="'Enter subject' | translate" />
           @if (title?.invalid && title?.touched) {
-            <small class="text-danger">Το θέμα είναι υποχρεωτικό.</small>
+            <small class="text-danger">{{ 'The subject is mandatory.' | translate }}</small>
           }
         </div>
 
         <div class="mb-3">
-          <label class="form-label">Περιγραφή</label>
-          <textarea rows="6" class="form-control" formControlName="description" placeholder="Περιγράψτε το πρόβλημα"></textarea>
+          <label class="form-label">{{ 'Description' | translate }}</label>
+          <textarea
+            rows="6"
+            class="form-control"
+            formControlName="description"
+            [placeholder]="'Describe the problem' | translate"
+          ></textarea>
           @if (description?.invalid && description?.touched) {
-            <small class="text-danger">Η περιγραφή είναι υποχρεωτική.</small>
+            <small class="text-danger">{{ 'Description is required.' | translate }}</small>
           }
         </div>
 
         <div class="text-end">
-          <button type="button" class="btn btn-outline-secondary me-2" (click)="clearForm()">Καθαρισμός</button>
+          <button type="button" class="btn btn-outline-secondary me-2" (click)="clearForm()">{{ 'Cleaning' | translate }}</button>
 
           <button type="submit" class="btn btn-primary" [disabled]="submitting">
-            {{ submitting ? 'Υποβολή...' : 'Υποβολή Αιτήματος' }}
+            {{ submitting ? ('Submit...' | translate) : ('Submit a Request' | translate) }}
           </button>
         </div>
       </form>

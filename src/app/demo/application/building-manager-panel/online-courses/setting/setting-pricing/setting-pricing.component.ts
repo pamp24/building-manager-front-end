@@ -1,5 +1,6 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, OnInit } from '@angular/core';
 // angular import
-import { Component, OnInit } from '@angular/core';
 
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -11,6 +12,8 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
   styleUrl: './setting-pricing.component.scss'
 })
 export class SettingPricingComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   // public props
   activeButton!: string;
 
@@ -27,124 +30,124 @@ export class SettingPricingComponent implements OnInit {
   prices = [
     {
       type: 'basic',
-      title: 'Basic',
+      title: this.uiLocale.text('Basic'),
       service: '03',
       yearly: 269,
       monthly: 69,
       includeItems: [
         {
           available: true,
-          title: 'One End Product'
+          title: this.uiLocale.text('One End Product')
         },
         {
           available: true,
-          title: 'No attribution required'
+          title: this.uiLocale.text('No attribution required')
         },
         {
           available: true,
-          title: 'TypeScript'
+          title: this.uiLocale.text('TypeScript')
         },
         {
           available: false,
-          title: 'Figma Design Resources'
+          title: this.uiLocale.text('Figma Design Resources')
         },
         {
           available: false,
-          title: 'Create Multiple Products'
+          title: this.uiLocale.text('Create Multiple Products')
         },
         {
           available: false,
-          title: 'Create a SaaS Project'
+          title: this.uiLocale.text('Create a SaaS Project')
         },
         {
           available: false,
-          title: 'Resale Product'
+          title: this.uiLocale.text('Resale Product')
         },
         {
           available: false,
-          title: 'Separate sale of our UI Elements?'
+          title: this.uiLocale.text('Separate sale of our UI Elements?')
         }
       ]
     },
     {
       type: 'popular',
-      title: 'Basic',
+      title: this.uiLocale.text('Basic'),
       service: '05',
       yearly: 529,
       monthly: 129,
       includeItems: [
         {
           available: true,
-          title: 'One End Product'
+          title: this.uiLocale.text('One End Product')
         },
         {
           available: true,
-          title: 'No attribution required'
+          title: this.uiLocale.text('No attribution required')
         },
         {
           available: true,
-          title: 'TypeScript'
+          title: this.uiLocale.text('TypeScript')
         },
         {
           available: true,
-          title: 'Figma Design Resources'
+          title: this.uiLocale.text('Figma Design Resources')
         },
         {
           available: true,
-          title: 'Create Multiple Products'
+          title: this.uiLocale.text('Create Multiple Products')
         },
         {
           available: false,
-          title: 'Create a SaaS Project'
+          title: this.uiLocale.text('Create a SaaS Project')
         },
         {
           available: false,
-          title: 'Resale Product'
+          title: this.uiLocale.text('Resale Product')
         },
         {
           available: false,
-          title: 'Separate sale of our UI Elements?'
+          title: this.uiLocale.text('Separate sale of our UI Elements?')
         }
       ]
     },
     {
       type: 'Basic',
-      title: 'Premium',
+      title: this.uiLocale.text('Premium'),
       service: '08',
       yearly: 1299,
       monthly: 599,
       includeItems: [
         {
           available: true,
-          title: 'One End Product'
+          title: this.uiLocale.text('One End Product')
         },
         {
           available: true,
-          title: 'No attribution required'
+          title: this.uiLocale.text('No attribution required')
         },
         {
           available: true,
-          title: 'TypeScript'
+          title: this.uiLocale.text('TypeScript')
         },
         {
           available: true,
-          title: 'Figma Design Resources'
+          title: this.uiLocale.text('Figma Design Resources')
         },
         {
           available: true,
-          title: 'Create Multiple Products'
+          title: this.uiLocale.text('Create Multiple Products')
         },
         {
           available: true,
-          title: 'Create a SaaS Project'
+          title: this.uiLocale.text('Create a SaaS Project')
         },
         {
           available: true,
-          title: 'Resale Product'
+          title: this.uiLocale.text('Resale Product')
         },
         {
           available: true,
-          title: 'Separate sale of our UI Elements?'
+          title: this.uiLocale.text('Separate sale of our UI Elements?')
         }
       ]
     }

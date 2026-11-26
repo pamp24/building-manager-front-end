@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // angular import
 import { Component, OnInit, effect, input, inject } from '@angular/core';
 
@@ -15,6 +16,8 @@ import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
   styleUrl: './statement-list-chart.component.scss'
 })
 export class StatementListChartComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private themeService = inject(ThemeService);
 
   // public props
@@ -74,9 +77,10 @@ export class StatementListChartComponent implements OnInit {
         },
         custom: ({ dataPointIndex }) => {
           const label = this.labels()?.[dataPointIndex];
-          const value = this.seriesData()?.[dataPointIndex];          return `<div style="padding: 6px 10px; font-size: 12px; line-height: 1.4;">
-            <div style="font-weight: 600;">${label ?? 'Παραστατικό'}</div>
-            <div>${typeof value === 'number' ? value.toLocaleString('el-GR') + ' €' : value ?? ''}</div>
+          const value = this.seriesData()?.[dataPointIndex];
+          return `<div style="padding: 6px 10px; font-size: 12px; line-height: 1.4;">
+            <div style="font-weight: 600;">${label ?? this.uiLocale.text('Document:')}</div>
+            <div>${typeof value === 'number' ? value.toLocaleString(this.uiLocale.locale) + ' €' : (value ?? '')}</div>
           </div>`;
         }
       },

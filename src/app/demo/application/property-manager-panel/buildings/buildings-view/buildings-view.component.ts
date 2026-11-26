@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -30,12 +31,14 @@ import { CalenderModule } from '../../../calender/calendar.module';
     StatementListComponent,
     PollsComponent,
     CalenderComponent,
-    CalenderModule,
+    CalenderModule
   ],
   templateUrl: './buildings-view.component.html',
   styleUrl: './buildings-view.component.scss'
 })
 export class BuildingsViewComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private route = inject(ActivatedRoute);
   private buildingService = inject(BuildingService);
   @Input() pmView = false;
@@ -55,7 +58,7 @@ export class BuildingsViewComponent implements OnInit {
 
     if (!this.buildingId || Number.isNaN(this.buildingId)) {
       this.loading = false;
-      this.error = 'Μη έγκυρο building id.';
+      this.error = this.uiLocale.text('Invalid building id.');
       return;
     }
 
@@ -75,7 +78,7 @@ export class BuildingsViewComponent implements OnInit {
       error: (err) => {
         console.error(err);
         this.loading = false;
-        this.error = 'Αποτυχία φόρτωσης πολυκατοικίας.';
+        this.error = this.uiLocale.text('Failed to load apartment building.');
       }
     });
   }

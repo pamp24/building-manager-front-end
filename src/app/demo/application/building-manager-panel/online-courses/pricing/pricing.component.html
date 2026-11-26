@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-12">
-    <app-card cardTitle="Course Pricing">
+    <app-card [cardTitle]="'Course Pricing' | translate">
       <div class="row justify-content-center">
         <div class="col-md-10 col-lg-8 col-xxl-6">
           <div class="card border">
@@ -45,7 +45,7 @@
                             <span class="flex-shrink-0">
                               <span class="h3 mb-0">
                                 {{ list.price }}$/
-                                <span class="text-sm">mo</span>
+                                <span class="text-sm">{{ 'mo' | translate }}</span>
                               </span>
                             </span>
                           </span>

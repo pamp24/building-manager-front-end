@@ -12,7 +12,7 @@
                 class="form-control"
                 name="searchTerm"
                 [(ngModel)]="service.searchTerm"
-                placeholder="Αναζήτηση..."
+                [placeholder]="'Search...' | translate"
               />
             </div>
             <div class="dataTable-search d-flex align-items-center">
@@ -23,7 +23,7 @@
                 (click)="openLg(content)"
               >
                 <i class="me-2 d-flex" antIcon type="plus" theme="outline"></i>
-                <span>Προσθήκη Πελάτη</span>
+                <span>{{ 'Add Customer' | translate }}</span>
               </a>
               <a href="javascript:">
                 <i class="ms-3 f-24 text-muted" antIcon type="download" theme="outline"></i>
@@ -36,12 +36,12 @@
                 <tr>
                   <th><input class="form-check-input" type="checkbox" /></th>
                   <th>#</th>
-                  <th>Πληροφορίες Χρήστη</th>
-                  <th>Επικοινωνία</th>
-                  <th class="text-center">Παραγγελίες</th>
-                  <th>Συνολικό Ποσό</th>
-                  <th>Κατάσταση</th>
-                  <th class="text-center">Ενέργειες</th>
+                  <th>{{ 'User Information' | translate }}</th>
+                  <th>{{ 'Communication' | translate }}</th>
+                  <th class="text-center">{{ 'Orders' | translate }}</th>
+                  <th>{{ 'Total Amount' | translate }}</th>
+                  <th>{{ 'Status' | translate }}</th>
+                  <th class="text-center">{{ 'Actions' | translate }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -68,13 +68,29 @@
                       <ngb-highlight [result]="customer.spent" [term]="service.searchTerm"></ngb-highlight>
                     </td>
                     <td>
-                      <ngb-highlight [result]="customer.status" [term]="service.searchTerm" class="badge {{ customer.status_type }} rounded-pill f-12"></ngb-highlight>
+                      <ngb-highlight
+                        [result]="customer.status"
+                        [term]="service.searchTerm"
+                        class="badge {{ customer.status_type }} rounded-pill f-12"
+                      ></ngb-highlight>
                     </td>
                     <td class="text-center">
                       <ul class="list-inline me-auto mb-0">
-                        <li class="list-inline-item"><a title="Προβολή" (click)="openCustomer(details)"><i class="f-18 text-secondary" antIcon type="eye" theme="outline"></i></a></li>
-                        <li class="list-inline-item"><a title="Επεξεργασία" (click)="openLg(content)"><i class="f-18 text-primary" antIcon type="edit" theme="outline"></i></a></li>
-                        <li class="list-inline-item"><a title="Διαγραφή" (click)="service.deleteCustomer(customer.id)"><i class="f-18 text-danger" antIcon type="delete" theme="outline"></i></a></li>
+                        <li class="list-inline-item">
+                          <a [title]="'Projection' | translate" (click)="openCustomer(details)">
+                            <i class="f-18 text-secondary" antIcon type="eye" theme="outline"></i>
+                          </a>
+                        </li>
+                        <li class="list-inline-item">
+                          <a [title]="'Processing' | translate" (click)="openLg(content)">
+                            <i class="f-18 text-primary" antIcon type="edit" theme="outline"></i>
+                          </a>
+                        </li>
+                        <li class="list-inline-item">
+                          <a [title]="'Delete' | translate" (click)="service.deleteCustomer(customer.id)">
+                            <i class="f-18 text-danger" antIcon type="delete" theme="outline"></i>
+                          </a>
+                        </li>
                       </ul>
                     </td>
                   </tr>
@@ -84,9 +100,9 @@
           </div>
           <div class="d-sm-flex justify-content-between p-3">
             <select class="form-select" [(ngModel)]="service.pageSize">
-              <option [ngValue]="5">5 ανά σελίδα</option>
-              <option [ngValue]="10">10 ανά σελίδα</option>
-              <option [ngValue]="15">15 ανά σελίδα</option>
+              <option [ngValue]="5">{{ '5 per page' | translate }}</option>
+              <option [ngValue]="10">{{ '10 per page' | translate }}</option>
+              <option [ngValue]="15">{{ '15 per page' | translate }}</option>
             </select>
             <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="service.page" [pageSize]="service.pageSize"></ngb-pagination>
           </div>
@@ -99,11 +115,11 @@
 <!-- Modal Λεπτομέρειες Πελάτη -->
 <ng-template #details let-modal>
   <div class="modal-header justify-content-between">
-    <h5 class="mb-0">Λεπτομέρειες Πελάτη</h5>
+    <h5 class="mb-0">{{ 'Customer Details' | translate }}</h5>
     <a (click)="modal.close('Close click')"><i class="f-20 text-danger" antIcon type="close" theme="outline"></i></a>
   </div>
   <div class="modal-body">
-    <h5>Προσωπικές Πληροφορίες</h5>
+    <h5>{{ 'Personal Information' | translate }}</h5>
     <!-- Σώμα modal -- Δεδομένα -->
   </div>
 </ng-template>
@@ -111,30 +127,30 @@
 <!-- Modal Επεξεργασία Πελάτη -->
 <ng-template #content let-modal>
   <div class="modal-header justify-content-between">
-    <h5 class="modal-title">Επεξεργασία Πελάτη</h5>
+    <h5 class="modal-title">{{ 'Edit Customer' | translate }}</h5>
     <button class="btn-close" (click)="modal.close('Close click')"></button>
   </div>
   <div class="modal-body">
-    <label>Όνομα Πελάτη</label>
-    <input type="text" class="form-control" placeholder="Όνομα" />
-    <label>Τηλέφωνο</label>
-    <input type="number" class="form-control" placeholder="Τηλέφωνο" />
-    <label>Κατάσταση</label>
+    <label>{{ 'Customer Name' | translate }}</label>
+    <input type="text" class="form-control" [placeholder]="'Name' | translate" />
+    <label>{{ 'Telephone' | translate }}</label>
+    <input type="number" class="form-control" [placeholder]="'Telephone' | translate" />
+    <label>{{ 'Status' | translate }}</label>
     <select class="form-select">
-      <option>Επιλέξτε Κατάσταση</option>
-      <option>Πολύπλοκο</option>
-      <option>Ελεύθερος</option>
-      <option>Σε Σχέση</option>
+      <option>{{ 'Select Status' | translate }}</option>
+      <option>{{ 'Complicated' | translate }}</option>
+      <option>{{ 'Free' | translate }}</option>
+      <option>{{ 'In Relationship' | translate }}</option>
     </select>
-    <label>Σύνολο Παραγγελιών</label>
-    <input type="number" class="form-control" placeholder="Παραγγελίες" />
-    <label>Συνολικό Ποσό</label>
-    <input type="number" class="form-control" placeholder="Ποσό" />
-    <label>Διεύθυνση</label>
-    <textarea class="form-control" rows="3" placeholder="Διεύθυνση"></textarea>
+    <label>{{ 'Total Orders' | translate }}</label>
+    <input type="number" class="form-control" [placeholder]="'Orders' | translate" />
+    <label>{{ 'Total Amount' | translate }}</label>
+    <input type="number" class="form-control" [placeholder]="'Amount' | translate" />
+    <label>{{ 'Address' | translate }}</label>
+    <textarea class="form-control" rows="3" [placeholder]="'Address' | translate"></textarea>
   </div>
   <div class="modal-footer justify-content-between">
-    <button type="button" class="btn btn-link-danger" (click)="modal.close('Close click')">Άκυρο</button>
-    <button type="button" class="btn btn-primary" (click)="modal.close('Close click')">Αποθήκευση</button>
+    <button type="button" class="btn btn-link-danger" (click)="modal.close('Close click')">{{ 'Invalid' | translate }}</button>
+    <button type="button" class="btn btn-primary" (click)="modal.close('Close click')">{{ 'Save' | translate }}</button>
   </div>
 </ng-template>

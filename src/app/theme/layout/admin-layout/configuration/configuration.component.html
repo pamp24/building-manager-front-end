@@ -1,7 +1,7 @@
 <div class="menu-styler">
   <div class="style-block">
     <div class="customize-header bg-primary align-items-center">
-      <h5 class="offcanvas-title text-white">Theme Customization</h5>
+      <h5 class="offcanvas-title text-white">{{ 'Theme Customization' | translate }}</h5>
       <a href="javascript:" class="wid-30 hei-30 d-flex align-items-center justify-content-center" (click)="this.Customize.emit()">
         <i class="f-18 d-flex align-items-centert text-white" antIcon type="close-circle" theme="outline"></i>
       </a>
@@ -21,8 +21,8 @@
                 </div>
               </div>
               <div class="flex-grow-1 ms-3">
-                <h6 class="mb-1">Επιλογή Θέματος</h6>
-                <span class="f-12">Επιλέξτε ανάμεσα σε φωτεινό ή σκούρο θέμα</span>
+                <h6 class="mb-1">{{ 'Topic Selection' | translate }}</h6>
+                <span class="f-12">{{ 'Choose between light or dark theme' | translate }}</span>
               </div>
               <i class="ti ti-chevron-down"></i>
             </div>
@@ -35,20 +35,20 @@
                   [ngClass]="{ active: layoutType === false }"
                   (click)="setDarkLayout(false)"
                   data-value="light"
-                  ngbTooltip="Default Layout"
+                  [ngbTooltip]="'Default Layout' | translate"
                 >
                   <span><img src="assets/images/customization/default.svg" alt="img" /></span>
-                  <span>Φωτεινό</span>
+                  <span>{{ 'Bright' | translate }}</span>
                 </a>
                 <a
                   href="javascript:"
                   [ngClass]="{ active: layoutType === true }"
                   (click)="setDarkLayout(true)"
                   data-value="dark"
-                  ngbTooltip="Dark"
+                  [ngbTooltip]="'Dark' | translate"
                 >
                   <span><img src="assets/images/customization/dark.svg" alt="img" /></span>
-                  <span>Σκούρο</span>
+                  <span>{{ 'Dark' | translate }}</span>
                 </a>
               </div>
             </div>

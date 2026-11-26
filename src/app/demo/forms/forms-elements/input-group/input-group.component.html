@@ -4,31 +4,31 @@
   <div class="col-md-6">
     <div class="card">
       <div class="card-header">
-        <h5>Basic example</h5>
+        <h5>{{ 'Basic example' | translate }}</h5>
       </div>
       <div class="card-body">
         <div class="alert alert-primary">
           <div class="media align-items-center">
             <i class="feather icon-alert-circle h2"></i>
             <div class="media-body ms-3">
-              Place one add-on or button on either side of an input. You may also place one on both sides of an input.
+              {{ 'Place one add-on or button on either side of an input. You may also place one on both sides of an input.' | translate }}
             </div>
           </div>
         </div>
         <div class="form-group">
           <div class="input-group">
             <span class="input-group-text">&#64;</span>
-            <input type="text" class="form-control" placeholder="Username" />
+            <input type="text" class="form-control" [placeholder]="'Username' | translate" />
           </div>
         </div>
         <div class="form-group">
           <div class="input-group">
-            <input type="text" class="form-control" placeholder="Recipient's username" />
-            <span class="input-group-text">&#64;example.com</span>
+            <input type="text" class="form-control" [placeholder]="'Recipient\'s username' | translate" />
+            <span class="input-group-text">{{ '@example.com' | translate }}</span>
           </div>
         </div>
         <div class="form-group">
-          <label class="form-label" for="basic-url">Your vanity URL</label>
+          <label class="form-label" for="basic-url">{{ 'Your vanity URL' | translate }}</label>
           <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon3">https://example.com/users/</span>
             <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" />
@@ -37,185 +37,219 @@
         <div class="form-group">
           <div class="input-group">
             <span class="input-group-text">$</span>
-            <input type="text" class="form-control" placeholder="Rate" aria-label="Amount (to the nearest dollar)" />
+            <input
+              type="text"
+              class="form-control"
+              [placeholder]="'Rate' | translate"
+              [attr.aria-label]="'Amount (to the nearest dollar)' | translate"
+            />
             <span class="input-group-text">.00</span>
           </div>
         </div>
         <div class="form-group">
-          <label class="form-label" for="example=textarea">With textarea</label>
+          <label class="form-label" for="example=textarea">{{ 'With textarea' | translate }}</label>
           <div class="input-group">
-            <span class="input-group-text">With textarea</span>
-            <textarea class="form-control" aria-label="With textarea" id="example-textarea"></textarea>
+            <span class="input-group-text">{{ 'With textarea' | translate }}</span>
+            <textarea class="form-control" [attr.aria-label]="'With textarea' | translate" id="example-textarea"></textarea>
           </div>
         </div>
         <hr />
         <div class="form-group">
-          <label for="multiple-addons">Multiple Addons</label>
+          <label for="multiple-addons">{{ 'Multiple Addons' | translate }}</label>
           <div class="input-group mb-3">
             <span class="input-group-text">$</span>
             <span class="input-group-text">0.00</span>
-            <input type="text" class="form-control" id="multiple-addons" aria-label="Amount (to the nearest dollar)" />
+            <input type="text" class="form-control" id="multiple-addons" [attr.aria-label]="'Amount (to the nearest dollar)' | translate" />
           </div>
           <div class="input-group">
-            <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" />
+            <input type="text" class="form-control" [attr.aria-label]="'Amount (to the nearest dollar)' | translate" />
             <span class="input-group-text">$</span>
             <span class="input-group-text">0.00</span>
           </div>
         </div>
         <div class="form-group mb-0">
-          <label for="multiple-inputs">Multiple Inputs</label>
+          <label for="multiple-inputs">{{ 'Multiple Inputs' | translate }}</label>
           <div class="input-group">
-            <span class="input-group-text">First and last name</span>
-            <input type="text" id="multiple-inputs" aria-label="First name" class="form-control" />
-            <input type="text" aria-label="Last name" class="form-control" />
+            <span class="input-group-text">{{ 'First and last name' | translate }}</span>
+            <input type="text" id="multiple-inputs" [attr.aria-label]="'First name' | translate" class="form-control" />
+            <input type="text" [attr.aria-label]="'Last name' | translate" class="form-control" />
           </div>
         </div>
       </div>
       <div class="card-footer">
-        <button class="btn btn-primary me-2">Submit</button>
-        <button class="btn btn-light">Reset</button>
+        <button class="btn btn-primary me-2">{{ 'Submit' | translate }}</button>
+        <button class="btn btn-light">{{ 'Reset' | translate }}</button>
       </div>
     </div>
     <div class="card">
       <div class="card-header">
-        <h5>Input Group Sizing</h5>
+        <h5>{{ 'Input Group Sizing' | translate }}</h5>
       </div>
       <div class="card-body">
         <div class="alert alert-primary">
           <div class="media align-items-center">
             <i class="feather icon-alert-circle h2"></i>
             <div class="media-body ms-3">
-              Add sizing class
-              <code>.input-group-sm, .input-group-lg</code>
+              {{ 'Add sizing class' | translate }}
+              <code>{{ '.input-group-sm, .input-group-lg' | translate }}</code>
             </div>
           </div>
         </div>
         <div class="form-group">
           <div class="input-group input-group-sm">
-            <span class="input-group-text">Small</span>
-            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" />
+            <span class="input-group-text">{{ 'Small' | translate }}</span>
+            <input
+              type="text"
+              class="form-control"
+              [attr.aria-label]="'Sizing example input' | translate"
+              aria-describedby="inputGroup-sizing-sm"
+            />
           </div>
         </div>
         <div class="form-group">
           <div class="input-group">
-            <span class="input-group-text">Default</span>
-            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+            <span class="input-group-text">{{ 'Default' | translate }}</span>
+            <input
+              type="text"
+              class="form-control"
+              [attr.aria-label]="'Sizing example input' | translate"
+              aria-describedby="inputGroup-sizing-default"
+            />
           </div>
         </div>
         <div class="form-group mb-0">
           <div class="input-group input-group-lg">
-            <span class="input-group-text">Large</span>
-            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" />
+            <span class="input-group-text">{{ 'Large' | translate }}</span>
+            <input
+              type="text"
+              class="form-control"
+              [attr.aria-label]="'Sizing example input' | translate"
+              aria-describedby="inputGroup-sizing-lg"
+            />
           </div>
         </div>
       </div>
       <div class="card-footer">
-        <button class="btn btn-primary me-2">Submit</button>
-        <button class="btn btn-secondary">Cancel</button>
+        <button class="btn btn-primary me-2">{{ 'Submit' | translate }}</button>
+        <button class="btn btn-secondary">{{ 'Cancel' | translate }}</button>
       </div>
     </div>
   </div>
   <div class="col-md-6">
     <div class="card">
       <div class="card-header">
-        <h5>Input Group Options</h5>
+        <h5>{{ 'Input Group Options' | translate }}</h5>
       </div>
       <div class="card-body">
         <div class="alert alert-primary">
           <div class="media align-items-center">
             <i class="feather icon-alert-circle h2"></i>
             <div class="media-body ms-3">
-              Input Group with more options like Button, Button with Dropdown, Colors, Checkbox & with Radio
+              {{ 'Input Group with more options like Button, Button with Dropdown, Colors, Checkbox &amp; with Radio' | translate }}
             </div>
           </div>
         </div>
         <div class="form-group">
-          <label class="form-label">With Button</label>
+          <label class="form-label">{{ 'With Button' | translate }}</label>
           <div class="input-group">
-            <button class="btn btn-outline-secondary" type="button">Button</button>
-            <input type="text" class="form-control" placeholder="Left Button" />
+            <button class="btn btn-outline-secondary" type="button">{{ 'Button' | translate }}</button>
+            <input type="text" class="form-control" [placeholder]="'Left Button' | translate" />
           </div>
         </div>
         <div class="form-group">
           <div class="input-group">
-            <input type="text" class="form-control" placeholder="Right Button" />
-            <button class="btn btn-outline-secondary" type="button">Button</button>
+            <input type="text" class="form-control" [placeholder]="'Right Button' | translate" />
+            <button class="btn btn-outline-secondary" type="button">{{ 'Button' | translate }}</button>
           </div>
         </div>
         <div class="form-group">
           <div class="input-group">
-            <button class="btn btn-outline-secondary" type="button">Button</button>
-            <input type="text" class="form-control" placeholder="Left & Right Button" />
-            <button class="btn btn-outline-secondary" type="button">Button</button>
+            <button class="btn btn-outline-secondary" type="button">{{ 'Button' | translate }}</button>
+            <input type="text" class="form-control" [placeholder]="'Left &amp; Right Button' | translate" />
+            <button class="btn btn-outline-secondary" type="button">{{ 'Button' | translate }}</button>
           </div>
         </div>
         <hr />
         <div class="form-group">
-          <label class="form-label">Button with Dropdown</label>
+          <label class="form-label">{{ 'Button with Dropdown' | translate }}</label>
           <div class="input-group" ngbDropdown>
-            <button type="button" class="btn btn-secondary dropdown-toggle" ngbDropdownToggle>Dropdown</button>
+            <button type="button" class="btn btn-secondary dropdown-toggle" ngbDropdownToggle>
+              {{ 'Dropdown' | translate }}
+            </button>
             <div class="dropdown-menu" ngbDropdownMenu>
-              <a class="dropdown-item" href="javascript:">Action</a>
-              <a class="dropdown-item" href="javascript:">Another action</a>
-              <a class="dropdown-item" href="javascript:">Something else here</a>
+              <a class="dropdown-item" href="javascript:">{{ 'Action' | translate }}</a>
+              <a class="dropdown-item" href="javascript:">{{ 'Another action' | translate }}</a>
+              <a class="dropdown-item" href="javascript:">{{ 'Something else here' | translate }}</a>
               <div role="separator" class="dropdown-divider"></div>
-              <a class="dropdown-item" href="javascript:">Separated link</a>
+              <a class="dropdown-item" href="javascript:">{{ 'Separated link' | translate }}</a>
             </div>
-            <input type="text" class="form-control" placeholder="Left Dropdown" />
+            <input type="text" class="form-control" [placeholder]="'Left Dropdown' | translate" />
           </div>
         </div>
         <div class="form-group">
           <div class="input-group" ngbDropdown>
-            <input type="text" class="form-control" placeholder="Right Dropdown" />
-            <button type="button" class="btn btn-secondary dropdown-toggle" ngbDropdownToggle>Dropdown</button>
+            <input type="text" class="form-control" [placeholder]="'Right Dropdown' | translate" />
+            <button type="button" class="btn btn-secondary dropdown-toggle" ngbDropdownToggle>
+              {{ 'Dropdown' | translate }}
+            </button>
             <div class="dropdown-menu" ngbDropdownMenu>
-              <a class="dropdown-item" href="javascript:">Action</a>
-              <a class="dropdown-item" href="javascript:">Another action</a>
-              <a class="dropdown-item" href="javascript:">Something else here</a>
+              <a class="dropdown-item" href="javascript:">{{ 'Action' | translate }}</a>
+              <a class="dropdown-item" href="javascript:">{{ 'Another action' | translate }}</a>
+              <a class="dropdown-item" href="javascript:">{{ 'Something else here' | translate }}</a>
               <div role="separator" class="dropdown-divider"></div>
-              <a class="dropdown-item" href="javascript:">Separated link</a>
+              <a class="dropdown-item" href="javascript:">{{ 'Separated link' | translate }}</a>
             </div>
           </div>
         </div>
         <div class="form-group">
-          <label class="form-label">Color variants with Icons</label>
+          <label class="form-label">{{ 'Color variants with Icons' | translate }}</label>
           <div class="input-group">
             <button class="btn btn-outline-primary" type="color">
               <i class="feather icon-aperture"></i>
-              Outline color
+              {{ 'Outline color' | translate }}
             </button>
-            <input type="text" class="form-control" placeholder="Left Button" />
+            <input type="text" class="form-control" [placeholder]="'Left Button' | translate" />
           </div>
         </div>
         <div class="form-group">
           <div class="input-group">
-            <input type="text" class="form-control" placeholder="Right Button" />
+            <input type="text" class="form-control" [placeholder]="'Right Button' | translate" />
             <button class="btn btn-success" type="color">
               <i class="feather icon-download-cloud"></i>
-              Fill color
+              {{ 'Fill color' | translate }}
             </button>
           </div>
         </div>
         <hr />
         <div class="form-group">
-          <label class="form-label">Checkbox & Radio</label>
+          <label class="form-label">{{ 'Checkbox &amp; Radio' | translate }}</label>
           <div class="input-group mb-3">
             <div class="input-group-text">
-              <input class="form-check-input" type="checkbox" value="" aria-label="Checkbox for following text input" />
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value=""
+                [attr.aria-label]="'Checkbox for following text input' | translate"
+              />
             </div>
-            <input type="text" class="form-control" aria-label="Text input with checkbox" />
+            <input type="text" class="form-control" [attr.aria-label]="'Text input with checkbox' | translate" />
           </div>
           <div class="input-group">
             <div class="input-group-text">
-              <input class="form-check-input" type="radio" value="" aria-label="Radio button for following text input" />
+              <input
+                class="form-check-input"
+                type="radio"
+                value=""
+                [attr.aria-label]="'Radio button for following text input' | translate"
+              />
             </div>
-            <input type="text" class="form-control" aria-label="Text input with radio button" />
+            <input type="text" class="form-control" [attr.aria-label]="'Text input with radio button' | translate" />
           </div>
         </div>
       </div>
       <div class="card-footer">
-        <button class="btn btn-primary me-2">Submit</button>
-        <button type="reset" class="btn btn-light">Reset</button>
+        <button class="btn btn-primary me-2">{{ 'Submit' | translate }}</button>
+        <button type="reset" class="btn btn-light">{{ 'Reset' | translate }}</button>
       </div>
     </div>
   </div>

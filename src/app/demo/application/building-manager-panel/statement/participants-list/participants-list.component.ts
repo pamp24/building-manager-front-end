@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // angular import
 import { Component, inject } from '@angular/core';
 
@@ -10,11 +11,13 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 
 @Component({
   selector: 'app-participants-list',
-  imports: [SharedModule,],
+  imports: [SharedModule],
   templateUrl: './participants-list.component.html',
   styleUrl: './participants-list.component.scss'
 })
 export class ParticipantsListComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private iconService = inject(IconService);
 
   // constructor
@@ -25,7 +28,7 @@ export class ParticipantsListComponent {
   // public method
   widgetCards = [
     {
-      title: 'Πληρώθηκαν',
+      title: this.uiLocale.text('They were paid'),
       isLoss: false,
       value: '$7,825',
       percentage: 70.5,
@@ -35,7 +38,7 @@ export class ParticipantsListComponent {
       colors: ['#52c41a']
     },
     {
-      title: 'Εκκρεμεί',
+      title: this.uiLocale.text('It is pending'),
       isLoss: true,
       value: '$1,880',
       percentage: 27.4,
@@ -45,7 +48,7 @@ export class ParticipantsListComponent {
       colors: ['#faad14']
     },
     {
-      title: 'Έληξαν',
+      title: this.uiLocale.text('They are over'),
       isLoss: true,
       value: '$3,507',
       percentage: 27.4,

@@ -1,6 +1,9 @@
+<div *ngIf="!buildingId" class="alert alert-info" role="status">
+  {{ 'There is no apartment building data for the dashboard.' | translate }}
+</div>
 <div class="row">
-  <div class="col-12" *ngIf="showBuildingSelector">
-    <app-card cardTitle="Επιλογή Πολυκατοικίας" [padding]="24">
+  <div class="col-12" *ngIf="showBuildingSelector && !hasInputBuildingId">
+    <app-card [cardTitle]="'Choice of Apartment Building' | translate" [padding]="24">
       <app-building-selector (buildingSelected)="onBuildingSelected($event)"></app-building-selector>
     </app-card>
   </div>
@@ -18,20 +21,22 @@
   </div>
 
   <div class="col-sm-12">
-    <app-card [cardTitle]="'Πληρωμές Χρηστών για Παραστατικό'" [padding]="0">
+    <app-card [cardTitle]="'User Payments for Document' | translate" [padding]="0">
       <ng-template #headerOptionsTemplate>
-        <button class="btn btn-sm btn-link-primary" (click)="goToInvoiceList()">Περισσότερα</button>
+        <button class="btn btn-sm btn-link-primary" (click)="goToInvoiceList()">{{ 'More' | translate }}</button>
       </ng-template>
 
       <!--Dropdown παραστατικού -->
       <div class="d-flex align-items-center justify-content-start ms-3 mt-3 mb-3">
-        <label for="statementSelect" class="me-2 fw-semibold">Παραστατικό:</label>
+        <label for="statementSelect" class="me-2 fw-semibold">{{ 'Document:' | translate }}</label>
         <select
           id="statementSelect"
           class="form-select form-select-sm w-auto"
+          [disabled]="!statements.length"
           [(ngModel)]="selectedStatementId"
           (change)="onStatementChange()"
         >
+          <option *ngIf="!statements.length" [ngValue]="undefined">{{ 'There are no documents' | translate }}</option>
           <option *ngFor="let s of statements" [value]="s.id">{{ s.code }} ({{ s.startDate | date: 'MMM yyyy' }})</option>
         </select>
       </div>
@@ -47,19 +52,22 @@
   </div>
 
   <div class="col-md-6 col-xl-4">
-    <app-card cardTitle="Πρόσφατες Πληρωμές" [padding]="0">
+    <app-card [cardTitle]="'Recent Payments' | translate" [padding]="0">
       <app-recent-payments [recentPayments]="recentPayments"></app-recent-payments>
     </app-card>
   </div>
 
-  <div class="col-md-6 col-xl-4" *ngIf="currentBuilding">
-    <app-total-expenses-chart *ngIf="currentBuilding" [buildingId]="buildingId" [attr.key]="buildingId"></app-total-expenses-chart>
+  <div class="col-md-6 col-xl-4">
+    <app-total-expenses-chart [buildingId]="buildingId" [attr.key]="buildingId"></app-total-expenses-chart>
   </div>
 
   <div class="col-sm-12 col-xl-4">
-    <app-card cardTitle="Ανακοινώσεις" [padding]="0">
+    <app-card [cardTitle]="'Announcements' | translate" [padding]="0">
       <ng-template #headerOptionsTemplate></ng-template>
       <ul class="list-group list-group-flush border-top-0 list-scroll-10">
+        <li *ngIf="!announcements.length" class="list-group-item border-0 text-center text-muted py-4">
+          {{ 'There are no announcements.' | translate }}
+        </li>
         <li class="list-group-item border-0" *ngFor="let ann of announcements">
           <div>
             <strong>{{ ann.title }}</strong>
@@ -70,35 +78,40 @@
         </li>
         <li class="list-group-item border-0">
           <div class="d-grid">
-            <button class="btn btn-outline-secondary" (click)="goToAllAnnouncements()">Προβολή Όλων</button>
+            <button class="btn btn-outline-secondary" (click)="goToAllAnnouncements()">{{ 'View All' | translate }}</button>
           </div>
         </li>
       </ul>
     </app-card>
   </div>
 
-  <div class="col-12 mt-4" *ngIf="currentBuilding">
-    <app-card cardTitle="Ψηφοφορίες Κτιρίου" [padding]="0">
+  <div class="col-12 mt-4">
+    <app-card [cardTitle]="'Building Votes' | translate" [padding]="0">
       <!-- Κουμπί στον τίτλο (δεξιά) -->
       <ng-template #headerOptionsTemplate>
-        <button class="btn btn-sm btn-primary" (click)="onCreatePoll()">+ Νέα Ψηφοφορία</button>
+        <button class="btn btn-sm btn-primary" [disabled]="!buildingId" (click)="onCreatePoll()">
+          {{ '+ New Poll' | translate }}
+        </button>
       </ng-template>
 
       <div class="card-body p-0 table-scroll-10">
         <table class="table table-hover mb-0" *ngIf="!loading">
           <thead>
             <tr>
-              <th (click)="onSort('title')" style="cursor: pointer">Τίτλος {{ getSortIcon('title') }}</th>
-              <th (click)="onSort('startDate')" style="cursor: pointer">Έναρξη {{ getSortIcon('startDate') }}</th>
-              <th (click)="onSort('endDate')" style="cursor: pointer">Λήξη {{ getSortIcon('endDate') }}</th>
-              <th (click)="onSort('active')" style="cursor: pointer">Κατάσταση {{ getSortIcon('active') }}</th>
-              <th>Επιλογές</th>
-              <th>Πρώτη Επιλογή</th>
-              <th class="text-center">Ενέργειες</th>
+              <th (click)="onSort('title')" style="cursor: pointer">{{ 'Title' | translate }} {{ getSortIcon('title') }}</th>
+              <th (click)="onSort('startDate')" style="cursor: pointer">{{ 'Start' | translate }} {{ getSortIcon('startDate') }}</th>
+              <th (click)="onSort('endDate')" style="cursor: pointer">{{ 'Expiration' | translate }} {{ getSortIcon('endDate') }}</th>
+              <th (click)="onSort('active')" style="cursor: pointer">{{ 'Status' | translate }} {{ getSortIcon('active') }}</th>
+              <th>{{ 'Options' | translate }}</th>
+              <th>{{ 'First Choice' | translate }}</th>
+              <th class="text-center">{{ 'Actions' | translate }}</th>
             </tr>
           </thead>
 
           <tbody>
+            <tr *ngIf="!polls.length">
+              <td colspan="7" class="text-center text-muted py-4">{{ 'There are no votes.' | translate }}</td>
+            </tr>
             <ng-container *ngFor="let poll of polls">
               <tr>
                 <td>{{ poll.title }}</td>
@@ -112,7 +125,7 @@
                       'bg-secondary': !poll.active
                     }"
                   >
-                    {{ poll.active ? 'Ενεργή' : 'Ανενεργή' }}
+                    {{ poll.active ? ('Active' | translate) : ('Inactive' | translate) }}
                   </span>
                 </td>
                 <td>{{ poll.options?.length || 0 }}</td>
@@ -121,7 +134,7 @@
                   <a
                     href="javascript:"
                     class="avatar avatar-xs btn-link-success"
-                    ngbTooltip="Προβολή Ψηφισάντων"
+                    [ngbTooltip]="'View Voters' | translate"
                     (click)="toggleVotes(poll.id)"
                   >
                     <i
@@ -144,10 +157,10 @@
                     <table class="table table-sm table-striped align-middle mb-0" *ngIf="!votesLoading">
                       <thead>
                         <tr>
-                          <th>Χρήστης</th>
-                          <th>Επιλογή</th>
-                          <th>Περιγραφή</th>
-                          <th>Ημερομηνία Ψήφου</th>
+                          <th>{{ 'User' | translate }}</th>
+                          <th>{{ 'Choice' | translate }}</th>
+                          <th>{{ 'Description' | translate }}</th>
+                          <th>{{ 'Date of Vote' | translate }}</th>
                         </tr>
                       </thead>
 
@@ -155,12 +168,12 @@
                         <tr *ngFor="let v of pollVotes">
                           <td>{{ v?.userFullName }}</td>
                           <td>{{ v?.optionNumber }}</td>
-                          <td>{{ v?.optionText}}</td>
+                          <td>{{ v?.optionText }}</td>
                           <td>{{ v?.voteDate | date: 'dd/MM/yyyy HH:mm' }}</td>
                         </tr>
 
                         <tr *ngIf="!pollVotes?.length">
-                          <td colspan="3" class="text-center text-muted">Δεν υπάρχουν ψήφοι</td>
+                          <td colspan="4" class="text-center text-muted">{{ 'There are no votes' | translate }}</td>
                         </tr>
                       </tbody>
                     </table>

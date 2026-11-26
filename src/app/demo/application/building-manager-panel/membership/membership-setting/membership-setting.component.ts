@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // angular import
 import { Component, inject } from '@angular/core';
 
@@ -15,6 +16,8 @@ import { CopyOutline, EditOutline, RightOutline } from '@ant-design/icons-angula
   styleUrl: './membership-setting.component.scss'
 })
 export class MembershipSettingComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private iconService = inject(IconService);
 
   // constructor
@@ -25,17 +28,17 @@ export class MembershipSettingComponent {
   // public method
   memberPlan = [
     {
-      title: 'Membership Plan',
+      title: this.uiLocale.text('Membership Plan'),
       value: 'Addicted $150',
       more: 'See more Plan'
     },
     {
-      title: 'Manage',
+      title: this.uiLocale.text('Manage'),
       value: 'Membership',
       more: 'Update, Cancel and more'
     },
     {
-      title: 'Renewal Date',
+      title: this.uiLocale.text('Renewal Date'),
       value: '120 November, 2024',
       more: 'View payment method'
     }

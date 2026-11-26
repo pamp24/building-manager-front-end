@@ -1,5 +1,7 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
 
@@ -35,6 +37,8 @@ type ApartmentSelectDTO = ApartmentDTO & {
   styleUrl: './ticket-create.component.scss'
 })
 export class TicketCreateComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   form = this.fb.group({
     buildingId: [null as number | null, Validators.required],
     apartmentId: [null as number | null],
@@ -91,22 +95,22 @@ export class TicketCreateComponent implements OnInit {
 
     if (normalizedRole === 'ADMIN') {
       this.availableTargetRoles = [
-        { value: 'BUILDING_MANAGER', label: 'BUILDING_MANAGER' },
-        { value: 'PROPERTY_MANAGER', label: 'PROPERTY_MANAGER' }
+        { value: 'BUILDING_MANAGER', label: this.uiLocale.text('BUILDING_MANAGER') },
+        { value: 'PROPERTY_MANAGER', label: this.uiLocale.text('PROPERTY_MANAGER') }
       ];
     } else if (normalizedRole === 'PROPERTYMANAGER' || normalizedRole === 'PROPERTY_MANAGER') {
-      this.availableTargetRoles = [{ value: 'ADMIN', label: 'ADMIN' }];
+      this.availableTargetRoles = [{ value: 'ADMIN', label: this.uiLocale.text('ADMIN') }];
     } else if (normalizedRole === 'PROPERTYAGENT' || normalizedRole === 'PROPERTY_AGENT') {
-      this.availableTargetRoles = [{ value: 'PROPERTY_MANAGER', label: 'PROPERTY_MANAGER' }];
+      this.availableTargetRoles = [{ value: 'PROPERTY_MANAGER', label: this.uiLocale.text('PROPERTY_MANAGER') }];
     } else if (normalizedRole === 'BUILDINGMANAGER' || normalizedRole === 'BUILDING_MANAGER') {
       this.availableTargetRoles = [
-        { value: 'PROPERTY_MANAGER', label: 'PROPERTY_MANAGER' },
-        { value: 'ADMIN', label: 'ADMIN' }
+        { value: 'PROPERTY_MANAGER', label: this.uiLocale.text('PROPERTY_MANAGER') },
+        { value: 'ADMIN', label: this.uiLocale.text('ADMIN') }
       ];
     } else if (normalizedRole === 'OWNER' || normalizedRole === 'RESIDENT') {
       this.availableTargetRoles = [
-        { value: 'BUILDING_MANAGER', label: 'BUILDING_MANAGER' },
-        { value: 'PROPERTY_MANAGER', label: 'PROPERTY_MANAGER' }
+        { value: 'BUILDING_MANAGER', label: this.uiLocale.text('BUILDING_MANAGER') },
+        { value: 'PROPERTY_MANAGER', label: this.uiLocale.text('PROPERTY_MANAGER') }
       ];
     } else {
       this.availableTargetRoles = [];
@@ -122,23 +126,23 @@ export class TicketCreateComponent implements OnInit {
   }
 
   priorities: SelectOption<SupportTicketPriority>[] = [
-    { value: 'LOW', label: 'Χαμηλή' },
-    { value: 'MEDIUM', label: 'Μεσαία' },
-    { value: 'HIGH', label: 'Υψηλή' },
-    { value: 'URGENT', label: 'Επείγουσα' }
+    { value: 'LOW', label: this.uiLocale.text('Low') },
+    { value: 'MEDIUM', label: this.uiLocale.text('Medium') },
+    { value: 'HIGH', label: this.uiLocale.text('High') },
+    { value: 'URGENT', label: this.uiLocale.text('Urgent') }
   ];
 
   categories: SelectOption<SupportTicketCategory>[] = [
-    { value: 'MAINTENANCE', label: 'Συντήρηση' },
-    { value: 'PAYMENTS', label: 'Πληρωμές' },
-    { value: 'DOCUMENTS', label: 'Έγγραφα' },
-    { value: 'COMPLAINT', label: 'Παράπονο' },
-    { value: 'CLEANING', label: 'Καθαρισμός' },
-    { value: 'HEATING', label: 'Θέρμανση' },
-    { value: 'ELEVATOR', label: 'Ασανσέρ' },
-    { value: 'PLUMBING', label: 'Υδραυλικά' },
-    { value: 'ELECTRICAL', label: 'Ηλεκτρολογικά' },
-    { value: 'OTHER', label: 'Άλλο' }
+    { value: 'MAINTENANCE', label: this.uiLocale.text('Maintenance') },
+    { value: 'PAYMENTS', label: this.uiLocale.text('Payments') },
+    { value: 'DOCUMENTS', label: this.uiLocale.text('Documents') },
+    { value: 'COMPLAINT', label: this.uiLocale.text('Complaint') },
+    { value: 'CLEANING', label: this.uiLocale.text('Cleaning') },
+    { value: 'HEATING', label: this.uiLocale.text('Heating') },
+    { value: 'ELEVATOR', label: this.uiLocale.text('Elevator') },
+    { value: 'PLUMBING', label: this.uiLocale.text('Plumbing') },
+    { value: 'ELECTRICAL', label: this.uiLocale.text('Electrically') },
+    { value: 'OTHER', label: this.uiLocale.text('Other') }
   ];
 
   loadingBuildings = false;
@@ -167,17 +171,15 @@ export class TicketCreateComponent implements OnInit {
         ? this.buildingService.getAllBuildingsForAdmin()
         : this.buildingService.getMyBuildings();
 
-    buildingsRequest
-      .pipe(finalize(() => (this.loadingBuildings = false)))
-      .subscribe({
-        next: (buildings: BuildingDTO[]) => {
-          this.allBuildings = buildings ?? [];
-          this.applyBuildingFilter();
-        },
-        error: (error) => {
-          this.errorMessage = error?.error?.message || 'Αποτυχία φόρτωσης πολυκατοικιών.';
-        }
-      });
+    buildingsRequest.pipe(finalize(() => (this.loadingBuildings = false))).subscribe({
+      next: (buildings: BuildingDTO[]) => {
+        this.allBuildings = buildings ?? [];
+        this.applyBuildingFilter();
+      },
+      error: (error) => {
+        this.errorMessage = error?.error?.message || this.uiLocale.text('Failed to load apartment blocks.');
+      }
+    });
   }
 
   onTargetRoleChange(targetRole: SupportTicketTargetRole | null): void {
@@ -207,7 +209,7 @@ export class TicketCreateComponent implements OnInit {
           }));
         },
         error: (error) => {
-          this.errorMessage = error?.error?.message || 'Αποτυχία φόρτωσης διαμερισμάτων.';
+          this.errorMessage = error?.error?.message || this.uiLocale.text('Failed to load partitions.');
         }
       });
   }
@@ -319,7 +321,7 @@ export class TicketCreateComponent implements OnInit {
           this.initializeTargetRolesFromUserRole();
         },
         error: (error) => {
-          this.errorMessage = error?.error?.message || 'Αποτυχία δημιουργίας support ticket.';
+          this.errorMessage = error?.error?.message || this.uiLocale.text('Failed to create support ticket.');
         }
       });
   }
@@ -356,10 +358,12 @@ export class TicketCreateComponent implements OnInit {
       floor?: string | number | null;
     };
 
-    const number = apartmentAny.number ?? apartmentAny.apartmentNumber ?? 'Διαμέρισμα';
+    const number = apartmentAny.number ?? apartmentAny.apartmentNumber ?? this.uiLocale.text('Apartment');
     const floor = apartmentAny.floor;
 
-    return floor !== undefined && floor !== null && floor !== '' ? `${number} - Όροφος ${floor}` : `${number}`;
+    return floor !== undefined && floor !== null && floor !== ''
+      ? this.uiLocale.text('{{p0}} - Floor {{p1}}', { p0: number, p1: floor })
+      : `${number}`;
   }
 
   getSelectedRecipientName(): string {

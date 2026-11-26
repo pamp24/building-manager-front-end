@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -28,6 +29,8 @@ import { Observable } from 'rxjs';
   styleUrl: './statement-list.component.scss'
 })
 export class StatementListComponent implements OnInit, OnChanges {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private iconService = inject(IconService);
   @ViewChild('nav', { static: false }) nav?: NgbNav;
   @Input() buildingId?: number;
@@ -74,7 +77,9 @@ export class StatementListComponent implements OnInit, OnChanges {
     if (currentUser) {
       const parsed = JSON.parse(currentUser);
       this.currentUserRole = parsed.role ?? null;
-      this.isManagementRole = ['Admin', 'BuildingManager', 'PropertyManager', 'PropertyAgent', 'AdminAgent'].includes(this.currentUserRole ?? '');
+      this.isManagementRole = ['Admin', 'BuildingManager', 'PropertyManager', 'PropertyAgent', 'AdminAgent'].includes(
+        this.currentUserRole ?? ''
+      );
     }
 
     this.apartmentService.getMyApartments().subscribe({
@@ -126,11 +131,12 @@ export class StatementListComponent implements OnInit, OnChanges {
   }
 
   private loadAccessibleBuildings(): void {
-    const load$: Observable<(BuildingDTO | ManagedBuildingDTO)[]> = this.currentUserRole === 'PropertyManager' || this.currentUserRole === 'AdminAgent'
-      ? this.buildingService.getMyCompanyBuildings()
-      : this.currentUserRole === 'PropertyAgent' || !this.isManagementRole
-        ? this.buildingService.getMyBuildings()
-        : this.buildingService.getMyManagedBuildings();
+    const load$: Observable<(BuildingDTO | ManagedBuildingDTO)[]> =
+      this.currentUserRole === 'PropertyManager' || this.currentUserRole === 'AdminAgent'
+        ? this.buildingService.getMyCompanyBuildings()
+        : this.currentUserRole === 'PropertyAgent' || !this.isManagementRole
+          ? this.buildingService.getMyBuildings()
+          : this.buildingService.getMyManagedBuildings();
 
     load$.subscribe({
       next: (buildings: (BuildingDTO | ManagedBuildingDTO)[]) => {
@@ -250,9 +256,9 @@ export class StatementListComponent implements OnInit, OnChanges {
 
     this.widgetCards = [
       {
-        title: 'Πληρώθηκαν',
+        title: this.uiLocale.text('They were paid'),
         isLoss: false,
-        value: `${totalPaid.toLocaleString('el-GR')} €`,
+        value: `${totalPaid.toLocaleString(this.uiLocale.locale)} €`,
         percentage: grandTotal ? ((totalPaid / grandTotal) * 100).toFixed(1) : 0,
         color: 'text-success',
         statement: this.paidStatements.length,
@@ -261,9 +267,9 @@ export class StatementListComponent implements OnInit, OnChanges {
         colors: ['#52c41a']
       },
       {
-        title: 'Τρέχοντα',
+        title: this.uiLocale.text('Current'),
         isLoss: true,
-        value: `${totalPending.toLocaleString('el-GR')} €`,
+        value: `${totalPending.toLocaleString(this.uiLocale.locale)} €`,
         percentage: grandTotal ? ((totalPending / grandTotal) * 100).toFixed(1) : 0,
         color: 'text-warning',
         statement: this.pendingStatements.length,
@@ -272,9 +278,9 @@ export class StatementListComponent implements OnInit, OnChanges {
         colors: ['#faad14']
       },
       {
-        title: 'Έληξαν',
+        title: this.uiLocale.text('They are over'),
         isLoss: true,
-        value: `${totalOverdue.toLocaleString('el-GR')} €`,
+        value: `${totalOverdue.toLocaleString(this.uiLocale.locale)} €`,
         percentage: grandTotal ? ((totalOverdue / grandTotal) * 100).toFixed(1) : 0,
         color: 'text-danger',
         statement: this.expiredStatements.length,
@@ -288,15 +294,15 @@ export class StatementListComponent implements OnInit, OnChanges {
   translateStatus(status: string | undefined): string {
     switch (status) {
       case 'PAID':
-        return 'Πληρώθηκε';
+        return this.uiLocale.text('It was paid');
       case 'ISSUED':
-        return 'Τρέχων';
+        return this.uiLocale.text('Current');
       case 'EXPIRED':
-        return 'Έληξε';
+        return this.uiLocale.text("It's over");
       case 'CLOSED':
-        return 'Ακυρώθηκε';
+        return this.uiLocale.text('Canceled');
       case 'DRAFT':
-        return 'Πρόχειρο';
+        return this.uiLocale.text('Draft');
       default:
         return status ?? '';
     }

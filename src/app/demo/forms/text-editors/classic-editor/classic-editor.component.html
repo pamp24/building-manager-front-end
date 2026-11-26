@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-sm-12">
-    <app-card cardTitle="text-editor">
+    <app-card [cardTitle]="'text-editor' | translate">
       <form [formGroup]="form">
         <div class="editor">
           <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"></ngx-editor-menu>

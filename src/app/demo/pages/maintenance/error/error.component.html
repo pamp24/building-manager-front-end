@@ -9,12 +9,15 @@
               <img class="img-fluid img-twocone" src="assets/images/pages/TwoCone.png" alt="twoCone img" />
             </div>
             <div class="text-center">
-              <h1 class="mt-5"><b>Η Σελίδα Δεν Βρέθηκε</b></h1>
+              <h1 class="mt-5">
+                <b>{{ 'Page Not Found' | translate }}</b>
+              </h1>
               <p class="mt-2 mb-4 text-muted">
-                Η σελίδα που αναζητάτε έχει μετακινηθεί, διαγραφεί,<br />
-                μετονομαστεί ή μπορεί να μην υπάρχει ποτέ!
+                {{ 'The page you are looking for has been moved, deleted,' | translate }}
+                <br />
+                {{ 'be renamed or it may never exist!' | translate }}
               </p>
-              <a [routerLink]="['/dashboard/default']" type="button" class="btn btn-primary mb-3">Επιστροφή στην αρχική</a>
+              <a [routerLink]="['/dashboard/default']" type="button" class="btn btn-primary mb-3">{{ 'Return to original' | translate }}</a>
             </div>
           </div>
         </div>

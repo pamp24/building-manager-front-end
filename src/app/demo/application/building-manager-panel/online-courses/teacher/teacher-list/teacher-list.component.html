@@ -3,12 +3,14 @@
   <div class="col-sm-12">
     <div class="card table-card">
       <div class="card-header d-sm-flex justify-content-between align-items-center">
-        <h5 class="mb-3 mb-sm-0">Teacher List</h5>
+        <h5 class="mb-3 mb-sm-0">{{ 'Teacher List' | translate }}</h5>
         <div class="d-flex align-items-center justify-content-between gap-2 flex-wrap">
-          <a [routerLink]="['/online-course/teacher/apply']" class="btn btn-outline-secondary me-2">Apply Teacher List</a>
+          <a [routerLink]="['/online-course/teacher/apply']" class="btn btn-outline-secondary me-2">
+            {{ 'Apply Teacher List' | translate }}
+          </a>
           <a [routerLink]="['/online-course/teacher/add']" class="btn btn-primary d-inline-flex align-items-center">
             <i class="me-2 d-flex" antIcon type="plus" theme="outline"></i>
-            <span>Add Teacher</span>
+            <span>{{ 'Add Teacher' | translate }}</span>
           </a>
         </div>
       </div>
@@ -16,10 +18,16 @@
         <form class="">
           <div class="dataTable-top">
             <div class="dataTable-dropdown">
-              <select class="form-select" title="select item per page" style="width: auto" name="pageSize" [(ngModel)]="service.pageSize">
-                <option [ngValue]="5">5 items per page</option>
-                <option [ngValue]="10">10 items per page</option>
-                <option [ngValue]="15">15 items per page</option>
+              <select
+                class="form-select"
+                [title]="'select item per page' | translate"
+                style="width: auto"
+                name="pageSize"
+                [(ngModel)]="service.pageSize"
+              >
+                <option [ngValue]="5">{{ '5 items per page' | translate }}</option>
+                <option [ngValue]="10">{{ '10 items per page' | translate }}</option>
+                <option [ngValue]="15">{{ '15 items per page' | translate }}</option>
               </select>
             </div>
             <div class="dataTable-search d-flex align-items-center">
@@ -29,7 +37,7 @@
                 class="form-control"
                 name="searchTerm"
                 [(ngModel)]="service.searchTerm"
-                placeholder="Search..."
+                [placeholder]="'Search...' | translate"
               />
             </div>
           </div>
@@ -37,12 +45,12 @@
             <table class="table table-hover mb-0">
               <thead>
                 <tr>
-                  <th scope="col" sortable="name">NAME</th>
-                  <th scope="col" sortable="department">DEPARTMENT</th>
-                  <th scope="col" sortable="qualification">QUALIFICATION</th>
-                  <th scope="col" sortable="mobile">MOBILE</th>
-                  <th scope="col" sortable="date">JOINING DATE</th>
-                  <th scope="col" sortable="action" class="text-center">ACTIONS</th>
+                  <th scope="col" sortable="name">{{ 'NAME' | translate }}</th>
+                  <th scope="col" sortable="department">{{ 'DEPARTMENT' | translate }}</th>
+                  <th scope="col" sortable="qualification">{{ 'QUALIFICATION' | translate }}</th>
+                  <th scope="col" sortable="mobile">{{ 'MOBILE' | translate }}</th>
+                  <th scope="col" sortable="date">{{ 'JOINING DATE' | translate }}</th>
+                  <th scope="col" sortable="action" class="text-center">{{ 'ACTIONS' | translate }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -65,19 +73,19 @@
                     <td class="text-center">
                       <ul class="list-inline me-auto mb-0">
                         <li class="list-inline-item align-bottom">
-                          <a href="javascript:" class="avatar avatar-xs btn-link-secondary" ngbTooltip="View">
+                          <a href="javascript:" class="avatar avatar-xs btn-link-secondary" [ngbTooltip]="'View' | translate">
                             <i class="f-16 text-secondary d-flex" antIcon type="eye" theme="outline"></i>
                           </a>
                         </li>
                         <li class="list-inline-item align-bottom">
-                          <a href="javascript:" class="avatar avatar-xs btn-link-primary" ngbTooltip="Edit">
+                          <a href="javascript:" class="avatar avatar-xs btn-link-primary" [ngbTooltip]="'Edit' | translate">
                             <i class="f-16 text-primary d-flex" antIcon type="edit" theme="outline"></i>
                           </a>
                         </li>
                         <li class="list-inline-item align-bottom">
                           <a
                             href="javascript:"
-                            ngbTooltip="Delete"
+                            [ngbTooltip]="'Delete' | translate"
                             class="avatar avatar-xs btn-link-danger"
                             (click)="service.deleteTeacher(teacher.id)"
                           >
@@ -92,7 +100,7 @@
             </table>
           </div>
           <div class="datatable-bottom">
-            <div class="datatable-info">Showing 1 to {{ service.pageSize }} of 15 entries</div>
+            <div class="datatable-info">{{ 'Showing 1 to' | translate }} {{ service.pageSize }} {{ 'of 15 entries' | translate }}</div>
             <ngb-pagination
               [collectionSize]="(total$ | async)!"
               [(page)]="service.page"

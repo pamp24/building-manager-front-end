@@ -21,14 +21,16 @@
         <div class="card">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-end mb-4">
-              <h3 class="mb-0"><b>Σύνδεση</b></h3>
+              <h3 class="mb-0">
+                <b>{{ 'Connection' | translate }}</b>
+              </h3>
               <a [routerLink]="[this.authenticationService.isLoggedIn() ? '/auth/register' : '/register']" class="link-primary">
-                Δεν έχετε λογαριασμό;
+                {{ "Don't have an account?" | translate }}
               </a>
             </div>
             <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
               <div class="form-group mb-3">
-                <label class="form-label" for="email">Διεύθυνση Email</label>
+                <label class="form-label" for="email">{{ 'Email address' | translate }}</label>
                 <input
                   type="email"
                   id="email"
@@ -39,16 +41,16 @@
                 @if (submitted && formValues?.['email'].errors) {
                   <div class="invalid-feedback">
                     @if (formValues?.['email'].errors.required) {
-                      <div>Το email είναι υποχρεωτικό.</div>
+                      <div>{{ 'Email is required.' | translate }}</div>
                     }
                     @if (formValues?.['email'].errors.email) {
-                      <div>Παρακαλώ εισάγετε έγκυρο email.</div>
+                      <div>{{ 'Please enter a valid email.' | translate }}</div>
                     }
                   </div>
                 }
               </div>
               <div class="form-group mb-3">
-                <label class="form-label" for="password">Κωδικός πρόσβασης</label>
+                <label class="form-label" for="password">{{ 'Password' | translate }}</label>
                 <input
                   type="{{ showPassword ? 'text' : 'password' }}"
                   id="password"
@@ -68,7 +70,7 @@
                 @if (submitted && formValues?.['password'].errors) {
                   <div class="invalid-feedback">
                     @if (formValues?.['password'].errors.required) {
-                      <div>Ο κωδικός πρόσβασης είναι υποχρεωτικός</div>
+                      <div>{{ 'Password is mandatory' | translate }}</div>
                     }
                   </div>
                 }
@@ -83,18 +85,18 @@
                     [ngModelOptions]="{ standalone: true }"
                   />
 
-                  <label class="form-check-label text-muted" for="rememberMe">Να με κρατάει συνδεδεμένο</label>
+                  <label class="form-check-label text-muted" for="rememberMe">{{ 'Keep me connected' | translate }}</label>
                 </div>
                 <a
                   [routerLink]="[this.authenticationService.isLoggedIn() ? '/auth/forgot-password' : '/forgot-password']"
                   class="text-primary"
                 >
-                  Ξεχάσατε τον κωδικό;
+                  {{ 'Forgot password?' | translate }}
                 </a>
               </div>
               <div class="d-grid mt-4">
                 <button class="btn btn-primary" [disabled]="loading">
-                  {{ loading ? 'Γίνεται σύνδεση...' : 'Σύνδεση' }}
+                  {{ loading ? ('Connecting...' | translate) : ('Connection' | translate) }}
                 </button>
               </div>
               @if (error) {
@@ -102,7 +104,7 @@
               }
             </form>
             <div class="saprator mt-3">
-              <span>Σύνδεση μέσω</span>
+              <span>{{ 'Connect via' | translate }}</span>
             </div>
             <div class="row">
               @for (platform of socialMedia; track platform) {
@@ -122,15 +124,21 @@
       <div class="auth-footer row">
         <div class="col my-1">
           <p class="m-0">
-            Copyright©
-            <a href="/" target="_blank">Building Manager</a>
+            {{ 'Copyright©' | translate }}
+            <a href="/" target="_blank">{{ 'Building Manager' | translate }}</a>
           </p>
         </div>
         <div class="col-auto my-1">
           <ul class="list-inline footer-link mb-0">
-            <li class="list-inline-item"><a [routerLink]="['/']">Αρχική Σελίδα</a></li>
-            <li class="list-inline-item"><a href="/">Πολιτική Απορρήτου</a></li>
-            <li class="list-inline-item"><a [routerLink]="['/contact-us']">Επικοινωνία</a></li>
+            <li class="list-inline-item">
+              <a [routerLink]="['/']">{{ 'Home Page' | translate }}</a>
+            </li>
+            <li class="list-inline-item">
+              <a href="/">{{ 'Privacy Policy' | translate }}</a>
+            </li>
+            <li class="list-inline-item">
+              <a [routerLink]="['/contact-us']">{{ 'Communication' | translate }}</a>
+            </li>
           </ul>
         </div>
       </div>

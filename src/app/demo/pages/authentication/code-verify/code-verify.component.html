@@ -7,35 +7,37 @@
       <div class="card my-5">
         <div class="card-body p-30">
           <ng-template [ngIf]="!submitted">
-            <h2 class="mb-4">Ενεργοποίηση Λογαριασμού</h2>
+            <h2 class="mb-4">{{ 'Account Activation' | translate }}</h2>
             <div class="mb-4">
-              <h3 class="mb-2"><b>Εισάγετε τον Κωδικό Επιβεβαίωσης</b></h3>
-              <p class="text-muted mb-4">Σας στείλαμε ένα μήνυμα στο email σας.</p>
-              <p class="">Σας στείλαμε έναν κωδικό στο testmail</p>
+              <h3 class="mb-2">
+                <b>{{ 'Enter the Confirmation Code' | translate }}</b>
+              </h3>
+              <p class="text-muted mb-4">{{ 'We have sent you a message to your email.' | translate }}</p>
+              <p class="">{{ 'We have sent you a code on testmail' | translate }}</p>
             </div>
             <div class="code-inputs d-flex justify-content-center gap-2">
               <code-input [isCodeHidden]="false" [codeLength]="6" [code]="'number'" (codeCompleted)="onCodeCompleted($event)"></code-input>
             </div>
             <div class="d-grid mt-4">
-              <button (click)="onSubmit()" type="button" class="btn btn-primary">Συνέχεια</button>
+              <button (click)="onSubmit()" type="button" class="btn btn-primary">{{ 'Continuation' | translate }}</button>
             </div>
             <div class="d-flex justify-content-between align-items-end mt-3">
-              <p class="mb-0">Δεν λάβατε το email;</p>
-              <a href="javascript:" class="link-primary">Επαναποστολή κωδικού</a>
+              <p class="mb-0">{{ "Didn't receive the email?" | translate }}</p>
+              <a href="javascript:" class="link-primary">{{ 'Resend password' | translate }}</a>
             </div>
           </ng-template>
           <div *ngIf="submitted">
             <div class="activation-message" *ngIf="isOkay; else activationError">
-              <h2>Η ενεργοποίηση ολοκληρώθηκε με επιτυχία!</h2>
-              <p>Ο λογαριασμός σας ενεργοποιήθηκε με επιτυχία.</p>
-              <button class="btn btn-primary" (click)="redirectToLogin()">Μετάβαση στην είσοδο</button>
+              <h2>{{ 'Activation completed successfully!' | translate }}</h2>
+              <p>{{ 'Your account has been successfully activated.' | translate }}</p>
+              <button class="btn btn-primary" (click)="redirectToLogin()">{{ 'Go to the entrance' | translate }}</button>
             </div>
           </div>
           <ng-template #activationError>
             <div class="activation-error">
-              <h2>Η ενεργοποίηση απέτυχε!</h2>
+              <h2>{{ 'Activation failed!' | translate }}</h2>
               <p>{{ message }}</p>
-              <button class="btn btn-primary" (click)="submitted = false">Δοκιμάστε ξανά</button>
+              <button class="btn btn-primary" (click)="submitted = false">{{ 'Please try again' | translate }}</button>
             </div>
           </ng-template>
         </div>
@@ -43,15 +45,21 @@
       <div class="auth-footer row">
         <div class="col my-1">
           <p class="m-0">
-            Copyright ©
-            <a href="/" target="_blank">Building Manager</a>
+            {{ 'Copyright ©' | translate }}
+            <a href="/" target="_blank">{{ 'Building Manager' | translate }}</a>
           </p>
         </div>
         <div class="col-auto my-1">
           <ul class="list-inline footer-link mb-0">
-            <li class="list-inline-item"><a href="/" target="_blank">Αρχική Σελίδα</a></li>
-            <li class="list-inline-item"><a href="/" target="_blank">Privacy Policy</a></li>
-            <li class="list-inline-item"><a href="/" target="_blank">Επικοινωνία</a></li>
+            <li class="list-inline-item">
+              <a href="/" target="_blank">{{ 'Home Page' | translate }}</a>
+            </li>
+            <li class="list-inline-item">
+              <a href="/" target="_blank">{{ 'Privacy Policy' | translate }}</a>
+            </li>
+            <li class="list-inline-item">
+              <a href="/" target="_blank">{{ 'Communication' | translate }}</a>
+            </li>
           </ul>
         </div>
       </div>

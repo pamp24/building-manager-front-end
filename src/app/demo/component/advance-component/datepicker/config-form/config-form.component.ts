@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 // Angular Import
 import { Component, OnInit, EventEmitter, Output, input } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -95,7 +96,7 @@ const DAY_TIME_CALENDAR_OPTION_KEYS = [...DAY_TIME_PICKER_OPTION_KEYS, ...DAY_CA
   selector: 'app-config-form',
   templateUrl: './config-form.component.html',
   styleUrls: ['./config-form.component.scss'],
-  imports: [CardComponent, DpDatePickerModule, FormsModule, ReactiveFormsModule]
+  imports: [TranslateModule, CardComponent, DpDatePickerModule, FormsModule, ReactiveFormsModule]
 })
 export class ConfigFormComponent implements OnInit {
   // private props

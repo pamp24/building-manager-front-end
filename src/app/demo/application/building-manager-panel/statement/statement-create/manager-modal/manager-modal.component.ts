@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 import { Component, effect, inject, OnInit, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -13,6 +14,8 @@ import { BuildingService } from 'src/app/theme/shared/service/building.service';
   styleUrls: ['./manager-modal.component.scss']
 })
 export class ManagerModalComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   @Input() buildings: ManagedBuildingDTO[] = [];
   activeModal = inject(NgbActiveModal);
   themeService = inject(ThemeService);
@@ -73,7 +76,7 @@ export class ManagerModalComponent implements OnInit {
 
   saveSelection() {
     if (!this.selectedBuilding || !this.selectedBuilding.id) {
-      alert('Παρακαλώ επιλέξτε μία πολυκατοικία πριν συνεχίσετε.');
+      alert(this.uiLocale.text('Please select an apartment building before continuing.'));
       return;
     }
 

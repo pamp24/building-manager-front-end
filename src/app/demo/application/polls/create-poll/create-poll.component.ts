@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -6,15 +7,15 @@ import { PollService } from 'src/app/theme/shared/service/poll.service';
 import { NgbActiveModal, NgbDate, NgbDatepickerModule, NgbDatepickerI18n } from '@ng-bootstrap/ng-bootstrap';
 import { IconService } from '@ant-design/icons-angular';
 import { CalendarOutline } from '@ant-design/icons-angular/icons';
-import { GreekDatepickerI18n } from 'src/app/theme/shared/service/greek-datepicker-i18n';
+import { AppDatepickerI18n } from 'src/app/theme/shared/service/datepicker-i18n.service';
 
 @Component({
   selector: 'app-create-poll',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgbDatepickerModule],
+  imports: [TranslateModule, CommonModule, FormsModule, NgbDatepickerModule],
   templateUrl: './create-poll.component.html',
   styleUrls: ['./create-poll.component.scss'],
-  providers: [{ provide: NgbDatepickerI18n, useClass: GreekDatepickerI18n }]
+  providers: [{ provide: NgbDatepickerI18n, useClass: AppDatepickerI18n }]
 })
 export class CreatePollComponent {
   @Output() pollCreated = new EventEmitter<void>();
@@ -64,7 +65,7 @@ export class CreatePollComponent {
     this.pollService.create(payload).subscribe({
       next: () => {
         this.pollCreated.emit();
-        this.activeModal.close();  // κλείνει το modal
+        this.activeModal.close(); // κλείνει το modal
         this.resetForm();
       },
       error: (err) => console.error(err)
@@ -92,4 +93,3 @@ export class CreatePollComponent {
     this.endDateModel = null;
   }
 }
-

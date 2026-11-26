@@ -20,13 +20,13 @@
                 </div>
               </div>
               <div class="ms-3">
-                <h5>Επεξεργασία Προφίλ</h5>
-                <p class="mb-0">Συμπληρώστε το προφίλ σας για να ξεκλειδώσετε όλες τις δυνατότητες.</p>
+                <h5>{{ 'Edit Profile' | translate }}</h5>
+                <p class="mb-0">{{ 'Complete your profile to unlock all features.' | translate }}</p>
               </div>
             </div>
           </div>
           <div class="col-auto">
-            <div class="btn btn-primary my-3">Επεξεργασία Προφίλ</div>
+            <div class="btn btn-primary my-3">{{ 'Edit Profile' | translate }}</div>
           </div>
         </div>
       </div>
@@ -36,11 +36,11 @@
         <div class="card">
           <div class="card-body position-relative">
             <div class="d-flex justify-content-end" ngbDropdown>
-              <a href="javascript:" class="profile-edit dropdown-toggle" title="profile-Edit Tab" ngbDropdownToggle>
+              <a href="javascript:" class="profile-edit dropdown-toggle" [title]="'profile-Edit Tab' | translate" ngbDropdownToggle>
                 <i class="f-16" antIcon theme="outline" type="more"></i>
               </a>
               <div class="dropdown-menu dropdown-menu-end pc-h-dropdown pc-mega-dropdown user-edit" ngbDropdownMenu>
-                <a href="javascript:" class="dropdown-item">Επεξεργασία</a>
+                <a href="javascript:" class="dropdown-item">{{ 'Processing' | translate }}</a>
               </div>
             </div>
             <div class="text-center">
@@ -48,12 +48,12 @@
                 <img [src]="imgSrc(user?.profileImageUrl)" alt="User Avatar" class="rounded-circle img-fluid wid-120 user-avatar-img" />
                 <label for="uplfile" class="img-avatar-upload-overlay">
                   <i class="ti ti-camera f-24"></i>
-                  <span>Upload</span>
+                  <span>{{ 'Upload' | translate }}</span>
                 </label>
                 <input type="file" id="uplfile" hidden accept="image/*" (change)="onFileSelected($event)" />
               </div>
               <h5 class="mt-3">{{ user?.lastName }} {{ user?.firstName }}</h5>
-              <p class="text-muted">{{ authenticationService.currentUserValue?.role | translate}}</p>
+              <p class="text-muted">{{ authenticationService.currentUserValue?.role | translate }}</p>
 
               <!-- <ul class="list-inline ms-auto mb-0">
                 @for (task of socialMedia; track task; let last = $last) {
@@ -68,15 +68,15 @@
               <div class="row g-3 my-4">
                 <div class="col-4">
                   <h5 class="mb-0">86</h5>
-                  <p class="text-muted">Post</p>
+                  <p class="text-muted">{{ 'Post' | translate }}</p>
                 </div>
                 <div class="col-4 border border-top-0 border-bottom-0">
                   <h5 class="mb-0">40</h5>
-                  <p class="text-muted">Project</p>
+                  <p class="text-muted">{{ 'Project' | translate }}</p>
                 </div>
                 <div class="col-4">
-                  <h5 class="mb-0">4.5K</h5>
-                  <p class="text-muted">Members</p>
+                  <h5 class="mb-0">{{ '4.5K' | translate }}</h5>
+                  <p class="text-muted">{{ 'Members' | translate }}</p>
                 </div>
               </div>
             </div>
@@ -85,107 +85,115 @@
                 <a ngbNavLink class="list-group-item list-group-item-action border-0">
                   <div class="d-flex align-items-center">
                     <i antIcon type="user" theme="outline" class="me-2 f-14"></i>
-                    <span class="f-w-500">Προσωπικές Πληροφορίες</span>
+                    <span class="f-w-500">{{ 'Personal Information' | translate }}</span>
                   </div>
                 </a>
                 <ng-template ngbNavContent>
-                  <app-card cardTitle="Τα Στοιχεία σας" footerClass="text-end btn-page">
+                  <app-card [cardTitle]="'Your Details' | translate" footerClass="text-end btn-page">
                     <form [formGroup]="userForm">
                       <div class="row">
                         <div class="col-12">
-                          <h5>Προσωπικές Πληροφορίες</h5>
+                          <h5>{{ 'Personal Information' | translate }}</h5>
                           <hr class="mb-4" />
                         </div>
                         <div class="col-sm-6">
                           <div class="form-group">
-                            <label class="form-label">Όνομα*</label>
+                            <label class="form-label">{{ 'Name*' | translate }}</label>
                             <input type="text" class="form-control" formControlName="firstName" />
                           </div>
                         </div>
                         <div class="col-sm-6">
                           <div class="form-group">
-                            <label class="form-label">Επίθετο*</label>
+                            <label class="form-label">{{ 'Adjective*' | translate }}</label>
                             <input type="text" class="form-control" formControlName="lastName" />
                           </div>
                         </div>
                         <div class="col-sm-6">
                           <div class="form-group">
-                            <label class="form-label">Email</label>
+                            <label class="form-label">{{ 'Email' | translate }}</label>
                             <input type="email" class="form-control" formControlName="email" />
                           </div>
                         </div>
                         <div class="col-sm-6">
                           <div class="form-group">
-                            <label class="form-label">Ημερομηνία Γέννησης*</label>
+                            <label class="form-label">{{ 'Date of Birth*' | translate }}</label>
                             <input type="date" class="form-control" formControlName="dateOfBirth" />
                           </div>
                         </div>
 
                         <div class="col-sm-6">
                           <div class="form-group">
-                            <label class="form-label">Τηλέφωνο*</label>
+                            <label class="form-label">{{ 'Telephone*' | translate }}</label>
                             <input type="text" class="form-control" formControlName="phoneNumber" />
                           </div>
                         </div>
                         <div class="col-12">
-                          <h5 class="mt-4">Διεύθυνση</h5>
+                          <h5 class="mt-4">{{ 'Address' | translate }}</h5>
                           <hr class="mb-4" />
                         </div>
                         <div class="col-sm-6">
                           <div class="form-group">
-                            <label class="form-label">Διεύθυνση 1*</label>
-                            <textarea class="form-control" formControlName="address1" placeholder="Διεύθυνση 1"></textarea>
+                            <label class="form-label">{{ 'Address 1*' | translate }}</label>
+                            <textarea class="form-control" formControlName="address1" [placeholder]="'Address 1' | translate"></textarea>
                           </div>
                         </div>
                         <div class="col-sm-6">
                           <div class="form-group">
-                            <label class="form-label">Αριθμός 1*</label>
-                            <textarea class="form-control" formControlName="addressNumber1" placeholder="Αριθμός 1"></textarea>
+                            <label class="form-label">{{ 'Number 1*' | translate }}</label>
+                            <textarea
+                              class="form-control"
+                              formControlName="addressNumber1"
+                              [placeholder]="'Number 1' | translate"
+                            ></textarea>
                           </div>
                         </div>
                         <div class="col-sm-6">
                           <div class="form-group">
-                            <label class="form-label">Διεύθυνση 2</label>
-                            <textarea class="form-control" formControlName="address2" placeholder="Διεύθυνση 2"></textarea>
+                            <label class="form-label">{{ 'Address 2' | translate }}</label>
+                            <textarea class="form-control" formControlName="address2" [placeholder]="'Address 2' | translate"></textarea>
                           </div>
                         </div>
                         <div class="col-sm-6">
                           <div class="form-group">
-                            <label class="form-label">Αριθμός 2</label>
-                            <textarea class="form-control" formControlName="addressNumber2" placeholder="Αριθμός 2"></textarea>
+                            <label class="form-label">{{ 'Number 2' | translate }}</label>
+                            <textarea
+                              class="form-control"
+                              formControlName="addressNumber2"
+                              [placeholder]="'Number 2' | translate"
+                            ></textarea>
                           </div>
                         </div>
                         <div class="col-sm-6">
                           <div class="form-group">
-                            <label class="form-label">Χώρα*</label>
+                            <label class="form-label">{{ 'Country*' | translate }}</label>
                             <select class="form-select" formControlName="country">
-                              <option value="">-- Επιλέξτε Χώρα --</option>
-                              <option value="Ελλάδα">Ελλάδα</option>
+                              <option value="">{{ '-- Select Country --' | translate }}</option>
+                              <option value="Ελλάδα">{{ 'Greece' | translate }}</option>
                             </select>
                           </div>
                         </div>
                         <div class="col-sm-6">
                           <div class="form-group">
-                            <label class="form-label">Νομός*</label>
-                            <input type="text" class="form-control" formControlName="state" placeholder="Νομός" />
+                            <label class="form-label">{{ 'County*' | translate }}</label>
+                            <input type="text" class="form-control" formControlName="state" [placeholder]="'Prefecture' | translate" />
                           </div>
                         </div>
                         <div class="col-sm-6">
                           <div class="form-group">
-                            <label class="form-label">Πόλη*</label>
-                            <input type="text" class="form-control" formControlName="city" placeholder="Πόλη" />
+                            <label class="form-label">{{ 'City*' | translate }}</label>
+                            <input type="text" class="form-control" formControlName="city" [placeholder]="'City' | translate" />
                           </div>
                         </div>
                         <div class="col-sm-6">
                           <div class="form-group">
-                            <label class="form-label">Περιοχή</label>
-                            <input type="text" class="form-control" formControlName="region" placeholder="Περιοχή" />
+                            <label class="form-label">{{ 'Area' | translate }}</label>
+                            <input type="text" class="form-control" formControlName="region" [placeholder]="'Area' | translate" />
                           </div>
                         </div>
                         <div class="col-sm-6">
                           <div class="form-group">
-                            <label class="form-label">Τ.Κ.*</label>
-                            <input type="text" class="form-control" formControlName="postalCode" placeholder="Ταχ. Κώδικας" />
+                            <label class="form-label">{{ 'Postal Code*' | translate }}</label>
+                            <input type="text" class="form-control" formControlName="postalCode" [placeholder]="'Tach. Code' | translate" />
                           </div>
                         </div>
                       </div>
@@ -198,12 +206,12 @@
                           [class.btn-outline-secondary]="isEditing"
                           (click)="toggleEdit()"
                         >
-                          {{ isEditing ? 'Ακύρωση' : 'Επεξεργασία' }}
+                          {{ isEditing ? ('Cancellation' | translate) : ('Processing' | translate) }}
                         </button>
 
                         <!-- Save μόνο όταν κάνεις edit -->
                         <button type="button" class="btn btn-primary" [disabled]="!isEditing" (click)="savePersonalChanges()">
-                          Αποθήκευση
+                          {{ 'Save' | translate }}
                         </button>
                       </div>
                     </form>
@@ -214,18 +222,18 @@
                 <a ngbNavLink class="list-group-item list-group-item-action border-0">
                   <div class="d-flex align-items-center">
                     <i antIcon type="credit-card" theme="outline" class="me-2 f-14"></i>
-                    <span class="f-w-500">Πληρωμές</span>
+                    <span class="f-w-500">{{ 'Payments' | translate }}</span>
                   </div>
                 </a>
                 <ng-template ngbNavContent>
-                  <app-card cardTitle="Πληρωμές" footerClass="text-end btn-page">
+                  <app-card [cardTitle]="'Payments' | translate" footerClass="text-end btn-page">
                     <ul ngbNav #nav1="ngbNav" class="nav-pills mb-3">
                       <li [ngbNavItem]="1" class="mb-2">
                         <a ngbNavLink class="card-type">
                           <span class="card-img">
                             <img src="assets/images/profile/master.png" alt="master" />
                           </span>
-                          Card
+                          {{ 'Card' | translate }}
                         </a>
                         <ng-template ngbNavContent>
                           <div class="row mb-2">
@@ -277,11 +285,11 @@
                           <span class="card-img">
                             <img src="assets/images/profile/paypal.png" alt="paypal method" />
                           </span>
-                          Paypal
+                          {{ 'Paypal' | translate }}
                         </a>
                         <ng-template ngbNavContent>
                           <div class="form-group">
-                            <label class="form-label">Διεύθυνση Email</label>
+                            <label class="form-label">{{ 'Email address' | translate }}</label>
                             <input type="email" class="form-control" value="stebin.ben@gmail.com" />
                           </div>
                         </ng-template>
@@ -290,33 +298,33 @@
                         <a ngbNavLink class="p-0">
                           <a href="javascript:" class="btn btn-primary d-inline-flex align-items-center text-white">
                             <i antIcon type="plus" theme="outline" class="d-flex me-2 f-14"></i>
-                            <span>Προσθήκη Νέας Κάρτας</span>
+                            <span>{{ 'Add New Card' | translate }}</span>
                           </a>
                         </a>
                         <ng-template ngbNavContent>
                           <div class="row">
                             <div class="col-sm-6">
                               <div class="mb-3">
-                                <label for="name" class="form-label">Ονοματεπόνυμο Δικαιούχου</label>
-                                <input type="text" class="form-control" id="name" placeholder="Ονοματεπόνυμο Δικαιούχου" />
+                                <label for="name" class="form-label">{{ 'Name of Beneficiary' | translate }}</label>
+                                <input type="text" class="form-control" id="name" [placeholder]="'Name of Beneficiary' | translate" />
                               </div>
                             </div>
                             <div class="col-sm-6">
                               <div class="mb-3">
-                                <label for="name" class="form-label">Αριθμός Κάρτας</label>
-                                <input type="text" class="form-control" id="name" placeholder="Αριθμός Κάρτας" />
+                                <label for="name" class="form-label">{{ 'Card Number' | translate }}</label>
+                                <input type="text" class="form-control" id="name" [placeholder]="'Card Number' | translate" />
                               </div>
                             </div>
                             <div class="col-sm-4">
                               <div class="mb-3">
-                                <label for="date" class="form-label">Ημερομηνία Λήξης</label>
-                                <input type="number" class="form-control" id="date" placeholder="Ημερομηνία Λήξης" />
+                                <label for="date" class="form-label">{{ 'Expiration Date' | translate }}</label>
+                                <input type="number" class="form-control" id="date" [placeholder]="'Expiration Date' | translate" />
                               </div>
                             </div>
                             <div class="col-sm-4">
                               <div class="mb-3">
-                                <label for="cvv" class="form-label">Αριθμός CCV</label>
-                                <input type="number" class="form-control" id="cvv" placeholder="Αριθμός CCV" />
+                                <label for="cvv" class="form-label">{{ 'CCV number' | translate }}</label>
+                                <input type="number" class="form-control" id="cvv" [placeholder]="'CCV number' | translate" />
                               </div>
                             </div>
                             <!-- <div class="col-sm-4">
@@ -331,8 +339,8 @@
                     </ul>
                     <div [ngbNavOutlet]="nav1"></div>
                     <ng-template #footerTemplate>
-                      <div class="btn btn-outline-secondary">Ακύρωση</div>
-                      <div class="btn btn-primary">Αποθήκευση</div>
+                      <div class="btn btn-outline-secondary">{{ 'Cancellation' | translate }}</div>
+                      <div class="btn btn-primary">{{ 'Save' | translate }}</div>
                     </ng-template>
                   </app-card>
                 </ng-template>
@@ -341,11 +349,11 @@
                 <a ngbNavLink class="list-group-item list-group-item-action border-0">
                   <div class="d-flex align-items-center">
                     <i antIcon type="lock" theme="outline" class="me-2 f-14"></i>
-                    <span class="f-w-500">Αλλαγή Κωδικού</span>
+                    <span class="f-w-500">{{ 'Change Code' | translate }}</span>
                   </div>
                 </a>
                 <ng-template ngbNavContent>
-                  <app-card cardTitle="Αλλαγή Κωδικού" footerClass="text-end btn-page">
+                  <app-card [cardTitle]="'Change Code' | translate" footerClass="text-end btn-page">
                     <div class="row">
                       <div class="col-lg-6">
                         @for (password of passwords; track password) {
@@ -356,7 +364,7 @@
                         }
                       </div>
                       <div class="col-lg-6">
-                        <h5>Ο νέος κωδικός πρέπει να περιέχει:</h5>
+                        <h5>{{ 'The new code must contain:' | translate }}</h5>
                         <ul class="list-group list-group-flush">
                           @for (list of condition; track list) {
                             <li class="list-group-item">
@@ -374,11 +382,11 @@
                 <a ngbNavLink class="list-group-item list-group-item-action border-0">
                   <div class="d-flex align-items-center">
                     <i antIcon type="setting" theme="outline" class="me-2 f-14"></i>
-                    <span class="f-w-500">Ρυθμίσεις</span>
+                    <span class="f-w-500">{{ 'Settings' | translate }}</span>
                   </div>
                 </a>
                 <ng-template ngbNavContent>
-                  <app-card cardTitle="Settings" footerClass="text-end btn-page">
+                  <app-card [cardTitle]="'Settings' | translate" footerClass="text-end btn-page">
                     <div class="row">
                       <div class="col-sm-12">
                         <ul class="list-group list-group-flush">
@@ -407,8 +415,8 @@
                       </div>
                     </div>
                     <ng-template #footerTemplate>
-                      <div class="btn btn-outline-secondary">Άκυρο</div>
-                      <div class="btn btn-primary" (click)="saveChanges()">Αποθήκευση</div>
+                      <div class="btn btn-outline-secondary">{{ 'Invalid' | translate }}</div>
+                      <div class="btn btn-primary" (click)="saveChanges()">{{ 'Save' | translate }}</div>
                     </ng-template>
                   </app-card>
                 </ng-template>

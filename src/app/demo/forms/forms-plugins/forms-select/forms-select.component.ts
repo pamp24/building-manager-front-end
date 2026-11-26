@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // angular import
 import { Component, ElementRef, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -24,6 +25,8 @@ import { TagInputModule } from 'ngx-chips';
   providers: [DataService]
 })
 export class FrmSelectComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private dataService = inject(DataService);
   private fb = inject(FormBuilder);
   private modalService = inject(NgbModal);
@@ -32,7 +35,7 @@ export class FrmSelectComponent implements OnInit {
   people: Person[] = [];
   selectedPeople1 = [];
   people$: Observable<Person[]> | undefined;
-  selectedPeople = [{ name: 'Karyn Wright' }];
+  selectedPeople = [{ name: this.uiLocale.text('Karyn Wright') }];
   selectedPeople2 = [];
   githubUsers$!: Observable<object>;
   selectedUsers = ['anjmao'];
@@ -40,11 +43,11 @@ export class FrmSelectComponent implements OnInit {
   peopleLoading = false;
   peopleInput$ = new Subject<string>();
   // eslint-disable-next-line
-  selectedPersons: Person[] = <any>[{ name: 'Karyn Wright' }, { name: 'Other' }];
+  selectedPersons: Person[] = <any>[{ name: this.uiLocale.text('Karyn Wright') }, { name: this.uiLocale.text('Other') }];
   ages = [
-    { value: '<18', label: 'Under 18' },
+    { value: '<18', label: this.uiLocale.text('Under 18') },
     { value: '18', label: '18' },
-    { value: '>18', label: 'More than 18' }
+    { value: '>18', label: this.uiLocale.text('More than 18') }
   ];
 
   customForm!: FormGroup;

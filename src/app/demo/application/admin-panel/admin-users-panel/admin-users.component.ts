@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
@@ -19,6 +19,8 @@ import { environment } from 'src/environments/environment';
   styleUrl: './admin-users.component.scss'
 })
 export class AdminUsersComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private iconService = inject(IconService);
 
   users: AdminUserDTO[] = [];
@@ -29,7 +31,10 @@ export class AdminUsersComponent implements OnInit {
   error?: string;
   updatingId?: number;
 
-  constructor(private userService: UserService, private authService: AuthenticationService) {
+  constructor(
+    private userService: UserService,
+    private authService: AuthenticationService
+  ) {
     this.iconService.addIcon(...[UserSwitchOutline, StopOutline, CheckCircleOutline, TeamOutline, DeleteOutline]);
   }
 
@@ -49,7 +54,7 @@ export class AdminUsersComponent implements OnInit {
       error: (err) => {
         console.error(err);
         this.loading = false;
-        this.error = 'Αποτυχία φόρτωσης χρηστών.';
+        this.error = this.uiLocale.text('Failed to load users.');
       }
     });
   }
@@ -76,9 +81,7 @@ export class AdminUsersComponent implements OnInit {
   }
 
   get availableRoles(): string[] {
-    return [...new Set(this.users.map((user) => user.role).filter((role): role is string => !!role))].sort((a, b) =>
-      a.localeCompare(b)
-    );
+    return [...new Set(this.users.map((user) => user.role).filter((role): role is string => !!role))].sort((a, b) => a.localeCompare(b));
   }
 
   clearFilters(): void {
@@ -91,12 +94,12 @@ export class AdminUsersComponent implements OnInit {
     const newValue = !user.enabled;
 
     if (newValue) {
-      const confirmed = confirm(`Θέλετε να ενεργοποιήσετε τον χρήστη "${user.fullName}";`);
+      const confirmed = confirm(this.uiLocale.text('Do you want to enable the user "{{p0}}"?', { p0: user.fullName }));
       if (!confirmed) {
         return;
       }
     } else {
-      const confirmed = confirm(`Θέλετε να απενεργοποιήσετε τον χρήστη "${user.fullName}";`);
+      const confirmed = confirm(this.uiLocale.text('Do you want to disable the user "{{p0}}"?', { p0: user.fullName }));
       if (!confirmed) {
         return;
       }
@@ -114,7 +117,7 @@ export class AdminUsersComponent implements OnInit {
       error: (err) => {
         this.updatingId = undefined;
         console.error(err);
-        this.error = err?.error?.message || 'Αποτυχία ενημέρωσης χρήστη.';
+        this.error = err?.error?.message || this.uiLocale.text('Failed to update user.');
       }
     });
   }
@@ -126,7 +129,7 @@ export class AdminUsersComponent implements OnInit {
   }
 
   softDeleteUser(user: AdminUserDTO): void {
-    const confirmed = confirm(`Είστε σίγουροι ότι θέλετε να διαγράψετε (soft-delete) τον χρήστη "${user.fullName}";`);
+    const confirmed = confirm(this.uiLocale.text('Are you sure you want to soft-delete the user "{{p0}}"?', { p0: user.fullName }));
     if (!confirmed) {
       return;
     }
@@ -143,7 +146,7 @@ export class AdminUsersComponent implements OnInit {
       error: (err) => {
         this.updatingId = undefined;
         console.error(err);
-        this.error = err?.error?.message || 'Αποτυχία διαγραφής χρήστη.';
+        this.error = err?.error?.message || this.uiLocale.text('Failed to delete user.');
       }
     });
   }

@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // angular import
 import { Component, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -33,11 +34,13 @@ import { BuildingPendingCardComponent } from '../../../theme/shared/apexchart/bu
     BuildingTotalCardComponent,
     BuildingChartComponent,
     SalesReportChartComponent
-],
+  ],
   templateUrl: './analytics.component.html',
   styleUrls: ['./analytics.component.scss']
 })
 export class AnalyticsComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private iconService = inject(IconService);
   private themeService = inject(ThemeService);
 
@@ -60,31 +63,31 @@ export class AnalyticsComponent {
   // public method
   page_view = [
     {
-      title: 'Admin Home',
+      title: this.uiLocale.text('Admin Home'),
       link: '/demo/admin/index.html',
       amount: '7755',
       percentage: '31.74%'
     },
     {
-      title: 'Form Elements',
+      title: this.uiLocale.text('Form Elements'),
       link: '/demo/admin/forms.html',
       amount: '5215',
       percentage: '28.53%'
     },
     {
-      title: 'Utilities',
+      title: this.uiLocale.text('Utilities'),
       link: '/demo/admin/util.html',
       amount: '4848',
       percentage: '25.74%'
     },
     {
-      title: 'Form Validation',
+      title: this.uiLocale.text('Form Validation'),
       link: '/demo/admin/validation.html',
       amount: '3275',
       percentage: '23.17%'
     },
     {
-      title: 'Modals',
+      title: this.uiLocale.text('Modals'),
       link: '/demo/admin/modals.html',
       amount: '3003',
       percentage: '22.21%'
@@ -95,7 +98,7 @@ export class AnalyticsComponent {
     {
       background: 'text-success bg-light-success',
       icon: 'check',
-      title: 'Order #002434',
+      title: this.uiLocale.text('Order #002434'),
       time: 'Today, 2:00 AM',
       amount: '+ $1,430',
       percentage: '78%'
@@ -103,7 +106,7 @@ export class AnalyticsComponent {
     {
       background: 'text-danger bg-light-danger',
       icon: 'close',
-      title: 'Order #984947',
+      title: this.uiLocale.text('Order #984947'),
       time: '5 August, 1:45 PM',
       amount: '- $302',
       percentage: '8%'
@@ -111,7 +114,7 @@ export class AnalyticsComponent {
     {
       background: 'text-primary bg-light-primary',
       icon: 'clock-circle',
-      title: 'Order #988784',
+      title: this.uiLocale.text('Order #988784'),
       time: '7 hours ago',
       amount: '- $682',
       percentage: '16%'
@@ -122,28 +125,28 @@ export class AnalyticsComponent {
 
   summaryIncome = [
     {
-      title: 'Published Project',
+      title: this.uiLocale.text('Published Project'),
       color: 'primary',
       background: 'progress-primary',
       value: '30',
       percentage: '30%'
     },
     {
-      title: 'Completed Task',
+      title: this.uiLocale.text('Completed Task'),
       color: 'success',
       background: 'progress-success',
       value: '90',
       percentage: '90%'
     },
     {
-      title: 'Pending Task',
+      title: this.uiLocale.text('Pending Task'),
       color: 'danger',
       background: 'progress-danger',
       value: '50',
       percentage: '50%'
     },
     {
-      title: 'Issues',
+      title: this.uiLocale.text('Issues'),
       color: 'warning',
       background: 'progress-warning',
       value: '55',

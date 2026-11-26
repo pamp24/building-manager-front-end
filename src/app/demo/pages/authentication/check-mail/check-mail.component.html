@@ -7,21 +7,23 @@
       <div class="card my-5">
         <div class="card-body p-30">
           <div class="mb-4">
-            <h3 class="mb-2"><b>Γεια σας, ελέγξτε το email σας</b></h3>
-            <p class="text-muted">Σας στείλαμε οδηγίες για επαναφορά του κωδικού πρόσβασης στο email σας.</p>
+            <h3 class="mb-2">
+              <b>{{ 'Hello, check your email' | translate }}</b>
+            </h3>
+            <p class="text-muted">{{ 'We have sent you password reset instructions to your email.' | translate }}</p>
           </div>
           <div class="d-grid mt-3">
-            <button type="button" class="btn btn-primary">Σύνδεση</button>
+            <button type="button" class="btn btn-primary">{{ 'Connection' | translate }}</button>
           </div>
           <div class="saprator mt-3">
-            <span>Εγγραφή με</span>
+            <span>{{ 'Register with' | translate }}</span>
           </div>
           <div class="row">
             <div class="col-4">
               <div class="d-grid">
                 <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
                   <img src="assets/images/authentication/google.svg" alt="google logo" />
-                  <span class="d-none d-sm-inline-block">Google</span>
+                  <span class="d-none d-sm-inline-block">{{ 'Google' | translate }}</span>
                 </button>
               </div>
             </div>
@@ -29,7 +31,7 @@
               <div class="d-grid">
                 <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
                   <img src="assets/images/authentication/twitter.svg" alt="twitter logo" />
-                  <span class="d-none d-sm-inline-block">Twitter</span>
+                  <span class="d-none d-sm-inline-block">{{ 'Twitter' | translate }}</span>
                 </button>
               </div>
             </div>
@@ -37,7 +39,7 @@
               <div class="d-grid">
                 <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
                   <img src="assets/images/authentication/facebook.svg" alt="facebook logo" />
-                  <span class="d-none d-sm-inline-block">Facebook</span>
+                  <span class="d-none d-sm-inline-block">{{ 'Facebook' | translate }}</span>
                 </button>
               </div>
             </div>
@@ -47,15 +49,21 @@
       <div class="auth-footer row">
         <div class="col my-1">
           <p class="m-0">
-            Copyright ©
-            <a href="/" target="_blank">Building Manager</a>
+            {{ 'Copyright ©' | translate }}
+            <a href="/" target="_blank">{{ 'Building Manager' | translate }}</a>
           </p>
         </div>
         <div class="col-auto my-1">
           <ul class="list-inline footer-link mb-0">
-            <li class="list-inline-item"><a href="/" target="_blank">Αρχική Σελίδα</a></li>
-            <li class="list-inline-item"><a href="/" target="_blank">Privacy Policy</a></li>
-            <li class="list-inline-item"><a href="/" target="_blank">Επικοινωνία</a></li>
+            <li class="list-inline-item">
+              <a href="/" target="_blank">{{ 'Home Page' | translate }}</a>
+            </li>
+            <li class="list-inline-item">
+              <a href="/" target="_blank">{{ 'Privacy Policy' | translate }}</a>
+            </li>
+            <li class="list-inline-item">
+              <a href="/" target="_blank">{{ 'Communication' | translate }}</a>
+            </li>
           </ul>
         </div>
       </div>

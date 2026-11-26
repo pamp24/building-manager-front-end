@@ -6,32 +6,36 @@
       </div>
       <app-card [showHeader]="false" [padding]="30" cardClass="my-5">
         <div class="d-flex justify-content-between align-items-end mb-4">
-          <h3 class="mb-0"><b>Εγγραφή</b></h3>
-          <a [routerLink]="['/login']" class="link-primary">Έχετε ήδη λογαριασμό;</a>
+          <h3 class="mb-0">
+            <b>{{ 'Registration' | translate }}</b>
+          </h3>
+          <a [routerLink]="['/login']" class="link-primary">{{ 'Already have an account?' | translate }}</a>
         </div>
         <div class="row">
           <div class="col-md-6">
             <div class="form-group mb-3">
-              <label class="form-label" for="First Name">Όνομα*</label>
-              <input 
-              name="firstname"
-              [(ngModel)]="registerRequest.firstName" 
-              type="text" 
-              id="First Name" 
-              class="form-control" 
-              placeholder="Όνομα" />
+              <label class="form-label" for="First Name">{{ 'Name*' | translate }}</label>
+              <input
+                name="firstname"
+                [(ngModel)]="registerRequest.firstName"
+                type="text"
+                id="First Name"
+                class="form-control"
+                [placeholder]="'Name' | translate"
+              />
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group mb-3">
-              <label class="form-label" for="Last Name">Επίθετο</label>
-              <input 
-              name="lastname"
-              [(ngModel)]="registerRequest.lastName" 
-              type="text" 
-              id="Last Name" 
-              class="form-control"
-               placeholder="Επίθετο" />
+              <label class="form-label" for="Last Name">{{ 'Adjective' | translate }}</label>
+              <input
+                name="lastname"
+                [(ngModel)]="registerRequest.lastName"
+                type="text"
+                id="Last Name"
+                class="form-control"
+                [placeholder]="'Adjective' | translate"
+              />
             </div>
           </div>
         </div>
@@ -40,46 +44,48 @@
           <input type="text" id="Company" class="form-control" placeholder="Company" />
         </div> -->
         <div class="form-group mb-3">
-          <label class="form-label" for="Email">Διεύθυνση Email*</label>
-          <input 
-          name="email"
-          [(ngModel)]="registerRequest.email" 
-          type="email" 
-          id="Email" 
-          class="form-control" 
-          placeholder="Διεύθυνση Email" />
+          <label class="form-label" for="Email">{{ 'Email Address*' | translate }}</label>
+          <input
+            name="email"
+            [(ngModel)]="registerRequest.email"
+            type="email"
+            id="Email"
+            class="form-control"
+            [placeholder]="'Email address' | translate"
+          />
         </div>
         <div class="form-group mb-3">
-          <label class="form-label" for="Password">Κωδικός</label>
-          <input 
-          name="password"
-          [(ngModel)]="registerRequest.password" 
-          type="password" 
-          id="Password" 
-          class="form-control" 
-          placeholder="Κωδικός" />
+          <label class="form-label" for="Password">{{ 'Code' | translate }}</label>
+          <input
+            name="password"
+            [(ngModel)]="registerRequest.password"
+            type="password"
+            id="Password"
+            class="form-control"
+            [placeholder]="'Code' | translate"
+          />
         </div>
         <p class="mt-4 text-sm text-muted">
-          Με την εγγραφή σας, αποδέχεστε τους
-          <a href="javascript:" class="text-primary">Όρους Παροχής Υπηρεσιών</a>
-          και την
-          <a href="javascript:" class="text-primary">Πολιτική Απορρήτου</a>
+          {{ 'By registering, you accept them' | translate }}
+          <a href="javascript:" class="text-primary">{{ 'Terms of Service' | translate }}</a>
+          {{ 'and her' | translate }}
+          <a href="javascript:" class="text-primary">{{ 'Privacy Policy' | translate }}</a>
         </p>
         <div class="d-grid mt-3">
-          <button type="button" (click)="register()" class="btn btn-primary">Δημιουργία Λογαριασμού</button>
+          <button type="button" (click)="register()" class="btn btn-primary">{{ 'Create an Account' | translate }}</button>
         </div>
         <div class="alert alert-danger" role="alert" *ngIf="errorMsg.length">
           <p *ngFor="let msg of errorMsg">{{ msg }}</p>
         </div>
         <div class="saprator mt-3">
-          <span>Εγγραφή μέσω</span>
+          <span>{{ 'Register via' | translate }}</span>
         </div>
         <div class="row">
           <div class="col-4">
             <div class="d-grid">
               <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
                 <img src="assets/images/authentication/google.svg" alt="Google logo" />
-                <span class="d-none d-sm-inline-block">Google</span>
+                <span class="d-none d-sm-inline-block">{{ 'Google' | translate }}</span>
               </button>
             </div>
           </div>
@@ -87,7 +93,7 @@
             <div class="d-grid">
               <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
                 <img src="assets/images/authentication/twitter.svg" alt="Twitter logo" />
-                <span class="d-none d-sm-inline-block">Twitter</span>
+                <span class="d-none d-sm-inline-block">{{ 'Twitter' | translate }}</span>
               </button>
             </div>
           </div>
@@ -95,7 +101,7 @@
             <div class="d-grid">
               <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
                 <img src="assets/images/authentication/facebook.svg" alt="Facebook logo" />
-                <span class="d-none d-sm-inline-block">Facebook</span>
+                <span class="d-none d-sm-inline-block">{{ 'Facebook' | translate }}</span>
               </button>
             </div>
           </div>
@@ -104,15 +110,21 @@
       <div class="auth-footer row">
         <div class="col my-1">
           <p class="m-0">
-            Copyrights©
-            <a href="/" target="_blank">Building Manager</a>
+            {{ 'Copyrights©' | translate }}
+            <a href="/" target="_blank">{{ 'Building Manager' | translate }}</a>
           </p>
         </div>
         <div class="col-auto my-1">
           <ul class="list-inline footer-link mb-0">
-            <li class="list-inline-item"><a [routerLink]="['/']">Αρχική Σελίδα</a></li>
-            <li class="list-inline-item"><a href="/">Πολιτική Απορρήτου</a></li>
-            <li class="list-inline-item"><a [routerLink]="['/contact-us']">Επικοινωνία</a></li>
+            <li class="list-inline-item">
+              <a [routerLink]="['/']">{{ 'Home Page' | translate }}</a>
+            </li>
+            <li class="list-inline-item">
+              <a href="/">{{ 'Privacy Policy' | translate }}</a>
+            </li>
+            <li class="list-inline-item">
+              <a [routerLink]="['/contact-us']">{{ 'Communication' | translate }}</a>
+            </li>
           </ul>
         </div>
       </div>

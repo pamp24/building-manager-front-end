@@ -1066,7 +1066,7 @@ $card-spacer-y: 20px; // change
 $card-spacer-x: 20px; // change
 $card-title-spacer-y: calc($spacer / 2);
 $card-border-width: 1px; // change
-$card-border-radius: $border-radius;
+$card-border-radius: 16px;
 $card-border-color: $border-color;
 $card-box-shadow: 0px 8px 24px rgba(27, 46, 94, 0.08);
 $card-inner-border-radius: calc(#{$card-border-radius} - #{$card-border-width});

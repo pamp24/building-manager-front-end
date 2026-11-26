@@ -1,7 +1,7 @@
 <app-card [showHeader]="false">
   <div class="mb-3 text-center">
-    <h5 class="mb-0">Κατάσταση Παραστατικών</h5>
-    <small class="text-muted">Ανά Μήνα</small>
+    <h5 class="mb-0">{{ 'Status of Documents' | translate }}</h5>
+    <small class="text-muted">{{ 'Per Month' | translate }}</small>
   </div>
 
   <ng-container *ngIf="chartOptions; else noData">
@@ -22,9 +22,6 @@
   </ng-container>
 
   <ng-template #noData>
-    <div class="text-center my-4 text-muted">
-      Δεν υπάρχουν διαθέσιμα δεδομένα
-    </div>
+    <div class="dashboard-empty-state" style="--empty-state-height: 450px">{{ 'No data available' | translate }}</div>
   </ng-template>
 </app-card>
-

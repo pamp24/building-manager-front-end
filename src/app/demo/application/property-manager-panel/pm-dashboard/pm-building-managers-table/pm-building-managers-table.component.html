@@ -1,55 +1,51 @@
 <div class="card">
   <div class="card-header">
-    <h5 class="mb-0">Διαχειριστές Πολυκατοικιών</h5>
+    <h5 class="mb-0">{{ 'Apartment Managers' | translate }}</h5>
   </div>
 
   <div class="card-body p-0">
-    @if (managers.length === 0) {
-      <div class="p-4 text-center text-muted">
-        Δεν βρέθηκαν διαχειριστές για την εταιρία σας.
-      </div>
-    } @else {
-      <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
-          <thead>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead>
+          <tr>
+            <th>{{ 'Building' | translate }}</th>
+            <th>{{ 'Code' | translate }}</th>
+            <th>{{ 'City' | translate }}</th>
+            <th>{{ 'Administrator' | translate }}</th>
+            <th>{{ 'Email' | translate }}</th>
+            <th>{{ 'Telephone' | translate }}</th>
+            <th class="text-center">{{ 'Status' | translate }}</th>
+            <th class="text-center">{{ 'Energy' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (managers.length === 0) {
             <tr>
-              <th>Πολυκατοικία</th>
-              <th>Κωδικός</th>
-              <th>Πόλη</th>
-              <th>Διαχειριστής</th>
-              <th>Email</th>
-              <th>Τηλέφωνο</th>
-              <th class="text-center">Κατάσταση</th>
-              <th class="text-center">Ενέργεια</th>
+              <td colspan="8" class="text-center text-muted py-4">{{ 'There is no admin data for your company.' | translate }}</td>
             </tr>
-          </thead>
-          <tbody>
-            @for (row of managers; track row.buildingId) {
-              <tr>
-                <td>{{ row.buildingName }}</td>
-                <td>{{ row.buildingCode }}</td>
-                <td>{{ row.city }}</td>
-                <td>{{ row.managerFullName || '-' }}</td>
-                <td>{{ row.managerEmail || '-' }}</td>
-                <td>{{ row.managerPhone || '-' }}</td>
-                <td class="text-center">
-                  <span class="badge rounded-pill px-3 py-2" [ngClass]="getStatusBadgeClass(row.managerAssigned)">
-                    {{ getStatusLabel(row.managerAssigned) }}
-                  </span>
-                </td>
-                <td class="text-center">
-                  <a
-                    class="btn btn-sm btn-outline-primary"
-                    [routerLink]="['/pm/buildings', row.buildingId]"
-                  >
-                    Προβολή
-                  </a>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-    }
+          }
+          @for (row of managers; track row.buildingId) {
+            <tr>
+              <td>{{ row.buildingName }}</td>
+              <td>{{ row.buildingCode }}</td>
+              <td>{{ row.city }}</td>
+              <td>{{ row.managerFullName || '-' }}</td>
+              <td>{{ row.managerEmail || '-' }}</td>
+              <td>{{ row.managerPhone || '-' }}</td>
+              <td class="text-center">
+                <span class="badge rounded-pill px-3 py-2" [ngClass]="getStatusBadgeClass(row.managerAssigned)">
+                  {{ getStatusLabel(row.managerAssigned) }}
+                </span>
+              </td>
+              <td class="text-center">
+                <a class="btn btn-sm btn-outline-primary" [routerLink]="['/pm/buildings', row.buildingId]">
+                  {{ 'Projection' | translate }}
+                </a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

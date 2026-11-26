@@ -4,12 +4,14 @@
       <div class="row w-100">
         <div class="col-sm-6 col-xs-12">
           <div class="info-section">
-            <h2 class="">Καλώς Ήρθατε στο Building Manager</h2>
+            <h2 class="">{{ 'Welcome to Building Manager' | translate }}</h2>
             <h6 class="my-3 f-w-400">
-              Πάρτε τον έλεγχο των κοινωστήστων σας με το Building Manager. Παρακολουθήστε την πρόοδο, διαχειριστείτε τις εργασίες και
-              επικοινωνήστε με τους ενοίκους εύκολα και αποτελεσματικά.
+              {{
+                'Take control of your sharers with Building Manager. Track progress, manage tasks and communicate with tenants easily and efficiently.'
+                  | translate
+              }}
             </h6>
-            <button routerLink="/dashboard/forms-validator" class="btn btn-outline-light">Δείτε Περισσότερα</button>
+            <button routerLink="/dashboard/forms-validator" class="btn btn-outline-light">{{ 'See More' | translate }}</button>
           </div>
         </div>
         <div class="col-sm-6 col-xs-12">
@@ -46,64 +48,64 @@
     <app-building-pedning-card />
   </div> -->
 
-  <div class="col-md-12 col-xl-8">
+  <div class="col-md-12 col-xl-8 dashboard-section">
     <app-building-chart [isVisible]="dashboardLoaded"></app-building-chart>
   </div>
 
-
   <!-- Ενεργείες/Πληρωμές -->
-  <div class="col-md-12 col-xl-4">
-    <h5 class="mb-3">Ενέργειες Πληρωμών</h5>
+  <div class="col-md-12 col-xl-4 dashboard-section">
+    <h5 class="mb-3">{{ 'Payment actions' | translate }}</h5>
 
-    <div class="card actions-card" style="max-height: 420px; overflow-y: auto">
+    <div class="card actions-card" [class.is-empty]="!allocations.length">
       <div class="list-group list-group-flush">
         @for (task of allocations; track task) {
           <div class="list-group-item py-3">
             <div class="d-flex justify-content-between align-items-start">
               <div>
                 <h6 class="mb-1 d-flex align-items-center gap-2">
-                  Σύνολο: {{ task.totalForApartment }} €
+                  {{ 'Total:' | translate }} {{ task.totalForApartment }} €
 
                   <span class="badge" [class.bg-success]="task.isPaid" [class.bg-danger]="!task.isPaid">
-                    {{ task.isPaid ? 'Πληρωμένο' : 'Απλήρωτο' }}
+                    {{ task.isPaid ? ('Paid' | translate) : ('Unpaid' | translate) }}
                   </span>
                 </h6>
                 <br />
               </div>
 
               <button class="btn btn-sm" [class.btn-primary]="!task.isPaid" [class.btn-secondary]="task.isPaid" (click)="openModal(task)">
-                {{ task.isPaid ? 'Εμφάνιση' : 'Πληρωμή' }}
+                {{ task.isPaid ? ('Display' | translate) : ('Payment' | translate) }}
               </button>
             </div>
             <div>
-              <h6>Τίτλος: {{ task.code }}</h6>
-              <h6>Μήνας: {{ task.month }}</h6>
+              <h6>{{ 'Title:' | translate }} {{ task.code }}</h6>
+              <h6>{{ 'Month:' | translate }} {{ task.month }}</h6>
             </div>
             <div>
               <small class="text-muted">
-                Ημερομηνία Έκδοσης: {{ task.issueDate | date: 'dd/MM/yyyy' }} Ημερομηνία Λήξης: {{ task.dueDate | date: 'dd/MM/yyyy' }}
+                {{ 'Issue Date:' | translate }} {{ task.issueDate | date: 'dd/MM/yyyy' }} {{ 'Expiration Date:' | translate }}
+                {{ task.dueDate | date: 'dd/MM/yyyy' }}
               </small>
             </div>
           </div>
         } @empty {
-          <div class="text-center text-muted py-4">Δεν υπάρχουν εκκρεμείς πληρωμές.</div>
+          <div class="dashboard-empty-state payment-empty-state">{{ 'There are no pending payments.' | translate }}</div>
         }
       </div>
     </div>
   </div>
 
   <!-- Πίνακας Έξοδα Μήνα -->
-  <div class="col-md-12 col-xl-8">
-    <h5 class="mb-3">Έξοδα Τελευταίου Μήνα</h5>
-    <div class="card tbl-card">
+  <div class="col-md-12 col-xl-8 dashboard-section">
+    <h5 class="mb-3">{{ "Last month's expenses" | translate }}</h5>
+    <div class="card dashboard-table-card" [class.is-empty]="!lastStatementItems.length">
       <div class="table-responsive scroll-10">
         <table class="table table-hover mb-0">
           <thead>
             <tr>
-              <th>Α.Α.</th>
-              <th>Κατηγορία</th>
-              <th class="text-center">Περιγραφή</th>
-              <th class="text-end">Συνολικό Ποσό</th>
+              <th>{{ 'AA' | translate }}</th>
+              <th>{{ 'Category' | translate }}</th>
+              <th class="text-center">{{ 'Description' | translate }}</th>
+              <th class="text-end">{{ 'Total Amount' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -116,12 +118,12 @@
               </tr>
             } @empty {
               <tr>
-                <td colspan="4" class="text-center text-muted py-4">Δεν υπάρχουν έξοδα για τον τελευταίο μήνα.</td>
+                <td colspan="4" class="text-center text-muted py-4">{{ 'There are no costs for the last month.' | translate }}</td>
               </tr>
             }
             <tr *ngIf="lastStatementItems.length > 0" class="table-secondary fw-bold">
               <td class="text-end"></td>
-              <td colspan="3" class="text-end">Σύνολο: {{ totalAmount | number: '1.2-2' }} €</td>
+              <td colspan="3" class="text-end">{{ 'Total:' | translate }} {{ totalAmount | number: '1.2-2' }} €</td>
             </tr>
           </tbody>
         </table>
@@ -129,24 +131,24 @@
     </div>
   </div>
 
-  <div class="col-md-12 col-xl-4">
+  <div class="col-md-12 col-xl-4 dashboard-section">
     <app-polls-table />
   </div>
 
-  <div class="col-md-12 col-xl-8">
+  <div class="col-md-12 col-xl-8 dashboard-section">
     <app-sales-report-chart />
   </div>
 
-  <div class="col-md-12 col-xl-4">
-    <h5 class="mb-3">Ιστορικό Συναλλαγών</h5>
-    <div class="card">
-      <div class="table-responsive" style="max-height: 340px; overflow-y: auto">
+  <div class="col-md-12 col-xl-4 dashboard-section">
+    <h5 class="mb-3">{{ 'Transaction History' | translate }}</h5>
+    <div class="card dashboard-table-card history-card" [class.is-empty]="!transactionHistory.length">
+      <div class="table-responsive history-table">
         <table class="table table-hover mb-0">
-          <thead class="table-light" style="position: sticky; top: 0; z-index: 2;">
+          <thead class="table-light" style="position: sticky; top: 0; z-index: 2">
             <tr>
-              <th>Μήνας</th>
-              <th class="text-end">Χρέωση</th>
-              <th class="text-end">Υπόλοιπο</th>
+              <th>{{ 'Month' | translate }}</th>
+              <th class="text-end">{{ 'Charge' | translate }}</th>
+              <th class="text-end">{{ 'Balance' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -162,19 +164,19 @@
               </tr>
             } @empty {
               <tr>
-                <td colspan="3" class="text-center text-muted py-4">Δεν υπάρχουν συναλλαγές.</td>
+                <td colspan="3" class="text-center text-muted py-4">{{ 'There are no trades.' | translate }}</td>
               </tr>
             }
           </tbody>
         </table>
       </div>
     </div>
-    <div class="card">
+    <div class="card support-card">
       <div class="card-body">
         <div class="row justify-content-between">
           <div class="col-auto">
-            <h5>Help & Support Chat</h5>
-            <p class="mb-3">Typical replay within 5 min</p>
+            <h5>{{ 'Help &amp; Support Chat' | translate }}</h5>
+            <p class="mb-3">{{ 'Typical replay within 5 min' | translate }}</p>
           </div>
           <div class="col-auto">
             <div class="user-group mb-3">
@@ -184,24 +186,24 @@
             </div>
           </div>
         </div>
-        <div class="btn btn-primary">Need Help?</div>
+        <div class="btn btn-primary">{{ 'Need Help?' | translate }}</div>
       </div>
     </div>
   </div>
 
-  <div class="col-md-12 col-xl-12" *ngIf="role === 'Owner'">
-    <h5 class="mb-3">Πληρωμές Ενοίκου στο Διαμέρισμά μου</h5>
-    <div class="card">
+  <div class="col-md-12 col-xl-12 dashboard-section" *ngIf="role === 'Owner'">
+    <h5 class="mb-3">{{ 'Tenant Payments in My Apartment' | translate }}</h5>
+    <div class="card dashboard-table-card" [class.is-empty]="!ownerResidentPayments.length">
       <div class="table-responsive scroll-10">
         <table class="table table-hover mb-0">
           <thead>
             <tr>
-              <th>Μήνας</th>
-              <th>Ένοικος</th>
-              <th class="text-end">Χρέωση</th>
-              <th class="text-end">Πληρωμένο</th>
-              <th class="text-end">Υπόλοιπο</th>
-              <th class="text-center">Κατάσταση</th>
+              <th>{{ 'Month' | translate }}</th>
+              <th>{{ 'Tenant' | translate }}</th>
+              <th class="text-end">{{ 'Charge' | translate }}</th>
+              <th class="text-end">{{ 'Paid' | translate }}</th>
+              <th class="text-end">{{ 'Balance' | translate }}</th>
+              <th class="text-center">{{ 'Status' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -214,13 +216,15 @@
                 <td class="text-end">{{ payment.remaining | number: '1.2-2' }} €</td>
                 <td class="text-center">
                   <span class="badge" [class.bg-success]="payment.isPaid" [class.bg-danger]="!payment.isPaid">
-                    {{ payment.isPaid ? 'Εξοφλημένο' : 'Ανεξόφλητο' }}
+                    {{ payment.isPaid ? ('Paid off' | translate) : ('Unpaid' | translate) }}
                   </span>
                 </td>
               </tr>
             } @empty {
               <tr>
-                <td colspan="6" class="text-center text-muted py-4">Δεν υπάρχει ένοικος στο διαμέρισμά σας ή δεν υπάρχουν δεδομένα.</td>
+                <td colspan="6" class="text-center text-muted py-4">
+                  {{ 'There is no tenant in your apartment or there is no data.' | translate }}
+                </td>
               </tr>
             }
           </tbody>

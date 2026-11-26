@@ -1,5 +1,7 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+
 import { RouterModule } from '@angular/router';
 
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -15,6 +17,8 @@ import { ProfessionalBusinessDTO } from 'src/app/theme/shared/models/professiona
   styleUrls: ['./my-professional-businesses.component.scss']
 })
 export class MyProfessionalBusinessesComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   businesses: ProfessionalBusinessDTO[] = [];
 
   loading = false;
@@ -38,7 +42,7 @@ export class MyProfessionalBusinessesComponent implements OnInit {
         this.loading = false;
       },
       error: () => {
-        this.error = 'Αποτυχία φόρτωσης επιχειρήσεων.';
+        this.error = this.uiLocale.text('Failed to load business.');
         this.loading = false;
       }
     });
@@ -57,11 +61,11 @@ export class MyProfessionalBusinessesComponent implements OnInit {
   }
 
   getStatusLabel(business: ProfessionalBusinessDTO): string {
-    if (business.verified && business.active) return 'Εγκεκριμένη';
-    if (!business.verified && !business.active) return 'Σε αναμονή έγκρισης';
-    if (business.verified && !business.active) return 'Ανενεργή';
+    if (business.verified && business.active) return this.uiLocale.text('Approved');
+    if (!business.verified && !business.active) return this.uiLocale.text('Awaiting approval');
+    if (business.verified && !business.active) return this.uiLocale.text('Inactive');
 
-    return 'Άγνωστη κατάσταση';
+    return this.uiLocale.text('Unknown status');
   }
 
   getStatusClass(business: ProfessionalBusinessDTO): string {

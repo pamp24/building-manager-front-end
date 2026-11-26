@@ -1,6 +1,6 @@
-<app-card cardTitle="Διαχείριση Χρηστών" [padding]="0">
+<app-card [cardTitle]="'User Management' | translate" [padding]="0">
   <ng-container *ngIf="loading">
-    <div class="py-4 px-3">Φόρτωση...</div>
+    <div class="py-4 px-3">{{ 'Loading...' | translate }}</div>
   </ng-container>
 
   <ng-container *ngIf="!loading && error">
@@ -12,19 +12,14 @@
       <div class="row g-2 align-items-center">
         <div class="col-lg-5">
           <div class="input-group">
-            <span class="input-group-text">Αναζήτηση</span>
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Όνομα, email ή ρόλος"
-              [(ngModel)]="searchTerm"
-            />
+            <span class="input-group-text">{{ 'Search' | translate }}</span>
+            <input type="text" class="form-control" [placeholder]="'Name, email or role' | translate" [(ngModel)]="searchTerm" />
           </div>
         </div>
 
         <div class="col-lg-3">
           <select class="form-select" [(ngModel)]="selectedRole">
-            <option value="">Όλοι οι ρόλοι</option>
+            <option value="">{{ 'All roles' | translate }}</option>
             @for (role of availableRoles; track role) {
               <option [value]="role">{{ role | translate }}</option>
             }
@@ -33,10 +28,10 @@
 
         <div class="col-lg-2">
           <select class="form-select" [(ngModel)]="selectedStatus">
-            <option value="">Όλα</option>
-            <option value="enabled">Ενεργοί</option>
-            <option value="disabled">Ανενεργοί</option>
-            <option value="deleted">Διαγραμμένοι</option>
+            <option value="">{{ 'Everything' | translate }}</option>
+            <option value="enabled">{{ 'Active' | translate }}</option>
+            <option value="disabled">{{ 'Inactive' | translate }}</option>
+            <option value="deleted">{{ 'Deleted' | translate }}</option>
           </select>
         </div>
 
@@ -47,25 +42,26 @@
             class="btn btn-outline-secondary"
             (click)="clearFilters()"
           >
-            Καθαρισμός
+            {{ 'Cleaning' | translate }}
           </button>
         </div>
       </div>
     </div>
 
     <div class="px-3 pb-1 pt-2 text-muted small" *ngIf="users.length">
-      Εμφανίζονται {{ filteredUsers.length }} από {{ users.length }} χρήστες
+      {{ 'They appear' | translate }} {{ filteredUsers.length }} {{ 'from' | translate }} {{ users.length }}
+      {{ 'users' | translate }}
     </div>
 
     <div class="table-responsive" *ngIf="filteredUsers.length; else empty">
       <table class="table table-hover table-striped mb-0">
         <thead>
           <tr>
-            <th scope="col">Χρήστης</th>
-            <th scope="col">Email</th>
-            <th scope="col">Ρόλος</th>
-            <th scope="col">Κατάσταση</th>
-            <th scope="col" class="text-end">Ενέργεια</th>
+            <th scope="col">{{ 'User' | translate }}</th>
+            <th scope="col">{{ 'Email' | translate }}</th>
+            <th scope="col">{{ 'Role' | translate }}</th>
+            <th scope="col">{{ 'Status' | translate }}</th>
+            <th scope="col" class="text-end">{{ 'Energy' | translate }}</th>
           </tr>
         </thead>
         <tbody>
@@ -73,11 +69,7 @@
             <tr>
               <td>
                 <div class="d-flex align-items-center">
-                  <img
-                    [src]="imgSrc(user.profileImageUrl)"
-                    alt="avatar"
-                    class="img-radius wid-35 me-2"
-                  />
+                  <img [src]="imgSrc(user.profileImageUrl)" alt="avatar" class="img-radius wid-35 me-2" />
                   <div>
                     <h6 class="mb-0">{{ user.fullName }}</h6>
                     <small class="text-muted">{{ user.city ? user.city : '' }}</small>
@@ -90,10 +82,10 @@
               </td>
               <td>
                 @if (user.deleted) {
-                  <span class="badge text-bg-dark">Διαγραμμένος</span>
+                  <span class="badge text-bg-dark">{{ 'Deleted' | translate }}</span>
                 } @else {
                   <span class="badge" [ngClass]="user.enabled ? 'text-bg-success' : 'text-bg-danger'">
-                    {{ user.enabled ? 'Ενεργός' : 'Ανενεργός' }}
+                    {{ user.enabled ? ('Active' | translate) : ('Inactive' | translate) }}
                   </span>
                 }
               </td>
@@ -115,18 +107,18 @@
                       [type]="user.enabled ? 'stop' : 'check-circle'"
                       theme="outline"
                     ></i>
-                    {{ user.enabled ? 'Απενεργοποίηση' : 'Ενεργοποίηση' }}
+                    {{ user.enabled ? ('Disable' | translate) : ('Activation' | translate) }}
                   </button>
 
                   <button
                     type="button"
                     class="btn btn-sm btn-light-danger"
                     [disabled]="updatingId === user.id || user.deleted || isCurrentUser(user)"
-                    [title]="isCurrentUser(user) ? 'Δεν μπορείτε να διαγράψετε τον λογαριασμό σας' : ''"
+                    [title]="isCurrentUser(user) ? ('You cannot delete your account' | translate) : ''"
                     (click)="softDeleteUser(user)"
                   >
                     <i class="mx-1 d-inline-flex align-items-center" antIcon type="delete" theme="outline"></i>
-                    Διαγραφή
+                    {{ 'Delete' | translate }}
                   </button>
                 </div>
               </td>
@@ -139,9 +131,7 @@
     <ng-template #empty>
       <div class="py-4 px-3 text-muted">
         {{
-          users.length
-            ? 'Δεν βρέθηκαν χρήστες με τα συγκεκριμένα φίλτρα.'
-            : 'Δεν βρέθηκαν χρήστες στη βάση δεδομένων.'
+          users.length ? ('No users were found with the specified filters.' | translate) : ('No users found in the database.' | translate)
         }}
       </div>
     </ng-template>

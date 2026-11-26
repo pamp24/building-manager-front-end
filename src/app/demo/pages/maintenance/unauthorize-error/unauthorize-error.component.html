@@ -13,13 +13,15 @@
               </div>
             </div>
             <div class="text-center">
-              <h1 class="mt-4"><b>Σφάλμα Μη Εξουσιοδοτημένης Πρόσβασης</b></h1>
+              <h1 class="mt-4">
+                <b>{{ 'Unauthorized Access Error' | translate }}</b>
+              </h1>
               <p class="mt-2 mb-4 text-sm text-muted">
-                Η εξουσιοδότηση απέτυχε.
+                {{ 'Authorization failed.' | translate }}
                 <br />
-                Παρακαλώ δοκιμάστε να ανανεώσετε τη σελίδα και να εισάγετε τα σωστά στοιχεία σύνδεσης.
+                {{ 'Please try refreshing the page and entering the correct login details.' | translate }}
               </p>
-              <a [routerLink]="['/dashboard/default']" type="button" class="btn btn-primary mb-3">Επιστροφή στην αρχική</a>
+              <a [routerLink]="['/dashboard/default']" type="button" class="btn btn-primary mb-3">{{ 'Return to original' | translate }}</a>
             </div>
           </div>
         </div>

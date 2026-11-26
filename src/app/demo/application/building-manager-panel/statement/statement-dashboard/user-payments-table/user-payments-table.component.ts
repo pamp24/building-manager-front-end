@@ -1,4 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, EventEmitter, Input, Output } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { StatementUserPaymentDTO } from 'src/app/theme/shared/models/StatementUserPaymentDTO';
@@ -11,6 +13,8 @@ import { StatementUserPaymentDTO } from 'src/app/theme/shared/models/StatementUs
   styleUrls: ['./user-payments-table.component.scss']
 })
 export class UserPaymentsTableComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   @Input() statementUserPayments: StatementUserPaymentDTO[] = [];
   @Input() currentMonthLabel!: string;
   @Input() paymentsLoading = false;
@@ -20,27 +24,27 @@ export class UserPaymentsTableComponent {
   translateStatus(status: string): string {
     switch (status) {
       case 'PAID':
-        return 'Πληρωμένο';
+        return this.uiLocale.text('Paid');
       case 'PARTIALLY_PAID':
-        return 'Μερικώς πληρωμένο';
+        return this.uiLocale.text('Partially paid');
       case 'PENDING':
       case 'UNPAID':
-        return 'Σε εκκρεμότητα';
+        return this.uiLocale.text('Pending');
       default:
-        return 'Άγνωστη κατάσταση';
+        return this.uiLocale.text('Unknown status');
     }
   }
 
   translatePaymentMethod(method: string): string {
     switch (method) {
       case 'CASH':
-        return 'Μετρητά';
+        return this.uiLocale.text('Cash');
       case 'BANK_TRANSFER':
-        return 'Τραπεζική μεταφορά';
+        return this.uiLocale.text('Bank transfer');
       case 'CARD':
-        return 'Κάρτα';
+        return this.uiLocale.text('Card');
       case 'ONLINE':
-        return 'Ηλεκτρονική πληρωμή';
+        return this.uiLocale.text('Electronic payment');
       default:
         return '-';
     }
@@ -55,7 +59,7 @@ export class UserPaymentsTableComponent {
       '3': 'Γ',
       '4': 'Δ',
       '5': 'Ε',
-      '6': 'ΣΤ',
+      '6': this.uiLocale.text('ST'),
       '7': 'Ζ',
       '8': 'Η',
       '9': 'Θ',

@@ -1,5 +1,7 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+
 import { FormsModule } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProfessionalBusinessDTO } from 'src/app/theme/shared/models/professional.model';
@@ -18,6 +20,8 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
   styleUrls: ['./professional-details-modal.component.scss']
 })
 export class ProfessionalDetailsModalComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   @Input() professional!: ProfessionalBusinessDTO;
 
   reviews: ProfessionalReviewDTO[] = [];
@@ -92,25 +96,25 @@ export class ProfessionalDetailsModalComponent implements OnInit {
   getCategoryLabel(category: string): string {
     switch (category) {
       case 'ELECTRICIAN':
-        return 'Ηλεκτρολόγος';
+        return this.uiLocale.text('Electrician');
       case 'PLUMBER':
-        return 'Υδραυλικός';
+        return this.uiLocale.text('Plumber');
       case 'ELEVATOR_TECHNICIAN':
-        return 'Τεχνικός Ασανσέρ';
+        return this.uiLocale.text('Elevator technician');
       case 'CLEANING_SERVICE':
-        return 'Καθαρισμός';
+        return this.uiLocale.text('Cleaning');
       case 'HEATING_TECHNICIAN':
-        return 'Θέρμανση';
+        return this.uiLocale.text('Heating');
       case 'LOCKSMITH':
-        return 'Κλειδαράς';
+        return this.uiLocale.text('Locker');
       case 'AIR_CONDITION_TECHNICIAN':
-        return 'Κλιματισμός';
+        return this.uiLocale.text('Air conditioning');
       case 'PAINTER':
-        return 'Ελαιοχρωματιστής';
+        return this.uiLocale.text('Oil painter');
       case 'PEST_CONTROL':
-        return 'Απεντομώσεις';
+        return this.uiLocale.text('Exterminations');
       case 'GENERAL_REPAIRS':
-        return 'Γενικές Επισκευές';
+        return this.uiLocale.text('General Repairs');
       default:
         return category;
     }
@@ -163,7 +167,7 @@ export class ProfessionalDetailsModalComponent implements OnInit {
   }
 
   deleteImage(imageId: number): void {
-    const confirmed = confirm('Θέλεις σίγουρα να διαγράψεις αυτή την εικόνα;');
+    const confirmed = confirm(this.uiLocale.text('Are you sure you want to delete this image?'));
 
     if (!confirmed) return;
 

@@ -4,11 +4,14 @@
       <div class="row w-100">
         <div class="col-sm-6 col-xs-12">
           <div class="info-section">
-            <h2 class="">Καλώς Ήρθατε στο Building Manager</h2>
+            <h2 class="">{{ 'Welcome to Building Manager' | translate }}</h2>
             <h6 class="my-3 f-w-400">
-              Πάρτε τον έλεγχο των κοινωστήστων σας με το Building Manager. Παρακολουθήστε την πρόοδο, διαχειριστείτε τις εργασίες και επικοινωνήστε με τους ενοίκους εύκολα και αποτελεσματικά.
+              {{
+                'Take control of your sharers with Building Manager. Track progress, manage tasks and communicate with tenants easily and efficiently.'
+                  | translate
+              }}
             </h6>
-            <button routerLink="/account/profile" class="btn btn-outline-light">Δείτε Περισσότερα</button>
+            <button routerLink="/account/profile" class="btn btn-outline-light">{{ 'See More' | translate }}</button>
           </div>
         </div>
         <div class="col-sm-6 col-xs-12">
@@ -41,7 +44,7 @@
     <app-building-chart />
   </div>
   <div class="col-md-12 col-xl-4">
-    <h5 class="mb-3">Page Views by Page Title</h5>
+    <h5 class="mb-3">{{ 'Page Views by Page Title' | translate }}</h5>
     <div class="card">
       <div class="list-group list-group-flush">
         @for (task of page_view; track task) {
@@ -63,17 +66,17 @@
   </div>
 
   <div class="col-md-12 col-xl-8">
-    <h5 class="mb-3">Recent Orders</h5>
+    <h5 class="mb-3">{{ 'Recent Orders' | translate }}</h5>
     <div class="card tbl-card">
       <div class="table-responsive">
         <table class="table table-hover mb-0">
           <thead>
             <tr>
-              <th>TRACKING NO.</th>
-              <th>PRODUCT NAME</th>
-              <th class="text-end">TOTAL ORDER</th>
-              <th class="text-center">STATUS</th>
-              <th class="text-end">TOTAL AMOUNT</th>
+              <th>{{ 'TRACKING NO.' | translate }}</th>
+              <th>{{ 'PRODUCT NAME' | translate }}</th>
+              <th class="text-end">{{ 'TOTAL ORDER' | translate }}</th>
+              <th class="text-center">{{ 'STATUS' | translate }}</th>
+              <th class="text-end">{{ 'TOTAL AMOUNT' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -106,7 +109,7 @@
     <app-sales-report-chart />
   </div>
   <div class="col-md-12 col-xl-4">
-    <h5 class="mb-3">Transaction History</h5>
+    <h5 class="mb-3">{{ 'Transaction History' | translate }}</h5>
     <div class="card">
       <div class="list-group list-group-flush">
         @for (history of transaction; track history) {
@@ -134,8 +137,8 @@
       <div class="card-body">
         <div class="row justify-content-between">
           <div class="col-auto">
-            <h5>Help & Support Chat</h5>
-            <p class="mb-3">Typical replay within 5 min</p>
+            <h5>{{ 'Help &amp; Support Chat' | translate }}</h5>
+            <p class="mb-3">{{ 'Typical replay within 5 min' | translate }}</p>
           </div>
           <div class="col-auto">
             <div class="user-group mb-3">
@@ -145,7 +148,7 @@
             </div>
           </div>
         </div>
-        <div class="btn btn-primary">Need Help?</div>
+        <div class="btn btn-primary">{{ 'Need Help?' | translate }}</div>
       </div>
     </div>
   </div>
@@ -172,9 +175,13 @@
             <img src="assets/images/widget/target.svg" alt="img" class="img-fluid" />
           </div>
           <div class="flex-grow-1 ms-3">
-            <span>Income Salaries & Budget</span>
-            <p class="text-muted mb-0 text-sm">All your income salaries and budget comes here, you can track them or manage them</p>
-            <p class="text-muted mb-0 text-sm">All your income salaries and budget comes here, you can track them or manage them</p>
+            <span>{{ 'Income Salaries &amp; Budget' | translate }}</span>
+            <p class="text-muted mb-0 text-sm">
+              {{ 'All your income salaries and budget comes here, you can track them or manage them' | translate }}
+            </p>
+            <p class="text-muted mb-0 text-sm">
+              {{ 'All your income salaries and budget comes here, you can track them or manage them' | translate }}
+            </p>
           </div>
         </div>
       </div>
@@ -183,9 +190,9 @@
       <div class="row g-0">
         <div class="col-md-7">
           <div class="card-body bg-primary position-relative h-100">
-            <h5 class="text-white">What would you want to learn today</h5>
-            <p class="text-white text-sm mb-4">Your learning capacity is 80% as daily analytics</p>
-            <h4 class="text-white pt-5">35% Completed</h4>
+            <h5 class="text-white">{{ 'What would you want to learn today' | translate }}</h5>
+            <p class="text-white text-sm mb-4">{{ 'Your learning capacity is 80% as daily analytics' | translate }}</p>
+            <h4 class="text-white pt-5">{{ '35% Completed' | translate }}</h4>
             <div class="max-60 position-relative">
               <ngb-progressbar type="success" height="6px" [value]="40"></ngb-progressbar>
             </div>
@@ -194,8 +201,8 @@
         </div>
         <div class="col-md-5">
           <div class="card-body">
-            <p class="mb-2">Get started with new basic skills</p>
-            <p class="text-muted mb-3">Last Date 5th Nov 2020</p>
+            <p class="mb-2">{{ 'Get started with new basic skills' | translate }}</p>
+            <p class="text-muted mb-3">{{ 'Last Date 5th Nov 2020' | translate }}</p>
             <hr class="my-4" />
             <div class="d-flex align-items-center justify-content-between mb-4">
               <div class="user-group">
@@ -203,12 +210,12 @@
                 <img src="assets/images/user/avatar-2.jpg" alt="image" />
                 <img src="assets/images/user/avatar-3.jpg" alt="image" />
               </div>
-              <a href="javascript:" class="avatar avatar-xs btn btn-primary" title="Add User">
+              <a href="javascript:" class="avatar avatar-xs btn btn-primary" [title]="'Add User' | translate">
                 <i antIcon type="plus" theme="outline"></i>
               </a>
             </div>
-            <p class="text-muted text-sm mb-0">Chrome fixed the bug several versions ago, thus rendering this...</p>
-            <p class="text-muted text-sm mb-0">Chrome fixed the bug several versions ago, thus rendering this...</p>
+            <p class="text-muted text-sm mb-0">{{ 'Chrome fixed the bug several versions ago, thus rendering this...' | translate }}</p>
+            <p class="text-muted text-sm mb-0">{{ 'Chrome fixed the bug several versions ago, thus rendering this...' | translate }}</p>
           </div>
         </div>
       </div>

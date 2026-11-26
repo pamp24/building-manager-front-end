@@ -1,5 +1,7 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, EventEmitter, OnInit, Output } from '@angular/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -38,6 +40,8 @@ type UiNotification = {
   templateUrl: './notification-dropdown.component.html'
 })
 export class NotificationDropdownComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   @Output() closeDropdown = new EventEmitter<void>();
   @Output() unreadCountChange = new EventEmitter<number>();
 
@@ -49,16 +53,18 @@ export class NotificationDropdownComponent implements OnInit {
     private router: Router,
     private iconService: IconService
   ) {
-    this.iconService.addIcon(...[
-      UserAddOutline,
-      CheckCircleOutline,
-      FileTextOutline,
-      NotificationOutline,
-      ClockCircleOutline,
-      CalendarOutline,
-      ShopOutline,
-      BellOutline
-    ]);
+    this.iconService.addIcon(
+      ...[
+        UserAddOutline,
+        CheckCircleOutline,
+        FileTextOutline,
+        NotificationOutline,
+        ClockCircleOutline,
+        CalendarOutline,
+        ShopOutline,
+        BellOutline
+      ]
+    );
   }
 
   ngOnInit(): void {
@@ -117,7 +123,7 @@ export class NotificationDropdownComponent implements OnInit {
 
     switch (n.type) {
       case 'PENDING_APARTMENT': {
-        const fullName = [p?.joinerLastName, p?.joinerFirstName].filter(Boolean).join(' ') || 'Άγνωστος χρήστης';
+        const fullName = [p?.joinerLastName, p?.joinerFirstName].filter(Boolean).join(' ') || this.uiLocale.text('Unknown user');
 
         const email = p?.joinerEmail ? ` (${p.joinerEmail})` : '';
         const buildingName = p?.buildingName ? ` στην <b>${p.buildingName}</b>` : '';
@@ -129,7 +135,8 @@ export class NotificationDropdownComponent implements OnInit {
           iconClass: 'user-add',
           time,
           message:
-            `Νέος χρήστης <b>${fullName}</b>${email} συνδέθηκε <b>${buildingName}</b>. ` + `Αναμονή για <b>ανάθεση διαμερίσματος</b>.`,
+            this.uiLocale.text('New user <b>{{p0}}</b>{{p1}} logged in <b>{{p2}}</b>.', { p0: fullName, p1: email, p2: buildingName }) +
+            this.uiLocale.text('Waiting for <b>apartment assignment</b>.'),
           date,
           payloadObj: p
         };
@@ -146,7 +153,11 @@ export class NotificationDropdownComponent implements OnInit {
           avatarClass: 'user-avatar bg-light-success',
           iconClass: 'check-circle',
           time,
-          message: `Σου ανατέθηκε διαμέρισμα <b>${fullApartment}</b>${buildingName}${role}.`,
+          message: this.uiLocale.text('You were assigned an <b>apartment {{p0}}</b>{{p1}}{{p2}}.', {
+            p0: fullApartment,
+            p1: buildingName,
+            p2: role
+          }),
           date,
           payloadObj: p
         };
@@ -160,7 +171,7 @@ export class NotificationDropdownComponent implements OnInit {
           avatarClass: 'user-avatar bg-light-primary',
           iconClass: 'file-text',
           time,
-          message: `Εκδόθηκε νέο παραστατικό <b>${code}</b> (${month}).`,
+          message: this.uiLocale.text('A new document <b>{{p0}}</b> ({{p1}}) has been issued.', { p0: code, p1: month }),
           date,
           payloadObj: p
         };
@@ -172,7 +183,7 @@ export class NotificationDropdownComponent implements OnInit {
           avatarClass: 'user-avatar bg-light-info',
           iconClass: 'notification',
           time,
-          message: n.message ?? 'Δημιουργήθηκε νέα ψηφοφορία.',
+          message: n.message ?? this.uiLocale.text('New poll created.'),
           date,
           payloadObj: p
         };
@@ -184,7 +195,7 @@ export class NotificationDropdownComponent implements OnInit {
           avatarClass: 'user-avatar bg-light-danger',
           iconClass: 'clock-circle',
           time,
-          message: n.message ?? 'Η ψηφοφορία έληξε.',
+          message: n.message ?? this.uiLocale.text('Voting has ended.'),
           date,
           payloadObj: p
         };
@@ -196,13 +207,13 @@ export class NotificationDropdownComponent implements OnInit {
           avatarClass: 'user-avatar bg-light-info',
           iconClass: 'calendar',
           time,
-          message: n.message ?? 'Νέο γεγονός στο ημερολόγιο.',
+          message: n.message ?? this.uiLocale.text('New calendar event.'),
           date,
           payloadObj: p
         };
       }
       case 'PROFESSIONAL_PENDING_APPROVAL': {
-        const businessName = (p as any)?.businessName ?? 'Νέα επιχείρηση';
+        const businessName = (p as any)?.businessName ?? this.uiLocale.text('New business');
 
         return {
           id: n.id,
@@ -210,7 +221,7 @@ export class NotificationDropdownComponent implements OnInit {
           avatarClass: 'user-avatar bg-light-info',
           iconClass: 'shop',
           time,
-          message: `Νέος επαγγελματίας <b>${businessName}</b> περιμένει έγκριση.`,
+          message: this.uiLocale.text('New <b>professional {{p0}}</b> awaiting approval.', { p0: businessName }),
           date,
           payloadObj: p
         };
@@ -223,7 +234,7 @@ export class NotificationDropdownComponent implements OnInit {
           avatarClass: 'user-avatar bg-light-primary',
           iconClass: 'bell',
           time,
-          message: n.message ?? 'Νέα ειδοποίηση.',
+          message: n.message ?? this.uiLocale.text('New notification.'),
           date,
           payloadObj: p
         };
@@ -270,7 +281,7 @@ export class NotificationDropdownComponent implements OnInit {
       this.close();
       return;
     }
-    
+
     if (item.type === 'PROFESSIONAL_PENDING_APPROVAL') {
       this.router.navigate(['/professionals/approval']);
       this.close();

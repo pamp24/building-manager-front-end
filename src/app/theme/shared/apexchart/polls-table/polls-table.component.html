@@ -1,14 +1,13 @@
-<h5 class="mb-3">Ψηφοφορίες</h5>
+<h5 class="mb-3">{{ 'Votes' | translate }}</h5>
 
-<div class="card">
-
+<div class="card" [class.is-empty]="!polls.length">
   <!-- Scrollable area μόνο για το table body -->
-  <div class="table-wrapper" style="max-height: 290px; overflow-y: auto;">
+  <div class="table-wrapper">
     <table class="table table-hover mb-0">
-      <thead class="table-light" style="position: sticky; top: 0; z-index: 2;">
+      <thead class="table-light" style="position: sticky; top: 0; z-index: 2">
         <tr>
-          <th>Τίτλος</th>
-          <th class="text-center">Κατάσταση</th>
+          <th>{{ 'Title' | translate }}</th>
+          <th class="text-center">{{ 'Status' | translate }}</th>
         </tr>
       </thead>
 
@@ -17,28 +16,22 @@
           <tr>
             <td>{{ poll.title }}</td>
             <td class="text-center">
-              <span class="badge" 
-                    [class.bg-success]="poll.active" 
-                    [class.bg-danger]="!poll.active">
-                {{ poll.active ? 'Ενεργή' : 'Μη Ενεργή' }}
+              <span class="badge" [class.bg-success]="poll.active" [class.bg-danger]="!poll.active">
+                {{ poll.active ? ('Active' | translate) : ('Not Active' | translate) }}
               </span>
             </td>
           </tr>
         } @empty {
           <tr>
-            <td colspan="2" class="text-center text-muted py-4">Δεν υπάρχουν ψηφοφορίες.</td>
+            <td colspan="2" class="text-center text-muted py-4">{{ 'There are no votes.' | translate }}</td>
           </tr>
         }
       </tbody>
-
     </table>
   </div>
 
   <!-- Κουμπί "Δείτε περισσότερα" -->
   <div class="card-footer text-center">
-    <button class="btn btn-outline-primary btn-sm" (click)="openPollsPage()">
-      Δείτε περισσότερα
-    </button>
+    <button class="btn btn-outline-primary btn-sm" (click)="openPollsPage()">{{ 'See more' | translate }}</button>
   </div>
-
 </div>

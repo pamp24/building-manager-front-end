@@ -1,34 +1,34 @@
-<h5 class="mb-3">Γράφημα Πολυκατοικίας</h5>
+<h5 class="mb-3">{{ 'Building chart' | translate }}</h5>
 <div class="card">
   <div class="card-body">
     <div class="row mb-0 align-items-center">
-
       <div class="col-auto">
         <div class="btn-group">
           <button class="btn toggle-btn" [class.active]="selectedView === 'building'" (click)="toggleActive('building')">
-            Πολυκατοικία
+            {{ 'Building' | translate }}
           </button>
 
           <button class="btn toggle-btn" [class.active]="selectedView === 'apartment'" (click)="toggleActive('apartment')">
-            Διαμέρισμα
+            {{ 'Apartment' | translate }}
           </button>
         </div>
       </div>
 
       <div class="col-auto">
         <select class="form-select select-time" [(ngModel)]="selectedPeriod" (change)="loadChartData()">
-          <option value="month">Μήνας</option>
-          <option value="year">Χρόνος</option>
+          <option value="month">{{ 'Month' | translate }}</option>
+          <option value="year">{{ 'Time' | translate }}</option>
         </select>
       </div>
       <div class="col-auto">
-        <a href="javascript:" class="avatar avatar-xs btn btn-outline-secondary" title="Λήψη">
+        <a href="javascript:" class="avatar avatar-xs btn btn-outline-secondary" [title]="'Download' | translate">
           <i antIcon type="download" theme="outline"></i>
         </a>
       </div>
     </div>
     <div id="chart">
       <apx-chart
+        *ngIf="hasData && !loading && !loadError"
         #chart
         [series]="chartOptions.series"
         [chart]="chartOptions.chart"
@@ -41,6 +41,15 @@
         [grid]="chartOptions.grid"
         [tooltip]="chartOptions.tooltip"
       ></apx-chart>
+      <div *ngIf="!hasData || loading || loadError" class="dashboard-empty-state" style="--empty-state-height: 355px" role="status">
+        {{
+          loading
+            ? ('Loading data…' | translate)
+            : loadError
+              ? ('The data could not be loaded.' | translate)
+              : ('There is no data for the selected period.' | translate)
+        }}
+      </div>
     </div>
   </div>
 </div>

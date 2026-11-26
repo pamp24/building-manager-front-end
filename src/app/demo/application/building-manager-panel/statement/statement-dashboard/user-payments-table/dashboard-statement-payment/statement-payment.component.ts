@@ -1,5 +1,8 @@
+import { TranslateModule } from '@ngx-translate/core';
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
@@ -8,10 +11,12 @@ import { PaymentDTO } from '../../../../../../theme/shared/models/paymentDTO';
 @Component({
   selector: 'app-statement-payment',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [TranslateModule, CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './statement-payment.component.html'
 })
 export class StatementPaymentComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   @Input() payment: any;
   @Output() paymentSaved = new EventEmitter<PaymentDTO>();
 
@@ -60,7 +65,7 @@ export class StatementPaymentComponent implements OnInit {
     const amount = formValue.paymentAmount;
 
     if (!amount || amount <= 0) {
-      alert('Παρακαλώ εισάγετε έγκυρο ποσό.');
+      alert(this.uiLocale.text('Please enter a valid amount.'));
       return;
     }
 
