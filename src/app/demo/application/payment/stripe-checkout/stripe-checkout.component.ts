@@ -1,4 +1,7 @@
-import { Component, Input, OnInit, Output, EventEmitter, OnDestroy, ViewChild, ElementRef, NgZone } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, Input, OnInit, Output, EventEmitter, OnDestroy, ViewChild, ElementRef, NgZone } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { loadStripe, Stripe, StripeElements, StripePaymentElement } from '@stripe/stripe-js';
 import { environment } from 'src/environments/environment';
@@ -8,22 +11,18 @@ export type StripeCheckoutState = 'loading' | 'ready' | 'processing' | 'succeede
 @Component({
   selector: 'app-stripe-checkout',
   standalone: true,
-  imports: [CommonModule],
+  imports: [TranslateModule, CommonModule],
   template: `
     <div class="stripe-checkout">
       <div *ngIf="state === 'loading'" class="stripe-loading">
         <div class="spinner-border text-primary" role="status"></div>
-        <p>Loading payment form...</p>
+        <p>{{ 'Loading payment form...' | translate }}</p>
       </div>
 
       <div *ngIf="state === 'ready' || state === 'processing'" class="stripe-form">
         <div #stripeElement class="stripe-element-wrapper"></div>
         <div *ngIf="errorMessage" class="alert alert-danger mt-2">{{ errorMessage }}</div>
-        <button
-          class="btn btn-primary w-100 mt-3"
-          (click)="handleSubmit()"
-          [disabled]="state === 'processing'"
-        >
+        <button class="btn btn-primary w-100 mt-3" (click)="handleSubmit()" [disabled]="state === 'processing'">
           <span *ngIf="state === 'processing'" class="spinner-border spinner-border-sm me-1"></span>
           {{ state === 'processing' ? 'Processing...' : 'Pay Now' }}
         </button>
@@ -31,24 +30,43 @@ export type StripeCheckoutState = 'loading' | 'ready' | 'processing' | 'succeede
 
       <div *ngIf="state === 'succeeded'" class="stripe-success text-center py-3">
         <div class="text-success mb-2" style="font-size: 48px;">&#10003;</div>
-        <h5>Payment Successful</h5>
-        <p class="text-muted mb-0">Your payment has been processed.</p>
+        <h5>{{ 'Payment Successful' | translate }}</h5>
+        <p class="text-muted mb-0">{{ 'Your payment has been processed.' | translate }}</p>
       </div>
 
       <div *ngIf="state === 'error' && !clientSecret" class="alert alert-danger">
-        No payment client secret provided. Cannot initialize payment form.
+        {{ 'No payment client secret provided. Cannot initialize payment form.' | translate }}
       </div>
     </div>
   `,
-  styles: [`
-    .stripe-checkout { min-height: 200px; }
-    .stripe-loading { text-align: center; padding: 40px 0; color: #757575; }
-    .stripe-element-wrapper { padding: 12px; border: 1px solid #e0e0e0; border-radius: 6px; background: #fff; }
-    .stripe-element-wrapper.StripeElement--focus { border-color: #3949ab; }
-    .stripe-element-wrapper.StripeElement--invalid { border-color: #e53935; }
-  `]
+  styles: [
+    `
+      .stripe-checkout {
+        min-height: 200px;
+      }
+      .stripe-loading {
+        text-align: center;
+        padding: 40px 0;
+        color: #757575;
+      }
+      .stripe-element-wrapper {
+        padding: 12px;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        background: #fff;
+      }
+      .stripe-element-wrapper.StripeElement--focus {
+        border-color: #3949ab;
+      }
+      .stripe-element-wrapper.StripeElement--invalid {
+        border-color: #e53935;
+      }
+    `
+  ]
 })
 export class StripeCheckoutComponent implements OnInit, OnDestroy {
+  private readonly uiLocale = inject(UiLocaleService);
+
   @Input() clientSecret = '';
   @Input() returnUrl = '';
   @Output() paymentSuccess = new EventEmitter<void>();
@@ -91,7 +109,9 @@ export class StripeCheckoutComponent implements OnInit, OnDestroy {
       setTimeout(() => {
         if (this.stripeElementRef) {
           this.paymentElement?.mount(this.stripeElementRef.nativeElement);
-          this.ngZone.run(() => { this.state = 'ready'; });
+          this.ngZone.run(() => {
+            this.state = 'ready';
+          });
         } else {
           this.setError('Payment form container not found.');
         }
@@ -112,7 +132,7 @@ export class StripeCheckoutComponent implements OnInit, OnDestroy {
     const { error: submitError } = await this.elements.submit();
     if (submitError) {
       this.ngZone.run(() => {
-        this.errorMessage = submitError.message || 'Invalid payment details.';
+        this.errorMessage = submitError.message || this.uiLocale.text('Invalid payment details.');
         this.state = 'ready';
       });
       return;
@@ -128,7 +148,7 @@ export class StripeCheckoutComponent implements OnInit, OnDestroy {
 
     if (confirmError) {
       this.ngZone.run(() => {
-        this.errorMessage = confirmError.message || 'Payment failed. Please try again.';
+        this.errorMessage = confirmError.message || this.uiLocale.text('Payment failed. Please try again.');
         this.state = 'ready';
       });
       return;

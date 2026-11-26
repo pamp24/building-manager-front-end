@@ -4,11 +4,11 @@
 </div>
 
 <!-- Κάρτα με στοιχεία πολυκατοικίας -->
-<app-card *ngIf="!pmView && buildings.length > 0" cardTitle="Πολυκατοικία" [padding]="24">
+<app-card *ngIf="!pmView && buildings.length > 0" [cardTitle]="'Building' | translate" [padding]="24">
   <div class="row">
     <!-- Όνομα Πολυκατοικίας (dropdown) -->
     <div class="col-md-6">
-      <label>Όνομα Πολυκατοικίας</label>
+      <label>{{ 'Name of Apartment Building' | translate }}</label>
 
       <select class="form-select" [(ngModel)]="selectedBuildingIndex" (change)="onBuildingChange()">
         <option *ngFor="let b of buildings; let i = index" [value]="i">
@@ -19,7 +19,7 @@
 
     <!-- Διεύθυνση -->
     <div class="col-md-6">
-      <label>Διεύθυνση Πολυκατοικίας</label>
+      <label>{{ 'Apartment building address' | translate }}</label>
       <input
         type="text"
         class="form-control readonly-input"
@@ -43,14 +43,14 @@
       <select
         *ngIf="!messageApartments"
         class="form-select"
-        aria-label="Επιλογή ταξινόμησης"
+        [attr.aria-label]="'Sort option' | translate"
         [(ngModel)]="sortOption"
         (change)="sortCards()"
       >
-        <option value="default">Ταξινόμηση (Προεπιλογή)</option>
-        <option value="name">Όνομα</option>
-        <option value="floorAsc">Όροφος Αύξουσα</option>
-        <option value="floorDesc">Όροφος Φθίνουσα</option>
+        <option value="default">{{ 'Sort (Default)' | translate }}</option>
+        <option value="name">{{ 'Name' | translate }}</option>
+        <option value="floorAsc">{{ 'Ascending floor' | translate }}</option>
+        <option value="floorDesc">{{ 'Descending floor' | translate }}</option>
       </select>
       <a
         *ngIf="userRole === 'BuildingManager' || userRole === 'PropertyManager'"
@@ -59,9 +59,16 @@
         (click)="openAddApartment()"
       >
         <i class="me-2 d-flex" antIcon type="plus" theme="outline"></i>
-        <span>Προσθήκη Διαμερίσματος</span>
+        <span>{{ 'Add Apartment' | translate }}</span>
       </a>
-      <button *ngIf="pmView && userRole === 'PropertyManager' && currentBuilding" type="button" class="btn btn-outline-primary" (click)="openBulk(bulkModal)">Μαζική Προσθήκη</button>
+      <button
+        *ngIf="pmView && userRole === 'PropertyManager' && currentBuilding"
+        type="button"
+        class="btn btn-outline-primary"
+        (click)="openBulk(bulkModal)"
+      >
+        {{ 'Bulk Add' | translate }}
+      </button>
     </div>
   </div>
 
@@ -81,16 +88,18 @@
               <button
                 type="button"
                 class="avatar avatar-s btn-link-secondary dropdown-toggle arrow-none border-0 bg-transparent"
-                title="Μενού"
+                [title]="'Menu' | translate"
                 ngbDropdownToggle
               >
                 <i antIcon type="more" theme="outline" class="f-16"></i>
               </button>
               <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
-                <button type="button" class="dropdown-item" (click)="open(preview, card)">Προεπισκόπηση</button>
+                <button type="button" class="dropdown-item" (click)="open(preview, card)">{{ 'Preview' | translate }}</button>
                 <ng-container *ngIf="canManageApartment">
-                  <button type="button" class="dropdown-item" (click)="openEdit(card)">Επεξεργασία</button>
-                  <button type="button" class="dropdown-item text-danger" (click)="openDelete(card)">Διαγραφή</button>
+                  <button type="button" class="dropdown-item" (click)="openEdit(card)">{{ 'Processing' | translate }}</button>
+                  <button type="button" class="dropdown-item text-danger" (click)="openDelete(card)">
+                    {{ 'Delete' | translate }}
+                  </button>
                 </ng-container>
               </div>
             </div>
@@ -136,29 +145,49 @@
 
         <div class="card-footer">
           <div class="d-flex align-items-center justify-content-between">
-            <p class="mb-0 text-muted text-sm">Ενημερώθηκε: {{ card.lastModifiedDate || 'Δεν υπάρχει ημερομηνία' }}</p>
-            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" (click)="open(preview, card)">Προεπισκόπηση</button>
+            <p class="mb-0 text-muted text-sm">
+              {{ 'Updated:' | translate }} {{ card.lastModifiedDate || ('There is no date' | translate) }}
+            </p>
+            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" (click)="open(preview, card)">
+              {{ 'Preview' | translate }}
+            </button>
           </div>
         </div>
       </div>
     </div>
   }
   <div *ngIf="pmView" class="mb-3">
-    <a class="btn btn-outline-primary" [routerLink]="['/pm/buildings']">Πίσω</a>
+    <a class="btn btn-outline-primary" [routerLink]="['/pm/buildings']">{{ 'Back' | translate }}</a>
   </div>
 </div>
 
 <ng-template #preview let-modal>
   <app-card-preview [apartment]="selectedApartment" [building]="currentBuilding"></app-card-preview>
   <div class="modal-footer">
-    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="modal.close('Close click')">Κλείσιμο</button>
+    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="modal.close('Close click')">
+      {{ 'Closing' | translate }}
+    </button>
   </div>
 </ng-template>
 
 <ng-template #bulkModal let-modal>
   <div class="modal-header">
-    <h2 class="modal-title fs-5">Μαζική Προσθήκη Διαμερισμάτων</h2>
-    <button type="button" class="btn-close" aria-label="Κλείσιμο" [disabled]="bulkSending" (click)="modal.dismiss()"></button>
+    <h2 class="modal-title fs-5">{{ 'Bulk Add Apartments' | translate }}</h2>
+    <button
+      type="button"
+      class="btn-close"
+      [attr.aria-label]="'Closing' | translate"
+      [disabled]="bulkSending"
+      (click)="modal.dismiss()"
+    ></button>
   </div>
-  <div class="modal-body"><app-bulk-apartments *ngIf="currentBuilding as building" [building]="building" (uploaded)="refreshBulk()" (sendingChange)="bulkSending = $event" (closed)="modal.close()" /></div>
+  <div class="modal-body">
+    <app-bulk-apartments
+      *ngIf="currentBuilding as building"
+      [building]="building"
+      (uploaded)="refreshBulk()"
+      (sendingChange)="bulkSending = $event"
+      (closed)="modal.close()"
+    />
+  </div>
 </ng-template>

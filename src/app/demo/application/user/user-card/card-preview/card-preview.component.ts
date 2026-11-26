@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
 import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
@@ -28,6 +29,8 @@ import { AuthenticationService } from 'src/app/theme/shared/service/authenticati
   styleUrls: ['./card-preview.component.scss']
 })
 export class CardPreviewComponent implements OnChanges {
+  private readonly uiLocale = inject(UiLocaleService);
+
   @Input() apartment!: ApartmentDTO;
   @Input() building!: BuildingDTO;
   private readonly apiBase = `${environment.apiUrl}/api/v1`;
@@ -64,16 +67,16 @@ export class CardPreviewComponent implements OnChanges {
 
     return [
       {
-        title: 'Κεντρική Θέρμανση',
-        name: b.hasCentralHeating ? 'Ναι' : 'Όχι',
-        sub_title: 'Τύπος Θέρμανσης',
+        title: this.uiLocale.text('Central Heating'),
+        name: b.hasCentralHeating ? this.uiLocale.text('Yes') : this.uiLocale.text('Nope'),
+        sub_title: this.uiLocale.text('Heating Type'),
         f_name: typeText,
         style: 'pt-0'
       },
       {
-        title: 'Χωρητικότητα Δεξαμενής',
-        name: b.heatingCapacityLitres ? `${b.heatingCapacityLitres} λίτρα` : '—',
-        sub_title: 'Καύσιμο',
+        title: this.uiLocale.text('Tank Capacity'),
+        name: b.heatingCapacityLitres ? this.uiLocale.text('{{p0}} liters', { p0: b.heatingCapacityLitres }) : '—',
+        sub_title: this.uiLocale.text('Fuel'),
         f_name: typeText
       }
     ];
@@ -84,34 +87,40 @@ export class CardPreviewComponent implements OnChanges {
   private translateHeatingType(type?: string): string {
     switch (type) {
       case 'OIL':
-        return 'Πετρέλαιο';
+        return this.uiLocale.text('Oil');
       case 'NATURAL_GAS':
-        return 'Φυσικό Αέριο';
+        return this.uiLocale.text('Natural Gas');
       case 'ELECTRIC':
-        return 'Ηλεκτρικό';
+        return this.uiLocale.text('Electric');
       case 'HEAT_PUMP':
-        return 'Αντλία Θερμότητας';
+        return this.uiLocale.text('Heat Pump');
       case 'NONE':
-        return 'Καθόλου';
+        return this.uiLocale.text('Not at all');
       default:
-        return 'Δεν έχει οριστεί';
+        return this.uiLocale.text('Not defined');
     }
   }
 
   get ownerInformation() {
     return [
-      { label: 'Όνομα', value: this.apartment.ownerFirstName || 'Άγνωστο Όνομα' },
-      { label: 'Επίθετο', value: this.apartment.ownerLastName || 'Άγνωστο Επίθετο' },
-      { label: 'Email', value: this.apartment.ownerEmail || 'Δεν είναι διαθέσιμο' },
-      { label: 'Τηλέφωνο', value: this.apartment.ownerPhone || 'Δεν είναι διαθέσιμο' }
+      { label: this.uiLocale.text('Name'), value: this.apartment.ownerFirstName || this.uiLocale.text('Unknown Name') },
+      { label: this.uiLocale.text('Adjective'), value: this.apartment.ownerLastName || this.uiLocale.text('Unknown Surname') },
+      { label: this.uiLocale.text('Email'), value: this.apartment.ownerEmail || this.uiLocale.text('Not available') },
+      { label: this.uiLocale.text('Telephone'), value: this.apartment.ownerPhone || this.uiLocale.text('Not available') }
     ];
   }
   get residentInformation() {
     return [
-      { label: 'Όνομα', value: this.apartment.residentFirstName || 'Άγνωστο Όνομα' },
-      { label: 'Επίθετο', value: this.apartment.residentLastName || 'Άγνωστο Επίθετο' },
-      { label: 'Email', value: this.apartment.residentEmail || 'Δεν είναι διαθέσιμο' },
-      { label: 'Τηλέφωνο', value: this.apartment.residentPhone || 'Δεν είναι διαθέσιμο' }
+      {
+        label: this.uiLocale.text('Name'),
+        value: this.apartment.residentFirstName || this.uiLocale.text('Unknown Name')
+      },
+      {
+        label: this.uiLocale.text('Adjective'),
+        value: this.apartment.residentLastName || this.uiLocale.text('Unknown Surname')
+      },
+      { label: this.uiLocale.text('Email'), value: this.apartment.residentEmail || this.uiLocale.text('Not available') },
+      { label: this.uiLocale.text('Telephone'), value: this.apartment.residentPhone || this.uiLocale.text('Not available') }
     ];
   }
 
@@ -222,44 +231,44 @@ export class CardPreviewComponent implements OnChanges {
   private refreshApartmentView(): void {
     this.apartmentFeatures = [
       {
-        leftLabel: 'Αριθμός',
-        leftValue: this.apartment?.number || 'Δεν είναι διαθέσιμο',
+        leftLabel: this.uiLocale.text('Number'),
+        leftValue: this.apartment?.number || this.uiLocale.text('Not available'),
 
-        rightLabel: 'Όροφος',
-        rightValue: this.apartment?.floor || 'Δεν είναι διαθέσιμο'
+        rightLabel: this.uiLocale.text('Floor'),
+        rightValue: this.apartment?.floor || this.uiLocale.text('Not available')
       },
       {
-        leftLabel: 'Τετραγωνικά',
-        leftValue: this.apartment?.sqMetersApart ?? 'Δεν είναι διαθέσιμο',
+        leftLabel: this.uiLocale.text('Square'),
+        leftValue: this.apartment?.sqMetersApart ?? this.uiLocale.text('Not available'),
 
-        rightLabel: 'Ενοικιασμένο',
-        rightValue: this.apartment?.isRented ? 'Ναι' : 'Όχι'
+        rightLabel: this.uiLocale.text('Rented'),
+        rightValue: this.apartment?.isRented ? this.uiLocale.text('Yes') : this.uiLocale.text('Nope')
       },
       {
         leftLabel: 'Parking',
-        leftValue: this.apartment?.parkingSpace ? 'Ναι' : 'Όχι',
+        leftValue: this.apartment?.parkingSpace ? this.uiLocale.text('Yes') : this.uiLocale.text('Nope'),
 
-        rightLabel: 'Θέση Parking',
-        rightValue: this.apartment?.parkingSlot || 'Δεν έχει'
+        rightLabel: this.uiLocale.text('Parking Spot'),
+        rightValue: this.apartment?.parkingSlot || this.uiLocale.text("It doesn't")
       },
       {
-        leftLabel: 'Αποθήκη',
-        leftValue: this.apartment?.apStorageExist ? 'Ναι' : 'Δεν έχει',
+        leftLabel: this.uiLocale.text('Warehouse'),
+        leftValue: this.apartment?.apStorageExist ? this.uiLocale.text('Yes') : this.uiLocale.text("It doesn't"),
 
-        rightLabel: 'Αριθμός Αποθήκης',
-        rightValue: this.apartment?.storageSlot || 'Δεν έχει'
+        rightLabel: this.uiLocale.text('Warehouse Number'),
+        rightValue: this.apartment?.storageSlot || this.uiLocale.text("It doesn't")
       }
     ];
 
     this.apartmentTripleFeatures = [
       {
-        label1: 'Χιλιοστά Κοινοχρήστων',
+        label1: this.uiLocale.text('Thousands of Users'),
         value1: this.apartment?.commonPercent ?? '—',
 
-        label2: 'Χιλιοστά Ανελκυστήρα',
+        label2: this.uiLocale.text('Elevator millimeters'),
         value2: this.apartment?.elevatorPercent ?? '—',
 
-        label3: 'Χιλιοστά Θέρμανσης',
+        label3: this.uiLocale.text('Kilometers of Heating'),
         value3: this.apartment?.heatingPercent ?? '—'
       }
     ];

@@ -1,16 +1,21 @@
+import { TranslateModule } from '@ngx-translate/core';
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+
 import { RouterModule } from '@angular/router';
 import { AttentionBuilding } from 'src/app/theme/shared/models/pmDashboardDTO';
 
 @Component({
   selector: 'app-attention-buildings-table',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [TranslateModule, CommonModule, RouterModule],
   templateUrl: './attention-buildings-table.component.html',
   styleUrl: './attention-buildings-table.component.scss'
 })
 export class AttentionBuildingsTableComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   @Input() attentionBuildings: AttentionBuilding[] = [];
 
   getSeverityBadgeClass(severity: string): string {
@@ -33,13 +38,13 @@ export class AttentionBuildingsTableComponent {
     switch (severity?.toLowerCase()) {
       case 'danger':
       case 'high':
-        return 'Υψηλή';
+        return this.uiLocale.text('High');
       case 'warning':
       case 'medium':
-        return 'Μέτρια';
+        return this.uiLocale.text('Moderate');
       case 'success':
       case 'low':
-        return 'Χαμηλή';
+        return this.uiLocale.text('Low');
       default:
         return severity;
     }

@@ -1,5 +1,7 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 
 export interface AgentWorkloadTableRow {
@@ -18,9 +20,11 @@ export interface AgentWorkloadTableRow {
   styleUrl: './agent-workload-table.component.scss'
 })
 export class AgentWorkloadTableComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   @Input() rows: AgentWorkloadTableRow[] = [];
   @Input() title = 'Support Agents Workload';
-  @Input() emptyMessage = 'Δεν υπάρχουν δεδομένα agents.';
+  @Input() emptyMessage = this.uiLocale.text('There are no agent data.');
 
   trackByAgentId(_: number, agent: AgentWorkloadTableRow): number {
     return agent.agentId;

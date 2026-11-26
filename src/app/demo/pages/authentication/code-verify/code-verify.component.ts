@@ -1,19 +1,22 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component } from '@angular/core';
 // angular import
-import { Component } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { AuthenticationService } from 'src/app/theme/shared/service/authentication.service';
 import { Router } from '@angular/router';
 import { CodeInputModule } from 'angular-code-input';
 
-
 @Component({
   selector: 'app-code-verify',
-  imports: [CommonModule, SharedModule, CodeInputModule,],
+  imports: [CommonModule, SharedModule, CodeInputModule],
   templateUrl: './code-verify.component.html',
   styleUrls: ['./code-verify.component.scss']
 })
 export class CodeVerifyComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   message = '';
   isOkay = false;
   submitted = false;
@@ -25,17 +28,15 @@ export class CodeVerifyComponent {
   ) {}
 
   private confirmAccount(token: string) {
-    
-  this.submitted = true;
-    this.authService.confirm(token)
-    .subscribe({
+    this.submitted = true;
+    this.authService.confirm(token).subscribe({
       next: () => {
         this.isOkay = true;
-        this.message = 'Ο λογαριασμός σας ενεργοποιήθηκε με επιτυχία.\nΤώρα μπορείτε να προχωρήσετε στην είσοδο.';
+        this.message = this.uiLocale.text('Your account has been successfully activated. Now you can proceed to the entrance.');
       },
       error: () => {
         this.isOkay = false;
-        this.message = 'Το token έχει λήξει ή είναι άκυρο';
+        this.message = this.uiLocale.text('The token has expired or is invalid');
       }
     });
   }
@@ -44,7 +45,7 @@ export class CodeVerifyComponent {
     this.router.navigate(['login']);
   }
 
-  onCodeCompleted(token: string) {  
+  onCodeCompleted(token: string) {
     this.code = token;
   }
 
@@ -53,7 +54,7 @@ export class CodeVerifyComponent {
       this.isOkay = true;
       this.confirmAccount(this.code);
     } else {
-      this.message = 'Παρακαλώ συμπληρώστε έγκυρο κωδικό.';
+      this.message = this.uiLocale.text('Please enter a valid code.');
       this.submitted = true;
       this.isOkay = false;
     }

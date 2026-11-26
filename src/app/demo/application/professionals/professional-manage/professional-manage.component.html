@@ -1,8 +1,8 @@
 <div class="row">
   <div class="col-12">
-    <app-card cardTitle="Διαχείριση Επιχείρησης">
+    <app-card [cardTitle]="'Business Management' | translate">
       @if (loading) {
-        <div class="py-4 text-center">Φόρτωση...</div>
+        <div class="py-4 text-center">{{ 'Loading...' | translate }}</div>
       }
 
       @if (error) {
@@ -16,105 +16,105 @@
       @if (professional) {
         <div class="row">
           <div class="col-lg-7">
-            <h5 class="mb-3">Στοιχεία Επιχείρησης</h5>
+            <h5 class="mb-3">{{ 'Business Details' | translate }}</h5>
 
             <div class="mb-3">
-              <label class="form-label">Όνομα Επιχείρησης</label>
+              <label class="form-label">{{ 'Business Name' | translate }}</label>
               <input class="form-control" [(ngModel)]="professional.businessName" [readonly]="!editMode" />
             </div>
 
             <div class="mb-3">
-              <label class="form-label">Υπεύθυνος</label>
+              <label class="form-label">{{ 'Responsible' | translate }}</label>
               <input class="form-control" [(ngModel)]="professional.ownerFullName" [readonly]="!editMode" />
             </div>
 
             <div class="mb-3">
-              <label class="form-label">Περιγραφή</label>
+              <label class="form-label">{{ 'Description' | translate }}</label>
               <textarea class="form-control" rows="4" [(ngModel)]="professional.description" [readonly]="!editMode"></textarea>
             </div>
 
             <div class="row">
               <div class="col-md-6 mb-3">
-                <label class="form-label">Τηλέφωνο</label>
+                <label class="form-label">{{ 'Telephone' | translate }}</label>
                 <input class="form-control" [(ngModel)]="professional.phone" [readonly]="!editMode" />
               </div>
 
               <div class="col-md-6 mb-3">
-                <label class="form-label">Email</label>
+                <label class="form-label">{{ 'Email' | translate }}</label>
                 <input class="form-control" [(ngModel)]="professional.email" [readonly]="!editMode" />
               </div>
             </div>
 
             <div class="mb-3">
-              <label class="form-label">Website</label>
+              <label class="form-label">{{ 'Website' | translate }}</label>
               <input class="form-control" [(ngModel)]="professional.website" [readonly]="!editMode" />
             </div>
 
             <div class="row">
               <div class="col-md-6 mb-3">
-                <label class="form-label">Πόλη</label>
+                <label class="form-label">{{ 'City' | translate }}</label>
                 <input class="form-control" [(ngModel)]="professional.city" [readonly]="!editMode" />
               </div>
 
               <div class="col-md-6 mb-3">
-                <label class="form-label">Περιοχή</label>
+                <label class="form-label">{{ 'Area' | translate }}</label>
                 <input class="form-control" [(ngModel)]="professional.region" [readonly]="!editMode" />
               </div>
             </div>
 
             <div class="mb-3">
-              <label class="form-label">Διεύθυνση</label>
+              <label class="form-label">{{ 'Address' | translate }}</label>
               <input class="form-control" [(ngModel)]="professional.address" [readonly]="!editMode" />
             </div>
 
             <div class="mb-3">
-              <label class="form-label">ΑΦΜ</label>
+              <label class="form-label">{{ 'VAT number' | translate }}</label>
               <input class="form-control" [(ngModel)]="professional.taxNumber" [readonly]="!editMode" />
             </div>
 
             <div class="mb-3">
-              <label class="form-label">Ωράριο Λειτουργίας</label>
+              <label class="form-label">{{ 'Hours of Operation' | translate }}</label>
               <textarea class="form-control" rows="3" [(ngModel)]="professional.workingHours" [readonly]="!editMode"></textarea>
             </div>
 
             <div class="d-flex gap-2 mt-3">
-              <button class="btn btn-outline-secondary" (click)="goBack()">← Πίσω</button>
+              <button class="btn btn-outline-secondary" (click)="goBack()">{{ '← Back' | translate }}</button>
 
               @if (!editMode) {
-                <button class="btn btn-outline-primary" (click)="toggleEdit()">Επεξεργασία</button>
+                <button class="btn btn-outline-primary" (click)="toggleEdit()">{{ 'Processing' | translate }}</button>
               }
 
               @if (editMode) {
-                <button class="btn btn-outline-danger" (click)="cancelEdit()">Ακύρωση</button>
+                <button class="btn btn-outline-danger" (click)="cancelEdit()">{{ 'Cancellation' | translate }}</button>
 
                 <button class="btn btn-primary" [disabled]="saving" (click)="saveBusiness()">
-                  {{ saving ? 'Αποθήκευση...' : 'Αποθήκευση' }}
+                  {{ saving ? ('Save...' | translate) : ('Save' | translate) }}
                 </button>
               }
             </div>
           </div>
 
           <div class="col-lg-5">
-            <h5 class="mb-3">Φωτογραφίες</h5>
+            <h5 class="mb-3">{{ 'Photographs' | translate }}</h5>
 
             <div class="border rounded p-3 mb-4">
               <div class="mb-3">
-                <label class="form-label">Νέα Φωτογραφία</label>
+                <label class="form-label">{{ 'New Photo' | translate }}</label>
                 <input type="file" class="form-control" accept="image/*" (change)="onImageSelected($event)" />
               </div>
 
               <div class="form-check mb-3">
                 <input class="form-check-input" type="checkbox" id="makePrimary" [(ngModel)]="makePrimary" />
-                <label class="form-check-label" for="makePrimary">Ορισμός ως βασική</label>
+                <label class="form-check-label" for="makePrimary">{{ 'Set as basic' | translate }}</label>
               </div>
 
               <button class="btn btn-success" [disabled]="!selectedImageFile || uploading" (click)="uploadSelectedImage()">
-                {{ uploading ? 'Ανέβασμα...' : 'Ανέβασμα Φωτογραφίας' }}
+                {{ uploading ? ('Uploading...' | translate) : ('Upload Photo' | translate) }}
               </button>
             </div>
 
             @if (images.length === 0) {
-              <div class="alert alert-info">Δεν έχουν ανέβει ακόμα φωτογραφίες.</div>
+              <div class="alert alert-info">{{ 'No photos have been uploaded yet.' | translate }}</div>
             }
 
             <div class="row">
@@ -130,15 +130,19 @@
 
                     <div class="card-body p-2">
                       @if (image.primaryImage) {
-                        <span class="badge bg-success mb-2">Primary</span>
+                        <span class="badge bg-success mb-2">{{ 'Primary' | translate }}</span>
                       }
 
                       <div class="d-flex gap-2">
                         @if (!image.primaryImage) {
-                          <button class="btn btn-sm btn-outline-primary" (click)="setPrimary(image.id)">Primary</button>
+                          <button class="btn btn-sm btn-outline-primary" (click)="setPrimary(image.id)">
+                            {{ 'Primary' | translate }}
+                          </button>
                         }
 
-                        <button class="btn btn-sm btn-outline-danger" (click)="deleteImage(image.id)">Διαγραφή</button>
+                        <button class="btn btn-sm btn-outline-danger" (click)="deleteImage(image.id)">
+                          {{ 'Delete' | translate }}
+                        </button>
                       </div>
                     </div>
                   </div>

@@ -1,43 +1,43 @@
 <div class="modal-header">
-  <h5 class="modal-title">{{ isEdit ? 'Επεξεργασία γεγονότος' : 'Νέο γεγονός' }}</h5>
-  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss()"></button>
+  <h5 class="modal-title">{{ isEdit ? ('Edit event' | translate) : ('New event' | translate) }}</h5>
+  <button type="button" class="btn-close" [attr.aria-label]="'Close' | translate" (click)="activeModal.dismiss()"></button>
 </div>
 
 <div class="modal-body">
   <div class="mb-3">
-    <label class="form-label">Τίτλος</label>
+    <label class="form-label">{{ 'Title' | translate }}</label>
     <input type="text" class="form-control" [(ngModel)]="event.title" />
   </div>
 
   <div class="mb-3">
-    <label class="form-label">Περιγραφή</label>
+    <label class="form-label">{{ 'Description' | translate }}</label>
     <textarea class="form-control" [(ngModel)]="event.description"></textarea>
   </div>
 
   <div class="row">
     <div class="col">
-      <label class="form-label">Έναρξη</label>
+      <label class="form-label">{{ 'Start' | translate }}</label>
       <input
         class="form-control"
         type="text"
         mwlFlatpickr
         [(ngModel)]="event.startDate"
         [altInput]="true"
-        [locale]="greekLocale"
+        [locale]="calendarLocale"
         dateFormat="Y-m-d"
         altFormat="F j, Y"
       />
     </div>
 
     <div class="col">
-      <label class="form-label">Λήξη</label>
+      <label class="form-label">{{ 'Expiration' | translate }}</label>
       <input
         class="form-control"
         type="text"
         mwlFlatpickr
         [(ngModel)]="event.endDate"
         [altInput]="true"
-        [locale]="greekLocale"
+        [locale]="calendarLocale"
         dateFormat="Y-m-d"
         altFormat="F j, Y"
       />
@@ -46,13 +46,13 @@
 
   <div class="row mt-3">
     <div class="col">
-      <label class="form-label">Χρώμα</label>
+      <label class="form-label">{{ 'Color' | translate }}</label>
       <input type="color" class="form-control form-control-color" [(ngModel)]="event.colorPrimary" />
     </div>
   </div>
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-secondary" (click)="activeModal.dismiss()">Ακύρωση</button>
-  <button class="btn btn-success" (click)="saveEvent()">Αποθήκευση</button>
+  <button class="btn btn-secondary" (click)="activeModal.dismiss()">{{ 'Cancellation' | translate }}</button>
+  <button class="btn btn-success" (click)="saveEvent()">{{ 'Save' | translate }}</button>
 </div>

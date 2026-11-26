@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -17,6 +18,8 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
   imports: [CommonModule, ReactiveFormsModule, SharedModule, NgbPaginationModule]
 })
 export class ApartmentComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private iconService = inject(IconService);
 
   apartments: any[] = []; // όλα τα διαμερίσματα του χρήστη
@@ -58,8 +61,8 @@ export class ApartmentComponent implements OnInit {
         this.userPhone = usr.phoneNumber ?? '';
       },
       error: () => {
-        this.userEmail = 'Δεν είναι διαθέσιμο';
-        this.userPhone = 'Δεν είναι διαθέσιμο';
+        this.userEmail = this.uiLocale.text('Not available');
+        this.userPhone = this.uiLocale.text('Not available');
       }
     });
 
@@ -69,7 +72,7 @@ export class ApartmentComponent implements OnInit {
         this.apartments = apartments;
 
         if (apartments.length === 0) {
-          this.message = 'Δεν υπάρχουν καταχωρημένα διαμερίσματα.';
+          this.message = this.uiLocale.text('There are no apartments listed.');
           return;
         }
 
@@ -92,7 +95,7 @@ export class ApartmentComponent implements OnInit {
         this.applyBuilding();
       },
       error: () => {
-        this.message = 'Σφάλμα φόρτωσης.';
+        this.message = this.uiLocale.text('Loading error.');
       }
     });
   }
@@ -144,13 +147,7 @@ export class ApartmentComponent implements OnInit {
   }
 
   // Πεδία που επιτρέπεται να αλλάζει το μέλος μόνο του (προσωπικά στοιχεία)
-  private editableFields = [
-    'ownerFirstName',
-    'ownerLastName',
-    'residentFirstName',
-    'residentLastName',
-    'apDescription'
-  ];
+  private editableFields = ['ownerFirstName', 'ownerLastName', 'residentFirstName', 'residentLastName', 'apDescription'];
 
   private enableEditableFields() {
     this.editableFields.forEach((field) => this.form.get(field)?.enable());
@@ -175,11 +172,11 @@ export class ApartmentComponent implements OnInit {
       next: () => {
         this.form.disable();
         this.isEditing = false;
-        alert('Τα στοιχεία ενημερώθηκαν με επιτυχία.');
+        alert(this.uiLocale.text('Details updated successfully.'));
       },
       error: (err) => {
         console.error('Σφάλμα ενημέρωσης:', err);
-        alert('Παρουσιάστηκε σφάλμα κατά την ενημέρωση.');
+        alert(this.uiLocale.text('An error occurred while updating.'));
       }
     });
   }

@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
 import { Component, effect, inject, OnInit } from '@angular/core';
@@ -16,7 +17,7 @@ import { RouterModule } from '@angular/router';
 import { PaymentModalComponent } from './payment-modal/payment-modal.component';
 
 import { NgbModalModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { BuildingAnnouncementsCardComponent } from "src/app/theme/shared/apexchart/building-announcements-card/building-announcements-card.component";
+import { BuildingAnnouncementsCardComponent } from 'src/app/theme/shared/apexchart/building-announcements-card/building-announcements-card.component';
 import { PollsTableComponent } from 'src/app/theme/shared/apexchart/polls-table/polls-table.component';
 import { LastStatementCardComponent } from 'src/app/theme/shared/apexchart/last-statement-card/last-statement-card.component';
 import { BuildingTotalCardComponent } from 'src/app/theme/shared/apexchart/building-total-card/building-total-card.component';
@@ -26,7 +27,6 @@ import { UserService } from 'src/app/theme/shared/service/user.service';
 import { AuthenticationService } from 'src/app/theme/shared/service';
 import { Role } from 'src/app/theme/shared/components/_helpers/role';
 
-
 @Component({
   selector: 'app-default',
   imports: [
@@ -34,20 +34,19 @@ import { Role } from 'src/app/theme/shared/components/_helpers/role';
     SharedModule,
     PollsTableComponent,
     SalesReportChartComponent,
-    CommonModule,
-    SharedModule,
     LastStatementCardComponent,
     BuildingTotalCardComponent,
     BuildingChartComponent,
-    SalesReportChartComponent,
     RouterModule,
     NgbModalModule,
     BuildingAnnouncementsCardComponent
-],
+  ],
   templateUrl: './default.component.html',
   styleUrls: ['./default.component.scss']
 })
 export class DefaultComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   dashboardLoaded = false;
   dashboard: any;
   private iconService = inject(IconService);
@@ -65,7 +64,7 @@ export class DefaultComponent implements OnInit {
   selectedAllocation: any = null;
   // public props
   isDarkThemes!: boolean;
-buildingId: any;
+  buildingId: any;
 
   // constructor
   constructor(
@@ -82,7 +81,8 @@ buildingId: any;
   ngOnInit(): void {
     this.userService.getCurrentUser().subscribe({
       next: (user) => {
-        this.showWelcomeBanner = (this.authenticationService.currentUserValue?.role || Role.User) === Role.User && user.buildingMember === false;
+        this.showWelcomeBanner =
+          (this.authenticationService.currentUserValue?.role || Role.User) === Role.User && user.buildingMember === false;
       },
       error: () => {
         this.showWelcomeBanner = false;
@@ -94,6 +94,9 @@ buildingId: any;
       next: (res) => {
         this.dashboard = res;
         this.dashboardLoaded = true;
+      },
+      error: () => {
+        this.dashboardLoaded = true;
       }
     });
     this.loadAllocations();
@@ -102,10 +105,11 @@ buildingId: any;
   }
 
   private loadRole() {
-    const userStr = localStorage.getItem('currentUser');
+    const userStr = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
     if (userStr) {
       const user = JSON.parse(userStr);
       this.role = user.role || null;
+      this.buildingId = user.currentBuildingId || Number(localStorage.getItem('buildingId')) || undefined;
       console.log('USER ROLE (localStorage):', this.role);
     }
   }
@@ -118,23 +122,23 @@ buildingId: any;
   loadLastStatementItems() {
     this.userDashboardService.getLastStatementItems().subscribe({
       next: (items) => {
-        this.lastStatementItems = items;
+        this.lastStatementItems = items ?? [];
 
-        this.totalAmount = items.reduce((sum, i) => sum + (i.price || 0), 0);
+        this.totalAmount = this.lastStatementItems.reduce((sum, i) => sum + (i.price || 0), 0);
       },
       error: (err) => console.error(err)
     });
   }
 
   categoryLabels: any = {
-    COMMON: 'Κοινόχρηστα',
-    HEATING: 'Θέρμανση',
-    ELEVATOR: 'Ανελκυστήρας',
-    EQUAL: 'Ίσα Έξοδα',
-    BOILER: 'Λέβητας',
-    SPECIAL: 'Ειδική Δαπάνη',
-    OWNERS: 'Ιδιοκτήτες',
-    OTHER: 'Άλλες Δαπάνες'
+    COMMON: this.uiLocale.text('Shared expenses'),
+    HEATING: this.uiLocale.text('Heating'),
+    ELEVATOR: this.uiLocale.text('Elevator'),
+    EQUAL: this.uiLocale.text('Equal Expenses'),
+    BOILER: this.uiLocale.text('Boiler'),
+    SPECIAL: this.uiLocale.text('Special Expense'),
+    OWNERS: this.uiLocale.text('Owners'),
+    OTHER: this.uiLocale.text('Other Expenses')
   };
 
   translateCategory(category: string): string {
@@ -142,12 +146,12 @@ buildingId: any;
   }
 
   loadAllocations() {
-  this.dashboardService.getUserStatements().subscribe({
-    next: (allocs) => {
-      this.allocations = allocs;
-    }
-  });
-}
+    this.dashboardService.getUserStatements().subscribe({
+      next: (allocs) => {
+        this.allocations = allocs ?? [];
+      }
+    });
+  }
 
   loadTransactionHistory() {
     this.userDashboardService.getHistory().subscribe({
@@ -169,7 +173,7 @@ buildingId: any;
   }
 
   getUserId(): number {
-    const userStr = localStorage.getItem('currentUser');
+    const userStr = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
     if (userStr) {
       const user = JSON.parse(userStr);
       return user.id || 0;
@@ -178,18 +182,17 @@ buildingId: any;
   }
 
   openModal(task: any) {
-  this.selectedAllocation = task; 
+    this.selectedAllocation = task;
 
-  const ref = this.modal.open(PaymentModalComponent, { size: 'md' });
-  ref.componentInstance.allocation = task;
-  ref.componentInstance.currentUserId = this.getUserId();
+    const ref = this.modal.open(PaymentModalComponent, { size: 'md' });
+    ref.componentInstance.allocation = task;
+    ref.componentInstance.currentUserId = this.getUserId();
 
-  ref.result.then(
-    (amount) => this.handlePay(amount),
-    () => {}
-  );
-}
-
+    ref.result.then(
+      (amount) => this.handlePay(amount),
+      () => {}
+    );
+  }
 
   handlePay(amount: number) {
     const id = this.selectedAllocation.id;

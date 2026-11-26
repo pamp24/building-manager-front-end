@@ -1,6 +1,8 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, OnInit, computed, effect } from '@angular/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, computed, effect } from '@angular/core';
+
 import { FormsModule } from '@angular/forms';
 import { NarikCustomValidatorsModule } from '@narik/custom-validators';
 
@@ -34,6 +36,8 @@ export type WizardStep = 1 | 2 | 3;
   styleUrls: ['./forms-validator.component.scss']
 })
 export class FormsValidatorComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   selectedAction = computed(() => this.wizard.selectedAction());
   currentStep = computed(() => this.wizard.currentStep());
 
@@ -105,7 +109,7 @@ export class FormsValidatorComponent implements OnInit {
       },
       error: (err) => {
         console.error('Failed to delete draft building', err);
-        alert('Δεν ήταν δυνατή η ακύρωση. Η πολυκατοικία δεν διαγράφηκε. Δοκιμάστε ξανά.');
+        alert(this.uiLocale.text('Unable to cancel. The apartment building was not deleted. Please try again.'));
       }
     });
   }

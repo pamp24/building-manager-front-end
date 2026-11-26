@@ -1,26 +1,28 @@
 <div class="row">
   <!-- [ basic-collapse ] start -->
   <div class="col-sm-12">
-    <h5 class="mb-3">Basic Collapse</h5>
+    <h5 class="mb-3">{{ 'Basic Collapse' | translate }}</h5>
     <hr />
     <div class="pc-component">
       <div class="card">
         <div class="card-header">
-          <a href="javascript:" class="btn btn-primary m-t-5 me-1">Link with href</a>
+          <a href="javascript:" class="btn btn-primary m-t-5 me-1">{{ 'Link with href' | translate }}</a>
           <button
             class="btn btn-primary m-t-5 me-1"
             (click)="isCollapsed = !isCollapsed"
             [attr.aria-expanded]="!isCollapsed"
             aria-controls="collapseExample"
           >
-            Button with data-bs-target
+            {{ 'Button with data-bs-target' | translate }}
           </button>
         </div>
         <div id="collapseExample" [ngbCollapse]="isCollapsed">
           <div class="card-body">
             <p class="mb-0">
-              Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica,
-              craft beer labore wes anderson cred nesciunt sapiente ea proident.
+              {{
+                'Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.'
+                  | translate
+              }}
             </p>
           </div>
         </div>
@@ -30,7 +32,7 @@
   <!-- [ basic-collapse ] end -->
   <!-- [ multiple-collapse ] start -->
   <div class="col-sm-12 mb-3">
-    <h5 class="mb-3">Multiple Targets</h5>
+    <h5 class="mb-3">{{ 'Multiple Targets' | translate }}</h5>
     <hr />
     <div class="pc-componant px-2">
       <a
@@ -40,7 +42,7 @@
         [attr.aria-expanded]="!multiCollapsed1"
         aria-controls="multiCollapseExample1"
       >
-        Toggle first element
+        {{ 'Toggle first element' | translate }}
       </a>
       <button
         class="btn mb-1 btn-primary me-1"
@@ -49,7 +51,7 @@
         [attr.aria-expanded]="!multiCollapsed2"
         aria-controls="multiCollapseExample2"
       >
-        Toggle second element
+        {{ 'Toggle second element' | translate }}
       </button>
       <button
         class="btn mb-1 btn-primary me-1"
@@ -57,7 +59,7 @@
         (click)="multiCollapsed1 = !multiCollapsed1; multiCollapsed2 = !multiCollapsed2"
         aria-controls="multiCollapseExample1 multiCollapseExample2"
       >
-        Toggle both elements
+        {{ 'Toggle both elements' | translate }}
       </button>
       <div class="row">
         <div class="col-sm-6">
@@ -65,8 +67,10 @@
             <div class="card">
               <div class="card-body">
                 <p class="mb-0">
-                  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh
-                  helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+                  {{
+                    'Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.'
+                      | translate
+                  }}
                 </p>
               </div>
             </div>
@@ -77,8 +81,10 @@
             <div class="card">
               <div class="card-body">
                 <p class="mb-0">
-                  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh
-                  helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+                  {{
+                    'Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.'
+                      | translate
+                  }}
                 </p>
               </div>
             </div>
@@ -92,22 +98,21 @@
   <div class="col-sm-12">
     <div class="card">
       <div class="card-header">
-        <h5>Accordion</h5>
+        <h5>{{ 'Accordion' | translate }}</h5>
       </div>
       <div class="card-body pc-component">
         <div ngbAccordion>
           <div ngbAccordionItem [collapsed]="false">
             <h2 ngbAccordionHeader>
-              <button ngbAccordionButton>Simple</button>
+              <button ngbAccordionButton>{{ 'Simple' | translate }}</button>
             </h2>
             <div ngbAccordionCollapse>
               <div ngbAccordionBody>
                 <ng-template>
-                  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute,
-                  non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua
-                  put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer
-                  labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer
-                  farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                  {{
+                    "Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS."
+                      | translate
+                  }}
                 </ng-template>
               </div>
             </div>
@@ -117,35 +122,33 @@
               <button ngbAccordionButton>
                 <span>
                   &#9733;
-                  <b>Fancy</b>
-                  title &#9733;
+                  <b>{{ 'Fancy' | translate }}</b>
+                  {{ 'title ★' | translate }}
                 </span>
               </button>
             </h2>
             <div ngbAccordionCollapse>
               <div ngbAccordionBody>
                 <ng-template>
-                  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute,
-                  non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua
-                  put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer
-                  labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer
-                  farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                  {{
+                    "Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS."
+                      | translate
+                  }}
                 </ng-template>
               </div>
             </div>
           </div>
           <div ngbAccordionItem [disabled]="true">
             <h2 ngbAccordionHeader>
-              <button ngbAccordionButton>Disabled</button>
+              <button ngbAccordionButton>{{ 'Disabled' | translate }}</button>
             </h2>
             <div ngbAccordionCollapse>
               <div ngbAccordionBody>
                 <ng-template>
-                  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute,
-                  non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua
-                  put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer
-                  labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer
-                  farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                  {{
+                    "Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS."
+                      | translate
+                  }}
                 </ng-template>
               </div>
             </div>
@@ -154,7 +157,7 @@
       </div>
     </div>
 
-    <h5 class="mt-4 mb-3">Accordion Flush</h5>
+    <h5 class="mt-4 mb-3">{{ 'Accordion Flush' | translate }}</h5>
     <hr />
     <div class="card">
       <div class="card-body pc-component">
@@ -167,12 +170,10 @@
               <div ngbAccordionCollapse>
                 <div ngbAccordionBody>
                   <ng-template>
-                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia
-                    aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt
-                    aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft
-                    beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat
-                    craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore
-                    sustainable VHS.
+                    {{
+                      "Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS."
+                        | translate
+                    }}
                   </ng-template>
                 </div>
               </div>

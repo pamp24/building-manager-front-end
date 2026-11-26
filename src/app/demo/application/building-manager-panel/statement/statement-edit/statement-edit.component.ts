@@ -1,5 +1,6 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // angular import
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -9,7 +10,6 @@ import { CloseOutline, DeleteOutline, EditOutline, PlusOutline } from '@ant-desi
 
 // bootstrap import
 
-import { OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { Validators } from 'ngx-editor';
@@ -22,7 +22,6 @@ import { CommonExpenseStatementService } from 'src/app/theme/shared/service/comm
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
 import { ApartmentService } from 'src/app/theme/shared/service/apartment.service';
 
-
 @Component({
   selector: 'app-statement-edit',
   imports: [SharedModule],
@@ -30,6 +29,8 @@ import { ApartmentService } from 'src/app/theme/shared/service/apartment.service
   styleUrl: './statement-edit.component.scss'
 })
 export class StatementEditComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private iconService = inject(IconService);
   private fb = inject(FormBuilder);
   statementId!: number;
@@ -52,15 +53,15 @@ export class StatementEditComponent implements OnInit {
   });
 
   expenseCategories = [
-    { label: 'ΚΟΙΝΟΧΡΗΣΤΑ', value: 'COMMON' },
-    { label: 'ΘΕΡΜΑΝΣΗ', value: 'HEATING' },
-    { label: 'ΑΣΑΝΣΕΡ', value: 'ELEVATOR' },
-    { label: 'ΑΥΤΟΝΟΜΙΑ', value: 'EQUAL' },
-    { label: 'BOILER', value: 'EQUAL' },
-    { label: 'ΕΙΔΙΚΕΣ ΔΑΠΑΝΕΣ', value: 'SPECIAL' },
-    { label: 'ΙΔΙΟΚΤΗΤΩΝ', value: 'EQUAL' },
-    { label: 'ΔΑΠΑΝΕΣ ΣΕ ΙΣΑ ΜΕΡΗ', value: 'EQUAL' },
-    { label: 'ΑΛΛΕΣ ΔΑΠΑΝΕΣ', value: 'EQUAL' }
+    { label: this.uiLocale.text('SHARE USERS'), value: 'COMMON' },
+    { label: this.uiLocale.text('HEATING'), value: 'HEATING' },
+    { label: this.uiLocale.text('ELEVATOR'), value: 'ELEVATOR' },
+    { label: this.uiLocale.text('AUTONOMY'), value: 'EQUAL' },
+    { label: this.uiLocale.text('BOILER'), value: 'EQUAL' },
+    { label: this.uiLocale.text('SPECIAL EXPENSES'), value: 'SPECIAL' },
+    { label: this.uiLocale.text('OWNERS'), value: 'EQUAL' },
+    { label: this.uiLocale.text('EXPENDITURE IN EQUAL PARTS'), value: 'EQUAL' },
+    { label: this.uiLocale.text('OTHER EXPENSES'), value: 'EQUAL' }
   ];
 
   constructor(
@@ -134,7 +135,7 @@ export class StatementEditComponent implements OnInit {
   onUpdate() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      alert('Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία!');
+      alert(this.uiLocale.text('Please fill in all mandatory fields!'));
       return;
     }
 
@@ -147,13 +148,13 @@ export class StatementEditComponent implements OnInit {
 
     this.commonExpenseStatementService.updateStatement(this.statementId, payload).subscribe({
       next: (updated) => {
-        alert('Το παραστατικό ενημερώθηκε!');
+        alert(this.uiLocale.text('The document has been updated!'));
         console.log('Updated:', updated);
         this.router.navigate(['/statement/list']);
       },
       error: (err) => {
         console.error('Σφάλμα ενημέρωσης:', err);
-        alert('Σφάλμα κατά την ενημέρωση!');
+        alert(this.uiLocale.text('Error updating!'));
       }
     });
   }

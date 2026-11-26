@@ -1,18 +1,20 @@
 <form [formGroup]="form" class="editForm" novalidate>
   <div class="col-md-4">
     <div class="form-group">
-      <label class="form-label">Κωδικός Πολυκατοικίας</label>
-      <input type="text" class="form-control" formControlName="buildingCode" placeholder="Εισάγετε αριθμό π.χ. 12345" />
-      <small class="form-text text-muted">Αν γνωρίζετε τον κωδικό της πολυκατοικίας, εισάγετέ τον εδώ.</small>
+      <label class="form-label">{{ 'Apartment code' | translate }}</label>
+      <input type="text" class="form-control" formControlName="buildingCode" [placeholder]="'Enter number e.g. 12345' | translate" />
+      <small class="form-text text-muted">{{ 'If you know the apartment code, enter it here.' | translate }}</small>
 
       <div class="text-danger mt-2" *ngIf="errorMsg">{{ errorMsg }}</div>
     </div>
   </div>
 
   <div class="form-group text-center mt-3">
-    <button type="button" class="btn btn-secondary me-2" (click)="onBack()" [disabled]="isSubmitting">Πίσω</button>
+    <button type="button" class="btn btn-secondary me-2" (click)="onBack()" [disabled]="isSubmitting">
+      {{ 'Back' | translate }}
+    </button>
     <button type="button" class="btn btn-success" (click)="submitForm()" [disabled]="isSubmitting">
-      {{ isSubmitting ? 'Υποβολή...' : 'Υποβολή' }}
+      {{ isSubmitting ? ('Submit...' | translate) : ('Submission' | translate) }}
     </button>
   </div>
 </form>

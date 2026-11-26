@@ -1,16 +1,13 @@
 <div class="card">
   <div class="card-header">
-    <h5 class="mb-0">Γρήγορες Ενέργειες</h5>
+    <h5 class="mb-0">{{ 'Quick Actions' | translate }}</h5>
   </div>
 
   <div class="card-body">
     <div class="row g-3">
       @for (action of actions; track action.title) {
         <div class="col-12 col-sm-6">
-          <a
-            class="quick-action-card text-decoration-none d-flex align-items-center"
-            [routerLink]="[action.route]"
-          >
+          <a class="quick-action-card text-decoration-none d-flex align-items-center" [routerLink]="[action.route]">
             <div class="quick-action-icon" [ngClass]="action.buttonClass">
               <i class="f-20 d-flex" antIcon [type]="action.icon" theme="outline"></i>
             </div>

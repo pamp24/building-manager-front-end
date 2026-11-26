@@ -1,9 +1,9 @@
 <div class="row">
   <div class="col-sm-12">
-    <app-card cardTitle="Color Picker">
+    <app-card [cardTitle]="'Color Picker' | translate">
       <div class="row">
         <div class="col-sm-12 col-xl-3">
-          <h5 class="sub-title">Basic</h5>
+          <h5 class="sub-title">{{ 'Basic' | translate }}</h5>
           <hr />
           <input
             class="form-control color-select"
@@ -13,14 +13,14 @@
             [cpPosition]="'bottom'"
           />
           <p>
-            set colorPicker
-            <code>#2f6a87 any color</code>
-            and set style
-            <code>background</code>
+            {{ 'set colorPicker' | translate }}
+            <code>{{ '#2f6a87 any color' | translate }}</code>
+            {{ 'and set style' | translate }}
+            <code>{{ 'background' | translate }}</code>
           </p>
         </div>
         <div class="col-sm-12 col-xl-3">
-          <h5 class="sub-title">Show Color Code</h5>
+          <h5 class="sub-title">{{ 'Show Color Code' | translate }}</h5>
           <hr />
           <input
             class="form-control color-select"
@@ -30,12 +30,12 @@
             [cpPosition]="'bottom'"
           />
           <p>
-            set attribute
-            <code>value</code>
+            {{ 'set attribute' | translate }}
+            <code>{{ 'value' | translate }}</code>
           </p>
         </div>
         <div class="col-sm-12 col-xl-3">
-          <h5 class="sub-title">Code Format</h5>
+          <h5 class="sub-title">{{ 'Code Format' | translate }}</h5>
           <hr />
           <input
             class="form-control color-select"
@@ -55,12 +55,12 @@
             [cpOutputFormat]="'rgba'"
           />
           <p>
-            set attribute cpOutputFormat with
-            <code>hex-default, rgba, hsla</code>
+            {{ 'set attribute cpOutputFormat with' | translate }}
+            <code>{{ 'hex-default, rgba, hsla' | translate }}</code>
           </p>
         </div>
         <div class="col-sm-12 col-xl-3">
-          <h5 class="sub-title">Element Color</h5>
+          <h5 class="sub-title">{{ 'Element Color' | translate }}</h5>
           <hr />
           <h1>
             <span
@@ -70,18 +70,18 @@
               [cpPositionOffset]="'50%'"
               [cpPositionRelativeToArrow]="true"
             >
-              Change me!
+              {{ 'Change me!' | translate }}
             </span>
           </h1>
           <p>
-            set attribute
-            <code>cpPositionRelativeToArrow, cpPositionOffset</code>
+            {{ 'set attribute' | translate }}
+            <code>{{ 'cpPositionRelativeToArrow, cpPositionOffset' | translate }}</code>
           </p>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-12 col-xl-3">
-          <h5 class="sub-title">Cancel Button</h5>
+          <h5 class="sub-title">{{ 'Cancel Button' | translate }}</h5>
           <hr />
           <input
             class="form-control color-select"
@@ -93,14 +93,14 @@
             [cpCancelButtonClass]="'btn btn-primary btn-xs'"
           />
           <p>
-            set cpCancelButton
-            <code>true/false</code>
-            and class cpCancelButtonClass
-            <code>btn btn-primary btn-xs</code>
+            {{ 'set cpCancelButton' | translate }}
+            <code>{{ 'true/false' | translate }}</code>
+            {{ 'and class cpCancelButtonClass' | translate }}
+            <code>{{ 'btn btn-primary btn-xs' | translate }}</code>
           </p>
         </div>
         <div class="col-sm-12 col-xl-3">
-          <h5 class="sub-title">OK Button - Multiple</h5>
+          <h5 class="sub-title">{{ 'OK Button - Multiple' | translate }}</h5>
           <hr />
           <input
             class="form-control color-select"
@@ -115,14 +115,14 @@
             [cpOKButtonClass]="'btn btn-primary btn-xs'"
           />
           <p>
-            set cpOKButton
-            <code>true/false</code>
-            and class cpCancelButtonClass
-            <code>btn btn-primary btn-xs</code>
+            {{ 'set cpOKButton' | translate }}
+            <code>{{ 'true/false' | translate }}</code>
+            {{ 'and class cpCancelButtonClass' | translate }}
+            <code>{{ 'btn btn-primary btn-xs' | translate }}</code>
           </p>
         </div>
         <div class="col-sm-12 col-xl-3">
-          <h5 class="sub-title">Toggle Event</h5>
+          <h5 class="sub-title">{{ 'Toggle Event' | translate }}</h5>
           <hr />
           <input
             class="form-control color-select"
@@ -135,15 +135,17 @@
             [cpIgnoredElements]="[ignoredButton, ignoredInput]"
           />
 
-          <button (click)="toggle = !toggle; lastColor = color" #ignoredButton class="btn btn-primary btn-sm m-t-10">Toggle</button>
+          <button (click)="toggle = !toggle; lastColor = color" #ignoredButton class="btn btn-primary btn-sm m-t-10">
+            {{ 'Toggle' | translate }}
+          </button>
           <p>
-            set cpToggle
-            <code>toggle</code>
-            with button
+            {{ 'set cpToggle' | translate }}
+            <code>{{ 'toggle' | translate }}</code>
+            {{ 'with button' | translate }}
           </p>
         </div>
         <div class="col-sm-12 col-xl-3">
-          <h5 class="sub-title">Preset Colors</h5>
+          <h5 class="sub-title">{{ 'Preset Colors' | translate }}</h5>
           <hr />
           <input
             class="form-control color-select"
@@ -154,14 +156,14 @@
             [cpPresetColors]="['#fff', '#000', '#2889e9', '#e920e9', '#fff500', 'rgb(236,64,64)']"
           />
           <p>
-            set cpPresetColors
-            <code>['#fff', '#000', '#2889e9', '#e920e9', '#fff500', 'rgb(236,64,64)']</code>
+            {{ 'set cpPresetColors' | translate }}
+            <code>{{ "['#fff', '#000', '#2889e9', '#e920e9', '#fff500', 'rgb(236,64,64)']" | translate }}</code>
           </p>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-12 col-xl-3">
-          <h5 class="sub-title">Position Bottom</h5>
+          <h5 class="sub-title">{{ 'Position Bottom' | translate }}</h5>
           <hr />
           <input
             class="form-control color-select"
@@ -171,12 +173,12 @@
             [cpPosition]="'bottom'"
           />
           <p>
-            set cpPosition
-            <code>bottom</code>
+            {{ 'set cpPosition' | translate }}
+            <code>{{ 'bottom' | translate }}</code>
           </p>
         </div>
         <div class="col-sm-12 col-xl-3">
-          <h5 class="sub-title">Position Top</h5>
+          <h5 class="sub-title">{{ 'Position Top' | translate }}</h5>
           <hr />
           <input
             class="form-control color-select"
@@ -186,12 +188,12 @@
             [cpPosition]="'top'"
           />
           <p>
-            set cpPosition
-            <code>top</code>
+            {{ 'set cpPosition' | translate }}
+            <code>{{ 'top' | translate }}</code>
           </p>
         </div>
         <div class="col-sm-12 col-xl-3">
-          <h5 class="sub-title">Position Right</h5>
+          <h5 class="sub-title">{{ 'Position Right' | translate }}</h5>
           <hr />
           <input
             class="form-control color-select"
@@ -201,12 +203,12 @@
             [cpPosition]="'right'"
           />
           <p>
-            set cpPosition
-            <code>right</code>
+            {{ 'set cpPosition' | translate }}
+            <code>{{ 'right' | translate }}</code>
           </p>
         </div>
         <div class="col-sm-12 col-xl-3">
-          <h5 class="sub-title">Position Left</h5>
+          <h5 class="sub-title">{{ 'Position Left' | translate }}</h5>
           <hr />
           <input
             class="form-control color-select"
@@ -216,14 +218,14 @@
             [cpPosition]="'left'"
           />
           <p>
-            set cpPosition
-            <code>left</code>
+            {{ 'set cpPosition' | translate }}
+            <code>{{ 'left' | translate }}</code>
           </p>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-12 col-xl-4">
-          <h5 class="sub-title">RGB Transparent</h5>
+          <h5 class="sub-title">{{ 'RGB Transparent' | translate }}</h5>
           <hr />
           <input
             class="form-control color-select"
@@ -235,12 +237,12 @@
             [value]="color13"
           />
           <p>
-            set cpOutputFormat
-            <code>rgba</code>
+            {{ 'set cpOutputFormat' | translate }}
+            <code>{{ 'rgba' | translate }}</code>
           </p>
         </div>
         <div class="col-sm-12 col-xl-4">
-          <h5 class="sub-title">RGBA Transparent</h5>
+          <h5 class="sub-title">{{ 'RGBA Transparent' | translate }}</h5>
           <hr />
           <input
             class="form-control color-select"
@@ -253,14 +255,14 @@
           />
           <br />
           <p>
-            set cpAlphaChannel
-            <code>always</code>
-            with cpOutputFormat
-            <code>rgba</code>
+            {{ 'set cpAlphaChannel' | translate }}
+            <code>{{ 'always' | translate }}</code>
+            {{ 'with cpOutputFormat' | translate }}
+            <code>{{ 'rgba' | translate }}</code>
           </p>
         </div>
         <div class="col-sm-12 col-xl-4">
-          <h5 class="sub-title">HEX Transparent</h5>
+          <h5 class="sub-title">{{ 'HEX Transparent' | translate }}</h5>
           <hr />
           <input
             class="form-control"
@@ -273,16 +275,16 @@
             [value]="color15"
           />
           <p>
-            set cpOutputFormat
-            <code>hex</code>
-            with cpAlphaChannel
-            <code>always</code>
+            {{ 'set cpOutputFormat' | translate }}
+            <code>{{ 'hex' | translate }}</code>
+            {{ 'with cpAlphaChannel' | translate }}
+            <code>{{ 'always' | translate }}</code>
           </p>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-12 col-xl-3">
-          <h5>Inline Color Picker</h5>
+          <h5>{{ 'Inline Color Picker' | translate }}</h5>
           <hr />
           <div style="height: 400px">
             <span

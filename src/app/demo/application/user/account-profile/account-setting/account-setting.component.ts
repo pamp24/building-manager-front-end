@@ -1,5 +1,7 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 // angular import
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 
 // project import
@@ -35,6 +37,8 @@ interface ManagerOption {
   styleUrl: './account-setting.component.scss'
 })
 export class AccountSettingComponent implements OnInit, OnChanges {
+  private readonly uiLocale = inject(UiLocaleService);
+
   @Input() pmView = false;
   @Input() buildingId?: number;
 
@@ -100,12 +104,12 @@ export class AccountSettingComponent implements OnInit, OnChanges {
         if (buildings && buildings.length) {
           this.loadSelectedBuilding(buildings[0].id);
         } else {
-          this.messageBuilding = 'Δεν έχετε πολυκατοικία για να ρυθμίσετε ειδοποιήσεις.';
+          this.messageBuilding = this.uiLocale.text("You don't have an apartment building to set up alerts.");
           this.loading = false;
         }
       },
       error: () => {
-        this.messageBuilding = 'Αποτυχία φόρτωσης της πολυκατοικίας.';
+        this.messageBuilding = this.uiLocale.text('Failure to load the apartment building.');
         this.loading = false;
       }
     });
@@ -139,7 +143,7 @@ export class AccountSettingComponent implements OnInit, OnChanges {
       },
       error: () => {
         console.error('Σφάλμα φόρτωσης πολυκατοικίας');
-        this.messageBuilding = 'Αποτυχία φόρτωσης στοιχείων πολυκατοικίας.';
+        this.messageBuilding = this.uiLocale.text('Failed to load apartment building details.');
         this.loading = false;
       }
     });
@@ -151,24 +155,36 @@ export class AccountSettingComponent implements OnInit, OnChanges {
         this.preferences = prefs;
 
         this.appItems = [
-          { key: 'appForStatementIssued', title: 'Παραστατικό κοινοχρήστων', check: !!prefs.appForStatementIssued },
-          { key: 'appForNewPoll', title: 'Νέα ψηφοφορία', check: !!prefs.appForNewPoll },
-          { key: 'appForNewAnnouncement', title: 'Νέα ανακοίνωση', check: !!prefs.appForNewAnnouncement },
-          { key: 'appForAddedToBuilding', title: 'Προσθήκη σε πολυκατοικία', check: !!prefs.appForAddedToBuilding }
+          { key: 'appForStatementIssued', title: this.uiLocale.text('Document of joint users'), check: !!prefs.appForStatementIssued },
+          { key: 'appForNewPoll', title: this.uiLocale.text('New vote'), check: !!prefs.appForNewPoll },
+          { key: 'appForNewAnnouncement', title: this.uiLocale.text('New announcement'), check: !!prefs.appForNewAnnouncement },
+          {
+            key: 'appForAddedToBuilding',
+            title: this.uiLocale.text('Addition to an apartment building'),
+            check: !!prefs.appForAddedToBuilding
+          }
         ];
 
         this.emailItems = [
-          { key: 'emailForStatementIssued', title: 'Παραστατικό κοινοχρήστων', check: !!prefs.emailForStatementIssued },
-          { key: 'emailForNewPoll', title: 'Νέα ψηφοφορία', check: !!prefs.emailForNewPoll },
-          { key: 'emailForNewAnnouncement', title: 'Νέα ανακοίνωση', check: !!prefs.emailForNewAnnouncement },
-          { key: 'emailForAddedToBuilding', title: 'Προσθήκη σε πολυκατοικία', check: !!prefs.emailForAddedToBuilding }
+          { key: 'emailForStatementIssued', title: this.uiLocale.text('Document of joint users'), check: !!prefs.emailForStatementIssued },
+          { key: 'emailForNewPoll', title: this.uiLocale.text('New vote'), check: !!prefs.emailForNewPoll },
+          { key: 'emailForNewAnnouncement', title: this.uiLocale.text('New announcement'), check: !!prefs.emailForNewAnnouncement },
+          {
+            key: 'emailForAddedToBuilding',
+            title: this.uiLocale.text('Addition to an apartment building'),
+            check: !!prefs.emailForAddedToBuilding
+          }
         ];
 
         this.smsItems = [
-          { key: 'smsForStatementIssued', title: 'Παραστατικό κοινοχρήστων', check: !!prefs.smsForStatementIssued },
-          { key: 'smsForNewPoll', title: 'Νέα ψηφοφορία', check: !!prefs.smsForNewPoll },
-          { key: 'smsForNewAnnouncement', title: 'Νέα ανακοίνωση', check: !!prefs.smsForNewAnnouncement },
-          { key: 'smsForAddedToBuilding', title: 'Προσθήκη σε πολυκατοικία', check: !!prefs.smsForAddedToBuilding }
+          { key: 'smsForStatementIssued', title: this.uiLocale.text('Document of joint users'), check: !!prefs.smsForStatementIssued },
+          { key: 'smsForNewPoll', title: this.uiLocale.text('New vote'), check: !!prefs.smsForNewPoll },
+          { key: 'smsForNewAnnouncement', title: this.uiLocale.text('New announcement'), check: !!prefs.smsForNewAnnouncement },
+          {
+            key: 'smsForAddedToBuilding',
+            title: this.uiLocale.text('Addition to an apartment building'),
+            check: !!prefs.smsForAddedToBuilding
+          }
         ];
 
         this.initialPrefsJson = JSON.stringify(this.buildPrefsPayload());
@@ -194,14 +210,14 @@ export class AccountSettingComponent implements OnInit, OnChanges {
 
         this.managerOptions = [
           {
-            title: 'Προσθήκη νέου μέλους',
+            title: this.uiLocale.text('Add new member'),
             appKey: 'managerAppForAddedToBuilding',
             appCheck: !!settings.managerAppForAddedToBuilding,
             emailKey: 'managerEmailForAddedToBuilding',
             emailCheck: !!settings.managerEmailForAddedToBuilding
           },
           {
-            title: 'Έξοδος μέλους από πολυκατοικία',
+            title: this.uiLocale.text('Member exit from an apartment building'),
             appKey: 'managerAppForMemberLeave',
             appCheck: !!settings.managerAppForMemberLeave,
             emailKey: 'managerEmailForMemberLeave',
@@ -210,8 +226,12 @@ export class AccountSettingComponent implements OnInit, OnChanges {
         ];
 
         this.memberCreateItems = [
-          { key: 'membersCanCreateAnnouncement', title: 'Τα μέλη μπορούν να δημιουργούν ανακοινώσεις', check: !!settings.membersCanCreateAnnouncement },
-          { key: 'membersCanCreatePoll', title: 'Τα μέλη μπορούν να δημιουργούν ψηφοφορίες', check: !!settings.membersCanCreatePoll }
+          {
+            key: 'membersCanCreateAnnouncement',
+            title: this.uiLocale.text('Members can create announcements'),
+            check: !!settings.membersCanCreateAnnouncement
+          },
+          { key: 'membersCanCreatePoll', title: this.uiLocale.text('Members can create polls'), check: !!settings.membersCanCreatePoll }
         ];
 
         this.initialBuildingJson = JSON.stringify(this.buildBuildingPayload());
@@ -225,15 +245,11 @@ export class AccountSettingComponent implements OnInit, OnChanges {
   }
 
   get hasChanges(): boolean {
-    const prefsChanged =
-      this.preferences != null &&
-      JSON.stringify(this.buildPrefsPayload()) !== this.initialPrefsJson;
+    const prefsChanged = this.preferences != null && JSON.stringify(this.buildPrefsPayload()) !== this.initialPrefsJson;
 
     let buildingChanged = false;
     if (this.isManager) {
-      buildingChanged =
-        this.settings != null &&
-        JSON.stringify(this.buildBuildingPayload()) !== this.initialBuildingJson;
+      buildingChanged = this.settings != null && JSON.stringify(this.buildBuildingPayload()) !== this.initialBuildingJson;
     }
 
     return prefsChanged || buildingChanged;
@@ -251,14 +267,14 @@ export class AccountSettingComponent implements OnInit, OnChanges {
 
         if (!this.isManager) {
           this.saving = false;
-          alert('Οι ρυθμίσεις αποθηκεύτηκαν επιτυχώς.');
+          alert(this.uiLocale.text('Settings saved successfully.'));
           return;
         }
 
         const buildingPayload = this.buildBuildingPayload();
         if (!buildingPayload || !this.activeBuildingId) {
           this.saving = false;
-          alert('Οι ρυθμίσεις αποθηκεύτηκαν επιτυχώς.');
+          alert(this.uiLocale.text('Settings saved successfully.'));
           return;
         }
 
@@ -266,19 +282,19 @@ export class AccountSettingComponent implements OnInit, OnChanges {
           next: () => {
             this.initialBuildingJson = JSON.stringify(buildingPayload);
             this.saving = false;
-            alert('Οι ρυθμίσεις αποθηκεύτηκαν επιτυχώς.');
+            alert(this.uiLocale.text('Settings saved successfully.'));
           },
           error: (err) => {
             console.error('Σφάλμα αποθήκευσης ρυθμίσεων πολυκατοικίας:', err);
             this.saving = false;
-            alert('Αποτυχία αποθήκευσης ρυθμίσεων.');
+            alert(this.uiLocale.text('Failed to save settings.'));
           }
         });
       },
       error: (err) => {
         console.error('Σφάλμα αποθήκευσης προσωπικών ρυθμίσεων:', err);
         this.saving = false;
-        alert('Αποτυχία αποθήκευσης ρυθμίσεων.');
+        alert(this.uiLocale.text('Failed to save settings.'));
       }
     });
   }
@@ -289,7 +305,7 @@ export class AccountSettingComponent implements OnInit, OnChanges {
   }
 
   resetSettings(): void {
-    if (!confirm('Θέλετε να ακυρώσετε τις αλλαγές και να επαναφέρετε τις αποθηκευμένες ρυθμίσεις;')) {
+    if (!confirm(this.uiLocale.text('Do you want to cancel the changes and restore the saved settings?'))) {
       return;
     }
 

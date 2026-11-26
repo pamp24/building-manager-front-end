@@ -4,32 +4,32 @@
   <div class="col-sm-12">
     <div class="card">
       <div class="card-header">
-        <h5>Custom Checkbox</h5>
+        <h5>{{ 'Custom Checkbox' | translate }}</h5>
       </div>
       <div class="card-body">
         <div class="form-group row">
-          <label class="col-3 col-form-label p-t-0 p-b-0">Checkboxes</label>
+          <label class="col-3 col-form-label p-t-0 p-b-0">{{ 'Checkboxes' | translate }}</label>
           <div class="col-9">
             <div class="form-check mb-2">
               <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-              <label class="form-check-label" for="flexCheckDefault">Default checkbox</label>
+              <label class="form-check-label" for="flexCheckDefault">{{ 'Default checkbox' | translate }}</label>
             </div>
             <div class="form-check mb-2">
               <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked />
-              <label class="form-check-label" for="flexCheckChecked">Checked checkbox</label>
+              <label class="form-check-label" for="flexCheckChecked">{{ 'Checked checkbox' | translate }}</label>
             </div>
             <div class="form-check mb-2">
               <input class="form-check-input" type="checkbox" value="" id="flexCheckDisabled" disabled />
-              <label class="form-check-label" for="flexCheckDisabled">Disabled checkbox</label>
+              <label class="form-check-label" for="flexCheckDisabled">{{ 'Disabled checkbox' | translate }}</label>
             </div>
             <div class="form-check mb-2">
               <input class="form-check-input" type="checkbox" value="" id="flexCheckCheckedDisabled" checked disabled />
-              <label class="form-check-label" for="flexCheckCheckedDisabled">Disabled checked checkbox</label>
+              <label class="form-check-label" for="flexCheckCheckedDisabled">{{ 'Disabled checked checkbox' | translate }}</label>
             </div>
           </div>
         </div>
         <div class="form-group row">
-          <label class="col-3 col-form-label p-t-0 p-b-0">Inline</label>
+          <label class="col-3 col-form-label p-t-0 p-b-0">{{ 'Inline' | translate }}</label>
           <div class="col-9">
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="checkbox" value="" id="customCheckinlh1" />
@@ -45,24 +45,26 @@
             </div>
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="checkbox" value="" id="customCheckinlh4" disabled />
-              <label class="form-check-label" for="customCheckinlh4">4 (disabled)</label>
+              <label class="form-check-label" for="customCheckinlh4">{{ '4 (disabled)' | translate }}</label>
             </div>
             <small class="form-text text-muted">
-              Add
-              <code>.form-check-inline</code>
-              to any
-              <code>.custom-control</code>
+              {{ 'Add' | translate }}
+              <code>{{ '.form-check-inline' | translate }}</code>
+              {{ 'to any' | translate }}
+              <code>{{ '.custom-control' | translate }}</code>
             </small>
           </div>
         </div>
         <div class="form-group row">
-          <label class="col-3 col-form-label p-t-0 p-b-0">Indeterminate</label>
+          <label class="col-3 col-form-label p-t-0 p-b-0">{{ 'Indeterminate' | translate }}</label>
           <div class="col-9">
             <div class="form-check">
               <input class="form-check-input" type="checkbox" value="" id="custom_Check_int" />
-              <label class="form-check-label" for="custom_Check_int">Indeterminate checkbox</label>
+              <label class="form-check-label" for="custom_Check_int">{{ 'Indeterminate checkbox' | translate }}</label>
             </div>
-            <small class="form-text text-muted"><code>document.querySelector('your-checkbox').indeterminate=!0;</code></small>
+            <small class="form-text text-muted">
+              <code>{{ "document.querySelector('your-checkbox').indeterminate=!0;" | translate }}</code>
+            </small>
           </div>
         </div>
       </div>
@@ -71,7 +73,7 @@
   <div class="col-sm-12">
     <div class="card">
       <div class="card-header">
-        <h5>Color Options</h5>
+        <h5>{{ 'Color Options' | translate }}</h5>
       </div>
       <div class="card-body">
         <form>

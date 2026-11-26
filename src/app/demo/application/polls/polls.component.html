@@ -1,9 +1,9 @@
 <div class="container mt-4">
   <!-- ΜΗ ΜΕΛΟΣ -->
   <div *ngIf="notMember" class="alert alert-warning text-center p-3 mt-3">
-    Δεν είστε μέλος κάποιας πολυκατοικίας.
+    {{ 'You are not a member of an apartment building.' | translate }}
     <br />
-    Δεν μπορείτε να δείτε ή να συμμετάσχετε σε ψηφοφορίες.
+    {{ 'You cannot view or participate in polls.' | translate }}
   </div>
 
   <div *ngIf="voteError" class="alert alert-danger mt-3 text-center">
@@ -18,22 +18,22 @@
     <!--   ΠΙΝΑΚΑΣ ΔΙΑΧΕΙΡΙΣΤΗ    -->
 
     <div class="d-flex justify-content-between align-items-center p-2">
-      <h5 class="mb-0">Λίστα Ψηφοφοριών</h5>
+      <h5 class="mb-0">{{ 'Voting List' | translate }}</h5>
     </div>
     <div class="card mb-4 shadow-sm p-3">
-      <app-card cardTitle="Ψηφοφορίες Κτιρίου" [padding]="0">
+      <app-card [cardTitle]="'Building Votes' | translate" [padding]="0">
         <div class="card-body p-0 table-scroll-10">
           <div class="table-wrapper">
             <table class="table table-hover mb-0" *ngIf="!loading">
               <thead>
                 <tr>
-                  <th (click)="onSort('title')" style="cursor: pointer">Τίτλος {{ getSortIcon('title') }}</th>
-                  <th (click)="onSort('startDate')" style="cursor: pointer">Έναρξη {{ getSortIcon('startDate') }}</th>
-                  <th (click)="onSort('endDate')" style="cursor: pointer">Λήξη {{ getSortIcon('endDate') }}</th>
-                  <th (click)="onSort('active')" style="cursor: pointer">Κατάσταση {{ getSortIcon('active') }}</th>
-                  <th>Επιλογές</th>
-                  <th>Πρώτη Επιλογή</th>
-                  <th class="text-center">Ενέργειες</th>
+                  <th (click)="onSort('title')" style="cursor: pointer">{{ 'Title' | translate }} {{ getSortIcon('title') }}</th>
+                  <th (click)="onSort('startDate')" style="cursor: pointer">{{ 'Start' | translate }} {{ getSortIcon('startDate') }}</th>
+                  <th (click)="onSort('endDate')" style="cursor: pointer">{{ 'Expiration' | translate }} {{ getSortIcon('endDate') }}</th>
+                  <th (click)="onSort('active')" style="cursor: pointer">{{ 'Status' | translate }} {{ getSortIcon('active') }}</th>
+                  <th>{{ 'Options' | translate }}</th>
+                  <th>{{ 'First Choice' | translate }}</th>
+                  <th class="text-center">{{ 'Actions' | translate }}</th>
                 </tr>
               </thead>
 
@@ -45,7 +45,7 @@
                     <td>{{ poll.endDate ? (poll.endDate | date: 'dd/MM/yyyy') : '-' }}</td>
                     <td>
                       <span class="badge px-3 py-2" [ngClass]="{ 'bg-success': poll.active, 'bg-secondary': !poll.active }">
-                        {{ poll.active ? 'Ενεργή' : 'Ανενεργή' }}
+                        {{ poll.active ? ('Active' | translate) : ('Inactive' | translate) }}
                       </span>
                     </td>
                     <td>{{ poll.options?.length || 0 }}</td>
@@ -55,7 +55,7 @@
                       <a
                         href="javascript:"
                         class="avatar avatar-xs btn-link-success"
-                        ngbTooltip="Προβολή Ψηφισάντων"
+                        [ngbTooltip]="'View Voters' | translate"
                         (click)="toggleVotes(poll.id)"
                       >
                         <i
@@ -68,7 +68,7 @@
                       <a
                         href="javascript:"
                         class="avatar avatar-xs btn-link-danger"
-                        ngbTooltip="Διαγραφή Ψηφοφορίας"
+                        [ngbTooltip]="'Delete Vote' | translate"
                         (click)="confirmDelete(poll.id)"
                       >
                         <i class="f-16 text-danger d-flex" antIcon type="delete" theme="outline"></i>
@@ -87,9 +87,9 @@
                         <table class="table table-sm table-striped align-middle mb-0" *ngIf="!votesLoading">
                           <thead>
                             <tr>
-                              <th>Χρήστης</th>
-                              <th>Επιλογή</th>
-                              <th>Περιγραφή</th>
+                              <th>{{ 'User' | translate }}</th>
+                              <th>{{ 'Choice' | translate }}</th>
+                              <th>{{ 'Description' | translate }}</th>
                             </tr>
                           </thead>
 
@@ -101,7 +101,7 @@
                             </tr>
 
                             <tr *ngIf="!pollVotes?.length">
-                              <td colspan="4" class="text-center text-muted">Δεν υπάρχουν ψήφοι</td>
+                              <td colspan="4" class="text-center text-muted">{{ 'There are no votes' | translate }}</td>
                             </tr>
                           </tbody>
                         </table>
@@ -119,7 +119,7 @@
         </div>
       </app-card>
       <div *ngIf="canCreatePoll" class="text-end p-3">
-        <button class="btn btn-primary" (click)="openAddModal()">+ Νέα Ψηφοφορία</button>
+        <button class="btn btn-primary" (click)="openAddModal()">{{ '+ New Poll' | translate }}</button>
       </div>
     </div>
 
@@ -128,12 +128,12 @@
       <div *ngFor="let poll of activePolls" class="card mb-3 shadow-sm">
         <div class="card-header d-flex justify-content-between">
           <div>
-            <h5>Τίτλος: {{ poll.title }}</h5>
-            <p>Περιγραφή: {{ poll.description }}</p>
+            <h5>{{ 'Title:' | translate }} {{ poll.title }}</h5>
+            <p>{{ 'Description:' | translate }} {{ poll.description }}</p>
           </div>
           <div>
-            <span *ngIf="!poll.active" class="badge bg-danger">ΕΛΗΞΕ</span>
-            <span *ngIf="poll.multipleChoice" class="badge bg-info text-dark">Πολλαπλές Ψήφοι</span>
+            <span *ngIf="!poll.active" class="badge bg-danger">{{ "IT'S OVER" | translate }}</span>
+            <span *ngIf="poll.multipleChoice" class="badge bg-info text-dark">{{ 'Multiple Votes' | translate }}</span>
           </div>
         </div>
 
@@ -151,7 +151,9 @@
 
               <div>
                 <span class="badge bg-secondary me-2">{{ option.votes }}</span>
-                <button *ngIf="poll.active" class="btn btn-sm btn-outline-primary" (click)="vote(poll.id, option.id)">Ψήφισε</button>
+                <button *ngIf="poll.active" class="btn btn-sm btn-outline-primary" (click)="vote(poll.id, option.id)">
+                  {{ 'Vote' | translate }}
+                </button>
               </div>
             </li>
           </ul>

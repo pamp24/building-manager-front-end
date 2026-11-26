@@ -1,3 +1,5 @@
+import { TranslateModule } from '@ngx-translate/core';
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 import { HttpClient } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
@@ -14,56 +16,161 @@ interface PricingCatalog {
 
 @Component({
   selector: 'app-faq',
-  imports: [RouterLink, PublicFooterComponent, PublicHeaderComponent],
+  imports: [TranslateModule, RouterLink, PublicFooterComponent, PublicHeaderComponent],
   templateUrl: './faq.component.html',
   styleUrl: './faq.component.scss'
 })
 export class FaqComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private http = inject(HttpClient);
   catalog: PricingCatalog | null = null;
 
   readonly categories = [
-    { title: 'Γενικά', questions: [
-      { q: 'Τι είναι το Oikio;', a: 'Το Oikio είναι μια πλατφόρμα οργάνωσης πληροφοριών, εργασιών και επικοινωνίας για πολυκατοικίες.' },
-      { q: 'Ποιοι μπορούν να χρησιμοποιήσουν την πλατφόρμα;', a: 'Απευθύνεται σε διαχειριστές, ιδιοκτήτες, ενοίκους και εταιρείες διαχείρισης. Οι ενέργειες που βλέπει κάθε χρήστης εξαρτώνται από τον ρόλο και τη συμμετοχή του στην πολυκατοικία.' },
-      { q: 'Πώς ξεκινώ;', a: 'Δημιουργήστε λογαριασμό ή συνδεθείτε. Η πρόσβαση σε μια πολυκατοικία εξαρτάται από τον ρόλο σας και τη σχετική πρόσκληση ή σύνδεση με αυτήν.' },
-      { q: 'Χρειάζεται να συνδεθώ για να διαβάσω τις συχνές ερωτήσεις;', a: 'Όχι. Η σελίδα είναι δημόσια και διαθέσιμη τόσο πριν όσο και μετά τη σύνδεση.' }
-    ] },
-    { title: 'Συνδρομές και τιμολόγηση', questions: [
-      { q: 'Μπορώ να αγοράσω ή να ενεργοποιήσω συνδρομή τώρα;', a: 'Όχι ακόμη. Η ολοκλήρωση αγοράς συνδρομής και η επιβολή των ορίων ή των δικαιωμάτων ανά πακέτο δεν είναι διαθέσιμες. Τα εμπορικά πακέτα και οι παροχές τους αποτελούν προτεινόμενη περιγραφή, όχι λειτουργική δέσμευση.' },
-      { q: 'Υπάρχει ετήσια έκπτωση;', a: 'Η ετήσια έκπτωση είναι προτεινόμενος εμπορικός όρος και όχι ενεργή χρέωση. Το ποσοστό καθορίζεται από τη διαμόρφωση τιμολόγησης και μπορεί να αλλάξει.' },
-      { q: 'Τι ισχύει για το πακέτο Plus;', a: 'Η προτεινόμενη τιμή Plus και η χρέωση για επιπλέον διαμερίσματα προέρχονται από τη διαμόρφωση του backend. Δεν αποτελούν ενεργή συνδρομή ή εγγύηση διαθεσιμότητας.' },
-      { q: 'Εφαρμόζονται ήδη τα όρια των πακέτων;', a: 'Όχι ως μηχανισμός επιβολής συνδρομής. Τα όρια και οι παροχές που περιγράφονται εμπορικά δεν πρέπει να θεωρούνται ενεργοί περιορισμοί ή εγγυημένα δικαιώματα.' }
-    ] },
-    { title: 'Εταιρείες διαχείρισης', questions: [
-      { q: 'Μπορεί μια εταιρεία να χρησιμοποιήσει το Oikio;', a: 'Η πλατφόρμα περιλαμβάνει ρόλους και εργαλεία για εταιρείες διαχείρισης και συνεργάτες τους. Η πρόσβαση εξαρτάται από τον λογαριασμό και τον ρόλο.' },
-      { q: 'Πώς τιμολογούνται οι εταιρείες;', a: 'Ο κατάλογος τιμολόγησης περιγράφει προτεινόμενα εταιρικά πακέτα και περιπτώσεις κατόπιν προσφοράς. Η αγορά συνδρομής και η επιβολή πακέτων δεν είναι ακόμη διαθέσιμες.' },
-      { q: 'Μπορούν συνεργάτες να αναλάβουν πολυκατοικίες;', a: 'Υπάρχουν ρόλοι συνεργατών για την εργασία εταιρειών διαχείρισης. Οι διαθέσιμες ενέργειες εξαρτώνται από την ανάθεση και τα δικαιώματα του χρήστη.' }
-    ] },
-    { title: 'Λειτουργίες', questions: [
-      { q: 'Ποιες εργασίες μπορώ να οργανώσω;', a: 'Ανάλογα με τον ρόλο σας, μπορείτε να διαχειρίζεστε στοιχεία πολυκατοικίας και μελών, δαπάνες και καταστάσεις κοινοχρήστων, καθώς και να χρησιμοποιείτε ανακοινώσεις, ψηφοφορίες και ημερολόγιο.' },
-      { q: 'Τι είναι το chat;', a: 'Το chat αφορά την εσωτερική επικοινωνία στην πλατφόρμα και δεν είναι κανάλι υποστήριξης του Oikio. Για βοήθεια με την πλατφόρμα χρησιμοποιήστε το helpdesk ή τη σελίδα υποστήριξης.' },
-      { q: 'Πώς ζητώ βοήθεια από το Oikio;', a: 'Οι συνδεδεμένοι χρήστες μπορούν να δημιουργήσουν αίτημα στο helpdesk. Για γενικές πληροφορίες δείτε επίσης τη δημόσια σελίδα υποστήριξης.' },
-      { q: 'Βλέπουν όλοι τις ίδιες πληροφορίες;', a: 'Όχι απαραίτητα. Η πρόσβαση και οι διαθέσιμες ενέργειες εξαρτώνται από τον ρόλο και τη σχέση του χρήστη με την πολυκατοικία.' }
-    ] },
-    { title: 'Πλήρης διαχείριση', questions: [
-      { q: 'Το Oikio αναλαμβάνει τη διαχείριση της πολυκατοικίας μου;', a: 'Το Oikio παρέχει ψηφιακά εργαλεία. Η χρήση της πλατφόρμας δεν σημαίνει από μόνη της ότι το Oikio αναλαμβάνει τη φυσική ή οικονομική διαχείριση της πολυκατοικίας.' },
-      { q: 'Μπορώ να ζητήσω πλήρη διαχείριση από εταιρεία;', a: 'Για υπηρεσίες πλήρους διαχείρισης χρειάζεται ξεχωριστή συνεννόηση με τον αντίστοιχο πάροχο. Το περιεχόμενο, η διαθεσιμότητα και το κόστος δεν αποτελούν αυτόματη παροχή της πλατφόρμας.' }
-    ] }
+    {
+      title: this.uiLocale.text('In general'),
+      questions: [
+        {
+          q: this.uiLocale.text('What is Oikio?'),
+          a: this.uiLocale.text('Oikio is a platform for organizing information, tasks, and communication for apartment buildings.')
+        },
+        {
+          q: this.uiLocale.text('Who can use the platform?'),
+          a: this.uiLocale.text(
+            'It is aimed at managers, owners, tenants, and management companies. The actions each user sees depend on their role and participation in the apartment building.'
+          )
+        },
+        {
+          q: this.uiLocale.text('How do I get started?'),
+          a: this.uiLocale.text(
+            'Create an account or log in. Access to an apartment building depends on your role and the relevant invitation or connection to it.'
+          )
+        },
+        {
+          q: this.uiLocale.text('Do I need to log in to read the frequently asked questions?'),
+          a: this.uiLocale.text('No. The page is public and available both before and after logging in.')
+        }
+      ]
+    },
+    {
+      title: this.uiLocale.text('Subscriptions and Pricing'),
+      questions: [
+        {
+          q: this.uiLocale.text('Can I purchase or activate a subscription now?'),
+          a: this.uiLocale.text(
+            'Not yet. Completing subscription purchases and enforcing limits or allowances per package are not available. Commercial packages and their benefits constitute a proposed description, not an operational commitment.'
+          )
+        },
+        {
+          q: this.uiLocale.text('Is there an annual discount?'),
+          a: this.uiLocale.text(
+            'The annual discount is a proposed commercial term, not an active charge. The rate is determined by the pricing configuration and is subject to change.'
+          )
+        },
+        {
+          q: this.uiLocale.text('What about the Plus package?'),
+          a: this.uiLocale.text(
+            'The suggested Plus price and charging for additional apartments come from the backend configuration. They do not constitute an active subscription or guarantee of availability.'
+          )
+        },
+        {
+          q: this.uiLocale.text('Are the package limits already applied?'),
+          a: this.uiLocale.text(
+            'Not as a mechanism for imposing assistance. The limits and benefits described commercially should not be considered active restrictions or guaranteed rights.'
+          )
+        }
+      ]
+    },
+    {
+      title: this.uiLocale.text('Management companies'),
+      questions: [
+        {
+          q: this.uiLocale.text('Can a company use Oikio?'),
+          a: this.uiLocale.text(
+            'The platform includes roles and tools for management companies and their partners. Access depends on the account and the role.'
+          )
+        },
+        {
+          q: this.uiLocale.text('How are companies priced?'),
+          a: this.uiLocale.text(
+            'The pricing directory describes recommended corporate packages and cases upon offer. Subscription purchase and package enforcement are not yet available.'
+          )
+        },
+        {
+          q: this.uiLocale.text('Can partners take over apartment buildings?'),
+          a: this.uiLocale.text(
+            "There are partner roles for the work of management companies. The available actions depend on the assignment and the user's permissions."
+          )
+        }
+      ]
+    },
+    {
+      title: this.uiLocale.text('Operations'),
+      questions: [
+        {
+          q: this.uiLocale.text('What tasks can I organize?'),
+          a: this.uiLocale.text(
+            'Depending on your role, you can manage building and membership items, expenses, and shared statements, as well as use announcements, polls, and a calendar.'
+          )
+        },
+        {
+          q: this.uiLocale.text('What is chat?'),
+          a: this.uiLocale.text(
+            'The chat concerns internal communication on the platform and is not a support channel for Oikio. For platform help, use the helpdesk or the support page.'
+          )
+        },
+        {
+          q: this.uiLocale.text('How do I ask Oikio for help?'),
+          a: this.uiLocale.text(
+            'Logged-in users can create a request on the helpdesk. For general information, see also the public support page.'
+          )
+        },
+        {
+          q: this.uiLocale.text('Do they all see the same information?'),
+          a: this.uiLocale.text(
+            "Not necessarily. Access and available actions depend on the user's role and relationship with the apartment building."
+          )
+        }
+      ]
+    },
+    {
+      title: this.uiLocale.text('Full management'),
+      questions: [
+        {
+          q: this.uiLocale.text('Does Oikio manage my apartment building?'),
+          a: this.uiLocale.text(
+            'Oikio provides digital tools. Using the platform by itself does not mean that Oikio takes over the physical or financial management of the apartment building.'
+          )
+        },
+        {
+          q: this.uiLocale.text('Can I request full management from a company?'),
+          a: this.uiLocale.text(
+            'For fully managed services, separate arrangement with the respective provider is required. Content, availability, and cost are not automatic provision of the platform.'
+          )
+        }
+      ]
+    }
   ];
 
   constructor() {
-    inject(Title).setTitle('Συχνές ερωτήσεις | Oikio');
-    inject(Meta).updateTag({ name: 'description', content: 'Απαντήσεις για το Oikio, τις λειτουργίες, τις προτεινόμενες συνδρομές και τη διαχείριση πολυκατοικίας.' });
+    inject(Title).setTitle(this.uiLocale.text('Frequently Asked Questions | Oikio'));
+    inject(Meta).updateTag({
+      name: 'description',
+      content: this.uiLocale.text('Answers about Oikio, its features, recommended subscriptions, and apartment building management.')
+    });
     this.http.get<PricingCatalog>(`${environment.apiUrl}/api/v1/pricing`).subscribe({
-      next: (catalog) => this.catalog = catalog,
-      error: () => this.catalog = null
+      next: (catalog) => (this.catalog = catalog),
+      error: () => (this.catalog = null)
     });
   }
 
-  get plus() { return this.catalog?.plans.find((plan) => plan.id === 'INDIVIDUAL_PLUS'); }
+  get plus() {
+    return this.catalog?.plans.find((plan) => plan.id === 'INDIVIDUAL_PLUS');
+  }
 
   money(cents: number): string {
-    return new Intl.NumberFormat('el-GR', { style: 'currency', currency: this.catalog?.currency || 'EUR' }).format(cents / 100);
+    return new Intl.NumberFormat(this.uiLocale.locale, { style: 'currency', currency: this.catalog?.currency || 'EUR' }).format(
+      cents / 100
+    );
   }
 }

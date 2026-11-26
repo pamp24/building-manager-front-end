@@ -1,8 +1,8 @@
 <div class="row">
   <div class="col-12">
-    <app-card cardTitle="Οι Επιχειρήσεις Μου">
+    <app-card [cardTitle]="'My Businesses' | translate">
       @if (loading) {
-        <div class="text-center py-5">Φόρτωση...</div>
+        <div class="text-center py-5">{{ 'Loading...' | translate }}</div>
       }
 
       @if (error) {
@@ -11,7 +11,7 @@
 
       @if (!loading && businesses.length === 0) {
         <div class="alert alert-info">
-          Δεν έχετε καταχωρίσει ακόμα επιχείρηση.
+          {{ 'You have not registered a business yet.' | translate }}
         </div>
       }
 
@@ -23,7 +23,7 @@
                 <img
                   [src]="getImageUrl(business)"
                   class="img-fluid w-100 rounded"
-                  style="height: 180px; object-fit: cover;"
+                  style="height: 180px; object-fit: cover"
                   alt="business"
                 />
 
@@ -44,24 +44,17 @@
               </p>
 
               <p class="text-muted small">
-                {{ business.description || 'Δεν υπάρχει περιγραφή.' }}
+                {{ business.description || ('There is no description.' | translate) }}
               </p>
 
               <div class="d-flex justify-content-between align-items-center mb-3">
-                <span class="badge bg-light-primary text-primary">
-                  ⭐ {{ business.ratingAverage || 0 }}
-                </span>
+                <span class="badge bg-light-primary text-primary">⭐ {{ business.ratingAverage || 0 }}</span>
 
-                <span class="text-muted small">
-                  {{ business.reviewCount || 0 }} αξιολογήσεις
-                </span>
+                <span class="text-muted small">{{ business.reviewCount || 0 }} {{ 'evaluations' | translate }}</span>
               </div>
 
-              <a
-                class="btn btn-primary w-100"
-                [routerLink]="['/professionals/manage', business.id]"
-              >
-                Διαχείριση
+              <a class="btn btn-primary w-100" [routerLink]="['/professionals/manage', business.id]">
+                {{ 'Management' | translate }}
               </a>
             </app-card>
           </div>

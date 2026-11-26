@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnInit, inject } from '@angular/core';
@@ -14,6 +15,8 @@ import { BUILDING_COUNTRIES, BUILDING_HEATING_TYPES } from '../building-options'
   styleUrl: './buildings-add.component.scss'
 })
 export class BuildingsAddComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private fb = inject(FormBuilder);
   private buildingService = inject(BuildingService);
   private router = inject(Router);
@@ -89,7 +92,7 @@ export class BuildingsAddComponent implements OnInit {
       stNumber1: ['', [Validators.required]],
       street2: [''],
       stNumber2: [''],
-      country: ['Ελλάδα', [Validators.required]],
+      country: [this.uiLocale.text('Greece'), [Validators.required]],
       state: ['', [Validators.required]],
       city: ['', [Validators.required]],
       region: ['', [Validators.required]],
@@ -170,7 +173,7 @@ export class BuildingsAddComponent implements OnInit {
     const file = input.files[0];
 
     if (file.type !== 'application/pdf') {
-      alert('Παρακαλώ επιλέξτε αρχείο PDF.');
+      alert(this.uiLocale.text('Please select PDF file.'));
       input.value = '';
       this.selectedRegulationFile = null;
       return;
@@ -234,19 +237,19 @@ export class BuildingsAddComponent implements OnInit {
       next: (buildingId) => {
         this.loading = false;
         // εδώ μετά μπορείς να κάνεις upload PDF αν θες (σε ξεχωριστό endpoint)
-        alert('Η πολυκατοικία δημιουργήθηκε!');
+        alert(this.uiLocale.text('The apartment building was created!'));
         this.router.navigate(['/pm/view']); // ή όπου θες
       },
       error: (err) => {
         console.error(err);
         this.loading = false;
-        this.error = err?.error?.message || 'Αποτυχία δημιουργίας πολυκατοικίας.';
+        this.error = err?.error?.message || this.uiLocale.text('Failed to create apartment building.');
       }
     });
   }
   back(): void {
     if (this.form.dirty) {
-      const ok = confirm('Θέλεις να φύγεις; Θα χαθούν τα μη αποθηκευμένα δεδομένα.');
+      const ok = confirm(this.uiLocale.text('Do you want to leave? Unsaved data will be lost.'));
       if (!ok) return;
     }
     this.router.navigate(['/pm/buildings']);

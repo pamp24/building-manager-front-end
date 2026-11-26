@@ -1,18 +1,23 @@
+import { TranslateModule } from '@ngx-translate/core';
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, OnInit } from '@angular/core';
 // angular import
-import { Component } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { OnInit } from '@angular/core';
+
 import { FormsModule } from '@angular/forms';
 import { AuthenticationService } from 'src/app/theme/shared/service/authentication.service';
 
 @Component({
   selector: 'app-reset-password',
-  imports: [CommonModule, FormsModule],
+  imports: [TranslateModule, CommonModule, FormsModule],
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.scss']
 })
 export class ResetPasswordComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   token: string | null = null;
   password: string = '';
   confirmPassword: string = '';
@@ -29,21 +34,21 @@ export class ResetPasswordComponent implements OnInit {
 
   resetPassword() {
     if (this.password !== this.confirmPassword) {
-      alert('Οι κωδικοί δεν ταιριάζουν!');
+      alert(this.uiLocale.text("The codes don't match!"));
       return;
     }
     if (!this.token) {
-      alert('Λείπει το token επαναφοράς.');
+      alert(this.uiLocale.text('The reset token is missing.'));
       return;
     }
     this.authService.resetPassword(this.token, this.password).subscribe({
       next: () => {
-        alert('Ο κωδικός επαναφέρθηκε επιτυχώς!');
+        alert(this.uiLocale.text('Password successfully reset!'));
         this.router.navigate(['/auth/login']); // 🔁 redirect to login
       },
       error: (err) => {
         console.error('Σφάλμα:', err); // DEBUG
-        alert('Σφάλμα στην επαναφορά κωδικού:\n' + (err.error?.message || err.message || JSON.stringify(err)));
+        alert(this.uiLocale.text('Password reset error:') + (err.error?.message || err.message || JSON.stringify(err)));
       }
     });
   }

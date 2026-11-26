@@ -1,7 +1,7 @@
 <div class="dp-date-wrapper">
   <div class="dp-date-input-container dp-inline">
     <div class="dp-form-item">
-      <app-card cardTitle="Change Content View">
+      <app-card [cardTitle]="'Change Content View' | translate">
         <div class="d-flex justify-content-center">
           <dp-day-calendar
             #dateComponent
@@ -12,7 +12,7 @@
             [minDate]="validationMinDate"
             ngDefaultControl
             mode="'day'"
-            placeholder="placeholder"
+            [attr.placeholder]="'placeholder' | translate"
             [required]="required"
             [theme]="material ? 'dp-material dp-main' : 'dp-main'"
             id="picker"
@@ -22,16 +22,16 @@
         <div class="dp-validations">
           <div class="dp-validations">
             @if (control?.errors?.minDate) {
-              <div id="minDateValidation" class="form-text text-danger text-center">minDate invalid</div>
+              <div id="minDateValidation" class="form-text text-danger text-center">{{ 'minDate invalid' | translate }}</div>
             }
             @if (control?.errors?.maxDate) {
-              <div id="maxDateValidation" class="form-text text-danger text-center">maxDate invalid</div>
+              <div id="maxDateValidation" class="form-text text-danger text-center">{{ 'maxDate invalid' | translate }}</div>
             }
             @if (control?.errors?.format) {
-              <div id="formatValidation" class="form-text text-danger text-center">invalid format</div>
+              <div id="formatValidation" class="form-text text-danger text-center">{{ 'invalid format' | translate }}</div>
             }
             @if (control?.errors?.required) {
-              <div id="requiredValidation" class="form-text text-danger text-center">required</div>
+              <div id="requiredValidation" class="form-text text-danger text-center">{{ 'required' | translate }}</div>
             }
           </div>
         </div>

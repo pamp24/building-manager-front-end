@@ -1,4 +1,7 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { inject, Component, Output, EventEmitter } from '@angular/core';
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { TranslateModule } from '@ngx-translate/core';
+
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
@@ -9,11 +12,13 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-existing-building-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [TranslateModule, CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './existing-building-form.component.html',
   styleUrls: ['./existing-building-form.component.scss']
 })
 export class ExistingBuildingFormComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   @Output() backClicked = new EventEmitter<void>();
   @Output() completed = new EventEmitter<{ buildingId: number }>();
 
@@ -65,7 +70,7 @@ export class ExistingBuildingFormComponent {
       },
       error: (err) => {
         this.isSubmitting = false;
-        this.errorMsg = err?.error?.message || 'Μη έγκυρος κωδικός πολυκατοικίας ή δεν ήταν δυνατή η σύνδεση.';
+        this.errorMsg = err?.error?.message || this.uiLocale.text('Invalid building code or connection was not possible.');
         console.error(err);
       }
     });

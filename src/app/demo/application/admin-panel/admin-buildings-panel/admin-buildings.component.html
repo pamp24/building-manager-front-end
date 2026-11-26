@@ -1,6 +1,6 @@
-<app-card cardTitle="Ολες οι Πολυκατοικίες" [padding]="0">
+<app-card [cardTitle]="'All Apartment Buildings' | translate" [padding]="0">
   <ng-container *ngIf="loading">
-    <div class="py-4 px-3">Φόρτωση...</div>
+    <div class="py-4 px-3">{{ 'Loading...' | translate }}</div>
   </ng-container>
 
   <ng-container *ngIf="!loading && error">
@@ -12,11 +12,11 @@
       <div class="row g-2 align-items-center">
         <div class="col-lg-8">
           <div class="input-group">
-            <span class="input-group-text">Αναζήτηση</span>
+            <span class="input-group-text">{{ 'Search' | translate }}</span>
             <input
               type="text"
               class="form-control"
-              placeholder="Ονομα, κωδικός, πόλη, διαχειριστής ή εταιρεία"
+              [placeholder]="'Name, code, city, manager or company' | translate"
               [(ngModel)]="searchTerm"
             />
           </div>
@@ -25,16 +25,26 @@
         <div class="col-lg-4">
           <div class="d-grid d-sm-flex gap-2 justify-content-lg-end">
             <button type="button" class="btn btn-outline-primary" (click)="toggleFilters()">
-              Φίλτρα
+              {{ 'Filters' | translate }}
             </button>
 
             <button
-              *ngIf="searchTerm || selectedCountry || selectedRegion || selectedCity || selectedAssignment || selectedStatus || selectedCompanyId || selectedManager || selectedHeating"
+              *ngIf="
+                searchTerm ||
+                selectedCountry ||
+                selectedRegion ||
+                selectedCity ||
+                selectedAssignment ||
+                selectedStatus ||
+                selectedCompanyId ||
+                selectedManager ||
+                selectedHeating
+              "
               type="button"
               class="btn btn-outline-secondary"
               (click)="clearFilters()"
             >
-              Καθαρισμός
+              {{ 'Cleaning' | translate }}
             </button>
           </div>
         </div>
@@ -44,9 +54,9 @@
         <div class="card card-body bg-light border-0">
           <div class="row g-3">
             <div class="col-md-6 col-xl-3">
-              <label class="form-label">Χώρα</label>
+              <label class="form-label">{{ 'Country' | translate }}</label>
               <select class="form-select" [(ngModel)]="selectedCountry" (ngModelChange)="onCountryChange()">
-                <option value="">Όλες</option>
+                <option value="">{{ 'All of them' | translate }}</option>
                 @for (country of availableCountries; track country) {
                   <option [value]="country">{{ country }}</option>
                 }
@@ -54,9 +64,9 @@
             </div>
 
             <div class="col-md-6 col-xl-3">
-              <label class="form-label">Νομός / Περιφέρεια</label>
+              <label class="form-label">{{ 'Prefecture / Region' | translate }}</label>
               <select class="form-select" [(ngModel)]="selectedRegion" (ngModelChange)="onRegionChange()">
-                <option value="">Όλοι</option>
+                <option value="">{{ 'Everyone' | translate }}</option>
                 @for (region of availableRegions; track region) {
                   <option [value]="region">{{ region }}</option>
                 }
@@ -64,9 +74,9 @@
             </div>
 
             <div class="col-md-6 col-xl-3">
-              <label class="form-label">Πόλη</label>
+              <label class="form-label">{{ 'City' | translate }}</label>
               <select class="form-select" [(ngModel)]="selectedCity">
-                <option value="">Όλες</option>
+                <option value="">{{ 'All of them' | translate }}</option>
                 @for (city of availableCities; track city) {
                   <option [value]="city">{{ city }}</option>
                 }
@@ -74,29 +84,29 @@
             </div>
 
             <div class="col-md-6 col-xl-3">
-              <label class="form-label">Ανάθεση</label>
+              <label class="form-label">{{ 'Assignment' | translate }}</label>
               <select class="form-select" [(ngModel)]="selectedAssignment">
-                <option value="">Όλες</option>
-                <option value="with-manager">Με διαχειριστή κτιρίου</option>
-                <option value="without-manager">Χωρίς διαχειριστή κτιρίου</option>
-                <option value="with-company">Με εταιρεία PM</option>
-                <option value="without-company">Χωρίς εταιρεία PM</option>
+                <option value="">{{ 'All of them' | translate }}</option>
+                <option value="with-manager">{{ 'With a building manager' | translate }}</option>
+                <option value="without-manager">{{ 'No building manager' | translate }}</option>
+                <option value="with-company">{{ 'With PM company' | translate }}</option>
+                <option value="without-company">{{ 'No PM company' | translate }}</option>
               </select>
             </div>
 
             <div class="col-md-6 col-xl-3">
-              <label class="form-label">Κατάσταση</label>
+              <label class="form-label">{{ 'Status' | translate }}</label>
               <select class="form-select" [(ngModel)]="selectedStatus">
-                <option value="">Όλες</option>
-                <option value="active">Ενεργό</option>
-                <option value="inactive">Ανενεργό</option>
+                <option value="">{{ 'All of them' | translate }}</option>
+                <option value="active">{{ 'Active' | translate }}</option>
+                <option value="inactive">{{ 'Inactive' | translate }}</option>
               </select>
             </div>
 
             <div class="col-md-6 col-xl-3">
-              <label class="form-label">Εταιρεία / PM</label>
+              <label class="form-label">{{ 'Company / PM' | translate }}</label>
               <select class="form-select" [(ngModel)]="selectedCompanyId">
-                <option value="">Όλες</option>
+                <option value="">{{ 'All of them' | translate }}</option>
                 @for (company of availableCompanies; track company.id) {
                   <option [value]="company.id">{{ company.name }}</option>
                 }
@@ -104,9 +114,9 @@
             </div>
 
             <div class="col-md-6 col-xl-3">
-              <label class="form-label">Διαχειριστής κτιρίου</label>
+              <label class="form-label">{{ 'Building manager' | translate }}</label>
               <select class="form-select" [(ngModel)]="selectedManager">
-                <option value="">Όλοι</option>
+                <option value="">{{ 'Everyone' | translate }}</option>
                 @for (manager of availableManagers; track manager) {
                   <option [value]="manager">{{ manager }}</option>
                 }
@@ -114,9 +124,9 @@
             </div>
 
             <div class="col-md-6 col-xl-3">
-              <label class="form-label">Τύπος θέρμανσης</label>
+              <label class="form-label">{{ 'Type of heating' | translate }}</label>
               <select class="form-select" [(ngModel)]="selectedHeating">
-                <option value="">Όλοι</option>
+                <option value="">{{ 'Everyone' | translate }}</option>
                 @for (heating of heatingTypes; track heating.value) {
                   <option [value]="heating.value">{{ heating.label }}</option>
                 }
@@ -128,7 +138,8 @@
     </div>
 
     <div class="px-3 pb-1 pt-2 text-muted small" *ngIf="buildings.length">
-      Εμφανίζονται {{ filteredBuildings.length }} από {{ buildings.length }} πολυκατοικίες
+      {{ 'They appear' | translate }} {{ filteredBuildings.length }} {{ 'from' | translate }} {{ buildings.length }}
+      {{ 'apartment buildings' | translate }}
     </div>
 
     <div class="row px-3 pb-3" *ngIf="filteredBuildings.length; else empty">
@@ -142,7 +153,7 @@
               </div>
               <div class="position-absolute top-0 start-0 p-2">
                 <span class="badge" [class.text-bg-success]="building.active" [class.text-bg-secondary]="!building.active">
-                  {{ building.active ? 'Ενεργό' : 'Ανενεργό' }}
+                  {{ building.active ? ('Active' | translate) : ('Inactive' | translate) }}
                 </span>
               </div>
             </div>
@@ -165,7 +176,9 @@
 
               <li class="list-group-item px-0 py-2">
                 <div class="d-flex align-items-center">
-                  <div class="flex-grow-1 me-2"><p class="mb-0">Οροφοι</p></div>
+                  <div class="flex-grow-1 me-2">
+                    <p class="mb-0">{{ 'Ceilings' | translate }}</p>
+                  </div>
                   <div class="flex-shrink-0">
                     <p class="text-muted mb-0">{{ building.floors }}</p>
                   </div>
@@ -174,7 +187,9 @@
 
               <li class="list-group-item px-0 py-2">
                 <div class="d-flex align-items-center">
-                  <div class="flex-grow-1 me-2"><p class="mb-0">Διαμερίσματα</p></div>
+                  <div class="flex-grow-1 me-2">
+                    <p class="mb-0">{{ 'Apartments' | translate }}</p>
+                  </div>
                   <div class="flex-shrink-0">
                     <p class="text-muted mb-0">{{ building.apartmentsNum }}</p>
                   </div>
@@ -183,7 +198,9 @@
 
               <li class="list-group-item px-0 py-2">
                 <div class="d-flex align-items-center">
-                  <div class="flex-grow-1 me-2"><p class="mb-0">Διαχειριστής Κτιρίου</p></div>
+                  <div class="flex-grow-1 me-2">
+                    <p class="mb-0">{{ 'Building Manager' | translate }}</p>
+                  </div>
                   <div class="flex-shrink-0">
                     <p class="text-muted mb-0">{{ building.managerFullName || '-' }}</p>
                   </div>
@@ -192,7 +209,9 @@
 
               <li class="list-group-item px-0 py-2">
                 <div class="d-flex align-items-center">
-                  <div class="flex-grow-1 me-2"><p class="mb-0">Εταιρεία / PM</p></div>
+                  <div class="flex-grow-1 me-2">
+                    <p class="mb-0">{{ 'Company / PM' | translate }}</p>
+                  </div>
                   <div class="flex-shrink-0">
                     <p class="text-muted mb-0">{{ building.company?.companyName || '-' }}</p>
                   </div>
@@ -201,15 +220,19 @@
             </ul>
 
             <div class="d-flex gap-2 mb-2">
-              <a class="btn btn-sm btn-outline-primary flex-grow-1" [routerLink]="['/admin/buildings', building.id]">Προβολή</a>
+              <a class="btn btn-sm btn-outline-primary flex-grow-1" [routerLink]="['/admin/buildings', building.id]">
+                {{ 'Projection' | translate }}
+              </a>
 
               <div ngbDropdown class="d-inline-block" placement="top-end">
-                <button class="btn btn-sm btn-outline-secondary" ngbDropdownToggle>Επεξεργασία</button>
+                <button class="btn btn-sm btn-outline-secondary" ngbDropdownToggle>{{ 'Processing' | translate }}</button>
                 <div ngbDropdownMenu>
                   <button ngbDropdownItem (click)="toggleBuildingActive(building)">
-                    {{ building.active ? 'Απενεργοποίηση' : 'Ενεργοποίηση' }}
+                    {{ building.active ? ('Disable' | translate) : ('Activation' | translate) }}
                   </button>
-                  <button ngbDropdownItem class="text-danger" (click)="softDeleteBuilding(building)">Διαγραφή</button>
+                  <button ngbDropdownItem class="text-danger" (click)="softDeleteBuilding(building)">
+                    {{ 'Delete' | translate }}
+                  </button>
                 </div>
               </div>
             </div>
@@ -220,7 +243,11 @@
 
     <ng-template #empty>
       <div class="py-4 px-3 text-muted">
-        {{ buildings.length ? 'Δεν βρέθηκαν πολυκατοικίες με τα συγκεκριμένα φίλτρα.' : 'Δεν βρέθηκαν πολυκατοικίες στη βάση δεδομένων.' }}
+        {{
+          buildings.length
+            ? ('No apartment buildings were found with the specific filters.' | translate)
+            : ('No apartment buildings were found in the database.' | translate)
+        }}
       </div>
     </ng-template>
   </ng-container>

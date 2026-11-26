@@ -1,7 +1,7 @@
 <div class="text-center p-5">
   <div *ngIf="loading">
     <div class="spinner-border text-primary"></div>
-    <p>Επεξεργασία πρόσκλησης...</p>
+    <p>{{ 'Edit invitation...' | translate }}</p>
   </div>
   <div *ngIf="!loading">
     <h3>{{ message }}</h3>

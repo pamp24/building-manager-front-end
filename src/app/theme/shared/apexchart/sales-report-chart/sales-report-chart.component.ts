@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // angular import
 import { Component, effect, inject, OnInit } from '@angular/core';
 
@@ -16,6 +17,8 @@ import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
   styleUrl: './sales-report-chart.component.scss'
 })
 export class SalesReportChartComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private themeService = inject(ThemeService);
   private dashboardService = inject(UserDashboardService);
 
@@ -67,7 +70,7 @@ export class SalesReportChartComponent implements OnInit {
       },
       series: [
         {
-          name: 'Πολυκατοικία',
+          name: this.uiLocale.text('Building'),
           data: []
         }
       ],
@@ -85,7 +88,7 @@ export class SalesReportChartComponent implements OnInit {
             colors: ['#8C8C8C']
           },
           formatter: (val: number) => {
-            return val.toLocaleString('el-GR', {
+            return val.toLocaleString(this.uiLocale.locale, {
               maximumFractionDigits: 2
             });
           }
@@ -95,7 +98,7 @@ export class SalesReportChartComponent implements OnInit {
         theme: 'light',
         y: {
           formatter: (val: number) => {
-            return `${val.toLocaleString('el-GR', { maximumFractionDigits: 2 })} €`;
+            return `${val.toLocaleString(this.uiLocale.locale, { maximumFractionDigits: 2 })} €`;
           }
         }
       },
@@ -126,9 +129,9 @@ export class SalesReportChartComponent implements OnInit {
         this.apartmentTotal = data?.apartmentTotal ?? null;
         this.hasData = buildingValues.some((v) => v > 0) || apartmentValues.some((v) => v > 0);
 
-        const series = [{ name: 'Πολυκατοικία', data: buildingValues }];
+        const series = [{ name: this.uiLocale.text('Building'), data: buildingValues }];
         if (apartmentValues.some((v) => v > 0)) {
-          series.push({ name: 'Διαμέρισμα', data: apartmentValues });
+          series.push({ name: this.uiLocale.text('Apartment'), data: apartmentValues });
         }
 
         this.chartOptions = {
@@ -147,7 +150,20 @@ export class SalesReportChartComponent implements OnInit {
   private formatMonthLabel(iso: string): string {
     const [y, m] = iso.split('-').map(Number);
     if (!y || !m) return iso;
-    const names = ['Ιαν', 'Φεβ', 'Μαρ', 'Απρ', 'Μαι', 'Ιουν', 'Ιουλ', 'Αυγ', 'Σεπ', 'Οκτ', 'Νοε', 'Δεκ'];
+    const names = [
+      this.uiLocale.text('Jan'),
+      this.uiLocale.text('Feb'),
+      this.uiLocale.text('Mar'),
+      this.uiLocale.text('Apr'),
+      this.uiLocale.text('May'),
+      this.uiLocale.text('Jun'),
+      this.uiLocale.text('Jul'),
+      this.uiLocale.text('Aug'),
+      this.uiLocale.text('Sep'),
+      this.uiLocale.text('Oct'),
+      this.uiLocale.text('Nov'),
+      this.uiLocale.text('Dec')
+    ];
     return `${names[m - 1]} ${y}`;
   }
 

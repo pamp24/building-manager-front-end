@@ -1,6 +1,9 @@
+import { TranslateModule } from '@ngx-translate/core';
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { BuildingMeta } from 'src/app/theme/shared/models/buildingMeta';
@@ -10,11 +13,13 @@ import { AuthenticationService } from 'src/app/theme/shared/service';
 @Component({
   selector: 'app-apartment-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [TranslateModule, CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './apartment-form.component.html',
   styleUrls: ['./apartment-form.component.scss']
 })
 export class ApartmentFormComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   form: FormGroup;
   isSubmitted = false;
   errorMessage = '';
@@ -104,7 +109,11 @@ export class ApartmentFormComponent implements OnInit {
     const apartmentsLimit = this.buildingMeta?.apartmentsNum ?? 0;
 
     if (apartmentsLimit > 0 && this.apartments.length >= apartmentsLimit) {
-      alert(`Δεν μπορείτε να προσθέσετε περισσότερα από ${apartmentsLimit} διαμερίσματα.\nΘα πρέπει να γίνει επεξεργασία της πολυκατοικίας.`);
+      alert(
+        this.uiLocale.text('You cannot add more than {{p0}} partitions. The apartment building will need to be renovated.', {
+          p0: apartmentsLimit
+        })
+      );
       return;
     }
 
@@ -130,29 +139,30 @@ export class ApartmentFormComponent implements OnInit {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       const invalidFields = this.getInvalidFieldLabels();
-      this.errorMessage = invalidFields.length > 0
-        ? `Υπάρχουν μη έγκυρα πεδία: ${invalidFields.join(', ')}.`
-        : 'Συμπληρώστε όλα τα υποχρεωτικά πεδία πριν την ολοκλήρωση.';
+      this.errorMessage =
+        invalidFields.length > 0
+          ? this.uiLocale.text('There are invalid fields: {{p0}}.', { p0: invalidFields.join(', ') })
+          : this.uiLocale.text('Please complete all required fields before completing.');
       return;
     }
 
     const apartmentsLimit = this.buildingMeta?.apartmentsNum ?? 0;
     if (apartmentsLimit > 0 && this.apartments.length > apartmentsLimit) {
-      this.errorMessage = `Δεν μπορείτε να δηλώσετε περισσότερα από ${apartmentsLimit} διαμερίσματα.`;
+      this.errorMessage = this.uiLocale.text('You cannot declare more than {{p0}} apartments.', { p0: apartmentsLimit });
       return;
     }
 
     const parkingLimit = this.buildingMeta?.parkingSpacesNum ?? 0;
     const usedParking = this.apartments.value.filter((apartment: any) => apartment.hasParking === true).length;
     if (usedParking > parkingLimit) {
-      this.errorMessage = `Δεν μπορείτε να δηλώσετε περισσότερες από ${parkingLimit} θέσεις parking.`;
+      this.errorMessage = this.uiLocale.text('You cannot enter more than {{p0}} parking spaces.', { p0: parkingLimit });
       return;
     }
 
     const storageLimit = this.buildingMeta?.storageNum ?? 0;
     const usedStorages = this.apartments.value.filter((apartment: any) => apartment.hasStorage === true).length;
     if (usedStorages > storageLimit) {
-      this.errorMessage = `Δεν μπορείτε να δηλώσετε περισσότερες από ${storageLimit} αποθήκες.`;
+      this.errorMessage = this.uiLocale.text('You cannot declare more than {{p0}} repositories.', { p0: storageLimit });
       return;
     }
 
@@ -187,12 +197,12 @@ export class ApartmentFormComponent implements OnInit {
 
     this.apartmentService.saveMultiple(formData).subscribe({
       next: () => {
-        alert('Τα διαμερίσματα αποθηκεύτηκαν με επιτυχία!');
+        alert(this.uiLocale.text('Apartments saved successfully!'));
         this.finished.emit();
       },
       error: (err) => {
         console.error('Σφάλμα:', err);
-        this.errorMessage = err?.error?.message || 'Η αποθήκευση των διαμερισμάτων απέτυχε. Ελέγξτε τα στοιχεία και δοκιμάστε ξανά.';
+        this.errorMessage = err?.error?.message || this.uiLocale.text('Failed to save partitions. Check the details and try again.');
       }
     });
   }
@@ -264,21 +274,21 @@ export class ApartmentFormComponent implements OnInit {
 
   private getInvalidFieldLabels(): string[] {
     const fieldLabels: Record<string, string> = {
-      ownerFirstName: 'Όνομα ιδιοκτήτη',
-      ownerLastName: 'Επώνυμο ιδιοκτήτη',
-      isRented: 'Ενοικιάζεται',
-      residentFirstName: 'Όνομα ενοικιαστή',
-      residentLastName: 'Επώνυμο ενοικιαστή',
-      apartmentNumber: 'Αριθμός διαμερίσματος',
-      floor: 'Όροφος',
-      sqMetersApart: 'Τετραγωνικά μέτρα',
+      ownerFirstName: this.uiLocale.text('Name of Owner'),
+      ownerLastName: this.uiLocale.text("Owner's Last Name"),
+      isRented: this.uiLocale.text('Is it for rent?'),
+      residentFirstName: this.uiLocale.text('Tenant Name'),
+      residentLastName: this.uiLocale.text('Name of Tenant'),
+      apartmentNumber: this.uiLocale.text('Apartment Number'),
+      floor: this.uiLocale.text('Floor'),
+      sqMetersApart: this.uiLocale.text('Square Meters'),
       hasParking: 'Parking',
-      parkingSlot: 'Θέση parking',
-      hasStorage: 'Αποθήκη',
-      storageSlot: 'Αριθμός αποθήκης',
-      commonPercent: 'Χιλιοστά κοινοχρήστων',
-      elevatorPercent: 'Χιλιοστά ασανσέρ',
-      heatingPercent: 'Χιλιοστά θέρμανσης'
+      parkingSlot: this.uiLocale.text('Parking space'),
+      hasStorage: this.uiLocale.text('Warehouse'),
+      storageSlot: this.uiLocale.text('Warehouse Number'),
+      commonPercent: this.uiLocale.text('Thousands of Users'),
+      elevatorPercent: this.uiLocale.text('Elevator kilometers'),
+      heatingPercent: this.uiLocale.text('Kilometers of Heating')
     };
 
     const invalid: string[] = [];

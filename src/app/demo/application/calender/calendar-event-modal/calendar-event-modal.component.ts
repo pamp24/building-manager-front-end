@@ -1,15 +1,23 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, inject, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FlatpickrDirective } from 'angularx-flatpickr';
 import { Greek } from 'flatpickr/dist/l10n/gr.js';
+import { French } from 'flatpickr/dist/l10n/fr.js';
+import { German } from 'flatpickr/dist/l10n/de.js';
+import { Spanish } from 'flatpickr/dist/l10n/es.js';
+import { Hebrew } from 'flatpickr/dist/l10n/he.js';
+import { Mandarin } from 'flatpickr/dist/l10n/zh.js';
+import { CustomLocale } from 'flatpickr/dist/types/locale';
 
 @Component({
   selector: 'app-calendar-event-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule, FlatpickrDirective],
+  imports: [TranslateModule, CommonModule, FormsModule, FlatpickrDirective],
   templateUrl: './calendar-event-modal.component.html',
   styleUrls: ['./calendar-event-modal.component.scss']
 })
@@ -19,7 +27,17 @@ export class CalendarEventModalComponent implements OnInit {
   @Input() isEdit = false;
   @Output() save = new EventEmitter<any>();
 
-  greekLocale = Greek;
+  calendarLocale: CustomLocale | 'default' =
+    (
+      {
+        gr: Greek,
+        fr: French,
+        de: German,
+        es: Spanish,
+        he: Hebrew,
+        cn: Mandarin
+      } as Record<string, CustomLocale>
+    )[inject(UiLocaleService).currentLanguage] ?? 'default';
 
   constructor(public activeModal: NgbActiveModal) {}
 

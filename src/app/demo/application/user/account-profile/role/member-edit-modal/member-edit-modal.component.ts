@@ -1,9 +1,7 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output
-} from '@angular/core';
+import { inject, Component, EventEmitter, Input, Output } from '@angular/core';
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { TranslateModule } from '@ngx-translate/core';
+
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -19,10 +17,12 @@ type ApartmentLite = {
 @Component({
   selector: 'app-member-edit-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [TranslateModule, CommonModule, FormsModule],
   templateUrl: './member-edit-modal.component.html'
 })
 export class MemberEditModalComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   @Input({ required: true })
   member!: BuildingMemberDTO;
 
@@ -34,8 +34,7 @@ export class MemberEditModalComponent {
   filteredApartments: ApartmentLite[] = [];
 
   @Output()
-  roleChanged =
-    new EventEmitter<'Owner' | 'Resident' | ''>();
+  roleChanged = new EventEmitter<'Owner' | 'Resident' | ''>();
 
   roleToInvite: 'Owner' | 'Resident' | '' = '';
   apartmentToInvite: number | null = null;
@@ -43,10 +42,21 @@ export class MemberEditModalComponent {
   isSending = false;
   errorMsg: string | null = null;
 
-  constructor(public activeModal: NgbActiveModal, private buildingService: BuildingService) {}
+  constructor(
+    public activeModal: NgbActiveModal,
+    private buildingService: BuildingService
+  ) {}
 
   designateManager(): void {
-    if (!this.pmView || this.buildingId == null || this.member.id == null || this.member.status !== 'JOINED' || this.member.isBuildingManager || this.isSending) return;
+    if (
+      !this.pmView ||
+      this.buildingId == null ||
+      this.member.id == null ||
+      this.member.status !== 'JOINED' ||
+      this.member.isBuildingManager ||
+      this.isSending
+    )
+      return;
 
     this.isSending = true;
     this.errorMsg = null;
@@ -58,7 +68,7 @@ export class MemberEditModalComponent {
       },
       error: (err) => {
         this.isSending = false;
-        this.errorMsg = err.error?.message || 'Αποτυχία ορισμού διαχειριστή πολυκατοικίας.';
+        this.errorMsg = err.error?.message || this.uiLocale.text('Failure to define apartment building manager.');
       }
     });
   }
@@ -77,12 +87,12 @@ export class MemberEditModalComponent {
     this.errorMsg = null;
 
     if (!this.roleToInvite) {
-      this.errorMsg = 'Επέλεξε ρόλο.';
+      this.errorMsg = this.uiLocale.text('He chose a role.');
       return;
     }
 
     if (this.apartmentToInvite == null) {
-      this.errorMsg = 'Επέλεξε διαμέρισμα.';
+      this.errorMsg = this.uiLocale.text('He chose an apartment.');
       return;
     }
 

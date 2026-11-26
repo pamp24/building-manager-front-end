@@ -2,6 +2,19 @@
   margin-bottom: 24px;
   transition: box-shadow 0.2s ease-in-out;
 
+  > .table-responsive,
+  > .table-wrapper {
+    &:first-child {
+      border-top-left-radius: var(--bs-card-inner-border-radius);
+      border-top-right-radius: var(--bs-card-inner-border-radius);
+    }
+
+    &:last-child {
+      border-bottom-left-radius: var(--bs-card-inner-border-radius);
+      border-bottom-right-radius: var(--bs-card-inner-border-radius);
+    }
+  }
+
   .card-header {
     border-bottom: 1px solid $border-color;
 

@@ -6,7 +6,7 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 
 // icons
 import { IconService } from '@ant-design/icons-angular';
-import { MenuUnfoldOutline, MenuFoldOutline, SearchOutline } from '@ant-design/icons-angular/icons';
+import { MenuUnfoldOutline, MenuFoldOutline } from '@ant-design/icons-angular/icons';
 
 @Component({
   selector: 'app-nav-left',
@@ -23,7 +23,7 @@ export class NavLeftComponent {
   readonly NavCollapsedMob = output();
   // Constructor
   constructor() {
-    this.iconService.addIcon(...[MenuUnfoldOutline, MenuFoldOutline, SearchOutline]);
+    this.iconService.addIcon(...[MenuUnfoldOutline, MenuFoldOutline]);
   }
 
   // public method

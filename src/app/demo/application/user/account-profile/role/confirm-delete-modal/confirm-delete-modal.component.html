@@ -8,6 +8,6 @@
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-outline-secondary" (click)="activeModal.dismiss()">Ακύρωση</button>
-  <button class="btn btn-danger" (click)="activeModal.close('confirm')">Διαγραφή</button>
+  <button class="btn btn-outline-secondary" (click)="activeModal.dismiss()">{{ 'Cancellation' | translate }}</button>
+  <button class="btn btn-danger" (click)="activeModal.close('confirm')">{{ 'Delete' | translate }}</button>
 </div>

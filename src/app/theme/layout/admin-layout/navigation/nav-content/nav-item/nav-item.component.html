@@ -5,7 +5,7 @@
         [ngClass]="item().classes!"
         [routerLinkActive]="['active']"
         [routerLinkActiveOptions]="{ exact: item().exact || false }"
-        ngbTooltip="{{ !isEnabled ? 'Δεν έχετε άδεια πρόσβασης σε αυτήν τη σελίδα. ' : '' }}"
+        ngbTooltip="{{ !isEnabled ? ('You do not have permission to access this page.' | translate) : '' }}"
       >
         <a
           class="nav-link"

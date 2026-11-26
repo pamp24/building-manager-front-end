@@ -1,5 +1,20 @@
+<div *ngIf="loadError" class="alert alert-danger" role="alert">{{ 'The control panel could not be loaded.' | translate }}</div>
+<div
+  *ngIf="
+    !loading &&
+    !loadError &&
+    !dashboardData?.summary?.totalBuildings &&
+    !dashboardData?.summary?.totalApartments &&
+    !dashboardData?.summary?.pendingAmount &&
+    !dashboardData?.summary?.overdueAmount
+  "
+  class="alert alert-info"
+  role="status"
+>
+  {{ 'There is no data for the dashboard.' | translate }}
+</div>
 <div class="row">
-  @for (summary of dashboard_summary; track summary) {
+  @for (summary of dashboard_summary; track summary.title) {
     <div class="col-lg-3 col-md-6">
       <app-card [showHeader]="false">
         <div class="d-flex align-items-center">

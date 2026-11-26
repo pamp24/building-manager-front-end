@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-md-6">
-    <app-card cardTitle="Fade" blockClass="pc-component">
+    <app-card [cardTitle]="'Fade' | translate" blockClass="pc-component">
       <div class="btn-page">
         <button
           data-pc-animate="fade-in-scale"
@@ -10,7 +10,7 @@
           data-modal="modal-1"
           (click)="openMyModal('modal-1')"
         >
-          Fade in &amp; Scale
+          {{ 'Fade in &amp; Scale' | translate }}
         </button>
         <app-animation-modal [modalID]="'modal-1'" [modalClass]="'md-effect-1'">
           <ng-container *ngTemplateOutlet="modalContent"></ng-container>
@@ -19,7 +19,7 @@
     </app-card>
   </div>
   <div class="col-md-6">
-    <app-card cardTitle="Slide" blockClass="pc-component">
+    <app-card [cardTitle]="'Slide' | translate" blockClass="pc-component">
       <div class="btn-page">
         <button
           data-pc-animate="fade-in-scale"
@@ -29,7 +29,7 @@
           data-modal="modal-2"
           (click)="openMyModal('modal-2')"
         >
-          Slide in (right)
+          {{ 'Slide in (right)' | translate }}
         </button>
         <app-animation-modal [modalID]="'modal-2'" [modalClass]="'md-effect-2'">
           <ng-container *ngTemplateOutlet="modalContent"></ng-container>
@@ -42,7 +42,7 @@
           data-modal="modal-3"
           (click)="openMyModal('modal-3')"
         >
-          Slide in (bottom)
+          {{ 'Slide in (bottom)' | translate }}
         </button>
         <app-animation-modal [modalID]="'modal-3'" [modalClass]="'md-effect-3'">
           <ng-container *ngTemplateOutlet="modalContent"></ng-container>
@@ -51,7 +51,7 @@
     </app-card>
   </div>
   <div class="col-md-6">
-    <app-card cardTitle="Fall" blockClass="pc-component">
+    <app-card [cardTitle]="'Fall' | translate" blockClass="pc-component">
       <div class="btn-page">
         <button
           data-pc-animate="fade-in-scale"
@@ -61,7 +61,7 @@
           data-modal="modal-5"
           (click)="openMyModal('modal-5')"
         >
-          Fall
+          {{ 'Fall' | translate }}
         </button>
         <app-animation-modal [modalID]="'modal-5'" [modalClass]="'md-effect-5'">
           <ng-container *ngTemplateOutlet="modalContent"></ng-container>
@@ -74,7 +74,7 @@
           data-modal="modal-6"
           (click)="openMyModal('modal-6')"
         >
-          Slide Fall
+          {{ 'Slide Fall' | translate }}
         </button>
         <app-animation-modal [modalID]="'modal-6'" [modalClass]="'md-effect-6'">
           <ng-container *ngTemplateOutlet="modalContent"></ng-container>
@@ -83,7 +83,7 @@
     </app-card>
   </div>
   <div class="col-md-6">
-    <app-card cardTitle="Flip" blockClass="pc-component">
+    <app-card [cardTitle]="'Flip' | translate" blockClass="pc-component">
       <div class="btn-page">
         <button
           data-pc-animate="fade-in-scale"
@@ -93,7 +93,7 @@
           data-modal="modal-8"
           (click)="openMyModal('modal-8')"
         >
-          3D Flip (horizontal)
+          {{ '3D Flip (horizontal)' | translate }}
         </button>
         <app-animation-modal [modalID]="'modal-8'" [modalClass]="'md-effect-8'">
           <ng-container *ngTemplateOutlet="modalContent"></ng-container>
@@ -106,7 +106,7 @@
           data-modal="modal-9"
           (click)="openMyModal('modal-9')"
         >
-          3D Flip (vertical)
+          {{ '3D Flip (vertical)' | translate }}
         </button>
         <app-animation-modal [modalID]="'modal-9'" [modalClass]="'md-effect-9'">
           <ng-container *ngTemplateOutlet="modalContent"></ng-container>
@@ -115,7 +115,7 @@
     </app-card>
   </div>
   <div class="col-md-6">
-    <app-card cardTitle="Rotate" blockClass="pc-component">
+    <app-card [cardTitle]="'Rotate' | translate" blockClass="pc-component">
       <div class="btn-page">
         <button
           data-pc-animate="fade-in-scale"
@@ -125,7 +125,7 @@
           data-modal="modal-13"
           (click)="openMyModal('modal-13')"
         >
-          3D Slit
+          {{ '3D Slit' | translate }}
         </button>
         <app-animation-modal [modalID]="'modal-13'" [modalClass]="'md-effect-13'">
           <ng-container *ngTemplateOutlet="modalContent"></ng-container>
@@ -138,7 +138,7 @@
           data-modal="modal-14"
           (click)="openMyModal('modal-14')"
         >
-          3D Rotate Bottom
+          {{ '3D Rotate Bottom' | translate }}
         </button>
         <app-animation-modal [modalID]="'modal-14'" [modalClass]="'md-effect-14'">
           <ng-container *ngTemplateOutlet="modalContent"></ng-container>
@@ -151,7 +151,7 @@
           data-modal="modal-15"
           (click)="openMyModal('modal-15')"
         >
-          3D Rotate InLeft
+          {{ '3D Rotate InLeft' | translate }}
         </button>
         <app-animation-modal [modalID]="'modal-15'" [modalClass]="'md-effect-15'">
           <ng-container *ngTemplateOutlet="modalContent"></ng-container>
@@ -160,7 +160,7 @@
     </app-card>
   </div>
   <div class="col-md-6">
-    <app-card cardTitle="Advance" blockClass="pc-component">
+    <app-card [cardTitle]="'Advance' | translate" blockClass="pc-component">
       <div class="btn-page">
         <button
           data-pc-animate="fade-in-scale"
@@ -170,7 +170,7 @@
           data-modal="modal-16"
           (click)="openMyModal('modal-16')"
         >
-          Blur
+          {{ 'Blur' | translate }}
         </button>
         <app-animation-modal [modalID]="'modal-16'" [modalClass]="'md-effect-16'">
           <ng-container *ngTemplateOutlet="modalContent"></ng-container>
@@ -183,7 +183,7 @@
           data-modal="modal-17"
           (click)="openMyModal('modal-17')"
         >
-          Let Me In
+          {{ 'Let Me In' | translate }}
         </button>
         <app-animation-modal [modalID]="'modal-17'" [modalClass]="'md-effect-17'">
           <ng-container *ngTemplateOutlet="modalContent"></ng-container>
@@ -196,7 +196,7 @@
           data-modal="modal-18"
           (click)="openMyModal('modal-18')"
         >
-          Make Way!
+          {{ 'Make Way!' | translate }}
         </button>
         <app-animation-modal [modalID]="'modal-18'" [modalClass]="'md-effect-18'">
           <ng-container *ngTemplateOutlet="modalContent"></ng-container>
@@ -209,7 +209,7 @@
           data-modal="modal-19"
           (click)="openMyModal('modal-19')"
         >
-          Slip from top
+          {{ 'Slip from top' | translate }}
         </button>
         <app-animation-modal [modalID]="'modal-19'" [modalClass]="'md-effect-19'">
           <ng-container *ngTemplateOutlet="modalContent"></ng-container>
@@ -218,7 +218,7 @@
     </app-card>
   </div>
   <div class="col-md-12">
-    <app-card cardTitle="Other" blockClass="pc-component">
+    <app-card [cardTitle]="'Other' | translate" blockClass="pc-component">
       <div class="btn-page">
         <button
           data-pc-animate="fade-in-scale"
@@ -228,7 +228,7 @@
           data-modal="modal-4"
           (click)="openMyModal('modal-4')"
         >
-          Newspaper
+          {{ 'Newspaper' | translate }}
         </button>
         <app-animation-modal [modalID]="'modal-4'" [modalClass]="'md-effect-4'">
           <ng-container *ngTemplateOutlet="modalContent"></ng-container>
@@ -241,7 +241,7 @@
           data-modal="modal-7"
           (click)="openMyModal('modal-7')"
         >
-          Sticky Up
+          {{ 'Sticky Up' | translate }}
         </button>
         <app-animation-modal [modalID]="'modal-7'" [modalClass]="'md-effect-7'">
           <ng-container *ngTemplateOutlet="modalContent"></ng-container>
@@ -254,7 +254,7 @@
           data-modal="modal-10"
           (click)="openMyModal('modal-10')"
         >
-          3D Sign
+          {{ '3D Sign' | translate }}
         </button>
         <app-animation-modal [modalID]="'modal-10'" [modalClass]="'md-effect-10'">
           <ng-container *ngTemplateOutlet="modalContent"></ng-container>
@@ -267,7 +267,7 @@
           data-modal="modal-11"
           (click)="openMyModal('modal-11')"
         >
-          Super Scaled
+          {{ 'Super Scaled' | translate }}
         </button>
         <app-animation-modal [modalID]="'modal-11'" [modalClass]="'md-effect-11'">
           <ng-container *ngTemplateOutlet="modalContent"></ng-container>
@@ -280,7 +280,7 @@
           data-modal="modal-12"
           (click)="openMyModal('modal-12')"
         >
-          Just Me
+          {{ 'Just Me' | translate }}
         </button>
         <app-animation-modal [modalID]="'modal-12'" [modalClass]="'md-effect-12 anim-just-me'">
           <ng-container *ngTemplateOutlet="modalContent"></ng-container>
@@ -292,27 +292,29 @@
 
 <ng-template #modalContent>
   <div class="modal-header justify-content-between">
-    <h5 class="modal-title text-dark">Animate Modal : fade-in-scale</h5>
+    <h5 class="modal-title text-dark">{{ 'Animate Modal : fade-in-scale' | translate }}</h5>
     <button type=" button" class="btn-close btn-close-daerk" (click)="closeMyModal($event)"></button>
   </div>
   <div class="modal-body">
-    <h5>This is a modal window</h5>
-    <p>You can do the following things with it:</p>
+    <h5>{{ 'This is a modal window' | translate }}</h5>
+    <p>{{ 'You can do the following things with it:' | translate }}</p>
     <p>
-      <b>Read:</b>
-      modal windows will probably tell you something important so don't forget to read what they say.
+      <b>{{ 'Read:' | translate }}</b>
+      {{ "modal windows will probably tell you something important so don't forget to read what they say." | translate }}
     </p>
     <p>
-      <b>Look:</b>
-      a modal window enjoys a certain kind of attention; just look at it and appreciate its presence.
+      <b>{{ 'Look:' | translate }}</b>
+      {{ 'a modal window enjoys a certain kind of attention; just look at it and appreciate its presence.' | translate }}
     </p>
     <p>
-      <b>Close:</b>
-      click on the button below to close the modal.
+      <b>{{ 'Close:' | translate }}</b>
+      {{ 'click on the button below to close the modal.' | translate }}
     </p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" (click)="closeMyModal($event)">Close</button>
-    <button type="button" class="btn btn-primary shadow-2" (click)="closeMyModal($event)">Save changes</button>
+    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" (click)="closeMyModal($event)">
+      {{ 'Close' | translate }}
+    </button>
+    <button type="button" class="btn btn-primary shadow-2" (click)="closeMyModal($event)">{{ 'Save changes' | translate }}</button>
   </div>
 </ng-template>

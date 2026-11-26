@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -17,6 +18,8 @@ import { ProfessionalService } from 'src/app/theme/shared/service/professional.s
   styleUrls: ['./professional-manage.component.scss']
 })
 export class ProfessionalManageComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private readonly phonePattern = /^\+?[0-9()\-\s]{8,20}$/;
   private readonly websitePattern = /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[^\s]*)?$/i;
   private readonly taxNumberPattern = /^[A-Za-z0-9-]{8,15}$/;
@@ -47,7 +50,7 @@ export class ProfessionalManageComponent implements OnInit {
     this.professionalId = Number(this.route.snapshot.paramMap.get('id'));
 
     if (!this.professionalId || Number.isNaN(this.professionalId)) {
-      this.error = 'Μη έγκυρο id επιχείρησης.';
+      this.error = this.uiLocale.text('Invalid business id.');
       return;
     }
 
@@ -64,7 +67,7 @@ export class ProfessionalManageComponent implements OnInit {
         this.loading = false;
       },
       error: () => {
-        this.error = 'Αποτυχία φόρτωσης επιχείρησης.';
+        this.error = this.uiLocale.text('Failed to load business.');
         this.loading = false;
       }
     });
@@ -105,12 +108,12 @@ export class ProfessionalManageComponent implements OnInit {
     this.professionalService.update(this.professionalId, payload).subscribe({
       next: (res) => {
         this.professional = res;
-        this.success = 'Τα στοιχεία αποθηκεύτηκαν επιτυχώς.';
+        this.success = this.uiLocale.text('The data was saved successfully.');
         this.saving = false;
         this.editMode = false;
       },
       error: () => {
-        this.error = 'Αποτυχία αποθήκευσης στοιχείων.';
+        this.error = this.uiLocale.text('Failed to save data.');
         this.saving = false;
       }
     });
@@ -146,7 +149,7 @@ export class ProfessionalManageComponent implements OnInit {
         this.loadBusiness();
       },
       error: () => {
-        this.error = 'Αποτυχία upload εικόνας.';
+        this.error = this.uiLocale.text('Failed to upload image.');
         this.uploading = false;
       }
     });
@@ -162,7 +165,7 @@ export class ProfessionalManageComponent implements OnInit {
   }
 
   deleteImage(imageId: number): void {
-    if (!confirm('Θέλεις σίγουρα να διαγράψεις αυτή την εικόνα;')) return;
+    if (!confirm(this.uiLocale.text('Are you sure you want to delete this image?'))) return;
 
     this.professionalService.deleteImage(imageId).subscribe({
       next: () => {
@@ -198,15 +201,15 @@ export class ProfessionalManageComponent implements OnInit {
     const taxNumber = this.professional?.taxNumber?.trim() ?? '';
 
     if (!phone || !this.phonePattern.test(phone)) {
-      return 'Παρακαλώ εισάγετε έγκυρο τηλέφωνο.';
+      return this.uiLocale.text('Please enter a valid phone number.');
     }
 
     if (website && !this.websitePattern.test(website)) {
-      return 'Παρακαλώ εισάγετε έγκυρο website.';
+      return this.uiLocale.text('Please enter a valid website.');
     }
 
     if (taxNumber && !this.taxNumberPattern.test(taxNumber)) {
-      return 'Παρακαλώ εισάγετε έγκυρο ΑΦΜ.';
+      return this.uiLocale.text('Please enter a valid VAT number.');
     }
 
     return '';

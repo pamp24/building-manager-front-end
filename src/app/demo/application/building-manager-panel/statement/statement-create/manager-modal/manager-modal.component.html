@@ -1,6 +1,6 @@
 <div class="modal-content">
   <div class="modal-header justify-content-between">
-    <h5 class="mb-0">Επιλογή Πολυκατοικίας</h5>
+    <h5 class="mb-0">{{ 'Choice of Apartment Building' | translate }}</h5>
     <a href="javascript:" class="avatar avatar-s btn-link-danger" (click)="cancel()">
       <i class="f-20" antIcon theme="outline" type="close"></i>
     </a>
@@ -21,21 +21,21 @@
           <label class="form-check-label d-block" [for]="'building-' + i">
             <h5 class="mb-0">{{ b.name }}</h5>
             <p class="mb-0">
-              Διεύθυνση: {{ b.street1 }} {{ b.stNumber1 }}
+              {{ 'Address:' | translate }} {{ b.street1 }} {{ b.stNumber1 }}
               <ng-container *ngIf="b.street2">- {{ b.street2 }} {{ b.stNumber2 }}</ng-container>
             </p>
-            <p class="mb-0">Πόλη: {{ b.city }}, ΤΚ: {{ b.postalCode }}</p>
-            <p class="mb-0">Διαχειριστής: {{ b.manager?.fullName }}</p>
-            <p class="mb-0">Τηλέφωνο: {{ b.manager?.phoneNumber }}</p>
-            <p class="mb-0">E-mail: {{ b.manager?.email }}</p>
+            <p class="mb-0">{{ 'City:' | translate }} {{ b.city }}{{ ', Postal Code:' | translate }} {{ b.postalCode }}</p>
+            <p class="mb-0">{{ 'Admin:' | translate }} {{ b.manager?.fullName }}</p>
+            <p class="mb-0">{{ 'Telephone:' | translate }} {{ b.manager?.phoneNumber }}</p>
+            <p class="mb-0">{{ 'E-mail:' | translate }} {{ b.manager?.email }}</p>
           </label>
         </div>
       </div>
     </div>
 
     <div class="text-end btn-page mt-3">
-      <button class="btn btn-outline-secondary me-2" type="button" (click)="cancel()">Άκυρο</button>
-      <button class="btn btn-primary" (click)="saveSelection()">Αποθήκευση και επιλογή</button>
+      <button class="btn btn-outline-secondary me-2" type="button" (click)="cancel()">{{ 'Invalid' | translate }}</button>
+      <button class="btn btn-primary" (click)="saveSelection()">{{ 'Save and select' | translate }}</button>
     </div>
   </div>
 </div>

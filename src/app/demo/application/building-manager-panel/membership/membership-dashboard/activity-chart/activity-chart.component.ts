@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // angular import
 import { Component, OnInit, effect, inject } from '@angular/core';
 
@@ -15,6 +16,8 @@ import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
   styleUrl: './activity-chart.component.scss'
 })
 export class ActivityChartComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private themeService = inject(ThemeService);
 
   // public props
@@ -68,11 +71,11 @@ export class ActivityChartComponent implements OnInit {
       },
       series: [
         {
-          name: 'Active',
+          name: this.uiLocale.text('Active'),
           data: [20, 90, 65, 85, 20, 80, 30, 60, 90, 65, 85, 20]
         },
         {
-          name: 'Inactive',
+          name: this.uiLocale.text('Inactive'),
           data: [70, 30, 40, 15, 60, 40, 95, 45, 30, 40, 15, 60]
         }
       ],
@@ -111,11 +114,11 @@ export class ActivityChartComponent implements OnInit {
       case 'today':
         this.chartOptions.series = [
           {
-            name: 'Active',
+            name: this.uiLocale.text('Active'),
             data: [20, 90, 65, 85, 20, 80, 30, 60, 90, 65, 85, 20]
           },
           {
-            name: 'Inactive',
+            name: this.uiLocale.text('Inactive'),
             data: [70, 30, 40, 15, 60, 40, 95, 45, 30, 40, 15, 60]
           }
         ];
@@ -123,11 +126,11 @@ export class ActivityChartComponent implements OnInit {
       case 'month':
         this.chartOptions.series = [
           {
-            name: 'Active',
+            name: this.uiLocale.text('Active'),
             data: [70, 30, 40, 15, 60, 40, 95, 45, 30, 40, 15, 60]
           },
           {
-            name: 'Inactive',
+            name: this.uiLocale.text('Inactive'),
             data: [20, 90, 65, 85, 20, 80, 30, 60, 90, 65, 85, 20]
           }
         ];
@@ -135,11 +138,11 @@ export class ActivityChartComponent implements OnInit {
       case 'week':
         this.chartOptions.series = [
           {
-            name: 'Active',
+            name: this.uiLocale.text('Active'),
             data: [20, 90, 15, 60, 40, 80, 30, 60, 90, 65, 85, 20]
           },
           {
-            name: 'Inactive',
+            name: this.uiLocale.text('Inactive'),
             data: [70, 20, 90, 65, 60, 40, 95, 45, 30, 40, 15, 60]
           }
         ];

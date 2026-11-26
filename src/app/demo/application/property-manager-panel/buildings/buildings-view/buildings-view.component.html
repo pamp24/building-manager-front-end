@@ -1,8 +1,8 @@
 <div class="row">
   <div class="col-sm-12">
     <ng-container *ngIf="loading">
-      <app-card cardTitle="Προβολή Πολυκατοικίας">
-        <div class="py-4">Φόρτωση...</div>
+      <app-card [cardTitle]="'View of Apartment Building' | translate">
+        <div class="py-4">{{ 'Loading...' | translate }}</div>
       </app-card>
     </ng-container>
 
@@ -18,7 +18,7 @@
               <a ngbNavLink>
                 <div class="d-flex align-items-center">
                   <i antIcon type="user" theme="outline" class="me-2 f-14"></i>
-                  <span class="f-w-500">Πολυκατοικία</span>
+                  <span class="f-w-500">{{ 'Building' | translate }}</span>
                 </div>
               </a>
               <ng-template ngbNavContent>
@@ -30,11 +30,14 @@
               </ng-template>
             </li>
 
-            <li *ngIf="hasRole('PropertyManager') || hasRole('BuildingManager') || hasRole('PropertyAgent') || hasRole('AdminAgent')" [ngbNavItem]="1">
+            <li
+              *ngIf="hasRole('PropertyManager') || hasRole('BuildingManager') || hasRole('PropertyAgent') || hasRole('AdminAgent')"
+              [ngbNavItem]="1"
+            >
               <a ngbNavLink>
                 <div class="d-flex align-items-center">
                   <i antIcon type="file-text" theme="outline" class="me-2 f-14"></i>
-                  <span class="f-w-500">Πίνακας Ελέγχου</span>
+                  <span class="f-w-500">{{ 'Dashboard' | translate }}</span>
                 </div>
               </a>
 
@@ -47,7 +50,7 @@
               <a ngbNavLink>
                 <div class="d-flex align-items-center">
                   <i antIcon type="file-text" theme="outline" class="me-2 f-14"></i>
-                  <span class="f-w-500">Λίστα Κοινοχρήστων</span>
+                  <span class="f-w-500">{{ 'List of Users' | translate }}</span>
                 </div>
               </a>
               <ng-template ngbNavContent>
@@ -59,7 +62,7 @@
               <a ngbNavLink>
                 <div class="d-flex align-items-center">
                   <i antIcon type="file-text" theme="outline" class="me-2 f-14"></i>
-                  <span class="f-w-500">Διαμερίσματα</span>
+                  <span class="f-w-500">{{ 'Apartments' | translate }}</span>
                 </div>
               </a>
               <ng-template ngbNavContent>
@@ -71,7 +74,7 @@
               <a ngbNavLink>
                 <div class="d-flex align-items-center">
                   <i antIcon type="team" theme="outline" class="me-2 f-14"></i>
-                  <span class="f-w-500">Ένοικοι</span>
+                  <span class="f-w-500">{{ 'Tenants' | translate }}</span>
                 </div>
               </a>
               <ng-template ngbNavContent>
@@ -83,7 +86,7 @@
               <a ngbNavLink>
                 <div class="d-flex align-items-center">
                   <i antIcon type="setting" theme="outline" class="me-2 f-14"></i>
-                  <span class="f-w-500">Ημερολόγιο</span>
+                  <span class="f-w-500">{{ 'Calendar' | translate }}</span>
                 </div>
               </a>
               <ng-template ngbNavContent>
@@ -95,7 +98,7 @@
               <a ngbNavLink>
                 <div class="d-flex align-items-center">
                   <i antIcon type="setting" theme="outline" class="me-2 f-14"></i>
-                  <span class="f-w-500">Ψηφοφορίες</span>
+                  <span class="f-w-500">{{ 'Votes' | translate }}</span>
                 </div>
               </a>
               <ng-template ngbNavContent>
@@ -107,7 +110,7 @@
               <a ngbNavLink>
                 <div class="d-flex align-items-center">
                   <i antIcon type="setting" theme="outline" class="me-2 f-14"></i>
-                  <span class="f-w-500">Ρυθμίσεις</span>
+                  <span class="f-w-500">{{ 'Settings' | translate }}</span>
                 </div>
               </a>
               <ng-template ngbNavContent>

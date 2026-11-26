@@ -1,5 +1,7 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, OnInit } from '@angular/core';
 // angular import
-import { Component, OnInit } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 
 // project import
@@ -16,6 +18,8 @@ import { AuthenticationService } from 'src/app/theme/shared/service';
   styleUrl: './company.component.scss'
 })
 export class CompanyComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   company?: CompanyDTO;
   companyForm!: FormGroup;
   loading = true;
@@ -46,7 +50,7 @@ export class CompanyComponent implements OnInit {
     this.companyForm.disable();
     this.loadCompany();
   }
-  
+
   hasRole(role: string): boolean {
     return this.authService.currentUserValue?.role === role;
   }
@@ -63,9 +67,9 @@ export class CompanyComponent implements OnInit {
       },
       error: (err) => {
         this.loading = false;
-        if (err?.status === 404) this.error = 'Δεν υπάρχει εταιρία συνδεδεμένη με τον λογαριασμό σας.';
-        else if (err?.status === 401) this.error = 'Δεν είστε συνδεδεμένος.';
-        else this.error = 'Αποτυχία φόρτωσης εταιρίας.';
+        if (err?.status === 404) this.error = this.uiLocale.text('There is no company associated with your account.');
+        else if (err?.status === 401) this.error = this.uiLocale.text('You are not logged in.');
+        else this.error = this.uiLocale.text('Failed to load company.');
       }
     });
   }
@@ -89,11 +93,11 @@ export class CompanyComponent implements OnInit {
         this.company = saved;
         this.companyForm.patchValue(saved);
         this.toggleEdit();
-        alert('Η εταιρία ενημερώθηκε!');
+        alert(this.uiLocale.text('The company has been updated!'));
       },
       error: (err) => {
         console.error(err);
-        alert('Αποτυχία ενημέρωσης εταιρίας.');
+        alert(this.uiLocale.text('Failed to update company.'));
       }
     });
   }

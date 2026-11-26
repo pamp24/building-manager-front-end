@@ -1,3 +1,5 @@
+import { TranslateModule } from '@ngx-translate/core';
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 import { CommonModule } from '@angular/common';
 import { Component, Input, inject } from '@angular/core';
 import { IconService } from '@ant-design/icons-angular';
@@ -8,11 +10,13 @@ import { ActivityItem } from 'src/app/theme/shared/models/pmDashboardDTO';
 @Component({
   selector: 'app-recent-activity',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [TranslateModule, CommonModule, RouterModule],
   templateUrl: './recent-activity.component..html',
   styleUrl: './recent-activity.component.scss'
 })
 export class RecentActivityComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private iconService = inject(IconService);
 
   @Input() recentActivity: ActivityItem[] = [];
@@ -26,7 +30,7 @@ export class RecentActivityComponent {
       return '-';
     }
 
-    return new Intl.DateTimeFormat('el-GR', {
+    return new Intl.DateTimeFormat(this.uiLocale.locale, {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',

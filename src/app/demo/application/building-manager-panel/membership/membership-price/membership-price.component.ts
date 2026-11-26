@@ -1,5 +1,6 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component } from '@angular/core';
 // angular import
-import { Component } from '@angular/core';
 
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -11,77 +12,79 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
   styleUrl: './membership-price.component.scss'
 })
 export class MembershipPriceComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   // public method
   priceList = [
     {
       border: 'border-success',
       background: 'bg-success',
-      name: 'Casual',
+      name: this.uiLocale.text('Casual'),
       price: '$50/',
       color: 'text-success',
       includeItem: [
         {
-          title: 'Full Facility Access'
+          title: this.uiLocale.text('Full Facility Access')
         },
         {
-          title: 'Meals plans'
+          title: this.uiLocale.text('Meals plans')
         },
         {
-          title: '10% Discounts'
+          title: this.uiLocale.text('10% Discounts')
         },
         {
-          title: 'Cancel anytime'
+          title: this.uiLocale.text('Cancel anytime')
         }
       ]
     },
     {
       border: 'border-primary',
       background: 'bg-primary',
-      name: 'Addicted',
+      name: this.uiLocale.text('Addicted'),
       price: '$150/',
       color: 'text-primary',
       includeItem: [
         {
-          title: 'Full Facility Access'
+          title: this.uiLocale.text('Full Facility Access')
         },
         {
-          title: 'Meals plans'
+          title: this.uiLocale.text('Meals plans')
         },
         {
-          title: '50% Discounts'
+          title: this.uiLocale.text('50% Discounts')
         },
         {
-          title: 'Cancel anytime'
+          title: this.uiLocale.text('Cancel anytime')
         },
         {
-          title: 'Basic feature'
+          title: this.uiLocale.text('Basic feature')
         }
       ]
     },
     {
       border: 'border-warning',
       background: 'bg-warning',
-      name: 'Addicted',
+      name: this.uiLocale.text('Addicted'),
       price: '$200/',
       color: 'text-warning',
       includeItem: [
         {
-          title: 'Full Facility Access'
+          title: this.uiLocale.text('Full Facility Access')
         },
         {
-          title: 'Meals plans'
+          title: this.uiLocale.text('Meals plans')
         },
         {
-          title: 'Primmum feature'
+          title: this.uiLocale.text('Primmum feature')
         },
         {
-          title: '75% Discounts'
+          title: this.uiLocale.text('75% Discounts')
         },
         {
-          title: 'Cancel anytime'
+          title: this.uiLocale.text('Cancel anytime')
         },
         {
-          title: 'Online booking'
+          title: this.uiLocale.text('Online booking')
         }
       ]
     }

@@ -6,10 +6,10 @@
 <!-- Εμφάνιση περιεχομένου μόνο αν υπάρχουν πολυκατοικίες -->
 <ng-container>
   <!-- Κάρτα με πληροφορίες πολυκατοικίας -->
-  <app-card *ngIf="!pmView && buildings.length > 0" cardTitle="Πολυκατοικία" [padding]="24">
+  <app-card *ngIf="!pmView && buildings.length > 0" [cardTitle]="'Building' | translate" [padding]="24">
     <div class="row">
       <div class="col-md-6">
-        <label>Όνομα Πολυκατοικίας</label>
+        <label>{{ 'Name of Apartment Building' | translate }}</label>
 
         <select class="form-select" [(ngModel)]="selectedBuildingIndex" (change)="onBuildingChange()">
           <option *ngFor="let b of buildings; let i = index" [value]="i">
@@ -19,7 +19,7 @@
       </div>
 
       <div class="col-md-6">
-        <label>Διεύθυνση Πολυκατοικίας</label>
+        <label>{{ 'Apartment building address' | translate }}</label>
         <input
           type="text"
           class="form-control readonly-input"
@@ -37,13 +37,13 @@
   </app-card>
 
   <!-- Κάρτα μελών πολυκατοικίας -->
-  <app-card cardTitle="Μέλη Πολυκατοικίας" [padding]="0" footerClass="text-end btn-page">
+  <app-card [cardTitle]="'Apartment Members' | translate" [padding]="0" footerClass="text-end btn-page">
     <!-- Ενότητα αποστολής προσκλήσεων (μόνο για διαχειριστές) -->
     <div *ngIf="canInvite()" class="table-top p-4">
-      <h3>Πρόσκληση Νέων Μελών</h3>
+      <h3>{{ 'Invitation of New Members' | translate }}</h3>
       <h4>
         {{ members.length }}
-        <small>μέλη που έχουν συνδεθεί στην Πολυκατοικία.</small>
+        <small>{{ 'members who have logged in to the Apartment.' | translate }}</small>
       </h4>
       <hr class="my-3" />
 
@@ -52,35 +52,39 @@
           <input
             type="email"
             class="form-control"
-            placeholder="Email"
+            [placeholder]="'Email' | translate"
             [(ngModel)]="emailToInvite"
             name="emailToInvite"
             required
             #emailCtrl="ngModel"
           />
-          <div *ngIf="emailCtrl.invalid && (emailCtrl.dirty || emailCtrl.touched)" class="text-danger">Παρακαλώ εισάγετε έγκυρο email.</div>
+          <div *ngIf="emailCtrl.invalid && (emailCtrl.dirty || emailCtrl.touched)" class="text-danger">
+            {{ 'Please enter a valid email.' | translate }}
+          </div>
         </div>
 
         <div class="col">
           <select class="form-select" [(ngModel)]="roleToInvite" (change)="onRoleChange()" [disabled]="isSending">
-            <option value="" disabled selected>Επιλέξτε Ρόλο</option>
-            <option value="Owner">Ιδιοκτήτης</option>
-            <option value="Resident">Ένοικος</option>
+            <option value="" disabled selected>{{ 'Select Role' | translate }}</option>
+            <option value="Owner">{{ 'Owner' | translate }}</option>
+            <option value="Resident">{{ 'Tenant' | translate }}</option>
           </select>
         </div>
 
         <div class="col">
           <select class="form-select" [(ngModel)]="apartmentToInvite" [disabled]="isSending">
-            <option [ngValue]="null" disabled selected>Επιλέξτε Διαμέρισμα</option>
-            <option *ngIf="filteredApartments.length === 0" disabled>Δεν υπάρχουν διαθέσιμα διαμερίσματα</option>
-            <option *ngFor="let ap of filteredApartments" [ngValue]="ap.id">Διαμέρισμα {{ ap.floor }}{{ ap.number }}</option>
+            <option [ngValue]="null" disabled selected>{{ 'Select Apartment' | translate }}</option>
+            <option *ngIf="filteredApartments.length === 0" disabled>{{ 'There are no apartments available' | translate }}</option>
+            <option *ngFor="let ap of filteredApartments" [ngValue]="ap.id">
+              {{ 'Apartment' | translate }} {{ ap.floor }}{{ ap.number }}
+            </option>
           </select>
         </div>
 
         <div class="col-auto">
           <button class="btn btn-primary" (click)="sendInvite()">
             <span *ngIf="isSending" class="spinner-border spinner-border-sm me-2"></span>
-            Αποστολή
+            {{ 'Shipping' | translate }}
           </button>
         </div>
       </div>
@@ -91,10 +95,10 @@
       <table class="table mb-0">
         <thead>
           <tr>
-            <th>ΜΕΛΟΣ</th>
-            <th>ΡΟΛΟΣ</th>
-            <th>ΑΡ. ΔΙΑΜΕΡΙΣΜΑΤΟΣ</th>
-            <th class="text-end">ΚΑΤΑΣΤΑΣΗ</th>
+            <th>{{ 'MEMBER' | translate }}</th>
+            <th>{{ 'ROLE' | translate }}</th>
+            <th>{{ 'APARTMENT NO' | translate }}</th>
+            <th class="text-end">{{ 'SITUATION' | translate }}</th>
             <th></th>
           </tr>
         </thead>
@@ -102,8 +106,10 @@
           <!-- Αν δεν υπάρχουν μέλη -->
           <tr *ngIf="!members || members.length === 0">
             <td colspan="5" class="text-center text-muted py-4">
-              Δεν υπάρχουν μέλη για αυτήν την πολυκατοικία. Θα πρέπει να προσθέσετε διαμερίσματα και να προσκαλέσετε μέλη για να δείτε
-              πληροφορίες εδώ.
+              {{
+                'There are no members for this apartment building. You must add apartments and invite members to see information here.'
+                  | translate
+              }}
             </td>
           </tr>
 
@@ -145,7 +151,9 @@
               >
                 {{ getTranslatedRole(member.role) }}
               </span>
-              <span *ngIf="pmView && member.isBuildingManager" class="badge bg-warning text-dark ms-1">Διαχειριστής πολυκατοικίας</span>
+              <span *ngIf="pmView && member.isBuildingManager" class="badge bg-warning text-dark ms-1">
+                {{ 'Apartment building manager' | translate }}
+              </span>
             </td>
 
             <td>{{ getMemberApartmentLabel(member) }}</td>
@@ -170,31 +178,37 @@
             </td>
 
             <td class="text-end">
-              <div *ngIf="member.id != null && (pmView || canManageMembers())" ngbDropdown container="body" class="d-inline-block">
+              <div
+                *ngIf="member.id !== null && member.id !== undefined && (pmView || canManageMembers())"
+                ngbDropdown
+                container="body"
+                class="d-inline-block"
+              >
                 <button
                   type="button"
                   class="avatar avatar-s btn-link-secondary border-0 bg-transparent"
                   ngbDropdownToggle
-                  aria-label="Ενέργειες"
-                  title="Ενέργειες"
+                  [attr.aria-label]="'Actions' | translate"
+                  [title]="'Actions' | translate"
                 >
                   <i class="ti ti-dots f-18"></i>
                 </button>
 
                 <div ngbDropdownMenu class="dropdown-menu-end">
-                  <button ngbDropdownItem type="button" (click)="openEditModal(member)">Επεξεργασία</button>
+                  <button ngbDropdownItem type="button" (click)="openEditModal(member)">{{ 'Processing' | translate }}</button>
 
-                  <button *ngIf="canManageMembers()" ngbDropdownItem type="button" class="text-danger" (click)="openDeleteModal(member)">Διαγραφή</button>
+                  <button *ngIf="canManageMembers()" ngbDropdownItem type="button" class="text-danger" (click)="openDeleteModal(member)">
+                    {{ 'Delete' | translate }}
+                  </button>
                 </div>
               </div>
             </td>
-            
           </tr>
         </tbody>
       </table>
     </div>
   </app-card>
   <div *ngIf="pmView" class="mb-3">
-    <a class="btn btn-outline-primary" [routerLink]="['/pm/buildings']">Πίσω</a>
+    <a class="btn btn-outline-primary" [routerLink]="['/pm/buildings']">{{ 'Back' | translate }}</a>
   </div>
 </ng-container>

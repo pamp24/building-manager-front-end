@@ -1,50 +1,222 @@
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  display: inline-block;
-}
-
-.announcement-text {
-  display: -webkit-box;
-  -webkit-line-clamp: 4; // δείξε 4 γραμμές
-  line-clamp: 4;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.announcement-carousel {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.nav-arrow {
-  width: 36px;
-  height: 36px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  flex: 0 0 auto;
-}
-
-.announcement-content {
-  max-height: 220px;   // άλλαξέ το όπως θες
-  overflow: auto;
-}
-
-.announcement-content {
-  max-height: 220px;   // άλλαξέ το όπως θες
-  overflow: auto;
-}
-
 :host {
   display: block;
   height: 100%;
+  min-width: 0;
 }
 
-:host ::ng-deep .card {
+:host ::ng-deep > app-card > .card {
   height: 100%;
+  overflow: hidden;
+  border-radius: 16px;
+
+  > .card-body {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.announcements-card {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  color: var(--bs-body-color, #262626);
+}
+
+.announcements-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--bs-border-color, #e8ebef);
+}
+
+.heading-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+
+  h5 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  p {
+    margin: 4px 0 0;
+    color: var(--bs-secondary-color, #667085);
+    font-size: 12px;
+  }
+}
+
+.heading-icon,
+.empty-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: rgba(22, 119, 255, 0.09);
+  color: #1677ff;
+  font-size: 20px;
+}
+
+.all-announcements {
+  white-space: nowrap;
+}
+
+.announcement-main {
+  flex: 1;
+  padding: 20px 24px;
+}
+
+.announcement-content {
+  padding: 16px 18px;
+  border: 1px solid var(--bs-border-color, #e8ebef);
+  border-radius: 12px;
+  border-inline-start: 3px solid #1677ff;
+  background: rgba(22, 119, 255, 0.025);
+
+  &.is-pinned {
+    border-inline-start-color: #d99b15;
+    background: rgba(250, 173, 20, 0.06);
+  }
+
+  h6 {
+    margin: 12px 0 8px;
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+}
+
+.announcement-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.pin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 9px;
+  border-radius: 6px;
+  color: #805500;
+  background: #fff1c2;
+  font-weight: 600;
+}
+
+.regular-label {
+  color: var(--bs-primary, #1677ff);
+  font-weight: 600;
+}
+
+.announcement-number,
+.announcement-date {
+  color: var(--bs-secondary-color, #667085);
+  font-size: 12px;
+}
+
+.announcement-date {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.announcement-text {
+  max-height: 150px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.7;
+  font-size: 14px;
+  padding-inline-end: 6px;
+}
+
+.announcement-navigation {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 24px 20px;
+}
+
+.announcement-select {
+  flex: 1;
+  min-width: 0;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.nav-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 8px;
+  font-size: 23px;
+  line-height: 1;
+
+  &:disabled {
+    opacity: 0.35;
+  }
+}
+
+.announcement-state {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 220px;
+  padding: 24px;
+  text-align: center;
+  color: var(--bs-secondary-color, #667085);
+
+  strong {
+    color: var(--bs-body-color, #262626);
+  }
+}
+
+button:focus-visible,
+select:focus-visible,
+.announcement-text:focus-visible {
+  outline: 2px solid #1677ff;
+  outline-offset: 3px;
+}
+
+@media (max-width: 575.98px) {
+  .announcements-header {
+    padding: 16px;
+  }
+
+  .heading-icon {
+    display: none;
+  }
+
+  .announcement-main {
+    padding: 16px;
+  }
+
+  .announcement-navigation {
+    gap: 8px;
+    padding: 0 16px 16px;
+  }
+
+  .announcement-content {
+    padding: 14px;
+  }
 }

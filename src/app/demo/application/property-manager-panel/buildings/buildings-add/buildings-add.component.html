@@ -1,102 +1,104 @@
 <div class="row">
   <div class="col-12">
-    <app-card cardTitle="Νέα Πολυκατοικία">
+    <app-card [cardTitle]="'New apartment building' | translate">
       <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label class="form-label">Όνομα*</label>
+            <label class="form-label">{{ 'Name*' | translate }}</label>
             <input class="form-control" formControlName="name" />
-            <div class="text-danger mt-1" *ngIf="isSubmitted && form.get('name')?.invalid">Υποχρεωτικό.</div>
+            <div class="text-danger mt-1" *ngIf="isSubmitted && form.get('name')?.invalid">{{ 'Mandatory.' | translate }}</div>
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label">Οδός 1*</label>
+            <label class="form-label">{{ 'Street 1*' | translate }}</label>
             <input class="form-control" formControlName="street1" />
-            <div class="text-danger mt-1" *ngIf="isSubmitted && form.get('street1')?.invalid">Υποχρεωτικό.</div>
+            <div class="text-danger mt-1" *ngIf="isSubmitted && form.get('street1')?.invalid">{{ 'Mandatory.' | translate }}</div>
           </div>
 
           <div class="col-md-3 mb-3">
-            <label class="form-label">Αριθμός*</label>
+            <label class="form-label">{{ 'Number*' | translate }}</label>
             <input class="form-control" formControlName="stNumber1" />
-            <div class="text-danger mt-1" *ngIf="isSubmitted && form.get('stNumber1')?.invalid">Υποχρεωτικό.</div>
+            <div class="text-danger mt-1" *ngIf="isSubmitted && form.get('stNumber1')?.invalid">{{ 'Mandatory.' | translate }}</div>
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label">Οδός 2</label>
+            <label class="form-label">{{ 'Street 2' | translate }}</label>
             <input class="form-control" formControlName="street2" />
           </div>
 
           <div class="col-md-3 mb-3">
-            <label class="form-label">Αριθμός 2</label>
+            <label class="form-label">{{ 'Number 2' | translate }}</label>
             <input class="form-control" formControlName="stNumber2" />
           </div>
 
           <div class="col-md-4 mb-3">
-            <label class="form-label">Χώρα*</label>
+            <label class="form-label">{{ 'Country*' | translate }}</label>
             <select class="form-select" formControlName="country">
-              <option value="">-- Επιλέξτε --</option>
+              <option value="">{{ '-- Select --' | translate }}</option>
               <option *ngFor="let c of countries" [value]="c">{{ c }}</option>
             </select>
           </div>
 
           <div class="col-md-4 mb-3">
-            <label class="form-label">Νομός*</label>
+            <label class="form-label">{{ 'County*' | translate }}</label>
             <select class="form-select" formControlName="state">
-              <option value="">-- Επιλέξτε --</option>
+              <option value="">{{ '-- Select --' | translate }}</option>
               <option *ngFor="let s of states" [value]="s">{{ s }}</option>
             </select>
           </div>
 
           <div class="col-md-4 mb-3">
-            <label class="form-label">Πόλη*</label>
+            <label class="form-label">{{ 'City*' | translate }}</label>
             <input class="form-control" formControlName="city" />
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label">Περιοχή*</label>
+            <label class="form-label">{{ 'Region*' | translate }}</label>
             <input class="form-control" formControlName="region" />
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label">Τ.Κ.*</label>
+            <label class="form-label">{{ 'Postal Code*' | translate }}</label>
             <input class="form-control" formControlName="postalCode" />
-            <div class="text-danger mt-1" *ngIf="isSubmitted && form.get('postalCode')?.invalid">5 ψηφία.</div>
+            <div class="text-danger mt-1" *ngIf="isSubmitted && form.get('postalCode')?.invalid">
+              {{ '5 digits.' | translate }}
+            </div>
           </div>
 
           <div class="col-md-3 mb-3">
-            <label class="form-label">Όροφοι*</label>
+            <label class="form-label">{{ 'Floors*' | translate }}</label>
             <input type="number" class="form-control" formControlName="floors" />
           </div>
 
           <div class="col-md-3 mb-3">
-            <label class="form-label">Διαμερίσματα*</label>
+            <label class="form-label">{{ 'Apartments*' | translate }}</label>
             <input type="number" class="form-control" formControlName="apartmentsNum" />
           </div>
 
           <div class="col-md-3 mb-3">
-            <label class="form-label">Συνολικά τ.μ.*</label>
+            <label class="form-label">{{ 'Total sq.m.*' | translate }}</label>
             <input type="number" class="form-control" formControlName="sqMetersTotal" />
           </div>
 
           <div class="col-md-3 mb-3">
-            <label class="form-label">Κοινόχρηστα τ.μ.</label>
+            <label class="form-label">{{ 'Shared sq.m.' | translate }}</label>
             <input type="number" class="form-control" formControlName="sqMetersCommonSpaces" />
           </div>
 
           <div class="col-md-12 mb-3">
-            <label class="form-label">Περιγραφή</label>
+            <label class="form-label">{{ 'Description' | translate }}</label>
             <textarea class="form-control" rows="3" formControlName="buildingDescription"></textarea>
           </div>
           <div class="row">
             <div class="col-md-4 mb-3">
               <label class="form-label">
                 <input type="checkbox" formControlName="parkingExist" class="me-2" />
-                Διαθέτει Πάρκινγκ
+                {{ 'It has Parking' | translate }}
               </label>
             </div>
 
             <div class="col-md-4 mb-3" *ngIf="form.get('parkingExist')?.value">
-              <label class="form-label">Θέσεις Πάρκινγκ*</label>
+              <label class="form-label">{{ 'Parking spaces*' | translate }}</label>
               <input type="number" class="form-control" formControlName="parkingSpacesNum" />
             </div>
           </div>
@@ -104,59 +106,59 @@
             <div class="col-md-4 mb-3">
               <label class="form-label">
                 <input type="checkbox" formControlName="storageExist" class="me-2" />
-                Διαθέτει Αποθήκες
+                {{ 'It has warehouses' | translate }}
               </label>
             </div>
 
             <div class="col-md-4 mb-3" *ngIf="form.get('storageExist')?.value">
-              <label class="form-label">Αριθμός Αποθηκών*</label>
+              <label class="form-label">{{ 'Number of Warehouses*' | translate }}</label>
               <input type="number" class="form-control" formControlName="storageNum" />
             </div>
           </div>
           <div class="col-md-4 mb-3">
             <label class="form-label">
               <input type="checkbox" formControlName="undergroundFloorExist" class="me-2" />
-              Υπόγειο
+              {{ 'Basement' | translate }}
             </label>
           </div>
 
           <div class="col-md-4 mb-3">
             <label class="form-label">
               <input type="checkbox" formControlName="halfFloorExist" class="me-2" />
-              Ημιόροφος
+              {{ 'Mezzanine' | translate }}
             </label>
           </div>
 
           <div class="col-md-4 mb-3">
             <label class="form-label">
               <input type="checkbox" formControlName="overTopFloorExist" class="me-2" />
-              Δώμα
+              {{ 'Roof' | translate }}
             </label>
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label">Κεντρική Θέρμανση</label>
+            <label class="form-label">{{ 'Central Heating' | translate }}</label>
             <select class="form-select" formControlName="hasCentralHeating">
-              <option [ngValue]="true">Ναι</option>
-              <option [ngValue]="false">Όχι</option>
+              <option [ngValue]="true">{{ 'Yes' | translate }}</option>
+              <option [ngValue]="false">{{ 'Nope' | translate }}</option>
             </select>
           </div>
 
           <div class="col-md-6 mb-3" *ngIf="form.get('hasCentralHeating')?.value">
-            <label class="form-label">Τύπος</label>
+            <label class="form-label">{{ 'Press' | translate }}</label>
             <select class="form-select" formControlName="heatingType">
-              <option *ngFor="let type of heatingTypes" [value]="type.value">{{ type.label }}</option>
+              <option *ngFor="let type of heatingTypes" [value]="type.value">{{ type.label | translate }}</option>
             </select>
           </div>
 
           <div class="col-md-6 mb-3" *ngIf="form.get('hasCentralHeating')?.value">
-            <label class="form-label">Χωρητικότητα (λίτρα)</label>
+            <label class="form-label">{{ 'Capacity (liters)' | translate }}</label>
             <input type="number" class="form-control" formControlName="heatingCapacityLitres" />
           </div>
 
           <!-- (προαιρετικό) PDF κανονισμού -->
           <div class="col-md-12 mb-3">
-            <label class="form-label">Κανονισμός Πολυκατοικίας (PDF)</label>
+            <label class="form-label">{{ 'Apartment Building Regulation (PDF)' | translate }}</label>
             <input type="file" class="form-control" accept="application/pdf" (change)="onFileSelected($event)" />
           </div>
 
@@ -165,9 +167,9 @@
           </div>
           <!-- Κουμπιά υποβολής -->
           <div class="col-12 text-end">
-            <button type="button" class="btn btn-secondary me-2" (click)="back()">Πίσω</button>
+            <button type="button" class="btn btn-secondary me-2" (click)="back()">{{ 'Back' | translate }}</button>
             <button class="btn btn-primary" [disabled]="loading">
-              {{ loading ? 'Αποθήκευση...' : 'Δημιουργία Πολυκατοικίας' }}
+              {{ loading ? ('Save...' | translate) : ('Building an Apartment Building' | translate) }}
             </button>
           </div>
         </div>

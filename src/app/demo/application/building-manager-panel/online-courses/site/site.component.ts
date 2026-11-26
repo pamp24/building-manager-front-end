@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // angular import
 import { Component, ElementRef, OnDestroy, OnInit, inject } from '@angular/core';
 import { CdkStepperModule } from '@angular/cdk/stepper';
@@ -27,6 +28,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrl: './site.component.scss'
 })
 export class SiteComponent implements OnInit, OnDestroy {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private iconService = inject(IconService);
   private modalService = inject(NgbModal);
 
@@ -71,7 +74,7 @@ export class SiteComponent implements OnInit, OnDestroy {
 
   presetColors = [
     {
-      name: 'Preset 1',
+      name: this.uiLocale.text('Preset 1'),
       color_type: [
         {
           color: 'text-green-600'
@@ -85,7 +88,7 @@ export class SiteComponent implements OnInit, OnDestroy {
       ]
     },
     {
-      name: 'Preset 2',
+      name: this.uiLocale.text('Preset 2'),
       color_type: [
         {
           color: 'text-yellow-600'
@@ -99,7 +102,7 @@ export class SiteComponent implements OnInit, OnDestroy {
       ]
     },
     {
-      name: 'Preset 3',
+      name: this.uiLocale.text('Preset 3'),
       color_type: [
         {
           color: 'text-blue-600'
@@ -113,7 +116,7 @@ export class SiteComponent implements OnInit, OnDestroy {
       ]
     },
     {
-      name: 'Preset 4',
+      name: this.uiLocale.text('Preset 4'),
       color_type: [
         {
           color: 'text-gray-600'
@@ -130,49 +133,49 @@ export class SiteComponent implements OnInit, OnDestroy {
 
   layoutsColor = [
     {
-      name: 'Nav Bar & Footer Background',
+      name: this.uiLocale.text('Nav Bar & Footer Background'),
       subTitle: 'Fixed, scrolling & email',
       color: 'text-green-400',
       code: '#96D4BF'
     },
     {
-      name: 'Navigation Bar Link',
+      name: this.uiLocale.text('Navigation Bar Link'),
       subTitle: 'Links when nav bar is fixed',
       color: 'text-red-500',
       code: '#FF602E'
     },
     {
-      name: 'Navigation Bar',
+      name: this.uiLocale.text('Navigation Bar'),
       subTitle: 'Links when nav bar is scrolling',
       color: 'text-green-200',
       code: '#96C9D4'
     },
     {
-      name: 'Homepage Headings & Subtitle',
+      name: this.uiLocale.text('Homepage Headings & Subtitle'),
       subTitle: 'When a background is set',
       color: 'text-gray-400',
       code: '#A7A6A6'
     },
     {
-      name: 'Course Page Heading & Subtitle',
+      name: this.uiLocale.text('Course Page Heading & Subtitle'),
       subTitle: 'When a background is set',
       color: 'text-gray-200',
       code: '#E6F5F0'
     },
     {
-      name: 'Headings',
+      name: this.uiLocale.text('Headings'),
       subTitle: '<h1> to <h5>',
       color: 'text-gray-500',
       code: '#737373'
     },
     {
-      name: 'Body text',
+      name: this.uiLocale.text('Body text'),
       subTitle: '<body>, <p>',
       color: 'text-gray-800',
       code: '#3A3A3A'
     },
     {
-      name: 'Buttons & Links',
+      name: this.uiLocale.text('Buttons & Links'),
       subTitle: '<a>, <button>',
       color: 'text-green-500',
       code: '#52c41a'
@@ -182,43 +185,43 @@ export class SiteComponent implements OnInit, OnDestroy {
   userList = [
     {
       image: 'assets/images/user/avatar-1.jpg',
-      name: 'Airi Satou',
+      name: this.uiLocale.text('Airi Satou'),
       date: '2023/09/12',
       time: '09:05 PM'
     },
     {
       image: 'assets/images/user/avatar-2.jpg',
-      name: 'Ashton Cox',
+      name: this.uiLocale.text('Ashton Cox'),
       date: '2023/12/24',
       time: '09:05 PM'
     },
     {
       image: 'assets/images/user/avatar-3.jpg',
-      name: 'Bradley Greer',
+      name: this.uiLocale.text('Bradley Greer'),
       date: '2022/09/19',
       time: '09:05 PM'
     },
     {
       image: 'assets/images/user/avatar-4.jpg',
-      name: 'Brielle Williamson',
+      name: this.uiLocale.text('Brielle Williamson'),
       date: '2022/08/22',
       time: '09:05 PM'
     },
     {
       image: 'assets/images/user/avatar-5.jpg',
-      name: 'Airi Satou',
+      name: this.uiLocale.text('Airi Satou'),
       date: '2023/09/12',
       time: '09:05 PM'
     },
     {
       image: 'assets/images/user/avatar-6.jpg',
-      name: 'Ashton Cox',
+      name: this.uiLocale.text('Ashton Cox'),
       date: '2023/12/24',
       time: '09:05 PM'
     },
     {
       image: 'assets/images/user/avatar-7.jpg',
-      name: 'Bradley Greer',
+      name: this.uiLocale.text('Bradley Greer'),
       date: '2022/09/19',
       time: '09:05 PM'
     }
@@ -226,55 +229,55 @@ export class SiteComponent implements OnInit, OnDestroy {
 
   schoolPage = [
     {
-      title: 'Main Page',
+      title: this.uiLocale.text('Main Page'),
       url: '/main.page',
       status: 'Published',
       background: 'text-bg-success'
     },
     {
-      title: 'Login Page',
+      title: this.uiLocale.text('Login Page'),
       url: '/login-page.design',
       status: 'Published',
       background: 'text-bg-success'
     },
     {
-      title: 'Privacy Policy',
+      title: this.uiLocale.text('Privacy Policy'),
       url: '/privacy-policy',
       status: 'Unpublished',
       background: 'text-bg-danger'
     },
     {
-      title: 'Main Page',
+      title: this.uiLocale.text('Main Page'),
       url: '/main.page',
       status: 'Published',
       background: 'text-bg-success'
     },
     {
-      title: 'Login Page',
+      title: this.uiLocale.text('Login Page'),
       url: '/login-page.design',
       status: 'Published',
       background: 'text-bg-success'
     },
     {
-      title: 'Privacy Policy',
+      title: this.uiLocale.text('Privacy Policy'),
       url: '/privacy-policy',
       status: 'Unpublished',
       background: 'text-bg-danger'
     },
     {
-      title: 'Main Page',
+      title: this.uiLocale.text('Main Page'),
       url: '/main.page',
       status: 'Published',
       background: 'text-bg-success'
     },
     {
-      title: 'Login Page',
+      title: this.uiLocale.text('Login Page'),
       url: '/login-page.design',
       status: 'Published',
       background: 'text-bg-success'
     },
     {
-      title: 'Privacy Policy',
+      title: this.uiLocale.text('Privacy Policy'),
       url: '/privacy-policy',
       status: 'Unpublished',
       background: 'text-bg-danger'

@@ -1,31 +1,27 @@
-// project import
-import en from '../../../assets/i18n/en.json';
-import fr from '../../../assets/i18n/fr.json';
-import ro from '../../../assets/i18n/ro.json';
-import cn from '../../../assets/i18n/cn.json';
-import gr from '../../../assets/i18n/gr.json';
-
-// third party
 import { TranslateLoader } from '@ngx-translate/core';
-
-// angular import
-import { of } from 'rxjs';
+import { from, map } from 'rxjs';
 
 export class CustomTranslateLoader implements TranslateLoader {
-  // public method
-  public getTranslation(lang: string) {
-    if (lang === 'fr') {
-      return of(fr);
-    }
-    if (lang === 'ro') {
-      return of(ro);
-    }
-    if (lang === 'cn') {
-      return of(cn);
-    }
-        if (lang === 'en') {
-      return of(en);
-    }
-    return of(gr);
+  getTranslation(language: string) {
+    // Separate chunks keep the six unused dictionaries out of the initial bundle.
+    const dictionary = (() => {
+      switch (language) {
+        case 'en':
+          return import('../../../assets/i18n/en.json');
+        case 'fr':
+          return import('../../../assets/i18n/fr.json');
+        case 'cn':
+          return import('../../../assets/i18n/cn.json');
+        case 'de':
+          return import('../../../assets/i18n/de.json');
+        case 'es':
+          return import('../../../assets/i18n/es.json');
+        case 'he':
+          return import('../../../assets/i18n/he.json');
+        default:
+          return import('../../../assets/i18n/gr.json');
+      }
+    })();
+    return from(dictionary).pipe(map((module) => module.default));
   }
 }

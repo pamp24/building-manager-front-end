@@ -1,14 +1,14 @@
-<div class="d-flex align-items-center mb-2">
+<div class="d-flex align-items-center mb-3">
   <div class="me-auto">
-    <h5 class="mb-0">Έξοδα Θέρμανσης</h5>
+    <h5 class="mb-0">{{ 'Heating Expenses' | translate }}</h5>
   </div>
 </div>
 <div class="card">
   <div class="card-body">
-    <h6 class="mb-2 f-w-400 text-muted">Σύνολο 12 τελευταίων μηνών – Πολυκατοικία</h6>
+    <h6 class="mb-2 f-w-400 text-muted">{{ 'Total of last 12 months – Apartment building' | translate }}</h6>
     <h3 class="mb-0">{{ total | number: '1.2-2' }} €</h3>
     <div *ngIf="apartmentTotal !== null && apartmentTotal > 0" class="text-muted mt-1" style="font-size: 0.85rem">
-      Διαμέρισμα: {{ apartmentTotal | number: '1.2-2' }} €
+      {{ 'Apartment:' | translate }} {{ apartmentTotal | number: '1.2-2' }} €
     </div>
     <div id="chart">
       <apx-chart
@@ -25,8 +25,8 @@
         [plotOptions]="chartOptions.plotOptions"
         [tooltip]="chartOptions.tooltip"
       ></apx-chart>
-      <div *ngIf="!hasData" class="text-center text-muted py-4">
-        Δεν υπάρχουν δεδομένα εξόδων θέρμανσης.
+      <div *ngIf="!hasData" class="dashboard-empty-state" style="--empty-state-height: 350px">
+        {{ 'There is no heating cost data.' | translate }}
       </div>
     </div>
   </div>

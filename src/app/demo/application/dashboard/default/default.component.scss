@@ -92,4 +92,85 @@
   height: 100%;
 }
 
+// Each column owns a heading and a card that fills the remaining row height.
+.dashboard-section {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 
+  > h5 {
+    flex-shrink: 0;
+  }
+
+  > .card {
+    flex: 1;
+    min-width: 0;
+    margin-bottom: 0;
+  }
+
+  > app-building-chart,
+  > app-polls-table,
+  > app-sales-report-chart {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  > .support-card {
+    flex: 0 0 auto;
+    margin-top: 16px;
+  }
+}
+
+.actions-card {
+  overflow: hidden;
+
+  > .list-group {
+    flex: 1;
+    max-height: 420px;
+    overflow-y: auto;
+  }
+
+  &.is-empty > .list-group {
+    display: flex;
+    max-height: none;
+  }
+
+  .payment-empty-state {
+    flex: 1;
+    min-height: 220px;
+  }
+}
+
+.dashboard-table-card {
+  min-height: 240px;
+
+  > .table-responsive {
+    flex: 1;
+  }
+
+  &.is-empty {
+    > .table-responsive,
+    table {
+      height: 100%;
+    }
+
+    thead {
+      height: 1px;
+    }
+
+    tbody td {
+      vertical-align: middle;
+    }
+  }
+
+  .history-table {
+    max-height: 340px;
+    overflow-y: auto;
+  }
+
+  &.is-empty .history-table {
+    max-height: none;
+  }
+}

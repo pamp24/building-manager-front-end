@@ -1,6 +1,6 @@
 <div class="row btn-page">
   <div class="col-sm-12">
-    <app-card cardTitle="Alerts">
+    <app-card [cardTitle]="'Alerts' | translate">
       <button
         type="button"
         class="btn btn-primary me-2"
@@ -8,7 +8,7 @@
           title: 'Hello world!'
         }"
       >
-        Basic
+        {{ 'Basic' | translate }}
       </button>
       <button
         type="button"
@@ -19,7 +19,7 @@
           text: 'You clicked the button!'
         }"
       >
-        Success
+        {{ 'Success' | translate }}
       </button>
       <button
         type="button"
@@ -30,7 +30,7 @@
           text: 'You clicked the button!'
         }"
       >
-        Warning
+        {{ 'Warning' | translate }}
       </button>
       <button
         type="button"
@@ -41,7 +41,7 @@
           text: 'You clicked the button!'
         }"
       >
-        Error
+        {{ 'Error' | translate }}
       </button>
       <button
         type="button"
@@ -52,16 +52,16 @@
           text: 'You clicked the button!'
         }"
       >
-        Info
+        {{ 'Info' | translate }}
       </button>
-      <button type="button" class="btn btn-primary me-2" (click)="confirmAlert()">Success or Cancel</button>
-      <button type="button" class="btn btn-primary" (click)="promptAlert()">Prompt</button>
+      <button type="button" class="btn btn-primary me-2" (click)="confirmAlert()">{{ 'Success or Cancel' | translate }}</button>
+      <button type="button" class="btn btn-primary" (click)="promptAlert()">{{ 'Prompt' | translate }}</button>
     </app-card>
   </div>
   <div class="col-sm-12">
-    <app-card cardTitle="SweetAlert 2">
+    <app-card [cardTitle]="'SweetAlert 2' | translate">
       <div class="form-group row">
-        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">Basic message</label>
+        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'Basic message' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
           <button
             class="btn btn-light-primary bs-message"
@@ -69,12 +69,12 @@
               title: 'Any fool can use a computer'
             }"
           >
-            Try me!
+            {{ 'Try me!' | translate }}
           </button>
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">Title with a text under</label>
+        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'Title with a text under' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
           <button
             class="btn btn-light-primary bs-message"
@@ -84,12 +84,12 @@
               text: 'That thing is still around?'
             }"
           >
-            Try me!
+            {{ 'Try me!' | translate }}
           </button>
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">Title with a error icon</label>
+        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'Title with a error icon' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
           <button
             class="btn btn-light-danger bs-error-icon"
@@ -100,12 +100,12 @@
               footer: '<a>Why do I have this issue?</a>'
             }"
           >
-            Try me!
+            {{ 'Try me!' | translate }}
           </button>
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">Long content inside</label>
+        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'Long content inside' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
           <button
             class="btn btn-light-primary bs-message"
@@ -115,12 +115,12 @@
               imageAlt: 'A tall image'
             }"
           >
-            Try me!
+            {{ 'Try me!' | translate }}
           </button>
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">Custom HTML</label>
+        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'Custom HTML' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
           <button
             class="btn btn-light-primary bs-message"
@@ -134,18 +134,18 @@
               confirmButtonText: 'Great!'
             }"
           >
-            Try me!
+            {{ 'Try me!' | translate }}
           </button>
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">Dialog with Three buttons</label>
+        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'Dialog with Three buttons' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
-          <button class="btn btn-light-primary bs-message" (click)="threeBtn()">Try me!</button>
+          <button class="btn btn-light-primary bs-message" (click)="threeBtn()">{{ 'Try me!' | translate }}</button>
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">Custom positioned</label>
+        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'Custom positioned' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
           <button
             class="btn btn-light-primary bs-message"
@@ -157,24 +157,26 @@
               timer: 1500
             }"
           >
-            Try me!
+            {{ 'Try me!' | translate }}
           </button>
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">Custom animation</label>
+        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'Custom animation' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
-          <button class="btn btn-light-primary bs-message" (click)="animationAlert()">Try me!</button>
+          <button class="btn btn-light-primary bs-message" (click)="animationAlert()">{{ 'Try me!' | translate }}</button>
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">By passing a parameter, you can execute something</label>
+        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">
+          {{ 'By passing a parameter, you can execute something' | translate }}
+        </label>
         <div class="col-lg-4 col-md-9 col-sm-12">
-          <button class="btn btn-light-primary bs-message" (click)="twoBtn()">Try me!</button>
+          <button class="btn btn-light-primary bs-message" (click)="twoBtn()">{{ 'Try me!' | translate }}</button>
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">Message with a custom image</label>
+        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'Message with a custom image' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
           <button
             class="btn btn-light-primary bs-message"
@@ -187,19 +189,19 @@
               imageAlt: 'Custom image'
             }"
           >
-            Try me!
+            {{ 'Try me!' | translate }}
           </button>
         </div>
       </div>
 
       <div class="form-group row">
-        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">Auto close timer</label>
+        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'Auto close timer' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
-          <button class="btn btn-light-primary bs-message" (click)="autoClose()">Try me!</button>
+          <button class="btn btn-light-primary bs-message" (click)="autoClose()">{{ 'Try me!' | translate }}</button>
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">RTL Languages</label>
+        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'RTL Languages' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
           <button
             class="btn btn-light-primary bs-message"
@@ -213,22 +215,24 @@
               showCloseButton: true
             }"
           >
-            Try me!
+            {{ 'Try me!' | translate }}
           </button>
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">AJAX request</label>
+        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'AJAX request' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
-          <button type="button" class="btn btn-light-primary bs-message" (click)="ajaxAlert()">Try Me!</button>
+          <button type="button" class="btn btn-light-primary bs-message" (click)="ajaxAlert()">
+            {{ 'Try Me!' | translate }}
+          </button>
         </div>
       </div>
     </app-card>
   </div>
   <div class="col-sm-12">
-    <app-card cardTitle="Icon">
+    <app-card [cardTitle]="'Icon' | translate">
       <div class="form-group row">
-        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">Success icons</label>
+        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'Success icons' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
           <button
             class="btn btn-primary"
@@ -238,12 +242,12 @@
               icon: 'success'
             }"
           >
-            Try me!
+            {{ 'Try me!' | translate }}
           </button>
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">Error icons</label>
+        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'Error icons' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
           <button
             class="btn btn-primary"
@@ -253,12 +257,12 @@
               icon: 'error'
             }"
           >
-            Try me!
+            {{ 'Try me!' | translate }}
           </button>
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">Warning icons</label>
+        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'Warning icons' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
           <button
             class="btn btn-primary"
@@ -268,12 +272,12 @@
               icon: 'warning'
             }"
           >
-            Try me!
+            {{ 'Try me!' | translate }}
           </button>
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">Info icons</label>
+        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'Info icons' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
           <button
             class="btn btn-primary"
@@ -283,12 +287,12 @@
               icon: 'info'
             }"
           >
-            Try me!
+            {{ 'Try me!' | translate }}
           </button>
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">Question icons</label>
+        <label class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'Question icons' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
           <button
             class="btn btn-primary"
@@ -298,16 +302,16 @@
               icon: 'question'
             }"
           >
-            Try me!
+            {{ 'Try me!' | translate }}
           </button>
         </div>
       </div>
     </app-card>
   </div>
   <div class="col-sm-12">
-    <app-card cardTitle="Input Type">
+    <app-card [cardTitle]="'Input Type' | translate">
       <div class="form-group row">
-        <label for="" class="col-form-label col-lg-5 col-sm-12 text-lg-end">Ip Address</label>
+        <label for="" class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'Ip Address' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
           <button
             type="button"
@@ -317,62 +321,62 @@
               input: 'text'
             }"
           >
-            Try Me!
+            {{ 'Try Me!' | translate }}
           </button>
         </div>
       </div>
       <div class="form-group row">
-        <label for="" class="col-form-label col-lg-5 col-sm-12 text-lg-end">Email</label>
+        <label for="" class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'Email' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
-          <button type="button" class="btn btn-primary" (click)="gmailAlert()">Try Me!</button>
+          <button type="button" class="btn btn-primary" (click)="gmailAlert()">{{ 'Try Me!' | translate }}</button>
         </div>
       </div>
       <div class="form-group row">
-        <label for="" class="col-form-label col-lg-5 col-sm-12 text-lg-end">Url</label>
+        <label for="" class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'Url' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
-          <button type="button" class="btn btn-primary" (click)="urlAlert()">Try Me!</button>
+          <button type="button" class="btn btn-primary" (click)="urlAlert()">{{ 'Try Me!' | translate }}</button>
         </div>
       </div>
       <div class="form-group row">
-        <label for="" class="col-form-label col-lg-5 col-sm-12 text-lg-end">Password</label>
+        <label for="" class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'Password' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
-          <button type="button" class="btn btn-primary" (click)="passwordAlert()">Try Me!</button>
+          <button type="button" class="btn btn-primary" (click)="passwordAlert()">{{ 'Try Me!' | translate }}</button>
         </div>
       </div>
       <div class="form-group row">
-        <label for="" class="col-form-label col-lg-5 col-sm-12 text-lg-end">Textarea</label>
+        <label for="" class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'Textarea' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
-          <button type="button" class="btn btn-primary" (click)="textAreaAlert()">Try Me!</button>
+          <button type="button" class="btn btn-primary" (click)="textAreaAlert()">{{ 'Try Me!' | translate }}</button>
         </div>
       </div>
       <div class="form-group row">
-        <label for="" class="col-form-label col-lg-5 col-sm-12 text-lg-end">Select</label>
+        <label for="" class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'Select' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
-          <button type="button" class="btn btn-primary" (click)="selectAlert()">Try Me!</button>
+          <button type="button" class="btn btn-primary" (click)="selectAlert()">{{ 'Try Me!' | translate }}</button>
         </div>
       </div>
       <div class="form-group row">
-        <label for="" class="col-form-label col-lg-5 col-sm-12 text-lg-end">Radio</label>
+        <label for="" class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'Radio' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
-          <button type="button" class="btn btn-primary" (click)="radioAlert()">Try Me!</button>
+          <button type="button" class="btn btn-primary" (click)="radioAlert()">{{ 'Try Me!' | translate }}</button>
         </div>
       </div>
       <div class="form-group row">
-        <label for="" class="col-form-label col-lg-5 col-sm-12 text-lg-end">Checkbox</label>
+        <label for="" class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'Checkbox' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
-          <button type="button" class="btn btn-primary" (click)="checkboxAlert()">Try Me!</button>
+          <button type="button" class="btn btn-primary" (click)="checkboxAlert()">{{ 'Try Me!' | translate }}</button>
         </div>
       </div>
       <div class="form-group row">
-        <label for="" class="col-form-label col-lg-5 col-sm-12 text-lg-end">File</label>
+        <label for="" class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'File' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
-          <button type="button" class="btn btn-primary" (click)="fileAlert()">Try Me!</button>
+          <button type="button" class="btn btn-primary" (click)="fileAlert()">{{ 'Try Me!' | translate }}</button>
         </div>
       </div>
       <div class="form-group row">
-        <label for="" class="col-form-label col-lg-5 col-sm-12 text-lg-end">Range</label>
+        <label for="" class="col-form-label col-lg-5 col-sm-12 text-lg-end">{{ 'Range' | translate }}</label>
         <div class="col-lg-4 col-md-9 col-sm-12">
-          <button type="button" class="btn btn-primary" (click)="rangeAlert()">Try Me!</button>
+          <button type="button" class="btn btn-primary" (click)="rangeAlert()">{{ 'Try Me!' | translate }}</button>
         </div>
       </div>
     </app-card>

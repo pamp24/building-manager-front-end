@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // angular import
 import { Component, HostListener, OnDestroy, OnInit, effect, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -36,11 +37,22 @@ import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
 
 @Component({
   selector: 'app-landing',
-  imports: [CommonModule, RouterModule, SharedModule, CarouselModule, PlaceholderCard1Component, PlaceholderCard2Component, PublicFooterComponent, PublicHeaderComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    SharedModule,
+    CarouselModule,
+    PlaceholderCard1Component,
+    PlaceholderCard2Component,
+    PublicFooterComponent,
+    PublicHeaderComponent
+  ],
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss']
 })
 export class LandingComponent implements OnInit, OnDestroy {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private iconService = inject(IconService);
   private authenticationService = inject(AuthenticationService);
   private themeService = inject(ThemeService);
@@ -220,150 +232,150 @@ export class LandingComponent implements OnInit, OnDestroy {
     {
       sub_list: [
         {
-          title: 'Διαχείριση πολυκατοικίας'
+          title: this.uiLocale.text('Apartment building management')
         },
         {
-          title: 'Διαμερίσματα'
+          title: this.uiLocale.text('Apartments')
         },
         {
-          title: 'Μέλη πολυκατοικίας'
+          title: this.uiLocale.text('Apartment building members')
         }
       ]
     },
     {
       sub_list: [
         {
-          title: 'Κοινόχρηστες δαπάνες'
+          title: this.uiLocale.text('Shared expenses')
         },
         {
-          title: 'Καταστάσεις κοινοχρήστων'
+          title: this.uiLocale.text('User statements')
         },
         {
-          title: 'Πληρωμές'
+          title: this.uiLocale.text('Payments')
         }
       ]
     },
     {
       sub_list: [
         {
-          title: 'Ανακοινώσεις'
+          title: this.uiLocale.text('Announcements')
         },
         {
-          title: 'Ψηφοφορίες'
+          title: this.uiLocale.text('Votes')
         },
         {
-          title: 'Μηνύματα'
+          title: this.uiLocale.text('Messages')
         }
       ]
     }
   ];
 
   landingFeatures = [
-    { title: 'Ανακοινώσεις', icon: 'ti-speakerphone' },
-    { title: 'Ψηφοφορίες', icon: 'ti-checkbox' },
-    { title: 'Μηνύματα', icon: 'ti-message-circle' },
-    { title: 'Κοινόχρηστα', icon: 'ti-receipt' },
-    { title: 'Πολυκατοικίες', icon: 'ti-building-community' },
-    { title: 'Ημερολόγιο', icon: 'ti-calendar' }
+    { title: this.uiLocale.text('Announcements'), icon: 'ti-speakerphone' },
+    { title: this.uiLocale.text('Votes'), icon: 'ti-checkbox' },
+    { title: this.uiLocale.text('Messages'), icon: 'ti-message-circle' },
+    { title: this.uiLocale.text('Shared expenses'), icon: 'ti-receipt' },
+    { title: this.uiLocale.text('Apartment buildings'), icon: 'ti-building-community' },
+    { title: this.uiLocale.text('Calendar'), icon: 'ti-calendar' }
   ];
 
   marquees = [
-    { text: 'Πολυκατοικίες' },
-    { text: 'Διαχειριστές' },
-    { text: 'Κάτοικοι' },
-    { text: 'Διαμερίσματα' },
-    { text: 'Κοινόχρηστα' },
-    { text: 'Δαπάνες' },
-    { text: 'Πληρωμές' },
-    { text: 'Ανακοινώσεις' },
-    { text: 'Ψηφοφορίες' },
-    { text: 'Μηνύματα' },
-    { text: 'Ημερολόγιο' },
-    { text: 'Μέλη' },
-    { text: 'Καταστάσεις κοινοχρήστων' },
-    { text: 'Επικοινωνία' },
-    { text: 'Οργάνωση' },
-    { text: 'Διαχείριση' },
-    { text: 'Ενημέρωση' },
-    { text: 'Oikio' }
+    { text: this.uiLocale.text('Apartment buildings') },
+    { text: this.uiLocale.text('Administrators') },
+    { text: this.uiLocale.text('Residents') },
+    { text: this.uiLocale.text('Apartments') },
+    { text: this.uiLocale.text('Shared expenses') },
+    { text: this.uiLocale.text('Expenses') },
+    { text: this.uiLocale.text('Payments') },
+    { text: this.uiLocale.text('Announcements') },
+    { text: this.uiLocale.text('Votes') },
+    { text: this.uiLocale.text('Messages') },
+    { text: this.uiLocale.text('Calendar') },
+    { text: this.uiLocale.text('Members') },
+    { text: this.uiLocale.text('User statements') },
+    { text: this.uiLocale.text('Communication') },
+    { text: this.uiLocale.text('Organization') },
+    { text: this.uiLocale.text('Management') },
+    { text: this.uiLocale.text('Update') },
+    { text: this.uiLocale.text('Oikio') }
   ];
 
   reviewers = [
     {
-      title: 'Ποιότητα κώδικα',
-      text: 'Ο καθαρός κώδικας αυτού του προτύπου κάνει το πακέτο εξαιρετικό. Ευχαριστώ την ομάδα!',
-      name: 'Govert',
+      title: this.uiLocale.text('Code quality'),
+      text: this.uiLocale.text('The clean code of this template makes the package great. Thanks to the team!'),
+      name: this.uiLocale.text('Govert'),
       rating: 5
     },
     {
-      title: 'Ποιότητα κώδικα',
-      text: 'Η ποιότητα του κώδικα και ο σχεδιασμός είναι εξαιρετικά.',
-      name: 'Bravo.',
+      title: this.uiLocale.text('Code quality'),
+      text: this.uiLocale.text('Code quality and design are excellent.'),
+      name: this.uiLocale.text('Bravo.'),
       rating: 5
     },
     {
-      title: 'Δυνατότητα προσαρμογής',
-      text: 'Αξιόπιστο και καλά οργανωμένο, με τις πιο πρόσφατες βιβλιοθήκες και εξαιρετική υποστήριξη πελατών!',
-      name: 'Rodrigo J.',
+      title: this.uiLocale.text('Adaptability'),
+      text: this.uiLocale.text('Reliable and well organized, with the latest libraries and excellent customer support!'),
+      name: this.uiLocale.text('Rodrigo J.'),
       rating: 5
     },
     {
-      title: 'Ποιότητα σχεδιασμού',
-      text: 'Εξαιρετικός σχεδιασμός και οργανωμένος κώδικας, ευχαριστώ ...',
-      name: 'Yang Z.',
+      title: this.uiLocale.text('Design quality'),
+      text: this.uiLocale.text('Great design and organized code, thanks...'),
+      name: this.uiLocale.text('Yang Z.'),
       rating: 4
     }
   ];
 
   short_link = [
     {
-      title: 'Βοήθεια προτύπου',
+      title: this.uiLocale.text('Template help'),
       support: [
         {
           support_link: 'Blog',
           url: 'https://blog.codedthemes.com/'
         },
         {
-          support_link: 'Τεκμηρίωση',
+          support_link: this.uiLocale.text('Documentation'),
           url: 'https://codedthemes.gitbook.io/mantis-angular'
         },
         {
-          support_link: 'Ιστορικό αλλαγών',
+          support_link: this.uiLocale.text('History of Changes'),
           url: 'https://codedthemes.gitbook.io/mantis-angular/changelog'
         },
         {
-          support_link: 'Υποστήριξη',
+          support_link: this.uiLocale.text('Support'),
           url: 'https://codedthemes.support-hub.io/'
         },
         {
           support_link: 'Discord',
           url: 'https://discord.com/invite/p2E2WhCb6s'
-        },
+        }
       ]
     },
     {
-      title: 'Κατάστημα CodedThemes',
+      title: this.uiLocale.text('CodedThemes Store'),
       support: [
         {
-          support_link: 'Άδεια χρήσης',
+          support_link: this.uiLocale.text('License'),
           url: 'https://codedthemes.com/license'
         },
         {
-          support_link: 'Πολιτική επιστροφών',
+          support_link: this.uiLocale.text('Return Policy'),
           url: 'https://codedthemes.com/terms-and-conditions'
         },
         {
-          support_link: 'Επικοινωνία',
+          support_link: this.uiLocale.text('Communication'),
           url: 'https://codedthemes.com/contact'
         },
         {
-          support_link: 'Συνεργάτες',
+          support_link: this.uiLocale.text('Partners'),
           url: 'https://codedthemes.com/affiliate'
         }
       ]
     },
     {
-      title: 'Εκδόσεις προτύπου',
+      title: this.uiLocale.text('Standard Editions'),
       support: [
         {
           support_link: 'CodeIgniter',
@@ -392,7 +404,7 @@ export class LandingComponent implements OnInit, OnDestroy {
       ]
     },
     {
-      title: 'Προϊόντα CodedThemes',
+      title: this.uiLocale.text('CodedThemes products'),
       support: [
         {
           support_link: 'Berry Angular',
@@ -445,13 +457,13 @@ export class LandingComponent implements OnInit, OnDestroy {
     },
     {
       link: 'https://discord.com/invite/p2E2WhCb6s',
-      title: 'Discord',
+      title: this.uiLocale.text('Discord'),
       icon: 'discord',
       theme: 'outline'
     },
     {
       link: 'https://github.com/codedthemes',
-      title: 'Github',
+      title: this.uiLocale.text('Github'),
       icon: 'github',
       theme: 'outline'
     }

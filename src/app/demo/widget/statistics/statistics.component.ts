@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // angular import
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -37,6 +38,8 @@ import {
   styleUrls: ['./statistics.component.scss']
 })
 export class StatisticsComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private iconService = inject(IconService);
 
   // constructor
@@ -71,25 +74,25 @@ export class StatisticsComponent {
   static_card = [
     {
       earning: '$30200',
-      name: 'All Earnings',
+      name: this.uiLocale.text('All Earnings'),
       icon: 'bar-chart',
       color: 'text-secondary'
     },
     {
       earning: '145',
-      name: 'Task',
+      name: this.uiLocale.text('Task'),
       icon: 'calendar',
       color: 'text-danger'
     },
     {
       earning: '290+',
-      name: 'Page Views',
+      name: this.uiLocale.text('Page Views'),
       icon: 'file-text',
       color: 'text-success'
     },
     {
       earning: '500',
-      name: 'Downloads',
+      name: this.uiLocale.text('Downloads'),
       icon: 'download',
       color: 'text-primary'
     }
@@ -99,47 +102,47 @@ export class StatisticsComponent {
     {
       color: 'bg-primary',
       icons: 'dollar-circle',
-      title: 'Revenue',
+      title: this.uiLocale.text('Revenue'),
       amount: '$4,500',
-      description: '$50,032 Last Month'
+      description: this.uiLocale.text('$50,032 Last Month')
     },
     {
       color: 'bg-warning',
       icons: 'schedule',
-      title: 'Orders Received',
+      title: this.uiLocale.text('Orders Received'),
       amount: '486',
-      description: '20% Increase'
+      description: this.uiLocale.text('20% Increase')
     },
     {
       color: 'bg-success',
       icons: 'shopping',
-      title: 'Total Sales',
+      title: this.uiLocale.text('Total Sales'),
       amount: '1641',
-      description: '$1,055 Revenue Generated'
+      description: this.uiLocale.text('$1,055 Revenue Generated')
     }
   ];
 
   HoverSocialCard = [
     {
-      name: 'Facebook Users',
+      name: this.uiLocale.text('Facebook Users'),
       total: '1165 +',
       icon: 'facebook',
       color: 'bg-primary'
     },
     {
-      name: 'Twitter Users',
+      name: this.uiLocale.text('Twitter Users'),
       total: '780 +',
       icon: 'twitter',
       color: 'bg-info'
     },
     {
-      name: 'Linked In Users',
+      name: this.uiLocale.text('Linked In Users'),
       total: '998 +',
       icon: 'linkedin',
       color: 'bg-dark'
     },
     {
-      name: 'Youtube Videos',
+      name: this.uiLocale.text('Youtube Videos'),
       total: '650 +',
       icon: 'youtube',
       color: 'bg-danger'
@@ -148,21 +151,21 @@ export class StatisticsComponent {
 
   RoundIconCard = [
     {
-      name: 'Impressions',
+      name: this.uiLocale.text('Impressions'),
       time: 'May 23 - June 01 (2018)',
       total: '1,563',
       color: 'bg-light-primary text-primary',
       icon: 'eye'
     },
     {
-      name: 'Goal',
+      name: this.uiLocale.text('Goal'),
       time: 'May 28 - June 01 (2018)',
       total: '30,564',
       color: 'bg-light-success text-success',
       icon: 'aim'
     },
     {
-      name: 'Impact',
+      name: this.uiLocale.text('Impact'),
       time: 'May 30 - June 01 (2018)',
       total: '42.6%',
       color: 'bg-light-warning text-warning',
@@ -172,7 +175,7 @@ export class StatisticsComponent {
 
   AnalyticEcommerce = [
     {
-      title: 'Total Page Views',
+      title: this.uiLocale.text('Total Page Views'),
       amount: '4,42,236',
       background: 'bg-light-primary ',
       border: 'border-primary',
@@ -182,7 +185,7 @@ export class StatisticsComponent {
       number: '35,000'
     },
     {
-      title: 'Total Users',
+      title: this.uiLocale.text('Total Users'),
       amount: '78,250',
       background: 'bg-light-primary ',
       border: 'border-primary',
@@ -192,7 +195,7 @@ export class StatisticsComponent {
       number: '8,900'
     },
     {
-      title: 'Total Order',
+      title: this.uiLocale.text('Total Order'),
       amount: '18,800',
       background: 'bg-light-warning ',
       border: 'border-warning',
@@ -202,7 +205,7 @@ export class StatisticsComponent {
       number: '1,943'
     },
     {
-      title: 'Total Sales',
+      title: this.uiLocale.text('Total Sales'),
       amount: '$35,078',
       background: 'bg-light-warning ',
       border: 'border-warning',
@@ -215,28 +218,28 @@ export class StatisticsComponent {
 
   summaryIncome = [
     {
-      title: 'Published Project',
+      title: this.uiLocale.text('Published Project'),
       color: 'primary',
       background: 'progress-primary',
       value: '30',
       percentage: '30%'
     },
     {
-      title: 'Completed Task',
+      title: this.uiLocale.text('Completed Task'),
       color: 'success',
       background: 'progress-success',
       value: '90',
       percentage: '90%'
     },
     {
-      title: 'Pending Task',
+      title: this.uiLocale.text('Pending Task'),
       color: 'danger',
       background: 'progress-danger',
       value: '50',
       percentage: '50%'
     },
     {
-      title: 'Issues',
+      title: this.uiLocale.text('Issues'),
       color: 'warning',
       background: 'progress-warning',
       value: '55',

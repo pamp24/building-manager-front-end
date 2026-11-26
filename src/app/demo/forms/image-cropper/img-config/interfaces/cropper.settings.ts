@@ -1,8 +1,11 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, SimpleChanges } from '@angular/core';
 import { CropperOptions, OutputFormat, OutputType } from './cropper-options.interface';
 import { ImageTransform } from './image-transform.interface';
-import { SimpleChanges } from '@angular/core';
 
 export class CropperSettings {
+  private readonly uiLocale = inject(UiLocaleService);
+
   // From options
   format: OutputFormat = 'png';
   output: OutputType = 'blob';
@@ -28,7 +31,7 @@ export class CropperSettings {
   containWithinAspectRatio = false;
   hideResizeSquares = false;
   alignImage: 'left' | 'center' = 'center';
-  cropperFrameAriaLabel = 'Crop photo';
+  cropperFrameAriaLabel = this.uiLocale.text('Crop photo');
 
   // Internal
   cropperScaledMinWidth = 20;

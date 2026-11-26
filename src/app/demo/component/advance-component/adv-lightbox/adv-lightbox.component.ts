@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // Angular import
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -15,6 +16,8 @@ import { Image, ModalGalleryService, ModalLibConfig } from '@ks89/angular-modal-
   styleUrls: ['./adv-lightbox.component.scss']
 })
 export default class AdvLightboxComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private modalGalleryService = inject(ModalGalleryService);
 
   // private props
@@ -46,15 +49,15 @@ export default class AdvLightboxComponent {
     }),
     new Image(1, {
       img: 'assets/images/light-box/sl4.jpg',
-      description: 'Description 2'
+      description: this.uiLocale.text('Description 2')
     }),
     new Image(2, {
       img: 'assets/images/light-box/sl5.jpg',
-      description: 'Description 3'
+      description: this.uiLocale.text('Description 3')
     }),
     new Image(3, {
       img: 'assets/images/light-box/sl6.jpg',
-      description: 'Description 4'
+      description: this.uiLocale.text('Description 4')
     })
   ];
 

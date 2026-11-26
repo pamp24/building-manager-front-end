@@ -1,21 +1,21 @@
 <div class="row">
   <div class="col-sm-12">
-    <app-card cardTitle="File Upload">
+    <app-card [cardTitle]="'File Upload' | translate">
       <form [formGroup]="demoForm">
         <file-upload formControlName="files" [multiple]="multiple" [animation]="animation"></file-upload>
       </form>
       <ng-template #footerTemplate>
-        <button class="btn btn-primary me-2 mb-2" (click)="toggleStatus()">Disable</button>
+        <button class="btn btn-primary me-2 mb-2" (click)="toggleStatus()">{{ 'Disable' | translate }}</button>
         <button class="btn btn-primary me-2 mb-2" (click)="toggleMultiple()">
-          {{ multiple === false ? 'Enable' : 'Disable' }} Multiple
+          {{ multiple === false ? 'Enable' : 'Disable' }} {{ 'Multiple' | translate }}
         </button>
         <button class="btn btn-primary me-2 mb-2" (click)="toggleAnimation()">
-          {{ animation === false ? 'Enable' : 'Disable' }} Animation
+          {{ animation === false ? 'Enable' : 'Disable' }} {{ 'Animation' | translate }}
         </button>
-        <button class="btn btn-primary mb-2" (click)="clear()">Clear</button>
+        <button class="btn btn-primary mb-2" (click)="clear()">{{ 'Clear' | translate }}</button>
       </ng-template>
     </app-card>
-    <app-card cardTitle="Custom Template">
+    <app-card [cardTitle]="'Custom Template' | translate">
       <file-upload [control]="control" class="p-4">
         <ng-template let-isFileDragDropAvailable="isFileDragDropAvailable" #placeholder>
           @if (control.size === 0) {
@@ -25,9 +25,9 @@
               </div>
               <div class="upload-text">
                 @if (isFileDragDropAvailable) {
-                  <ng-container>Drag and drop Template or click here</ng-container>
+                  <ng-container>{{ 'Drag and drop Template or click here' | translate }}</ng-container>
                 } @else {
-                  <ng-template>Click here to choose a Template</ng-template>
+                  <ng-template>{{ 'Click here to choose a Template' | translate }}</ng-template>
                 }
               </div>
             </div>

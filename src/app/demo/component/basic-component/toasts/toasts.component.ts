@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // angular import
 import { Component, Renderer2, VERSION, viewChildren, inject } from '@angular/core';
 import { cloneDeep, random } from 'lodash-es';
@@ -27,27 +28,29 @@ interface Quote {
   providers: [ToastrService]
 })
 export class ToastsComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   toastr = inject(ToastrService);
   private renderer = inject(Renderer2);
 
   // public props
   quotes: Quote[] = [
     {
-      title: 'Title',
-      message: 'Message'
+      title: this.uiLocale.text('Title'),
+      message: this.uiLocale.text('Message')
     },
     {
       title: '😃',
-      message: 'Supports Emoji'
+      message: this.uiLocale.text('Supports Emoji')
     },
     {
-      message: 'My name is Inigo Montoya. You killed my father. Prepare to die!'
+      message: this.uiLocale.text('My name is Inigo Montoya. You killed my father. Prepare to die!')
     },
     {
-      message: 'Titles are not always needed'
+      message: this.uiLocale.text('Titles are not always needed')
     },
     {
-      title: 'Title only 👊'
+      title: this.uiLocale.text('Title only 👊')
     },
     {
       title: '',
@@ -138,7 +141,7 @@ export class ToastsComponent {
     opt.toastComponent = NotyfToastComponent;
     opt.toastClass = 'notyf confirm';
     const { message, title } = this.getMessage();
-    const inserted = this.toastr.show(message || 'Success', title, opt);
+    const inserted = this.toastr.show(message || this.uiLocale.text('Success'), title, opt);
     if (inserted && inserted.toastId) {
       this.lastInserted.push(inserted.toastId);
     }

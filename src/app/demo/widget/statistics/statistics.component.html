@@ -80,9 +80,9 @@
           </span>
         </h4>
         <p class="mb-0 text-muted text-sm">
-          You made an extra
+          {{ 'You made an extra' | translate }}
           <span class="{{ analytic.color }}">{{ analytic.number }}</span>
-          this year
+          {{ 'this year' | translate }}
         </p>
       </app-card>
     </div>
@@ -107,9 +107,9 @@
       <div class="row g-0">
         <div class="col-md-7">
           <div class="card-body bg-primary position-relative h-100">
-            <h5 class="text-white">What would you want to learn today</h5>
-            <p class="text-white text-sm mb-4">Your learning capacity is 80% as daily analytics</p>
-            <h4 class="text-white pt-5">35% Completed</h4>
+            <h5 class="text-white">{{ 'What would you want to learn today' | translate }}</h5>
+            <p class="text-white text-sm mb-4">{{ 'Your learning capacity is 80% as daily analytics' | translate }}</p>
+            <h4 class="text-white pt-5">{{ '35% Completed' | translate }}</h4>
             <div class="max-60 position-relative">
               <ngb-progressbar type="success" height="6px" [value]="40"></ngb-progressbar>
             </div>
@@ -118,8 +118,8 @@
         </div>
         <div class="col-md-5">
           <div class="card-body">
-            <p class="mb-2">Get started with new basic skills</p>
-            <p class="text-muted mb-3">Last Date 5th Nov 2020</p>
+            <p class="mb-2">{{ 'Get started with new basic skills' | translate }}</p>
+            <p class="text-muted mb-3">{{ 'Last Date 5th Nov 2020' | translate }}</p>
             <hr class="my-4" />
             <div class="d-flex align-items-center justify-content-between mb-4">
               <div class="user-group">
@@ -127,11 +127,11 @@
                 <img src="assets/images/user/avatar-2.jpg" alt="image" />
                 <img src="assets/images/user/avatar-3.jpg" alt="image" />
               </div>
-              <a href="javascript:" class="avatar avatar-xs btn btn-primary" title="Add User">
+              <a href="javascript:" class="avatar avatar-xs btn btn-primary" [title]="'Add User' | translate">
                 <i antIcon type="plus" theme="outline"></i>
               </a>
             </div>
-            <p class="text-muted text-sm mb-0">Chrome fixed the bug several versions ago, thus rendering this...</p>
+            <p class="text-muted text-sm mb-0">{{ 'Chrome fixed the bug several versions ago, thus rendering this...' | translate }}</p>
           </div>
         </div>
       </div>
@@ -159,8 +159,10 @@
             <img src="assets/images/widget/target.svg" alt="img" class="img-fluid" />
           </div>
           <div class="flex-grow-1 ms-3">
-            <span>Income Salaries & Budget</span>
-            <p class="text-muted mb-0 text-sm">All your income salaries and budget comes here, you can track them or manage them</p>
+            <span>{{ 'Income Salaries &amp; Budget' | translate }}</span>
+            <p class="text-muted mb-0 text-sm">
+              {{ 'All your income salaries and budget comes here, you can track them or manage them' | translate }}
+            </p>
           </div>
         </div>
       </div>

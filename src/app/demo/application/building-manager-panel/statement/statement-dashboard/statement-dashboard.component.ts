@@ -1,6 +1,7 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
-import { Component, inject, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, Input, OnInit, ViewChild, effect } from '@angular/core';
 
 // icons
 import { IconService } from '@ant-design/icons-angular';
@@ -34,8 +35,6 @@ import {
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 
 import { TotalExpensesChartComponent } from './total-expenses-chart/total-expenses-chart.component';
-
-import { effect } from '@angular/core';
 
 import { BuildingSelectorComponent } from './building-selector/building-selector.component';
 import { StatusCardsComponent } from './status-cards/status-cards.component';
@@ -77,6 +76,8 @@ import { StatementPaymentComponent } from '../statement-list/statement-list-tabl
   styleUrl: './statement-dashboard.component.scss'
 })
 export class StatementDashboardComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private themeService = inject(ThemeService);
   private managerDashboardService = inject(ManagerDashboardService);
   private iconService = inject(IconService);
@@ -92,7 +93,7 @@ export class StatementDashboardComponent implements OnInit {
 
   dashboardData?: ManagerDashboardDTO;
   isManager = false;
-  
+
   currentBuildingIndex: number = 0;
   activeTab = 1;
 
@@ -102,7 +103,7 @@ export class StatementDashboardComponent implements OnInit {
   recentPayments: PaymentDTO[] = [];
   statementUserPayments: StatementUserPaymentDTO[] = [];
   paymentsLoading = false;
-  currentMonthLabel = new Date().toLocaleString('el-GR', { month: 'long', year: 'numeric' });
+  currentMonthLabel = new Date().toLocaleString(this.uiLocale.locale, { month: 'long', year: 'numeric' });
   statements: CommonExpenseStatement[] = [];
   showBuildingSelector = false;
 
@@ -171,7 +172,6 @@ export class StatementDashboardComponent implements OnInit {
   ngOnInit(): void {
     this.hasInputBuildingId = !!this.buildingId;
     this.loadBuildingsAndManagerDashboard();
-
   }
 
   private isDarkTheme(isDark: boolean) {
@@ -185,7 +185,13 @@ export class StatementDashboardComponent implements OnInit {
     this.dashboardData = undefined;
     this.recentPayments = [];
     this.statementUserPayments = [];
+    this.statements = [];
+    this.selectedStatementId = undefined;
+    this.announcements = [];
+    this.polls = [];
     this.loadAll();
+    this.loadRecentAnnouncements();
+    this.loadPolls();
   }
   loadAll(): void {
     this.loadDashboard();
@@ -199,10 +205,12 @@ export class StatementDashboardComponent implements OnInit {
 
     this.commonExpenseStatementService.getActiveStatementsByBuilding(this.buildingId).subscribe({
       next: (data) => {
-        this.statements = data;
-        if (data.length > 0) {
+        this.statements = data ?? [];
+        this.selectedStatementId = undefined;
+        this.statementUserPayments = [];
+        if (this.statements.length > 0) {
           // Τo πρώτο να είναι το πιο πρόσφατο
-          const sorted = [...data].sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
+          const sorted = [...this.statements].sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
 
           const latest = sorted[0];
 
@@ -219,7 +227,7 @@ export class StatementDashboardComponent implements OnInit {
   onStatementChange(): void {
     if (!this.selectedStatementId) return;
     this.paymentService.getUserPaymentsByStatement(this.selectedStatementId).subscribe({
-      next: (data) => (this.statementUserPayments = data),
+      next: (data) => (this.statementUserPayments = data ?? []),
       error: (err) => console.error('Σφάλμα φόρτωσης πληρωμών statement', err)
     });
   }
@@ -230,7 +238,7 @@ export class StatementDashboardComponent implements OnInit {
     this.managerDashboardService.getDashboardForBuilding(this.buildingId).subscribe({
       next: (data) => {
         console.log('Dashboard data:', data);
-        console.log('Monthly stats:', data.monthlyStats);
+        console.log('Monthly stats:', data?.monthlyStats);
 
         this.dashboardData = data;
       },
@@ -241,7 +249,7 @@ export class StatementDashboardComponent implements OnInit {
   loadRecentPayments(): void {
     if (!this.buildingId) return;
     this.paymentService.getRecentByBuilding(this.buildingId).subscribe({
-      next: (data) => (this.recentPayments = data),
+      next: (data) => (this.recentPayments = data ?? []),
 
       error: (err) => console.error('Σφάλμα φόρτωσης πρόσφατων πληρωμών', err)
     });
@@ -254,7 +262,7 @@ export class StatementDashboardComponent implements OnInit {
 
     this.paymentService.getLastStatementPayments(this.buildingId).subscribe({
       next: (data) => {
-        this.statementUserPayments = data;
+        this.statementUserPayments = data ?? [];
         this.paymentsLoading = false;
       },
       error: (err) => {
@@ -265,41 +273,40 @@ export class StatementDashboardComponent implements OnInit {
   }
 
   loadBuildingsAndManagerDashboard() {
-  this.buildingService.getMyBuildings().subscribe({
-    next: (buildings) => {
-      this.managedBuildings = buildings ?? [];
-      this.showBuildingSelector = this.managedBuildings.length > 1;
+    this.buildingService.getMyBuildings().subscribe({
+      next: (buildings) => {
+        this.managedBuildings = buildings ?? [];
+        this.showBuildingSelector = this.managedBuildings.length > 1;
 
-      //αν το buildingId ήρθε από parent, κράτα το
-      if (this.buildingId) {
-        this.currentBuilding =
-          this.managedBuildings.find(b => b.id === this.buildingId) || this.managedBuildings[0];
+        //αν το buildingId ήρθε από parent, κράτα το
+        if (this.buildingId) {
+          this.currentBuilding = this.managedBuildings.find((b) => b.id === this.buildingId);
 
-        // φόρτωσε ΟΛΑ τώρα που ξέρεις buildingId
-        this.loadAll();
-        this.loadRecentAnnouncements();
-        this.loadPolls();
-        return;
+          // φόρτωσε ΟΛΑ τώρα που ξέρεις buildingId
+          this.loadAll();
+          this.loadRecentAnnouncements();
+          this.loadPolls();
+          return;
+        }
+
+        // αλλιώς, fallback στην παλιά συμπεριφορά
+        if (this.managedBuildings.length > 0) {
+          this.buildingId = this.managedBuildings[0].id;
+          this.currentBuilding = this.managedBuildings[0];
+
+          localStorage.setItem('buildingId', this.buildingId.toString());
+          this.loadAll();
+          this.loadRecentAnnouncements();
+          this.loadPolls();
+        }
+      },
+      error: (err) => {
+        console.error('Σφάλμα κατά τη λήψη πολυκατοικιών', err);
+        this.showBuildingSelector = false;
+        this.managedBuildings = [];
       }
-
-      // αλλιώς, fallback στην παλιά συμπεριφορά
-      if (this.managedBuildings.length > 0) {
-        this.buildingId = this.managedBuildings[0].id;
-        this.currentBuilding = this.managedBuildings[0];
-
-        localStorage.setItem('buildingId', this.buildingId.toString());
-        this.loadAll();
-        this.loadRecentAnnouncements();
-        this.loadPolls();
-      }
-    },
-    error: (err) => {
-      console.error('Σφάλμα κατά τη λήψη πολυκατοικιών', err);
-      this.showBuildingSelector = false;
-      this.managedBuildings = [];
-    }
-  });
-}
+    });
+  }
 
   goToTab(tabId: number): void {
     if (this.hasInputBuildingId) {
@@ -317,7 +324,7 @@ export class StatementDashboardComponent implements OnInit {
     if (!this.isManager) return;
 
     if (payment.status === 'PAID') {
-      alert('Ο χρήστης έχει ήδη εξοφλήσει πλήρως αυτό το παραστατικό.');
+      alert(this.uiLocale.text('The user has already fully paid for this document.'));
       return;
     }
 
@@ -339,7 +346,7 @@ export class StatementDashboardComponent implements OnInit {
         next: () => {
           this.onStatementChange();
           this.paymentsLoading = false;
-          alert('Η πληρωμή καταχωρήθηκε με επιτυχία!');
+          alert(this.uiLocale.text('Payment submitted successfully!'));
         },
         error: (err) => {
           console.error('Σφάλμα αποθήκευσης πληρωμής:', err);
@@ -355,7 +362,7 @@ export class StatementDashboardComponent implements OnInit {
     this.calendarService.getByBuilding(this.buildingId).subscribe({
       next: (events) => {
         // ταξινόμηση κατά ημερομηνία φθίνουσα
-        this.announcements = events.sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime()); // π.χ. εμφάνιση 3 πιο πρόσφατων
+        this.announcements = (events ?? []).sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime()); // π.χ. εμφάνιση 3 πιο πρόσφατων
       },
       error: (err) => console.error('Σφάλμα φόρτωσης ανακοινώσεων:', err)
     });
@@ -366,10 +373,14 @@ export class StatementDashboardComponent implements OnInit {
   }
 
   loadPolls(): void {
+    if (!this.buildingId) {
+      this.polls = [];
+      return;
+    }
     this.loading = true;
     this.pollService.getByBuilding(this.buildingId).subscribe({
       next: (res) => {
-        this.polls = res.sort((a, b) => b.id - a.id);
+        this.polls = (res ?? []).sort((a, b) => b.id - a.id);
         this.loading = false;
       },
       error: (err) => {
@@ -420,10 +431,10 @@ export class StatementDashboardComponent implements OnInit {
 
   onSort(field: string) {
     if (this.sortField === field) {
-      this.sortAsc = !this.sortAsc; 
+      this.sortAsc = !this.sortAsc;
     } else {
       this.sortField = field;
-      this.sortAsc = true; 
+      this.sortAsc = true;
     }
 
     this.polls.sort((a, b) => {
@@ -438,7 +449,7 @@ export class StatementDashboardComponent implements OnInit {
   }
 
   getSortIcon(field: string) {
-    if (this.sortField !== field) return ''; 
+    if (this.sortField !== field) return '';
     return this.sortAsc ? '▲' : '▼';
   }
 }

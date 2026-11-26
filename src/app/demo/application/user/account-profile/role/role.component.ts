@@ -1,5 +1,7 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, OnInit, Inject, Input, SimpleChanges, OnChanges } from '@angular/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, OnInit, Inject, Input, SimpleChanges, OnChanges } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { environment } from 'src/environments/environment';
@@ -24,6 +26,8 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./role.component.scss']
 })
 export class RoleComponent implements OnInit, OnChanges {
+  private readonly uiLocale = inject(UiLocaleService);
+
   @Input() pmView = false;
   @Input() buildingId?: number;
   apiBase = `${environment.apiUrl}/api/v1`;
@@ -96,7 +100,7 @@ export class RoleComponent implements OnInit, OnChanges {
       },
       error: (err) => {
         console.error('Σφάλμα φόρτωσης πολυκατοικίας για PM:', err);
-        this.messageBuildings = 'Αποτυχία φόρτωσης πολυκατοικίας.';
+        this.messageBuildings = this.uiLocale.text('Failed to load apartment building.');
       }
     });
   }
@@ -105,7 +109,7 @@ export class RoleComponent implements OnInit, OnChanges {
     this.buildingService.getMyBuildings().subscribe({
       next: (buildings) => {
         if (!buildings || buildings.length === 0) {
-          this.messageBuildings = 'Δεν έχετε ακόμα καταχωρημένες πολυκατοικίες.';
+          this.messageBuildings = this.uiLocale.text("You don't have any listed apartment buildings yet.");
           return;
         }
 
@@ -114,7 +118,7 @@ export class RoleComponent implements OnInit, OnChanges {
         this.onBuildingChange();
       },
       error: () => {
-        this.messageBuildings = 'Σφάλμα φόρτωσης πολυκατοικιών.';
+        this.messageBuildings = this.uiLocale.text('Apartment building loading error.');
       }
     });
   }
@@ -143,7 +147,7 @@ export class RoleComponent implements OnInit, OnChanges {
         this.currentBuildingId = buildingId;
 
         if (this.members.length === 0) {
-          this.messageMembers = 'Δεν υπάρχουν μέλη για αυτήν την πολυκατοικία.';
+          this.messageMembers = this.uiLocale.text('There are no members for this apartment building.');
         } else {
           this.messageMembers = '';
         }
@@ -152,7 +156,7 @@ export class RoleComponent implements OnInit, OnChanges {
       },
       error: (err) => {
         console.error('Σφάλμα φόρτωσης μελών', err);
-        this.messageMembers = 'Αποτυχία φόρτωσης μελών.';
+        this.messageMembers = this.uiLocale.text('Failed to load members.');
       }
     });
   }
@@ -165,7 +169,7 @@ export class RoleComponent implements OnInit, OnChanges {
         this.members = this.members.map((member) => this.withResolvedApartment(member));
 
         if (data.length === 0) {
-          this.messageApartments = 'Δεν υπάρχουν καταχωρημένα διαμερίσματα.';
+          this.messageApartments = this.uiLocale.text('There are no apartments listed.');
         } else {
           this.messageApartments = '';
         }
@@ -174,7 +178,7 @@ export class RoleComponent implements OnInit, OnChanges {
       },
       error: (err) => {
         console.error('Σφάλμα φόρτωσης διαμερισμάτων:', err);
-        this.messageApartments = 'Αποτυχία φόρτωσης διαμερισμάτων.';
+        this.messageApartments = this.uiLocale.text('Failed to load partitions.');
       }
     });
   }
@@ -205,48 +209,48 @@ export class RoleComponent implements OnInit, OnChanges {
     const memberFullName = member.fullName?.trim().toLowerCase();
     const buildingManagerFullName = this.currentBuilding?.managerFullName?.trim().toLowerCase();
 
-    return managerApartmentCandidates.find((apartment) => {
-      if (member.userId != null && apartment.ownerId === member.userId) {
-        return true;
-      }
+    return (
+      managerApartmentCandidates.find((apartment) => {
+        if (member.userId != null && apartment.ownerId === member.userId) {
+          return true;
+        }
 
-      if (!apartment.isManagerHouse) {
+        if (!apartment.isManagerHouse) {
+          return false;
+        }
+
+        if (member.userId != null && apartment.managerId) {
+          return Number(apartment.managerId) === member.userId;
+        }
+
+        const buildingManagerId = this.currentBuilding?.managerId;
+        if (buildingManagerId != null && apartment.managerId) {
+          return Number(apartment.managerId) === buildingManagerId;
+        }
+
+        if (memberFullName && apartment.managerFullName?.trim().toLowerCase() === memberFullName) {
+          return true;
+        }
+
+        if (buildingManagerFullName && apartment.managerFullName?.trim().toLowerCase() === buildingManagerFullName) {
+          return true;
+        }
+
         return false;
-      }
-
-      if (member.userId != null && apartment.managerId) {
-        return Number(apartment.managerId) === member.userId;
-      }
-
-      const buildingManagerId = this.currentBuilding?.managerId;
-      if (buildingManagerId != null && apartment.managerId) {
-        return Number(apartment.managerId) === buildingManagerId;
-      }
-
-      if (memberFullName && apartment.managerFullName?.trim().toLowerCase() === memberFullName) {
-        return true;
-      }
-
-      if (buildingManagerFullName && apartment.managerFullName?.trim().toLowerCase() === buildingManagerFullName) {
-        return true;
-      }
-
-      return false;
-    }) ?? (managerApartmentCandidates.length === 1 ? managerApartmentCandidates[0] : undefined);
+      }) ?? (managerApartmentCandidates.length === 1 ? managerApartmentCandidates[0] : undefined)
+    );
   }
 
   getMemberApartmentLabel(member: BuildingMemberDTO): string {
-  const floor = member.floor?.trim();
-  const number = member.apartmentNumber?.trim();
+    const floor = member.floor?.trim();
+    const number = member.apartmentNumber?.trim();
 
-  return floor || number
-    ? `${floor ?? ''}${number ?? ''}`
-    : '—';
-}
+    return floor || number ? `${floor ?? ''}${number ?? ''}` : '—';
+  }
 
   sendInvite(): void {
     if (!this.emailToInvite || !this.roleToInvite || !this.apartmentToInvite) {
-      alert('Παρακαλώ συμπληρώστε όλα τα πεδία.');
+      alert(this.uiLocale.text('Please fill in all fields.'));
       return;
     }
 
@@ -259,11 +263,11 @@ export class RoleComponent implements OnInit, OnChanges {
 
     this.userService.inviteUserToBuilding(payload).subscribe({
       next: () => {
-        alert('Η πρόσκληση στάλθηκε με επιτυχία!');
+        alert(this.uiLocale.text('Invitation sent successfully!'));
         this.resetInviteForm();
       },
       error: (err) => {
-        alert(err.error?.message || 'Απέτυχε η αποστολή πρόσκλησης.');
+        alert(err.error?.message || this.uiLocale.text('Failed to send invitation.'));
         this.isSending = false;
       }
     });
@@ -280,15 +284,15 @@ export class RoleComponent implements OnInit, OnChanges {
   getTranslatedRole(role: string): string {
     switch (role) {
       case 'Owner':
-        return 'Ιδιοκτήτης';
+        return this.uiLocale.text('Owner');
       case 'User':
-        return 'Χρήστης';
+        return this.uiLocale.text('User');
       case 'Resident':
-        return 'Ένοικος';
+        return this.uiLocale.text('Tenant');
       case 'BuildingManager':
-        return 'Διαχειριστής';
+        return this.uiLocale.text('Administrator');
       case 'PropertyManager':
-        return 'Εταιρία Διαχείρισης';
+        return this.uiLocale.text('Management Company');
       default:
         return role;
     }
@@ -298,20 +302,20 @@ export class RoleComponent implements OnInit, OnChanges {
     switch (status) {
       case 'JOINED':
       case 'ACCEPTED':
-        return 'Μέλος';
+        return this.uiLocale.text('Member');
 
       case 'INVITED':
       case 'PENDING':
-        return 'Σε αναμονή πρόσκλησης';
+        return this.uiLocale.text('Awaiting invitation');
 
       case 'PENDING_APARTMENT':
-        return 'Αναμονή για ανάθεση διαμερίσματος';
+        return this.uiLocale.text('Waiting for apartment assignment');
 
       case 'EXPIRED':
-        return 'Η πρόσκληση έληξε';
+        return this.uiLocale.text('The invitation has expired');
 
       case 'CANCELLED':
-        return 'Η πρόσκληση ακυρώθηκε';
+        return this.uiLocale.text('The invitation was canceled');
 
       default:
         return status;
@@ -379,7 +383,7 @@ export class RoleComponent implements OnInit, OnChanges {
   openDeleteModal(member: any): void {
     const ref = this.modal.open(ConfirmDeleteModalComponent, { centered: true });
 
-    ref.componentInstance.title = 'Διαγραφή μέλους';
+    ref.componentInstance.title = this.uiLocale.text('Deletion of a Member');
     ref.componentInstance.message = `Θέλεις σίγουρα να διαγράψεις τον χρήστη ${member.fullName || member.email};`;
 
     ref.result.then(

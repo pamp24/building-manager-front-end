@@ -1,10 +1,10 @@
 <div class="row">
   <div class="col-sm-12">
-    <app-card cardTitle="Light Box" blockClass="pc-component">
+    <app-card [cardTitle]="'Light Box' | translate" blockClass="pc-component">
       <p>
-        Add this code
-        <code>data-lightbox="example-set"</code>
-        to see roadtrip gallery in lightbox popup.
+        {{ 'Add this code' | translate }}
+        <code>{{ 'data-lightbox=&quot;example-set&quot;' | translate }}</code>
+        {{ 'to see roadtrip gallery in lightbox popup.' | translate }}
       </p>
       <div class="row text-center border-less-image-gallery">
         @for (image of Images; track image) {

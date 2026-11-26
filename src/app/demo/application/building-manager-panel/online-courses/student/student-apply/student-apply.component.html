@@ -1,14 +1,20 @@
 <div class="row">
   <!-- [ sample-page ] start -->
   <div class="col-sm-12">
-    <app-card cardTitle="Apply Teacher list" cardClass="table-card" [padding]="0">
+    <app-card [cardTitle]="'Apply Teacher list' | translate" cardClass="table-card" [padding]="0">
       <form class="dt-responsive">
         <div class="dataTable-top">
           <div class="dataTable-dropdown">
-            <select class="form-select" title="select item per page" style="width: auto" name="pageSize" [(ngModel)]="service.pageSize">
-              <option [ngValue]="5">5 items per page</option>
-              <option [ngValue]="10">10 items per page</option>
-              <option [ngValue]="15">15 items per page</option>
+            <select
+              class="form-select"
+              [title]="'select item per page' | translate"
+              style="width: auto"
+              name="pageSize"
+              [(ngModel)]="service.pageSize"
+            >
+              <option [ngValue]="5">{{ '5 items per page' | translate }}</option>
+              <option [ngValue]="10">{{ '10 items per page' | translate }}</option>
+              <option [ngValue]="15">{{ '15 items per page' | translate }}</option>
             </select>
           </div>
           <div class="dataTable-search d-flex align-items-center">
@@ -18,7 +24,7 @@
               class="form-control"
               name="searchTerm"
               [(ngModel)]="service.searchTerm"
-              placeholder="Search..."
+              [placeholder]="'Search...' | translate"
             />
           </div>
         </div>
@@ -27,12 +33,12 @@
           <table class="table table-hover mb-0">
             <thead>
               <tr>
-                <th scope="col" sortable="name">NAME</th>
-                <th scope="col" sortable="email">EMAIL</th>
-                <th scope="col" sortable="qualification">QUALIFICATION</th>
-                <th scope="col" sortable="mobile">MOBILE</th>
-                <th scope="col" sortable="date">DATE/TIME</th>
-                <th scope="col" sortable="action" class="text-center">ACTION</th>
+                <th scope="col" sortable="name">{{ 'NAME' | translate }}</th>
+                <th scope="col" sortable="email">{{ 'EMAIL' | translate }}</th>
+                <th scope="col" sortable="qualification">{{ 'QUALIFICATION' | translate }}</th>
+                <th scope="col" sortable="mobile">{{ 'MOBILE' | translate }}</th>
+                <th scope="col" sortable="date">{{ 'DATE/TIME' | translate }}</th>
+                <th scope="col" sortable="action" class="text-center">{{ 'ACTION' | translate }}</th>
               </tr>
             </thead>
             <tbody>
@@ -58,17 +64,17 @@
                   <td class="text-center">
                     <ul class="list-inline me-auto mb-0">
                       <li class="list-inline-item align-bottom">
-                        <a href="javascript:" class="avatar avatar-xs btn-light-success" ngbTooltip="check">
+                        <a href="javascript:" class="avatar avatar-xs btn-light-success" [ngbTooltip]="'check' | translate">
                           <i class="f-16 d-flex" antIcon type="check" theme="outline"></i>
                         </a>
                       </li>
                       <li class="list-inline-item align-bottom">
-                        <a href="javascript:" class="avatar avatar-xs btn-light-danger" ngbTooltip="close">
+                        <a href="javascript:" class="avatar avatar-xs btn-light-danger" [ngbTooltip]="'close' | translate">
                           <i class="f-16 d-flex" antIcon type="close" theme="outline"></i>
                         </a>
                       </li>
                       <li class="list-inline-item align-bottom">
-                        <a href="javascript:" ngbTooltip="more" class="avatar avatar-xs btn-light-secondary">
+                        <a href="javascript:" [ngbTooltip]="'more' | translate" class="avatar avatar-xs btn-light-secondary">
                           <i class="f-16 d-flex" antIcon type="more" theme="outline"></i>
                         </a>
                       </li>
@@ -80,7 +86,7 @@
           </table>
         </div>
         <div class="datatable-bottom">
-          <div class="datatable-info">Showing 1 to {{ service.pageSize }} of 15 entries</div>
+          <div class="datatable-info">{{ 'Showing 1 to' | translate }} {{ service.pageSize }} {{ 'of 15 entries' | translate }}</div>
           <ngb-pagination
             [collectionSize]="(total$ | async)!"
             [(page)]="service.page"

@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-sm-12">
     <app-card
-      cardTitle="Copy From Text -- Text"
+      [cardTitle]="'Copy From Text -- Text' | translate"
       CardDate="Click this button, it will copy the text from the input by referring to the text content"
     >
       <div class="input-group mb-3">
@@ -9,8 +9,8 @@
           type="text"
           class="form-control"
           [(ngModel)]="text1"
-          placeholder="content will be copy after click the copy button"
-          aria-label="Recipient's username"
+          [placeholder]="'content will be copy after click the copy button' | translate"
+          [attr.aria-label]="'Recipient\'s username' | translate"
           aria-describedby="button-addon2"
         />
         <button
@@ -23,7 +23,7 @@
           (cbOnError)="onCopyFailure()"
           [class.btn-success]="isCopied1"
         >
-          Copy
+          {{ 'Copy' | translate }}
         </button>
       </div>
     </app-card>
@@ -31,7 +31,7 @@
 
   <div class="col-sm-12">
     <app-card
-      cardTitle="Copy From Text -- Target"
+      [cardTitle]="'Copy From Text -- Target' | translate"
       CardDate="Click this button, it will copy the text from the input by referring to the input element"
     >
       <div class="input-group mb-3">
@@ -39,9 +39,9 @@
           type="text"
           class="form-control"
           [(ngModel)]="text2"
-          placeholder="content will be copy after click the copy button"
+          [placeholder]="'content will be copy after click the copy button' | translate"
           #inputTarget
-          aria-label="Recipient's username"
+          [attr.aria-label]="'Recipient\'s username' | translate"
           aria-describedby="basic-addon1"
         />
         <button
@@ -52,17 +52,17 @@
           (cbOnError)="onCopyFailure()"
           [class.btn-success]="isCopied2"
         >
-          Copy
+          {{ 'Copy' | translate }}
         </button>
       </div>
     </app-card>
   </div>
 
   <div class="col-sm-12">
-    <app-card cardTitle="Copy From Service">
+    <app-card [cardTitle]="'Copy From Service' | translate">
       <div class="d-flex">
-        <button class="btn btn-primary me-2" (click)="callServiceToCopy()">Copy From Service</button>
-        <button class="btn btn-primary" (click)="basic = true">Focus Trapper</button>
+        <button class="btn btn-primary me-2" (click)="callServiceToCopy()">{{ 'Copy From Service' | translate }}</button>
+        <button class="btn btn-primary" (click)="basic = true">{{ 'Focus Trapper' | translate }}</button>
       </div>
     </app-card>
   </div>

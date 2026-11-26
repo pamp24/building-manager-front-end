@@ -4,13 +4,13 @@
       <thead>
         <tr>
           <th>#</th>
-          <th>Τίτλος</th>
-          <th>Πολυκατοικία</th>
-          <th>Κατηγορία</th>
-          <th>Προτεραιότητα</th>
-          <th>Status</th>
-          <th>Ενημέρωση</th>
-          <th>Ενέργειες</th>
+          <th>{{ 'Title' | translate }}</th>
+          <th>{{ 'Building' | translate }}</th>
+          <th>{{ 'Category' | translate }}</th>
+          <th>{{ 'Priority' | translate }}</th>
+          <th>{{ 'Status' | translate }}</th>
+          <th>{{ 'Update' | translate }}</th>
+          <th>{{ 'Actions' | translate }}</th>
         </tr>
       </thead>
 
@@ -29,7 +29,7 @@
 
             <td>
               <div class="fw-semibold">{{ ticket.title }}</div>
-              <small class="text-muted">Από {{ ticket.createdByName }}</small>
+              <small class="text-muted">{{ 'From' | translate }} {{ ticket.createdByName }}</small>
             </td>
 
             <td>{{ ticket.buildingName }}</td>
@@ -51,7 +51,7 @@
             <td>{{ formatDate(ticket.updatedAt) }}</td>
 
             <td>
-              <a class="btn btn-sm btn-outline-primary" [routerLink]="[detailsRoute, ticket.id]">Προβολή</a>
+              <a class="btn btn-sm btn-outline-primary" [routerLink]="[detailsRoute, ticket.id]">{{ 'Projection' | translate }}</a>
             </td>
           </tr>
         }

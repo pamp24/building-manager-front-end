@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
 import { Component, OnInit, effect, inject } from '@angular/core';
@@ -38,7 +39,6 @@ import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 //UserUpdateDTO
 import { UserUpdateDTO } from 'src/app/theme/shared/models/UserUpdateDTO';
-import { TranslateService } from '@ngx-translate/core';
 import { MantisConfig } from 'src/app/app-config';
 
 @Component({
@@ -48,8 +48,9 @@ import { MantisConfig } from 'src/app/app-config';
   styleUrls: ['./user-profile.component.scss']
 })
 export class UserProfileComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   apiBase = environment.apiUrl + '/api/v1';
-  private translate = inject(TranslateService);
   private dataService = inject(DataService);
   private iconService = inject(IconService);
   private themeService = inject(ThemeService);
@@ -79,7 +80,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   people$: Observable<any[]> | undefined;
-  selectedPeople = [{ name: 'Karyn Wright' }];
+  selectedPeople = [{ name: this.uiLocale.text('Karyn Wright') }];
   isDarkMode!: boolean;
   chartOptions!: Partial<ApexOptions>;
   currentUser$!: Observable<unknown>;
@@ -116,8 +117,8 @@ export class UserProfileComponent implements OnInit {
   // life cycle event
   ngOnInit() {
     setTimeout(() => {
-          this.useLanguage(MantisConfig.i18n);
-        }, 0);
+      this.useLanguage(MantisConfig.i18n);
+    }, 0);
     this.chartOptions = {
       series: [30],
       chart: {
@@ -205,7 +206,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   useLanguage(language: string) {
-    this.translate.use(language);
+    void this.uiLocale.setLanguage(language);
   }
 
   private setFormEditing(editing: boolean): void {
@@ -238,7 +239,7 @@ export class UserProfileComponent implements OnInit {
     const updateData: UserUpdateDTO = this.userForm.getRawValue();
     this.userService.updateUser(updateData).subscribe({
       next: () => {
-        alert('Τα στοιχεία αποθηκεύτηκαν!');
+        alert(this.uiLocale.text('Data saved!'));
         this.initialFormValue = this.userForm.getRawValue();
         this.setFormEditing(false);
         const completion = this.calculateProfileCompletion();
@@ -266,44 +267,43 @@ export class UserProfileComponent implements OnInit {
   }
 
   changeModel() {
-    this.selectedPeople = [{ name: 'New person' }];
+    this.selectedPeople = [{ name: this.uiLocale.text('New person') }];
   }
 
   onFileSelected(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  if (!input.files || input.files.length === 0) return;
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
 
-  const file = input.files[0];
+    const file = input.files[0];
 
-  // preview άμεσα
-  const reader = new FileReader();
-  reader.onload = () => {
-    if (this.user) this.user.profileImageUrl = reader.result as string;
-  };
-  reader.readAsDataURL(file);
+    // preview άμεσα
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (this.user) this.user.profileImageUrl = reader.result as string;
+    };
+    reader.readAsDataURL(file);
 
-  // upload
-  this.userService.uploadProfileImage(file).subscribe({
-    next: (res) => {
-      // backend δίνει π.χ. /uploads/profile-images/xxx.jpg
-      this.user.profileImageUrl = res.imageUrl;
+    // upload
+    this.userService.uploadProfileImage(file).subscribe({
+      next: (res) => {
+        // backend δίνει π.χ. /uploads/profile-images/xxx.jpg
+        this.user.profileImageUrl = res.imageUrl;
 
-      // ⭐ ΕΔΩ ενημερώνεις localStorage + authenticationService
-      this.authenticationService.updateCurrentUserProfileImage(res.imageUrl);
-    },
-    error: (err) => {
-      console.error('Σφάλμα upload:', err);
-    }
-  });
-}
-
+        // ⭐ ΕΔΩ ενημερώνεις localStorage + authenticationService
+        this.authenticationService.updateCurrentUserProfileImage(res.imageUrl);
+      },
+      error: (err) => {
+        console.error('Σφάλμα upload:', err);
+      }
+    });
+  }
 
   imgSrc(url?: string | null): string {
-  if (!url) return 'assets/images/user/avatar-5.jpg';
-  if (url.startsWith('http')) return url;
-  if (url.startsWith('/uploads/')) return `${this.apiBase}${url}`;
-  return url;
-}
+    if (!url) return 'assets/images/user/avatar-5.jpg';
+    if (url.startsWith('http')) return url;
+    if (url.startsWith('/uploads/')) return `${this.apiBase}${url}`;
+    return url;
+  }
 
   socialMedia = [
     {
@@ -323,49 +323,49 @@ export class UserProfileComponent implements OnInit {
   details = [
     {
       amount: '86',
-      text: 'Post'
+      text: this.uiLocale.text('Post')
     },
     {
       amount: '40',
-      text: 'Project'
+      text: this.uiLocale.text('Project')
     },
     {
       amount: '4.5K',
-      text: 'Members'
+      text: this.uiLocale.text('Members')
     }
   ];
 
   personal_info = [
     {
-      label: 'First Name',
+      label: this.uiLocale.text('First Name'),
       value: 'Stein',
       type: 'text',
       detail: 'First Name'
     },
     {
-      label: 'Last Name',
+      label: this.uiLocale.text('Last Name'),
       value: 'Ben',
       type: 'text',
       detail: 'Last Name'
     },
     {
-      label: 'Email Address',
+      label: this.uiLocale.text('Email Address'),
       value: 'stebin.ben@gmail.com',
       type: 'email',
       detail: 'Enter Your Email'
     },
     {
-      label: 'Date of Birth (+18)',
+      label: this.uiLocale.text('Date of Birth (+18)'),
       type: 'date',
       detail: 'Enter Your Date Of Birth Date'
     },
     {
-      label: 'Phone Number',
+      label: this.uiLocale.text('Phone Number'),
       detail: 'Phone Number',
       type: 'number'
     },
     {
-      label: 'Designation',
+      label: this.uiLocale.text('Designation'),
       detail: 'Designation',
       type: 'text'
     }
@@ -373,67 +373,73 @@ export class UserProfileComponent implements OnInit {
 
   passwords = [
     {
-      label: 'Παλαιός Κωδικός',
-      placeholder: 'Εισάγετε τον παλαιό κωδικό'
+      label: this.uiLocale.text('Old Code'),
+      placeholder: this.uiLocale.text('Enter the old password')
     },
     {
-      label: 'Νέος Κωδικός',
-      placeholder: 'Εισάγετε τον νέο κωδικό'
+      label: this.uiLocale.text('New Code'),
+      placeholder: this.uiLocale.text('Enter the new password')
     },
     {
-      label: 'Επιβεβαίωση Κωδικού',
-      placeholder: 'Εισάγετε ξανά τον νέο κωδικό'
+      label: this.uiLocale.text('Code Confirmation'),
+      placeholder: this.uiLocale.text('Re-enter the new password')
     }
   ];
 
   condition = [
     {
-      text: 'Τουλάχιστον 8 χαρακτήρες'
+      text: this.uiLocale.text('At least 8 characters')
     },
     {
-      text: 'Τουλάχιστον 1 πεζό γράμμα (a-z)'
+      text: this.uiLocale.text('At least 1 lowercase letter (a-z)')
     },
     {
-      text: 'Τουλάχιστον 1 κεφαλαίο γράμμα (A-Z)'
+      text: this.uiLocale.text('At least 1 capital letter (A-Z)')
     },
     {
-      text: 'Τουλάχιστον 1 αριθμός (0-9)'
+      text: this.uiLocale.text('At least 1 number (0-9)')
     },
     {
-      text: 'Τουλάχιστον 1 ειδικός χαρακτήρας'
+      text: this.uiLocale.text('At least 1 special character')
     }
   ];
 
   setting = [
     {
-      title: 'Order Confirmation',
-      text: 'You will be notified when customer order any product',
+      title: this.uiLocale.text('Order Confirmation'),
+      text: this.uiLocale.text('You will be notified when customer order any product'),
       icon: 'file-done',
       check: true
     },
     {
-      title: 'Setup Email Notification',
-      text: 'Turn on email notification to get updates through email',
+      title: this.uiLocale.text('Setup Email Notification'),
+      text: this.uiLocale.text('Turn on email notification to get updates through email'),
       icon: 'mail',
       check: false
     },
     {
-      title: 'Update System Notification',
-      text: 'You will be notified when customer order any product',
+      title: this.uiLocale.text('Update System Notification'),
+      text: this.uiLocale.text('You will be notified when customer order any product'),
       icon: 'mail',
       check: true
     },
     {
-      title: 'Language Change',
-      text: 'You will be notified when customer order any product',
+      title: this.uiLocale.text('Language Change'),
+      text: this.uiLocale.text('You will be notified when customer order any product'),
       icon: 'translation',
       check: true
     }
   ];
 
   cardItems = [
-    { id: 'master-card', name: 'Selena Litten', cardNumber: '**** **** **** 3456', cardType: 'master', checked: true },
-    { id: 'visa-card', name: 'Stebin Ben', cardNumber: '**** **** **** 7654', cardType: 'visa', checked: false }
+    {
+      id: 'master-card',
+      name: this.uiLocale.text('Selena Litten'),
+      cardNumber: '**** **** **** 3456',
+      cardType: 'master',
+      checked: true
+    },
+    { id: 'visa-card', name: this.uiLocale.text('Stebin Ben'), cardNumber: '**** **** **** 7654', cardType: 'visa', checked: false }
   ];
 
   removeCard(id: string) {

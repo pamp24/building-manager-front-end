@@ -1,5 +1,7 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component } from '@angular/core';
 // angular import
-import { Component } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 
 // project import
@@ -17,38 +19,40 @@ import { SweetAlert2LoaderService, SweetAlert2Module } from '@sweetalert2/ngx-sw
   providers: [SweetAlert2LoaderService]
 })
 export class SweetAlertComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   // private props
 
   // private Method
   confirmAlert() {
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'Once deleted, you will not be able to recover this imaginary file!',
+      title: this.uiLocale.text('Are you sure?'),
+      text: this.uiLocale.text('Once deleted, you will not be able to recover this imaginary file!'),
       icon: 'warning',
       showCloseButton: true,
       showCancelButton: true
     }).then((willDelete) => {
       if (willDelete.dismiss) {
-        Swal.fire('', 'Your imaginary file is safe!', 'error');
+        Swal.fire('', this.uiLocale.text('Your imaginary file is safe!'), 'error');
       } else {
-        Swal.fire('', 'Poof! Your imaginary file has been deleted!', 'success');
+        Swal.fire('', this.uiLocale.text('Poof! Your imaginary file has been deleted!'), 'success');
       }
     });
   }
 
   threeBtn() {
     Swal.fire({
-      title: 'Do you want to save the changes?',
+      title: this.uiLocale.text('Do you want to save the changes?'),
       showDenyButton: true,
       showCancelButton: true,
-      confirmButtonText: 'Save',
-      denyButtonText: `Don't save`
+      confirmButtonText: this.uiLocale.text('Save'),
+      denyButtonText: this.uiLocale.text("Don't save")
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
-        Swal.fire('Saved!', '', 'success');
+        Swal.fire(this.uiLocale.text('Saved!'), '', 'success');
       } else if (result.isDenied) {
-        Swal.fire('Changes are not saved', '', 'info');
+        Swal.fire(this.uiLocale.text('Changes are not saved'), '', 'info');
       }
     });
   }
@@ -64,12 +68,12 @@ export class SweetAlertComponent {
 
     swalWithBootstrapButtons
       .fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
+        title: this.uiLocale.text('Are you sure?'),
+        text: this.uiLocale.text("You won't be able to revert this!"),
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!',
-        cancelButtonText: 'No, cancel!',
+        confirmButtonText: this.uiLocale.text('Yes, delete it!'),
+        cancelButtonText: this.uiLocale.text('No, cancel!'),
         reverseButtons: true
       })
       .then((result) => {
@@ -88,8 +92,8 @@ export class SweetAlertComponent {
     // eslint-disable-next-line
     let timerInterval: any;
     Swal.fire({
-      title: 'Auto close alert!',
-      html: 'I will close in <b></b> milliseconds.',
+      title: this.uiLocale.text('Auto close alert!'),
+      html: this.uiLocale.text('I will close in <b></b> milliseconds.'),
       timer: 2000,
       timerProgressBar: true,
       didOpen: () => {
@@ -112,7 +116,7 @@ export class SweetAlertComponent {
 
   promptAlert() {
     Swal.fire({
-      text: 'Write something here:',
+      text: this.uiLocale.text('Write something here:'),
       input: 'text'
     }).then((result) => {
       if (result.value) {
@@ -123,13 +127,13 @@ export class SweetAlertComponent {
 
   ajaxAlert() {
     Swal.fire({
-      title: 'Submit your Github username',
+      title: this.uiLocale.text('Submit your Github username'),
       input: 'text',
       inputAttributes: {
         autocapitalize: 'off'
       },
       showCancelButton: true,
-      confirmButtonText: 'Look up',
+      confirmButtonText: this.uiLocale.text('Look up'),
       showLoaderOnConfirm: true,
       preConfirm: async (login) => {
         try {
@@ -162,30 +166,22 @@ export class SweetAlertComponent {
 
   animationAlert() {
     Swal.fire({
-      title: 'Custom animation with Animate.css',
+      title: this.uiLocale.text('Custom animation with Animate.css'),
       showClass: {
-        popup: `
-          animate__animated
-          animate__fadeInUp
-          animate__faster
-        `
+        popup: 'animate__animated animate__fadeInUp animate__faster'
       },
       hideClass: {
-        popup: `
-          animate__animated
-          animate__fadeOutDown
-          animate__faster
-        `
+        popup: 'animate__animated animate__fadeOutDown animate__faster'
       }
     });
   }
 
   passwordAlert() {
     Swal.fire({
-      title: 'Enter your password',
+      title: this.uiLocale.text('Enter your password'),
       input: 'password',
-      inputLabel: 'Password',
-      inputPlaceholder: 'Enter your password',
+      inputLabel: this.uiLocale.text('Password'),
+      inputPlaceholder: this.uiLocale.text('Enter your password'),
       inputAttributes: {
         maxlength: '10',
         autocapitalize: 'off',
@@ -200,10 +196,10 @@ export class SweetAlertComponent {
 
   urlAlert() {
     Swal.fire({
-      title: 'Enter your URl',
+      title: this.uiLocale.text('Enter your URl'),
       input: 'password',
-      inputLabel: 'Password',
-      inputPlaceholder: 'Enter your password',
+      inputLabel: this.uiLocale.text('Password'),
+      inputPlaceholder: this.uiLocale.text('Enter your password'),
       inputAttributes: {
         maxlength: '10',
         autocapitalize: 'off',
@@ -218,10 +214,10 @@ export class SweetAlertComponent {
 
   gmailAlert() {
     Swal.fire({
-      title: 'Input email address',
+      title: this.uiLocale.text('Input email address'),
       input: 'email',
-      inputLabel: 'Your email address',
-      inputPlaceholder: 'Enter your email address'
+      inputLabel: this.uiLocale.text('Your email address'),
+      inputPlaceholder: this.uiLocale.text('Enter your email address')
     }).then((result) => {
       if (result.value) {
         Swal.fire(`Entered email: ${result.value}`);
@@ -232,10 +228,10 @@ export class SweetAlertComponent {
   textAreaAlert() {
     Swal.fire({
       input: 'textarea',
-      inputLabel: 'Message',
-      inputPlaceholder: 'Type your message here...',
+      inputLabel: this.uiLocale.text('Message'),
+      inputPlaceholder: this.uiLocale.text('Type your message here...'),
       inputAttributes: {
-        'aria-label': 'Type your message here'
+        'aria-label': this.uiLocale.text('Type your message here')
       },
       showCancelButton: true
     }).then((result) => {
@@ -247,30 +243,30 @@ export class SweetAlertComponent {
 
   selectAlert() {
     Swal.fire({
-      title: 'Select field validation',
+      title: this.uiLocale.text('Select field validation'),
       input: 'select',
       inputOptions: {
         Fruits: {
-          apples: 'Apples',
-          bananas: 'Bananas',
-          grapes: 'Grapes',
-          oranges: 'Oranges'
+          apples: this.uiLocale.text('Apples'),
+          bananas: this.uiLocale.text('Bananas'),
+          grapes: this.uiLocale.text('Grapes'),
+          oranges: this.uiLocale.text('Oranges')
         },
         Vegetables: {
-          potato: 'Potato',
-          broccoli: 'Broccoli',
-          carrot: 'Carrot'
+          potato: this.uiLocale.text('Potato'),
+          broccoli: this.uiLocale.text('Broccoli'),
+          carrot: this.uiLocale.text('Carrot')
         },
-        icecream: 'Ice cream'
+        icecream: this.uiLocale.text('Ice cream')
       },
-      inputPlaceholder: 'Select a fruit',
+      inputPlaceholder: this.uiLocale.text('Select a fruit'),
       showCancelButton: true,
       inputValidator: (value) => {
         return new Promise((resolve) => {
           if (value === 'oranges') {
             resolve('');
           } else {
-            resolve('You need to select oranges :)');
+            resolve(this.uiLocale.text('You need to select oranges :)'));
           }
         });
       }
@@ -288,12 +284,12 @@ export class SweetAlertComponent {
       '#0000ff': 'Blue'
     };
     Swal.fire({
-      title: 'Select color',
+      title: this.uiLocale.text('Select color'),
       input: 'radio',
       inputOptions: colorOptions,
       inputValidator: (value) => {
         if (!value) {
-          return 'You need to choose something!';
+          return this.uiLocale.text('You need to choose something!');
         } else {
           // Since user chose something, return an empty string (indicates success)
           return '';
@@ -308,32 +304,30 @@ export class SweetAlertComponent {
 
   checkboxAlert() {
     Swal.fire({
-      title: 'Terms and conditions',
+      title: this.uiLocale.text('Terms and conditions'),
       input: 'checkbox',
-      inputPlaceholder: `
-      I agree with the terms and conditions
-    `,
+      inputPlaceholder: this.uiLocale.text('I agree with the terms and conditions'),
       inputValidator: (result) => {
         if (!result) {
-          return 'You need to agree with T&C';
+          return this.uiLocale.text('You need to agree with T&C');
         } else {
           return null;
         }
       }
     }).then((result) => {
       if (result.value) {
-        Swal.fire('You agreed with T&C :)');
+        Swal.fire(this.uiLocale.text('You agreed with T&C :)'));
       }
     });
   }
 
   fileAlert() {
     Swal.fire({
-      title: 'Select image',
+      title: this.uiLocale.text('Select image'),
       input: 'file',
       inputAttributes: {
-        accept: 'image/*',
-        'aria-label': 'Upload your profile picture'
+        accept: this.uiLocale.text('image/*'),
+        'aria-label': this.uiLocale.text('Upload your profile picture')
       }
     }).then((result) => {
       if (result.value) {
@@ -342,9 +336,9 @@ export class SweetAlertComponent {
           // Ensure imageUrl is always a string
           const imageUrl = e.target?.result?.toString() || '';
           Swal.fire({
-            title: 'Your uploaded picture',
+            title: this.uiLocale.text('Your uploaded picture'),
             imageUrl: imageUrl,
-            imageAlt: 'The uploaded picture'
+            imageAlt: this.uiLocale.text('The uploaded picture')
           });
         };
         reader.readAsDataURL(result.value);
@@ -354,10 +348,10 @@ export class SweetAlertComponent {
 
   rangeAlert() {
     Swal.fire({
-      title: 'How old are you?',
+      title: this.uiLocale.text('How old are you?'),
       icon: 'question',
       input: 'range',
-      inputLabel: 'Your age',
+      inputLabel: this.uiLocale.text('Your age'),
       inputAttributes: {
         min: '8',
         max: '120',

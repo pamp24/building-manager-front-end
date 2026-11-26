@@ -4,7 +4,9 @@
       <img
         [src]="imgSrc(apartment?.ownerProfileImageUrl)"
         [alt]="
-          apartment?.ownerFirstName || apartment?.ownerLastName ? apartment?.ownerFirstName + ' ' + apartment?.ownerLastName : 'Ιδιοκτήτης'
+          apartment?.ownerFirstName || apartment?.ownerLastName
+            ? apartment?.ownerFirstName + ' ' + apartment?.ownerLastName
+            : ('Owner' | translate)
         "
         class="wid-40 rounded-circle"
         style="width: 40px; height: 40px; object-fit: cover"
@@ -13,17 +15,19 @@
     <div class="flex-grow-1 mx-3">
       <h6 class="mb-1">
         {{ apartment?.ownerFirstName }} {{ apartment?.ownerLastName }}
-        <span *ngIf="!apartment?.ownerFirstName && !apartment?.ownerLastName">Άγνωστος Ιδιοκτήτης</span>
+        <span *ngIf="!apartment?.ownerFirstName && !apartment?.ownerLastName">{{ 'Unknown Owner' | translate }}</span>
       </h6>
-      <p class="text-muted text-sm mb-0">Διαμέρισμα {{ apartment?.number }} - Όροφος {{ apartment?.floor }}</p>
+      <p class="text-muted text-sm mb-0">
+        {{ 'Apartment' | translate }} {{ apartment?.number }} {{ '- Floor' | translate }} {{ apartment?.floor }}
+      </p>
     </div>
     <div class="dropdown" ngbDropdown *ngIf="canManageApartment">
       <a class="avatar avatar-s btn-link-secondary dropdown-toggle arrow-none" href="javascript:" ngbDropdownToggle>
         <i antIcon type="more" theme="outline" class="f-18"></i>
       </a>
       <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
-        <button type="button" class="dropdown-item" (click)="openEdit()">Επεξεργασία</button>
-        <button type="button" class="dropdown-item text-danger" (click)="openDelete()">Διαγραφή</button>
+        <button type="button" class="dropdown-item" (click)="openEdit()">{{ 'Processing' | translate }}</button>
+        <button type="button" class="dropdown-item text-danger" (click)="openDelete()">{{ 'Delete' | translate }}</button>
       </div>
     </div>
   </div>
@@ -35,18 +39,18 @@
       <div class="col-sm-12 col-xl-8">
         <div class="card">
           <div class="card-header">
-            <h5>Περιγραφή Διαμερίσματος</h5>
+            <h5>{{ 'Apartment Description' | translate }}</h5>
           </div>
           <div class="card-body">
             <p class="mb-0">
-              {{ apartment?.apDescription || 'Δεν υπάρχει περιγραφή για το διαμέρισμα.' }}
+              {{ apartment?.apDescription || ('There is no description for the apartment.' | translate) }}
             </p>
           </div>
         </div>
 
         <div class="card" *ngIf="apartment">
           <div class="card-header">
-            <h5>Χαρακτηριστικά Διαμερίσματος</h5>
+            <h5>{{ 'Apartment Features' | translate }}</h5>
           </div>
           <div class="card-body">
             <ul class="list-group list-group-flush">
@@ -89,7 +93,7 @@
 
         <div class="card">
           <div class="card-header">
-            <h5>Θέρμανση</h5>
+            <h5>{{ 'Heating' | translate }}</h5>
           </div>
           <div class="card-body">
             <ul class="list-group list-group-flush">
@@ -116,7 +120,7 @@
       <div class="col-sm-12 col-xl-4">
         <div class="card">
           <div class="card-header">
-            <h5>Πληροφορίες Ιδιοκτήτη</h5>
+            <h5>{{ 'Owner Information' | translate }}</h5>
           </div>
 
           <div class="card-body">
@@ -126,7 +130,7 @@
                 [alt]="
                   apartment?.ownerFirstName || apartment?.ownerLastName
                     ? apartment?.ownerFirstName + ' ' + apartment?.ownerLastName
-                    : 'Ιδιοκτήτης'
+                    : ('Owner' | translate)
                 "
                 class="rounded-circle me-3"
                 style="width: 56px; height: 56px; object-fit: cover"
@@ -138,7 +142,7 @@
                   {{ apartment?.ownerLastName || '' }}
                 </h6>
 
-                <span class="badge bg-primary">Ιδιοκτήτης</span>
+                <span class="badge bg-primary">{{ 'Owner' | translate }}</span>
               </div>
             </div>
 
@@ -153,7 +157,7 @@
         <!-- Πληροφορίες Ενοικιαστή -->
         <div class="card" *ngIf="apartment?.residentFirstName || apartment?.residentLastName || apartment?.residentEmail">
           <div class="card-header">
-            <h5>Πληροφορίες Ενοικιαστή</h5>
+            <h5>{{ 'Tenant Information' | translate }}</h5>
           </div>
 
           <div class="card-body">
@@ -163,7 +167,7 @@
                 [alt]="
                   apartment?.residentFirstName || apartment?.residentLastName
                     ? apartment?.residentFirstName + ' ' + apartment?.residentLastName
-                    : 'Ενοικιαστής'
+                    : ('Tenant' | translate)
                 "
                 class="rounded-circle me-3"
                 style="width: 56px; height: 56px; object-fit: cover"
@@ -175,7 +179,7 @@
                   {{ apartment?.residentLastName || '' }}
                 </h6>
 
-                <span class="badge bg-info">Ενοικιαστής</span>
+                <span class="badge bg-info">{{ 'Tenant' | translate }}</span>
               </div>
             </div>
 

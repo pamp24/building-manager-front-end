@@ -1,9 +1,9 @@
-import { Component, OnChanges, OnInit } from '@angular/core';
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, OnChanges, OnInit, Input, SimpleChanges } from '@angular/core';
+
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
 import { CommonExpenseStatementService } from 'src/app/theme/shared/service/commonExpensesStatement.service';
-import { Input } from '@angular/core';
-import { SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-total-expenses-chart',
@@ -13,6 +13,8 @@ import { SimpleChanges } from '@angular/core';
   styleUrl: './total-expenses-chart.component.scss'
 })
 export class TotalExpensesChartComponent implements OnInit, OnChanges {
+  private readonly uiLocale = inject(UiLocaleService);
+
   @Input() buildingId!: number;
   currentPeriod: 'month' | 'year' | 'all' = 'month';
   currentTitle = '';
@@ -50,17 +52,17 @@ export class TotalExpensesChartComponent implements OnInit, OnChanges {
   }
 
   setCurrentTitle(): void {
-    const monthLabel = new Date().toLocaleString('el-GR', { month: 'long', year: 'numeric' });
+    const monthLabel = new Date().toLocaleString(this.uiLocale.locale, { month: 'long', year: 'numeric' });
     switch (this.currentPeriod) {
       case 'year':
-        this.currentTitle = `Κατηγορίες Εξόδων Τρέχοντος Έτους (${new Date().getFullYear()})`;
+        this.currentTitle = this.uiLocale.text('Current Year Expense Categories ({{p0}})', { p0: new Date().getFullYear() });
         break;
       case 'all':
-        this.currentTitle = 'Κατηγορίες Εξόδων Συνολικά';
+        this.currentTitle = this.uiLocale.text('Categories of Expenses Total');
         break;
       case 'month':
       default:
-        this.currentTitle = `Κατηγορίες Εξόδων Τρέχοντος Μήνα (${monthLabel})`;
+        this.currentTitle = this.uiLocale.text("Current Month's Expense Categories ({{p0}})", { p0: monthLabel });
         break;
     }
   }
@@ -80,7 +82,7 @@ export class TotalExpensesChartComponent implements OnInit, OnChanges {
             chart: { height: 280, type: 'donut' },
             series: [],
             labels: [],
-            noData: { text: 'Δεν υπάρχουν διαθέσιμα δεδομένα' }
+            noData: { text: this.uiLocale.text('No data available') }
           };
           this.expenses = [];
           return;
@@ -95,7 +97,7 @@ export class TotalExpensesChartComponent implements OnInit, OnChanges {
             chart: { height: 280, type: 'donut' },
             series: [],
             labels: [],
-            noData: { text: 'Δεν υπάρχουν έγκυρα ποσά' }
+            noData: { text: this.uiLocale.text('There are no valid amounts') }
           };
           return;
         }
@@ -117,7 +119,7 @@ export class TotalExpensesChartComponent implements OnInit, OnChanges {
           tooltip: {
             y: {
               formatter: (value: number) =>
-                value.toLocaleString('el-GR', {
+                value.toLocaleString(this.uiLocale.locale, {
                   style: 'currency',
                   currency: 'EUR'
                 })
@@ -131,9 +133,9 @@ export class TotalExpensesChartComponent implements OnInit, OnChanges {
                   show: true,
                   total: {
                     show: true,
-                    label: 'Σύνολο (€)',
+                    label: this.uiLocale.text('Total (€)'),
                     formatter: () =>
-                      totalAmount.toLocaleString('el-GR', {
+                      totalAmount.toLocaleString(this.uiLocale.locale, {
                         style: 'currency',
                         currency: 'EUR',
                         minimumFractionDigits: 2
@@ -149,7 +151,7 @@ export class TotalExpensesChartComponent implements OnInit, OnChanges {
         // κάτω λίστα
         this.expenses = filtered.map((d) => ({
           title: this.translateCategory(d.category),
-          value: d.totalAmount.toLocaleString('el-GR', {
+          value: d.totalAmount.toLocaleString(this.uiLocale.locale, {
             style: 'currency',
             currency: 'EUR'
           }),
@@ -162,7 +164,7 @@ export class TotalExpensesChartComponent implements OnInit, OnChanges {
           chart: { height: 280, type: 'donut' },
           series: [],
           labels: [],
-          noData: { text: 'Σφάλμα φόρτωσης δεδομένων' }
+          noData: { text: this.uiLocale.text('Error loading data') }
         };
       }
     });
@@ -194,21 +196,21 @@ export class TotalExpensesChartComponent implements OnInit, OnChanges {
   translateCategory(category: string): string {
     switch (category) {
       case 'COMMON':
-        return 'Κοινόχρηστα';
+        return this.uiLocale.text('Shared expenses');
       case 'HEATING':
-        return 'Θέρμανση';
+        return this.uiLocale.text('Heating');
       case 'ELEVATOR':
-        return 'Ασανσέρ';
+        return this.uiLocale.text('Elevator');
       case 'EQUAL':
-        return 'Ισές Δαπάνες';
+        return this.uiLocale.text('Equal Expenses');
       case 'BOILER':
-        return 'Λέβητας';
+        return this.uiLocale.text('Boiler');
       case 'SPECIAL':
-        return 'Ειδικές Δαπάνες';
+        return this.uiLocale.text('Special Expenses');
       case 'OWNERS':
-        return 'Ιδιοκτήτες';
+        return this.uiLocale.text('Owners');
       case 'OTHER':
-        return 'Άλλες';
+        return this.uiLocale.text('Others');
       default:
         return category;
     }

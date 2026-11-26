@@ -15,20 +15,20 @@
         <div class="col-md-12 col-xl-5">
           <div class="hero-content">
             <h1 class="text-white mb-3 f-w-600 animate__animated animate__delay-1s animate__fadeInUpBig">
-              Η διαχείριση της πολυκατοικίας
-              <span class="text-primary">σε ένα μέρος</span>
-              με το Oikio
+              {{ 'The management of the apartment building' | translate }}
+              <span class="text-primary">{{ 'in one place' | translate }}</span>
+              {{ 'with Oikio' | translate }}
             </h1>
             <div class="mb-4 f-16 text-white animate__animated animate__delay-2s animate__fadeInUpBig">
-              Κοινόχρηστα, ανακοινώσεις και ψηφοφορίες για διαχειριστές και ενοίκους.
+              {{ 'Commons, announcements and polls for admins and tenants.' | translate }}
             </div>
             <div class="live-button animate__animated animate__delay-4s animate__fadeInUpBig">
               <a [routerLink]="['/components/basic/alert']" class="btn btn-outline-primary me-3 mt-3" target="_blank">
-                Προβολή στοιχείων διεπαφής
+                {{ 'View interface elements' | translate }}
               </a>
               <a [routerLink]="['/login']" class="btn btn-primary mt-3" target="_blank">
                 <i class="me-1" antIcon theme="outline" type="eye"></i>
-                Σύνδεση
+                {{ 'Connection' | translate }}
               </a>
             </div>
           </div>
@@ -47,10 +47,10 @@
   <div class="container title">
     <div class="row justify-content-center text-center">
       <div class="col-md-10 col-xl-6">
-        <h6 class="text-primary mb-0">Η πολυκατοικία σας ψηφιακά</h6>
-        <h2 class="my-3 pt-2">Γιατί το Oikio;</h2>
+        <h6 class="text-primary mb-0">{{ 'Your apartment building digitally' | translate }}</h6>
+        <h2 class="my-3 pt-2">{{ 'Why Oikio?' | translate }}</h2>
         <p class="mb-0">
-          Οργανώστε την καθημερινή διαχείριση και κρατήστε τους κατοίκους ενήμερους.
+          {{ 'Organize day-to-day management and keep residents informed.' | translate }}
         </p>
       </div>
     </div>
@@ -62,8 +62,10 @@
           <div class="card animate__animated animate__delay-1s animate__fadeInUp">
             <div class="card-body">
               <img src="assets/images/landing/img-feature1.svg" alt="img" class="img-fluid" />
-              <h5 class="my-3 pt-2">Κοινόχρηστα</h5>
-              <p class="mb-0 text-muted">Οργανώστε τις δαπάνες και τις καταστάσεις κοινοχρήστων της πολυκατοικίας.</p>
+              <h5 class="my-3 pt-2">{{ 'Shared expenses' | translate }}</h5>
+              <p class="mb-0 text-muted">
+                {{ 'Organize the expenses and the statements of shared users of the apartment building.' | translate }}
+              </p>
             </div>
           </div>
         } @placeholder {
@@ -76,8 +78,8 @@
           <div class="card animate__animated animate__delay-2s animate__fadeInUp">
             <div class="card-body">
               <img src="assets/images/landing/img-feature2.svg" alt="img" class="img-fluid" />
-              <h5 class="my-3 pt-2">Επικοινωνία</h5>
-              <p class="mb-0 text-muted">Μοιραστείτε ανακοινώσεις και επικοινωνήστε με τα μέλη της πολυκατοικίας.</p>
+              <h5 class="my-3 pt-2">{{ 'Communication' | translate }}</h5>
+              <p class="mb-0 text-muted">{{ 'Share announcements and communicate with apartment building members.' | translate }}</p>
             </div>
           </div>
         } @placeholder {
@@ -89,8 +91,8 @@
           <div class="card animate__animated animate__delay-3s animate__fadeInUp">
             <div class="card-body">
               <img src="assets/images/landing/img-feature3.svg" alt="img" class="img-fluid" />
-              <h5 class="my-3">Ψηφοφορίες</h5>
-              <p class="mb-0 text-muted">Συμμετέχετε στις αποφάσεις της πολυκατοικίας μέσα από ψηφοφορίες.</p>
+              <h5 class="my-3">{{ 'Votes' | translate }}</h5>
+              <p class="mb-0 text-muted">{{ 'Participate in apartment building decisions through votes.' | translate }}</p>
             </div>
           </div>
         } @placeholder {
@@ -107,10 +109,10 @@
   <div class="container title">
     <div class="row justify-content-center text-center">
       <div class="col-md-10 col-xl-6">
-        <h6 class="text-primary mb-0">Oikio για όλους</h6>
-        <h2 class="my-3">Για διαχειριστές και κατοίκους</h2>
+        <h6 class="text-primary mb-0">{{ 'Oikio for everyone' | translate }}</h6>
+        <h2 class="my-3">{{ 'For managers and residents' | translate }}</h2>
         <p class="mb-0">
-          Η διαχείριση και η ενημέρωση της πολυκατοικίας συναντιούνται σε μια κοινή πλατφόρμα.
+          {{ 'The management and update of the apartment building meet on a common platform.' | translate }}
         </p>
       </div>
     </div>
@@ -119,63 +121,65 @@
     <div class="oikio-cards">
       <article class="card oikio-card">
         <div class="card-body">
-          <span class="oikio-card-label">ΓΙΑ ΤΗ ΔΙΑΧΕΙΡΙΣΗ</span>
-          <h3 class="mb-3">Κοινόχρηστα σε τάξη</h3>
-          <p class="mb-4 text-muted">Οργανώστε τις δαπάνες και τις καταστάσεις κοινοχρήστων της πολυκατοικίας.</p>
-          <a class="btn btn-outline-primary" [routerLink]="['/features']">Δείτε τις λειτουργίες</a>
+          <span class="oikio-card-label">{{ 'FOR THE MANAGEMENT' | translate }}</span>
+          <h3 class="mb-3">{{ 'Shared in class' | translate }}</h3>
+          <p class="mb-4 text-muted">
+            {{ 'Organize the expenses and the statements of shared users of the apartment building.' | translate }}
+          </p>
+          <a class="btn btn-outline-primary" [routerLink]="['/features']">{{ 'See the features' | translate }}</a>
         </div>
         <div class="oikio-art oikio-art-expenses" aria-hidden="true">
           <svg viewBox="0 0 280 160" fill="none">
-            <rect x="48" y="20" width="184" height="140" rx="12" fill="white"/>
-            <rect x="68" y="40" width="76" height="8" rx="4" fill="#1677ff"/>
-            <rect x="68" y="61" width="144" height="1" fill="#e6ebf1"/>
-            <rect x="68" y="78" width="78" height="7" rx="3.5" fill="#c8d8eb"/>
-            <rect x="178" y="76" width="34" height="11" rx="5.5" fill="#e6f4ff"/>
-            <rect x="68" y="103" width="105" height="7" rx="3.5" fill="#c8d8eb"/>
-            <rect x="178" y="101" width="34" height="11" rx="5.5" fill="#e6f4ff"/>
-            <rect x="68" y="128" width="62" height="7" rx="3.5" fill="#c8d8eb"/>
-            <rect x="178" y="126" width="34" height="11" rx="5.5" fill="#e6f4ff"/>
+            <rect x="48" y="20" width="184" height="140" rx="12" fill="white" />
+            <rect x="68" y="40" width="76" height="8" rx="4" fill="#1677ff" />
+            <rect x="68" y="61" width="144" height="1" fill="#e6ebf1" />
+            <rect x="68" y="78" width="78" height="7" rx="3.5" fill="#c8d8eb" />
+            <rect x="178" y="76" width="34" height="11" rx="5.5" fill="#e6f4ff" />
+            <rect x="68" y="103" width="105" height="7" rx="3.5" fill="#c8d8eb" />
+            <rect x="178" y="101" width="34" height="11" rx="5.5" fill="#e6f4ff" />
+            <rect x="68" y="128" width="62" height="7" rx="3.5" fill="#c8d8eb" />
+            <rect x="178" y="126" width="34" height="11" rx="5.5" fill="#e6f4ff" />
           </svg>
         </div>
       </article>
       <article class="card oikio-card oikio-card-featured">
         <div class="card-body">
-          <span class="oikio-card-label">ΓΙΑ ΤΗΝ ΠΟΛΥΚΑΤΟΙΚΙΑ</span>
-          <h3 class="mb-3">Μαζί στην καθημερινότητα</h3>
-          <p class="mb-4 text-muted">Ανακοινώσεις, μηνύματα και ψηφοφορίες φέρνουν τα μέλη πιο κοντά.</p>
-          <a class="btn btn-primary" [routerLink]="['/about']">Γνωρίστε το Oikio</a>
+          <span class="oikio-card-label">{{ 'FOR THE APARTMENT HOUSE' | translate }}</span>
+          <h3 class="mb-3">{{ 'Together in everyday life' | translate }}</h3>
+          <p class="mb-4 text-muted">{{ 'Announcements, messages and polls bring members closer together.' | translate }}</p>
+          <a class="btn btn-primary" [routerLink]="['/about']">{{ 'Meet Oikio' | translate }}</a>
         </div>
         <div class="oikio-art oikio-art-community" aria-hidden="true">
           <svg viewBox="0 0 280 160" fill="none">
-            <rect x="35" y="24" width="151" height="78" rx="14" fill="white"/>
-            <circle cx="61" cy="50" r="12" fill="#d6eaff"/>
-            <rect x="82" y="41" width="77" height="7" rx="3.5" fill="#1677ff"/>
-            <rect x="82" y="56" width="55" height="6" rx="3" fill="#c8d8eb"/>
-            <rect x="55" y="79" width="109" height="6" rx="3" fill="#e6ebf1"/>
-            <rect x="103" y="111" width="142" height="49" rx="14" fill="#1677ff"/>
-            <circle cx="128" cy="135" r="11" fill="#8fc2ff"/>
-            <rect x="148" y="128" width="72" height="6" rx="3" fill="white"/>
-            <rect x="148" y="140" width="48" height="6" rx="3" fill="#a8d1ff"/>
+            <rect x="35" y="24" width="151" height="78" rx="14" fill="white" />
+            <circle cx="61" cy="50" r="12" fill="#d6eaff" />
+            <rect x="82" y="41" width="77" height="7" rx="3.5" fill="#1677ff" />
+            <rect x="82" y="56" width="55" height="6" rx="3" fill="#c8d8eb" />
+            <rect x="55" y="79" width="109" height="6" rx="3" fill="#e6ebf1" />
+            <rect x="103" y="111" width="142" height="49" rx="14" fill="#1677ff" />
+            <circle cx="128" cy="135" r="11" fill="#8fc2ff" />
+            <rect x="148" y="128" width="72" height="6" rx="3" fill="white" />
+            <rect x="148" y="140" width="48" height="6" rx="3" fill="#a8d1ff" />
           </svg>
         </div>
       </article>
       <article class="card oikio-card">
         <div class="card-body">
-          <span class="oikio-card-label">ΓΙΑ ΤΑ ΜΕΛΗ</span>
-          <h3 class="mb-3">Η πολυκατοικία σας, online</h3>
-          <p class="mb-4 text-muted">Συνδεθείτε στο Oikio για να ενημερώνεστε και να συμμετέχετε.</p>
-          <a class="btn btn-outline-primary" [routerLink]="['/login']">Σύνδεση στο Oikio</a>
+          <span class="oikio-card-label">{{ 'FOR MEMBERS' | translate }}</span>
+          <h3 class="mb-3">{{ 'Your apartment building, online' | translate }}</h3>
+          <p class="mb-4 text-muted">{{ 'Log in to Oikio to stay informed and participate.' | translate }}</p>
+          <a class="btn btn-outline-primary" [routerLink]="['/login']">{{ 'Login to Oikio' | translate }}</a>
         </div>
         <div class="oikio-art oikio-art-building" aria-hidden="true">
           <svg viewBox="0 0 280 160" fill="none">
-            <circle cx="140" cy="92" r="75" fill="#e6f4ff"/>
-            <path d="M79 160V50L140 20L201 50V160" fill="white"/>
-            <path d="M68 54L140 18L212 54" stroke="#1677ff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-            <rect x="96" y="65" width="25" height="25" rx="4" fill="#cce3ff"/>
-            <rect x="159" y="65" width="25" height="25" rx="4" fill="#cce3ff"/>
-            <rect x="96" y="105" width="25" height="25" rx="4" fill="#cce3ff"/>
-            <rect x="159" y="105" width="25" height="25" rx="4" fill="#cce3ff"/>
-            <path d="M130 160V126C130 120.477 134.477 116 140 116C145.523 116 150 120.477 150 126V160" fill="#1677ff"/>
+            <circle cx="140" cy="92" r="75" fill="#e6f4ff" />
+            <path d="M79 160V50L140 20L201 50V160" fill="white" />
+            <path d="M68 54L140 18L212 54" stroke="#1677ff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+            <rect x="96" y="65" width="25" height="25" rx="4" fill="#cce3ff" />
+            <rect x="159" y="65" width="25" height="25" rx="4" fill="#cce3ff" />
+            <rect x="96" y="105" width="25" height="25" rx="4" fill="#cce3ff" />
+            <rect x="159" y="105" width="25" height="25" rx="4" fill="#cce3ff" />
+            <path d="M130 160V126C130 120.477 134.477 116 140 116C145.523 116 150 120.477 150 126V160" fill="#1677ff" />
           </svg>
         </div>
       </article>
@@ -189,9 +193,9 @@
   <div class="container title">
     <div class="row justify-content-center text-center">
       <div class="col-md-10 col-xl-6">
-        <h6 class="text-primary mb-0">Η ΚΑΘΗΜΕΡΙΝΟΤΗΤΑ ΣΕ ΕΝΑ ΜΕΡΟΣ</h6>
-        <h2 class="my-3">Μια πιο οργανωμένη πολυκατοικία</h2>
-        <p class="mb-0">Από την ενημέρωση των μελών έως τα κοινόχρηστα, το Oikio φέρνει τις ανάγκες της πολυκατοικίας μαζί.</p>
+        <h6 class="text-primary mb-0">{{ 'DAILY LIFE IN ONE PLACE' | translate }}</h6>
+        <h2 class="my-3">{{ 'A more organized apartment building' | translate }}</h2>
+        <p class="mb-0">{{ 'From member information to commons, Oikio brings apartment building needs together.' | translate }}</p>
       </div>
     </div>
   </div>
@@ -199,31 +203,31 @@
   <div class="container">
     <div class="overview-panel">
       <div class="overview-copy">
-        <span class="oikio-card-label">Η ΠΟΛΥΚΑΤΟΙΚΙΑ ΣΑΣ</span>
-        <h3>Όλα όσα χρειάζεστε για την καθημερινή διαχείριση</h3>
-        <p>Οργανώστε τις δαπάνες, μοιραστείτε ανακοινώσεις και συμμετέχετε στις αποφάσεις της πολυκατοικίας.</p>
-        <a class="btn btn-primary" [routerLink]="['/features']">Δείτε τις λειτουργίες</a>
+        <span class="oikio-card-label">{{ 'YOUR APARTMENT HOUSE' | translate }}</span>
+        <h3>{{ 'Everything you need for daily management' | translate }}</h3>
+        <p>{{ 'Organize expenses, share announcements and participate in apartment building decisions.' | translate }}</p>
+        <a class="btn btn-primary" [routerLink]="['/features']">{{ 'See the features' | translate }}</a>
       </div>
       <div class="overview-art" aria-hidden="true">
         <svg viewBox="0 0 520 340" fill="none">
-          <circle cx="265" cy="170" r="148" fill="#d7ebff"/>
-          <rect x="162" y="42" width="196" height="261" rx="18" fill="white"/>
-          <path d="M145 105L260 40L375 105" stroke="#1677ff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-          <rect x="188" y="117" width="45" height="47" rx="7" fill="#d7ebff"/>
-          <rect x="287" y="117" width="45" height="47" rx="7" fill="#d7ebff"/>
-          <rect x="188" y="185" width="45" height="47" rx="7" fill="#d7ebff"/>
-          <rect x="287" y="185" width="45" height="47" rx="7" fill="#d7ebff"/>
-          <path d="M242 303V258C242 248 250 240 260 240C270 240 278 248 278 258V303" fill="#1677ff"/>
-          <rect x="24" y="150" width="154" height="76" rx="14" fill="white"/>
-          <circle cx="51" cy="178" r="12" fill="#e6f4ff"/>
-          <path d="M47 178H55M51 174V182" stroke="#1677ff" stroke-width="2" stroke-linecap="round"/>
-          <rect x="72" y="170" width="83" height="7" rx="3.5" fill="#1677ff"/>
-          <rect x="72" y="185" width="60" height="6" rx="3" fill="#c8d8eb"/>
-          <rect x="342" y="207" width="154" height="76" rx="14" fill="#1677ff"/>
-          <circle cx="369" cy="235" r="12" fill="#8fc2ff"/>
-          <path d="M364 235L368 239L375 231" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <rect x="390" y="227" width="83" height="7" rx="3.5" fill="white"/>
-          <rect x="390" y="242" width="60" height="6" rx="3" fill="#a8d1ff"/>
+          <circle cx="265" cy="170" r="148" fill="#d7ebff" />
+          <rect x="162" y="42" width="196" height="261" rx="18" fill="white" />
+          <path d="M145 105L260 40L375 105" stroke="#1677ff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+          <rect x="188" y="117" width="45" height="47" rx="7" fill="#d7ebff" />
+          <rect x="287" y="117" width="45" height="47" rx="7" fill="#d7ebff" />
+          <rect x="188" y="185" width="45" height="47" rx="7" fill="#d7ebff" />
+          <rect x="287" y="185" width="45" height="47" rx="7" fill="#d7ebff" />
+          <path d="M242 303V258C242 248 250 240 260 240C270 240 278 248 278 258V303" fill="#1677ff" />
+          <rect x="24" y="150" width="154" height="76" rx="14" fill="white" />
+          <circle cx="51" cy="178" r="12" fill="#e6f4ff" />
+          <path d="M47 178H55M51 174V182" stroke="#1677ff" stroke-width="2" stroke-linecap="round" />
+          <rect x="72" y="170" width="83" height="7" rx="3.5" fill="#1677ff" />
+          <rect x="72" y="185" width="60" height="6" rx="3" fill="#c8d8eb" />
+          <rect x="342" y="207" width="154" height="76" rx="14" fill="#1677ff" />
+          <circle cx="369" cy="235" r="12" fill="#8fc2ff" />
+          <path d="M364 235L368 239L375 231" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <rect x="390" y="227" width="83" height="7" rx="3.5" fill="white" />
+          <rect x="390" y="242" width="60" height="6" rx="3" fill="#a8d1ff" />
         </svg>
       </div>
     </div>
@@ -235,10 +239,13 @@
 <section class="cta-block">
   <div class="container cta-content">
     <div class="cta-copy">
-      <span class="oikio-card-label">ΜΑΖΙ ΣΤΟ OIKIO</span>
-      <h2 class="text-white mb-3">Η πολυκατοικία σας, <span class="text-primary">πιο κοντά</span></h2>
-      <p>Ενημέρωση, επικοινωνία και συμμετοχή για διαχειριστές και κατοίκους.</p>
-      <a [routerLink]="['/login']" class="btn btn-primary">Σύνδεση στο Oikio</a>
+      <span class="oikio-card-label">{{ 'TOGETHER AT OIKIO' | translate }}</span>
+      <h2 class="text-white mb-3">
+        {{ 'Your apartment building,' | translate }}
+        <span class="text-primary">{{ 'closer' | translate }}</span>
+      </h2>
+      <p>{{ 'Information, communication and participation for administrators and residents.' | translate }}</p>
+      <a [routerLink]="['/login']" class="btn btn-primary">{{ 'Login to Oikio' | translate }}</a>
     </div>
     <div class="cta-art" aria-hidden="true">
       <div class="cta-orbit">
@@ -265,8 +272,8 @@
                   <h2 class="m-0">€</h2>
                 </div>
                 <div class="flex-grow-1 ms-3">
-                  <h4 class="mb-1">Δαπάνες</h4>
-                  <p class="mb-0">Καταχώριση και οργάνωση δαπανών της πολυκατοικίας.</p>
+                  <h4 class="mb-1">{{ 'Expenses' | translate }}</h4>
+                  <p class="mb-0">{{ 'Registration and organization of costs of the apartment building.' | translate }}</p>
                 </div>
               </div>
             </div>
@@ -280,8 +287,8 @@
                   <h2 class="m-0">✓</h2>
                 </div>
                 <div class="flex-grow-1 ms-3">
-                  <h4 class="mb-1">Αποφάσεις</h4>
-                  <p class="mb-0">Ψηφοφορίες για τα θέματα της πολυκατοικίας.</p>
+                  <h4 class="mb-1">{{ 'Decisions' | translate }}</h4>
+                  <p class="mb-0">{{ 'Votes on the issues of the apartment building.' | translate }}</p>
                 </div>
               </div>
             </div>
@@ -295,8 +302,8 @@
                   <h2 class="m-0">&amp;</h2>
                 </div>
                 <div class="flex-grow-1 ms-3">
-                  <h4 class="mb-1">Επικοινωνία</h4>
-                  <p class="mb-0">Ανακοινώσεις και μηνύματα για τα μέλη.</p>
+                  <h4 class="mb-1">{{ 'Communication' | translate }}</h4>
+                  <p class="mb-0">{{ 'Announcements and messages for members.' | translate }}</p>
                 </div>
               </div>
             </div>
@@ -340,12 +347,12 @@
     <div class="row justify-content-center text-center">
       <div class="col-md-10 col-xl-6">
         <h2 class="mb-3">
-          Οργανώστε την καθημερινότητα
-          <span class="text-primary">της πολυκατοικίας</span>
-          με το Oikio
+          {{ 'Organize everyday life' | translate }}
+          <span class="text-primary">{{ 'of the apartment building' | translate }}</span>
+          {{ 'with Oikio' | translate }}
         </h2>
         <p class="mb-0">
-          Από τα κοινόχρηστα έως την επικοινωνία, βρείτε τα εργαλεία που χρειάζεστε σε ένα μέρος.
+          {{ 'From utilities to communication, find the tools you need in one place.' | translate }}
         </p>
       </div>
     </div>
@@ -399,9 +406,9 @@
   <div class="container title">
     <div class="row justify-content-center text-center">
       <div class="col-md-10 col-xl-6">
-        <h6 class="text-primary mb-0">ΕΡΓΑΛΕΙΑ ΓΙΑ ΤΗΝ ΠΟΛΥΚΑΤΟΙΚΙΑ</h6>
-        <h2 class="my-3">Η καθημερινότητα στο Oikio</h2>
-        <p class="mb-0">Οι λειτουργίες που βοηθούν τα μέλη να οργανώνονται και να επικοινωνούν.</p>
+        <h6 class="text-primary mb-0">{{ 'TOOLS FOR THE APARTMENT HOUSE' | translate }}</h6>
+        <h2 class="my-3">{{ 'Everyday life in Oikio' | translate }}</h2>
+        <p class="mb-0">{{ 'Functions that help members organize and communicate.' | translate }}</p>
       </div>
     </div>
   </div>
@@ -409,7 +416,10 @@
   <div class="container">
     <div class="feature-badges mb-4 mb-md-5">
       @for (feature of landingFeatures; track feature.title) {
-        <div class="feature-badge"><i class="ti {{ feature.icon }}" aria-hidden="true"></i><span>{{ feature.title }}</span></div>
+        <div class="feature-badge">
+          <i class="ti {{ feature.icon }}" aria-hidden="true"></i>
+          <span>{{ feature.title }}</span>
+        </div>
       }
     </div>
   </div>

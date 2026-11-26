@@ -8,7 +8,9 @@
               <ul class="breadcrumb">
                 <li class="breadcrumb-item">
                   @if (type === 'theme2') {
-                    <a [routerLink]="['/dashboard/default']" title="Home" class="home"><i class="feather icon-home"></i></a>
+                    <a [routerLink]="['/dashboard/default']" [title]="'Home' | translate" class="home">
+                      <i class="feather icon-home"></i>
+                    </a>
                   }
                   @if (type === 'theme1') {
                     <a [routerLink]="['/dashboard/default']" class="home">{{ 'Home' | translate }}</a>

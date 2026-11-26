@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { finalize } from 'rxjs';
@@ -18,6 +19,8 @@ import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
   styleUrl: './support-agents-management.component.scss'
 })
 export class SupportAgentsManagementComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private agentService = inject(PropertyAgentManagementService);
   private buildingService = inject(BuildingService);
   private userService = inject(UserService);
@@ -57,7 +60,7 @@ export class SupportAgentsManagementComponent implements OnInit {
           this.agents = res ?? [];
         },
         error: (err) => {
-          this.errorMessage = err?.error?.message || 'Σφάλμα φόρτωσης agents';
+          this.errorMessage = err?.error?.message || this.uiLocale.text('Error loading agents');
           this.agents = [];
         }
       });
@@ -121,7 +124,7 @@ export class SupportAgentsManagementComponent implements OnInit {
           this.closeAssignModal();
         },
         error: (err) => {
-          alert(err?.error?.message || 'Σφάλμα αποθήκευσης');
+          alert(err?.error?.message || this.uiLocale.text('Storage error'));
         }
       });
   }
@@ -148,7 +151,7 @@ export class SupportAgentsManagementComponent implements OnInit {
     const email = this.inviteEmail.trim();
 
     if (!email) {
-      this.inviteErrorMessage = 'Το email είναι υποχρεωτικό.';
+      this.inviteErrorMessage = this.uiLocale.text('Email is required.');
       return;
     }
 
@@ -163,29 +166,29 @@ export class SupportAgentsManagementComponent implements OnInit {
       .pipe(finalize(() => (this.inviteLoading = false)))
       .subscribe({
         next: () => {
-          this.inviteSuccessMessage = 'Η πρόσκληση στάλθηκε επιτυχώς.';
+          this.inviteSuccessMessage = this.uiLocale.text('Invitation sent successfully.');
           this.inviteEmail = '';
         },
         error: (err) => {
-          this.inviteErrorMessage = err?.error?.message || 'Αποτυχία αποστολής πρόσκλησης.';
+          this.inviteErrorMessage = err?.error?.message || this.uiLocale.text('Failed to send invitation.');
         }
       });
   }
 
   removeAgent(agentId: number): void {
-    if (!confirm('Σίγουρα θέλεις να αφαιρέσεις τον agent;')) {
+    if (!confirm(this.uiLocale.text('Are you sure you want to remove the agent?'))) {
       return;
     }
 
     this.agentService.removeAgent(agentId).subscribe({
       next: () => this.loadAgents(),
-      error: () => alert('Αποτυχία διαγραφής')
+      error: () => alert(this.uiLocale.text('Delete failed'))
     });
   }
 
   getBuildingsLabel(agent: PropertyAgentManagementResponse): string {
     if (!agent.assignedBuildings?.length) {
-      return 'Καμία ανάθεση';
+      return this.uiLocale.text('No assignment');
     }
 
     return agent.assignedBuildings.map((b) => b.name).join(', ');

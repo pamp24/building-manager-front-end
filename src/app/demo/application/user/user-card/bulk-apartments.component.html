@@ -1,11 +1,41 @@
-<p>Κατεβάστε το πρότυπο, αντικαταστήστε την ενδεικτική γραμμή και διατηρήστε τις επικεφαλίδες. Μία γραμμή ανά διαμέρισμα.</p>
-<button type="button" class="btn btn-outline-primary mb-3" (click)="download()">Λήψη προτύπου Excel</button>
-<p>Επιλέξτε όροφο του κτιρίου και Ναι ή Όχι (κενό σημαίνει Όχι). Για ενοικιασμένο διαμέρισμα συμπληρώστε τα στοιχεία ενοικιαστή, και για πάρκινγκ ή αποθήκη τον αντίστοιχο αριθμό. Τα χιλιοστά είναι από 0 έως 1000.</p>
-<p class="text-muted">Έως 500 διαμερίσματα και 2 MB. Ο έλεγχος γίνεται στη συσκευή σας και δεν ελέγχει τη βάση. Η εισαγωγή γίνεται μόνο με το Ανέβασμα.</p>
-<label for="bulk-apartment-file" class="form-label">Αρχείο Excel (.xlsx)</label>
-<input id="bulk-apartment-file" type="file" class="form-control mb-3" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" [disabled]="sending || !!uploadedCount" (change)="select($event)" />
-<button type="button" class="btn btn-primary" [disabled]="busy || sending || !!uploadedCount" (click)="check()">{{ busy ? 'Έλεγχος...' : 'Έλεγχος αρχείου' }}</button>
-<div *ngIf="success" class="alert alert-success mt-3" role="status">Ο έλεγχος ολοκληρώθηκε επιτυχώς. Δεν έγινε εισαγωγή και δεν ελέγχθηκε η βάση.</div>
-<div *ngIf="uploadedCount" class="alert alert-success mt-3" role="status">Η εισαγωγή ολοκληρώθηκε: {{ uploadedCount }} διαμερίσματα δημιουργήθηκαν.</div>
-<div *ngIf="errors.length" class="alert alert-danger mt-3" role="alert"><strong>Βρέθηκαν προβλήματα:</strong><ul class="mb-0"><li *ngFor="let error of errors">{{ error }}</li></ul></div>
-<div class="modal-footer mt-3"><button type="button" class="btn btn-secondary" [disabled]="sending" (click)="close()">Κλείσιμο</button><button type="button" class="btn btn-primary" [disabled]="!canUpload" (click)="upload()">{{ sending ? 'Ανέβασμα...' : 'Ανέβασμα' }}</button></div>
+<p>{{ 'Download the template, replace the inline and keep the headings. One line per partition.' | translate }}</p>
+<button type="button" class="btn btn-outline-primary mb-3" (click)="download()">{{ 'Download Excel template' | translate }}</button>
+<p>
+  {{
+    'Select building floor and Yes or No (blank means No). For a rented apartment, fill in the details of the tenant, and for parking or storage, the corresponding number. Millimeters are from 0 to 1000.'
+      | translate
+  }}
+</p>
+<p class="text-muted">
+  {{ 'Up to 500 partitions and 2 MB. The check is done on your device and does not check the base. Entry is by Upload only.' | translate }}
+</p>
+<label for="bulk-apartment-file" class="form-label">{{ 'Excel file (.xlsx)' | translate }}</label>
+<input
+  id="bulk-apartment-file"
+  type="file"
+  class="form-control mb-3"
+  accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  [disabled]="sending || !!uploadedCount"
+  (change)="select($event)"
+/>
+<button type="button" class="btn btn-primary" [disabled]="busy || sending || !!uploadedCount" (click)="check()">
+  {{ busy ? ('Check...' | translate) : ('File check' | translate) }}
+</button>
+<div *ngIf="success" class="alert alert-success mt-3" role="status">
+  {{ 'Check completed successfully. No entry was made and the base was not checked.' | translate }}
+</div>
+<div *ngIf="uploadedCount" class="alert alert-success mt-3" role="status">
+  {{ 'Import complete:' | translate }} {{ uploadedCount }} {{ 'apartments were created.' | translate }}
+</div>
+<div *ngIf="errors.length" class="alert alert-danger mt-3" role="alert">
+  <strong>{{ 'Problems found:' | translate }}</strong>
+  <ul class="mb-0">
+    <li *ngFor="let error of errors">{{ error }}</li>
+  </ul>
+</div>
+<div class="modal-footer mt-3">
+  <button type="button" class="btn btn-secondary" [disabled]="sending" (click)="close()">{{ 'Closing' | translate }}</button>
+  <button type="button" class="btn btn-primary" [disabled]="!canUpload" (click)="upload()">
+    {{ sending ? ('Uploading...' | translate) : ('Upload' | translate) }}
+  </button>
+</div>

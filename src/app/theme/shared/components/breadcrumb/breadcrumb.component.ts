@@ -66,7 +66,7 @@ export class BreadcrumbComponent {
         this.navigationList = crumbs;
 
         const last = crumbs[crumbs.length - 1];
-        if (last) this.titleService.setTitle('Building Manager | ' + last.title  );
+        if (last) this.titleService.setTitle('Building Manager | ' + last.title);
       }
     });
   }

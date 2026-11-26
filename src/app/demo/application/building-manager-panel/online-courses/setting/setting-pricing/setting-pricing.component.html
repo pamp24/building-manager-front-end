@@ -4,23 +4,25 @@
       <div class="card-body p-2">
         <div class="row align-items-center mb-3">
           <div class="col">
-            <h5>Plans & Pricing</h5>
+            <h5>{{ 'Plans &amp; Pricing' | translate }}</h5>
             <p>
-              Every paid plan comes with educational resources and training to support you on your journey, along with a 30-day money-back
-              guarantee.
+              {{
+                'Every paid plan comes with educational resources and training to support you on your journey, along with a 30-day money-back guarantee.'
+                  | translate
+              }}
             </p>
           </div>
           <div class="col-auto">
             <ul class="nav nav-pills nav-price">
               <li class="nav-item">
                 <button class="nav-link" type="button" [class.active]="activeButton === 'Monthly'" (click)="setActiveButton('Monthly')">
-                  Monthly
+                  {{ 'Monthly' | translate }}
                 </button>
               </li>
               <li class="nav-item">
                 <button class="nav-link" type="button" [class.active]="activeButton === 'Yearly'" (click)="setActiveButton('Yearly')">
-                  Yearly
-                  <span class="badge bg-primary ms-2">Save 30%</span>
+                  {{ 'Yearly' | translate }}
+                  <span class="badge bg-primary ms-2">{{ 'Save 30%' | translate }}</span>
                 </button>
               </li>
             </ul>
@@ -35,17 +37,17 @@
             <div class="card-body">
               <div class="price-head v2">
                 @if (list.type === 'popular') {
-                  <span class="badge f-12 bg-success mb-3">Popular</span>
+                  <span class="badge f-12 bg-success mb-3">{{ 'Popular' | translate }}</span>
                 }
                 <h5 class="mb-0">{{ list.title }}</h5>
-                <p class="text-muted">{{ list.service }} Services</p>
+                <p class="text-muted">{{ list.service }} {{ 'Services' | translate }}</p>
                 <div class="price-price mt-4">
                   ${{ activeButton === 'Monthly' ? list.monthly : list.yearly }}
-                  <span class="text-muted">Lifetime</span>
+                  <span class="text-muted">{{ 'Lifetime' | translate }}</span>
                 </div>
                 <div class="d-grid">
                   <a class="mt-4" [ngClass]="list.type === 'popular' ? 'btn btn-primary' : 'btn btn-outline-secondary'" href="javascript:">
-                    Buy Now
+                    {{ 'Buy Now' | translate }}
                   </a>
                 </div>
               </div>

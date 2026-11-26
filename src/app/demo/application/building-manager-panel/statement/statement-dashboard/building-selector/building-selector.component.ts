@@ -1,14 +1,15 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { Component, EventEmitter, inject, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { OnInit } from '@angular/core';
+
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
 import { ManagedBuildingDTO } from 'src/app/theme/shared/models/managedBuildingDTO';
 
 @Component({
   selector: 'app-building-selector',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [TranslateModule, CommonModule, FormsModule],
   templateUrl: './building-selector.component.html',
   styleUrl: './building-selector.component.scss'
 })
@@ -49,4 +50,3 @@ export class BuildingSelectorComponent implements OnInit {
     }
   }
 }
-

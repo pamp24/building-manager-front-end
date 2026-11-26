@@ -3,12 +3,12 @@
     <table class="table table-hover align-middle mb-0">
       <thead>
         <tr>
-          <th>Ticket</th>
-          <th>Κτίριο</th>
-          <th>Status</th>
-          <th>Κατηγορία</th>
-          <th>Τελευταία ενημέρωση</th>
-          <th>Ενέργειες</th>
+          <th>{{ 'Ticket' | translate }}</th>
+          <th>{{ 'Building' | translate }}</th>
+          <th>{{ 'Status' | translate }}</th>
+          <th>{{ 'Category' | translate }}</th>
+          <th>{{ 'Latest update' | translate }}</th>
+          <th>{{ 'Actions' | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -35,11 +35,8 @@
             <td>{{ getCategoryLabel(ticket.category) }}</td>
             <td>{{ formatDate(ticket.updatedAt) }}</td>
             <td>
-              <a
-                class="btn btn-sm btn-link text-primary p-0"
-                [routerLink]="[detailsRoute, ticket.id]"
-              >
-                Άνοιγμα
+              <a class="btn btn-sm btn-link text-primary p-0" [routerLink]="[detailsRoute, ticket.id]">
+                {{ 'Opening' | translate }}
               </a>
             </td>
           </tr>

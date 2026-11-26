@@ -1,9 +1,9 @@
 <div class="row">
-  <app-card cardTitle="Πολυκατοικία" [padding]="24" class="mb-3" *ngIf="managedBuildings?.length > 0">
+  <app-card [cardTitle]="'Building' | translate" [padding]="24" class="mb-3" *ngIf="managedBuildings?.length > 0">
     <div class="row align-items-end">
       <!-- Dropdown επιλογής -->
       <div class="col-md-6">
-        <label for="buildingSelect" class="form-label">Όνομα Πολυκατοικίας</label>
+        <label for="buildingSelect" class="form-label">{{ 'Name of Apartment Building' | translate }}</label>
         <select id="buildingSelect" class="form-select" [(ngModel)]="currentBuildingIndex" (ngModelChange)="setCurrentBuilding($event)">
           <option *ngFor="let b of managedBuildings; let i = index" [ngValue]="i">
             {{ b.name }}
@@ -13,7 +13,7 @@
 
       <!-- Πληροφορίες διεύθυνσης -->
       <div class="col-md-6" *ngIf="currentBuilding">
-        <label class="form-label">Διεύθυνση</label>
+        <label class="form-label">{{ 'Address' | translate }}</label>
         <input
           type="text"
           class="form-control readonly-input"

@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // angular import
 import { Component, OnInit, effect, input, inject } from '@angular/core';
 
@@ -15,6 +16,8 @@ import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
   styleUrl: './pm-statistics-chart.component.scss'
 })
 export class PmStatisticsChartComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private themeService = inject(ThemeService);
 
   chartOptions!: ApexOptions;
@@ -38,15 +41,15 @@ export class PmStatisticsChartComponent implements OnInit {
           ...this.chartOptions,
           series: [
             {
-              name: 'Εκδοθέντα',
+              name: this.uiLocale.text('Issued'),
               data: currentIssued
             },
             {
-              name: 'Πληρωμένα',
+              name: this.uiLocale.text('Paid'),
               data: currentPaid
             },
             {
-              name: 'Ληξιπρόθεσμα',
+              name: this.uiLocale.text('Overdue'),
               data: currentOverdue
             }
           ],
@@ -114,15 +117,15 @@ export class PmStatisticsChartComponent implements OnInit {
       },
       series: [
         {
-          name: 'Εκδοθέντα',
+          name: this.uiLocale.text('Issued'),
           data: this.issuedData()
         },
         {
-          name: 'Πληρωμένα',
+          name: this.uiLocale.text('Paid'),
           data: this.paidData()
         },
         {
-          name: 'Ληξιπρόθεσμα',
+          name: this.uiLocale.text('Overdue'),
           data: this.overdueData()
         }
       ],

@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -37,6 +38,8 @@ import { AuthenticationService } from 'src/app/theme/shared/service/authenticati
   styleUrl: './ticket-details.component.scss'
 })
 export class TicketDetailsComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private iconService = inject(IconService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -94,14 +97,14 @@ export class TicketDetailsComponent implements OnInit {
     const ticketIdParam = this.route.snapshot.paramMap.get('id');
 
     if (!ticketIdParam) {
-      this.errorMessage = 'Δεν βρέθηκε το id του ticket.';
+      this.errorMessage = this.uiLocale.text('Ticket id not found.');
       return;
     }
 
     const ticketId = Number(ticketIdParam);
 
     if (Number.isNaN(ticketId)) {
-      this.errorMessage = 'Μη έγκυρο id ticket.';
+      this.errorMessage = this.uiLocale.text('Invalid ticket id.');
       return;
     }
 
@@ -128,7 +131,7 @@ export class TicketDetailsComponent implements OnInit {
           this.selectedAgentId = response.assignedAgentId ?? null;
         },
         error: (error) => {
-          this.errorMessage = error?.error?.message || 'Αποτυχία φόρτωσης ticket.';
+          this.errorMessage = error?.error?.message || this.uiLocale.text('Failed to load ticket.');
           this.ticket = null;
         }
       });
@@ -166,7 +169,7 @@ export class TicketDetailsComponent implements OnInit {
         this.ticket = updated;
       },
       error: (error) => {
-        this.errorMessage = error?.error?.message || 'Αποτυχία ενημέρωσης status.';
+        this.errorMessage = error?.error?.message || this.uiLocale.text('Failed to update status.');
       }
     });
   }
@@ -186,7 +189,7 @@ export class TicketDetailsComponent implements OnInit {
           this.ticket = updated;
         },
         error: (error) => {
-          this.errorMessage = error?.error?.message || 'Αποτυχία ανάθεσης agent.';
+          this.errorMessage = error?.error?.message || this.uiLocale.text('Failed to assign agent.');
         }
       });
   }
@@ -210,7 +213,7 @@ export class TicketDetailsComponent implements OnInit {
           this.commentMessage = '';
         },
         error: (error) => {
-          this.errorMessage = error?.error?.message || 'Αποτυχία αποστολής σχολίου.';
+          this.errorMessage = error?.error?.message || this.uiLocale.text('Failed to send comment.');
         }
       });
   }
@@ -220,7 +223,7 @@ export class TicketDetailsComponent implements OnInit {
       return;
     }
 
-    const confirmed = confirm('Θέλεις σίγουρα να διαγράψεις αυτό το ticket;');
+    const confirmed = confirm(this.uiLocale.text('Are you sure you want to delete this ticket?'));
     if (!confirmed) {
       return;
     }
@@ -235,7 +238,7 @@ export class TicketDetailsComponent implements OnInit {
           this.router.navigate(['/helpdesk/ticket/list']);
         },
         error: (error) => {
-          this.errorMessage = error?.error?.message || 'Αποτυχία διαγραφής ticket.';
+          this.errorMessage = error?.error?.message || this.uiLocale.text('Failed to delete ticket.');
         }
       });
   }
@@ -243,17 +246,17 @@ export class TicketDetailsComponent implements OnInit {
   getStatusLabel(status: string | undefined): string {
     switch (status) {
       case 'OPEN':
-        return 'Ανοιχτό';
+        return this.uiLocale.text('Open');
       case 'IN_PROGRESS':
-        return 'Σε Εξέλιξη';
+        return this.uiLocale.text('In Evolution');
       case 'WAITING_FOR_RESIDENT':
-        return 'Αναμονή από κάτοικο';
+        return this.uiLocale.text('Waiting by a resident');
       case 'RESOLVED':
-        return 'Επιλύθηκε';
+        return this.uiLocale.text('It has been resolved');
       case 'CLOSED':
-        return 'Κλειστό';
+        return this.uiLocale.text('Closed');
       case 'REJECTED':
-        return 'Απορρίφθηκε';
+        return this.uiLocale.text('It was rejected');
       default:
         return status ?? '-';
     }
@@ -262,13 +265,13 @@ export class TicketDetailsComponent implements OnInit {
   getPriorityLabel(priority: string | undefined): string {
     switch (priority) {
       case 'LOW':
-        return 'Χαμηλή';
+        return this.uiLocale.text('Low');
       case 'MEDIUM':
-        return 'Μεσαία';
+        return this.uiLocale.text('Medium');
       case 'HIGH':
-        return 'Υψηλή';
+        return this.uiLocale.text('High');
       case 'URGENT':
-        return 'Επείγουσα';
+        return this.uiLocale.text('Urgent');
       default:
         return priority ?? '-';
     }
@@ -277,25 +280,25 @@ export class TicketDetailsComponent implements OnInit {
   getCategoryLabel(category: string | undefined): string {
     switch (category) {
       case 'MAINTENANCE':
-        return 'Συντήρηση';
+        return this.uiLocale.text('Maintenance');
       case 'PAYMENTS':
-        return 'Πληρωμές';
+        return this.uiLocale.text('Payments');
       case 'DOCUMENTS':
-        return 'Έγγραφα';
+        return this.uiLocale.text('Documents');
       case 'COMPLAINT':
-        return 'Παράπονο';
+        return this.uiLocale.text('Complaint');
       case 'CLEANING':
-        return 'Καθαρισμός';
+        return this.uiLocale.text('Cleaning');
       case 'HEATING':
-        return 'Θέρμανση';
+        return this.uiLocale.text('Heating');
       case 'ELEVATOR':
-        return 'Ασανσέρ';
+        return this.uiLocale.text('Elevator');
       case 'PLUMBING':
-        return 'Υδραυλικά';
+        return this.uiLocale.text('Plumbing');
       case 'ELECTRICAL':
-        return 'Ηλεκτρολογικά';
+        return this.uiLocale.text('Electrically');
       case 'OTHER':
-        return 'Άλλο';
+        return this.uiLocale.text('Other');
       default:
         return category ?? '-';
     }
@@ -304,11 +307,11 @@ export class TicketDetailsComponent implements OnInit {
   getTargetRoleLabel(targetRole: string | undefined): string {
     switch (targetRole) {
       case 'ADMIN':
-        return 'Admin';
+        return this.uiLocale.text('Admin');
       case 'PROPERTY_MANAGER':
-        return 'Property Manager';
+        return this.uiLocale.text('Property Manager');
       case 'BUILDING_MANAGER':
-        return 'Building Manager';
+        return this.uiLocale.text('Building Manager');
       default:
         return targetRole ?? '-';
     }
@@ -338,7 +341,7 @@ export class TicketDetailsComponent implements OnInit {
       return '-';
     }
 
-    return new Date(dateString).toLocaleString('el-GR');
+    return new Date(dateString).toLocaleString(this.uiLocale.locale);
   }
 
   isInternalComment(type: string): boolean {
@@ -371,10 +374,10 @@ export class TicketDetailsComponent implements OnInit {
     const userId = this.getCurrentUserId();
 
     return (
-      (role === 'BUILDINGMANAGER' || role === 'BUILDING_MANAGER') && this.ticket.targetRole === 'BUILDING_MANAGER' ||
-      (role === 'PROPERTYMANAGER' || role === 'PROPERTY_MANAGER') && this.ticket.targetRole === 'PROPERTY_MANAGER' ||
-      (role === 'PROPERTYAGENT' || role === 'PROPERTY_AGENT') && this.ticket.targetRole === 'PROPERTY_MANAGER' ||
-      role === 'ADMIN' && this.ticket.targetRole === 'ADMIN' ||
+      ((role === 'BUILDINGMANAGER' || role === 'BUILDING_MANAGER') && this.ticket.targetRole === 'BUILDING_MANAGER') ||
+      ((role === 'PROPERTYMANAGER' || role === 'PROPERTY_MANAGER') && this.ticket.targetRole === 'PROPERTY_MANAGER') ||
+      ((role === 'PROPERTYAGENT' || role === 'PROPERTY_AGENT') && this.ticket.targetRole === 'PROPERTY_MANAGER') ||
+      (role === 'ADMIN' && this.ticket.targetRole === 'ADMIN') ||
       ((role === 'PROPERTYAGENT' || role === 'PROPERTY_AGENT') && this.ticket.assignedAgentId === userId)
     );
   }

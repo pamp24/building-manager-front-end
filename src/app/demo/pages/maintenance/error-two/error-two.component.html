@@ -13,13 +13,15 @@
               </div>
             </div>
             <div class="text-center">
-              <h1 class="mt-4"><b>Εσωτερικό Σφάλμα Διακομιστή</b></h1>
+              <h1 class="mt-4">
+                <b>{{ 'Internal Server Error' | translate }}</b>
+              </h1>
               <p class="mt-2 mb-4 text-sm text-muted">
-                Σφάλμα διακομιστή 500. Διορθώνουμε το πρόβλημα. Παρακαλώ
+                {{ 'Server Error 500. We are fixing the problem. Please' | translate }}
                 <br />
-                δοκιμάστε ξανά αργότερα.
+                {{ 'try again later.' | translate }}
               </p>
-              <a [routerLink]="['/dashboard/default']" type="button" class="btn btn-primary mb-3">Επιστροφή στην αρχική</a>
+              <a [routerLink]="['/dashboard/default']" type="button" class="btn btn-primary mb-3">{{ 'Return to original' | translate }}</a>
             </div>
           </div>
         </div>

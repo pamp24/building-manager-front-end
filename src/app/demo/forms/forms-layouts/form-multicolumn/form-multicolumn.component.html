@@ -1,51 +1,51 @@
 <div class="row">
   <div class="col-sm-12">
-    <app-card cardTitle="2 Columns Form Layout">
+    <app-card [cardTitle]="'2 Columns Form Layout' | translate">
       <form>
         <div class="form-group row">
           <div class="col-lg-6">
-            <label class="form-label">Name:</label>
-            <input type="email" class="form-control" placeholder="Enter full name" />
-            <small class="form-text text-muted">Please enter your full name</small>
+            <label class="form-label">{{ 'Name:' | translate }}</label>
+            <input type="email" class="form-control" [placeholder]="'Enter full name' | translate" />
+            <small class="form-text text-muted">{{ 'Please enter your full name' | translate }}</small>
           </div>
           <div class="col-lg-6">
-            <label class="form-label">Email:</label>
-            <input type="email" class="form-control" placeholder="Enter contact number" />
-            <small class="form-text text-muted">Please enter your Email id</small>
+            <label class="form-label">{{ 'Email:' | translate }}</label>
+            <input type="email" class="form-control" [placeholder]="'Enter contact number' | translate" />
+            <small class="form-text text-muted">{{ 'Please enter your Email id' | translate }}</small>
           </div>
         </div>
         <div class="form-group row">
           <div class="col-lg-6">
-            <label class="form-label">Password:</label>
+            <label class="form-label">{{ 'Password:' | translate }}</label>
             <div class="input-group search-form">
-              <input type="Password" class="form-control" placeholder="Please enter your Password" />
+              <input type="Password" class="form-control" [placeholder]="'Please enter your Password' | translate" />
               <span class="input-group-text bg-transparent"><i class="feather icon-lock"></i></span>
             </div>
-            <small class="form-text text-muted">Please enter your Password</small>
+            <small class="form-text text-muted">{{ 'Please enter your Password' | translate }}</small>
           </div>
           <div class="col-lg-6">
-            <label class="form-label">Profile URL:</label>
+            <label class="form-label">{{ 'Profile URL:' | translate }}</label>
             <div class="input-group search-form">
-              <input type="text" class="form-control" placeholder="Please enter your Profile URL" />
+              <input type="text" class="form-control" [placeholder]="'Please enter your Profile URL' | translate" />
               <span class="input-group-text bg-transparent"><i class="feather icon-link"></i></span>
             </div>
-            <small class="form-text text-muted">Please enter your Profile URL</small>
+            <small class="form-text text-muted">{{ 'Please enter your Profile URL' | translate }}</small>
           </div>
         </div>
         <div class="form-group row">
           <div class="col-lg-6">
-            <label class="form-label">User Type:</label>
+            <label class="form-label">{{ 'User Type:' | translate }}</label>
             <div>
               <div class="form-check form-check-inline">
                 <input type="radio" id="customRadioInline1" name="customRadioInline1" class="form-check-input" checked />
-                <label class="form-check-label" for="customRadioInline1">Administrator</label>
+                <label class="form-check-label" for="customRadioInline1">{{ 'Administrator' | translate }}</label>
               </div>
               <div class="form-check form-check-inline">
                 <input type="radio" id="customRadioInline2" name="customRadioInline1" class="form-check-input" />
-                <label class="form-check-label" for="customRadioInline2">Author</label>
+                <label class="form-check-label" for="customRadioInline2">{{ 'Author' | translate }}</label>
               </div>
             </div>
-            <small class="form-text text-muted">Please select user type</small>
+            <small class="form-text text-muted">{{ 'Please select user type' | translate }}</small>
           </div>
         </div>
       </form>
@@ -53,52 +53,52 @@
   </div>
 
   <div class="col-sm-12">
-    <app-card cardTitle="2 Columns Horizontal Form Layout">
+    <app-card [cardTitle]="'2 Columns Horizontal Form Layout' | translate">
       <form>
         <div class="form-group row">
-          <label class="col-lg-2 col-form-label">Name:</label>
+          <label class="col-lg-2 col-form-label">{{ 'Name:' | translate }}</label>
           <div class="col-lg-3">
-            <input type="email" class="form-control" placeholder="Enter full name" />
-            <small class="form-text text-muted">Please enter your full name</small>
+            <input type="email" class="form-control" [placeholder]="'Enter full name' | translate" />
+            <small class="form-text text-muted">{{ 'Please enter your full name' | translate }}</small>
           </div>
-          <label class="col-lg-2 col-form-label">Email:</label>
+          <label class="col-lg-2 col-form-label">{{ 'Email:' | translate }}</label>
           <div class="col-lg-3">
-            <input type="email" class="form-control" placeholder="Enter contact number" />
-            <small class="form-text text-muted">Please enter your Email id</small>
+            <input type="email" class="form-control" [placeholder]="'Enter contact number' | translate" />
+            <small class="form-text text-muted">{{ 'Please enter your Email id' | translate }}</small>
           </div>
         </div>
         <div class="form-group row">
-          <label class="col-lg-2 col-form-label">Password:</label>
+          <label class="col-lg-2 col-form-label">{{ 'Password:' | translate }}</label>
           <div class="col-lg-3">
             <div class="input-group search-form">
-              <input type="password" class="form-control" placeholder="Enter your Password" />
+              <input type="password" class="form-control" [placeholder]="'Enter your Password' | translate" />
               <span class="input-group-text bg-transparent"><i class="feather icon-lock"></i></span>
             </div>
-            <small class="form-text text-muted">Please enter your Password</small>
+            <small class="form-text text-muted">{{ 'Please enter your Password' | translate }}</small>
           </div>
-          <label class="col-lg-2 col-form-label">Profile URL:</label>
+          <label class="col-lg-2 col-form-label">{{ 'Profile URL:' | translate }}</label>
           <div class="col-lg-3">
             <div class="input-group search-form">
-              <input type="text" class="form-control" placeholder="Enter your Profile URL" />
+              <input type="text" class="form-control" [placeholder]="'Enter your Profile URL' | translate" />
               <span class="input-group-text bg-transparent"><i class="feather icon-link"></i></span>
             </div>
-            <small class="form-text text-muted">Please enter your Profile URL</small>
+            <small class="form-text text-muted">{{ 'Please enter your Profile URL' | translate }}</small>
           </div>
         </div>
         <div class="form-group row">
-          <label class="col-lg-2 col-form-label">User Type:</label>
+          <label class="col-lg-2 col-form-label">{{ 'User Type:' | translate }}</label>
           <div class="col-lg-3">
             <div>
               <div class="form-check form-check-inline">
                 <input type="radio" id="customRadioInline21" name="customRadioInline1" class="form-check-input" checked />
-                <label class="form-check-label" for="customRadioInline21">Administrator</label>
+                <label class="form-check-label" for="customRadioInline21">{{ 'Administrator' | translate }}</label>
               </div>
               <div class="form-check form-check-inline">
                 <input type="radio" id="customRadioInline22" name="customRadioInline1" class="form-check-input" />
-                <label class="form-check-label" for="customRadioInline22">Author</label>
+                <label class="form-check-label" for="customRadioInline22">{{ 'Author' | translate }}</label>
               </div>
             </div>
-            <small class="form-text text-muted">Please select user type</small>
+            <small class="form-text text-muted">{{ 'Please select user type' | translate }}</small>
           </div>
         </div>
       </form>
@@ -106,67 +106,67 @@
   </div>
 
   <div class="col-sm-12">
-    <app-card cardTitle="3 Columns Form Layout">
+    <app-card [cardTitle]="'3 Columns Form Layout' | translate">
       <form>
         <div class="form-group row">
           <div class="col-lg-4">
-            <label class="form-label">Name:</label>
-            <input type="email" class="form-control" placeholder="Enter full name" />
-            <small class="form-text text-muted">Please enter your full name</small>
+            <label class="form-label">{{ 'Name:' | translate }}</label>
+            <input type="email" class="form-control" [placeholder]="'Enter full name' | translate" />
+            <small class="form-text text-muted">{{ 'Please enter your full name' | translate }}</small>
           </div>
           <div class="col-lg-4">
-            <label class="form-label">Email:</label>
-            <input type="email" class="form-control" placeholder="Enter email" />
-            <small class="form-text text-muted">Please enter your email</small>
+            <label class="form-label">{{ 'Email:' | translate }}</label>
+            <input type="email" class="form-control" [placeholder]="'Enter email' | translate" />
+            <small class="form-text text-muted">{{ 'Please enter your email' | translate }}</small>
           </div>
           <div class="col-lg-4">
-            <label class="form-label">Password:</label>
+            <label class="form-label">{{ 'Password:' | translate }}</label>
             <div class="input-group">
               <span class="input-group-text"><i class="feather icon-lock"></i></span>
-              <input type="password" class="form-control" placeholder="Enter Password" />
+              <input type="password" class="form-control" [placeholder]="'Enter Password' | translate" />
             </div>
-            <small class="form-text text-muted">Please enter your Password</small>
+            <small class="form-text text-muted">{{ 'Please enter your Password' | translate }}</small>
           </div>
         </div>
         <div class="form-group row">
           <div class="col-lg-4">
-            <label class="form-label">Contact:</label>
-            <input type="email" class="form-control" placeholder="Enter contact number" />
-            <small class="form-text text-muted">Please enter your contact</small>
+            <label class="form-label">{{ 'Contact:' | translate }}</label>
+            <input type="email" class="form-control" [placeholder]="'Enter contact number' | translate" />
+            <small class="form-text text-muted">{{ 'Please enter your contact' | translate }}</small>
           </div>
           <div class="col-lg-4">
-            <label class="form-label">Profile URL:</label>
+            <label class="form-label">{{ 'Profile URL:' | translate }}</label>
             <div class="input-group search-form">
-              <input type="text" class="form-control" placeholder="Profile URL" />
+              <input type="text" class="form-control" [placeholder]="'Profile URL' | translate" />
               <span class="input-group-text bg-transparent"><i class="feather icon-link"></i></span>
             </div>
-            <small class="form-text text-muted">Please enter Profile URL</small>
+            <small class="form-text text-muted">{{ 'Please enter Profile URL' | translate }}</small>
           </div>
           <div class="col-lg-4">
-            <label class="form-label">Pincode:</label>
-            <input type="text" class="form-control" placeholder="Enter your postcode" />
-            <small class="form-text text-muted">Please enter your postcode</small>
+            <label class="form-label">{{ 'Pincode:' | translate }}</label>
+            <input type="text" class="form-control" [placeholder]="'Enter your postcode' | translate" />
+            <small class="form-text text-muted">{{ 'Please enter your postcode' | translate }}</small>
           </div>
         </div>
         <div class="form-group row">
           <div class="col-lg-4">
-            <label class="form-label">Address:</label>
-            <input type="text" class="form-control" placeholder="Enter your address" />
-            <small class="form-text text-muted">Please enter your address</small>
+            <label class="form-label">{{ 'Address:' | translate }}</label>
+            <input type="text" class="form-control" [placeholder]="'Enter your address' | translate" />
+            <small class="form-text text-muted">{{ 'Please enter your address' | translate }}</small>
           </div>
           <div class="col-lg-4">
-            <label class="form-label">User Type:</label>
+            <label class="form-label">{{ 'User Type:' | translate }}</label>
             <div>
               <div class="form-check form-check-inline">
                 <input type="radio" id="customRadioInline221" name="customRadioInline1" class="form-check-input" checked />
-                <label class="form-check-label" for="customRadioInline221">Administrator</label>
+                <label class="form-check-label" for="customRadioInline221">{{ 'Administrator' | translate }}</label>
               </div>
               <div class="form-check form-check-inline">
                 <input type="radio" id="customRadioInline222" name="customRadioInline1" class="form-check-input" />
-                <label class="form-check-label" for="customRadioInline222">Author</label>
+                <label class="form-check-label" for="customRadioInline222">{{ 'Author' | translate }}</label>
               </div>
             </div>
-            <small class="form-text text-muted">Please select User Type</small>
+            <small class="form-text text-muted">{{ 'Please select User Type' | translate }}</small>
           </div>
         </div>
       </form>
@@ -174,36 +174,36 @@
   </div>
 
   <div class="col-sm-12">
-    <app-card cardTitle="3 Columns Horizontal Form Layout">
+    <app-card [cardTitle]="'3 Columns Horizontal Form Layout' | translate">
       <form>
         <div class="form-group row">
           <div class="col-lg-4">
             <div class="row">
-              <label class="col-lg-3 col-form-label text-lg-end px-lg-0">Name:</label>
+              <label class="col-lg-3 col-form-label text-lg-end px-lg-0">{{ 'Name:' | translate }}</label>
               <div class="col-lg-9">
-                <input type="email" class="form-control" placeholder="Full name" />
-                <small class="form-text text-muted">Please enter your full name</small>
+                <input type="email" class="form-control" [placeholder]="'Full name' | translate" />
+                <small class="form-text text-muted">{{ 'Please enter your full name' | translate }}</small>
               </div>
             </div>
           </div>
           <div class="col-lg-4">
             <div class="row">
-              <label class="col-lg-3 col-form-label text-lg-end px-lg-0">Email:</label>
+              <label class="col-lg-3 col-form-label text-lg-end px-lg-0">{{ 'Email:' | translate }}</label>
               <div class="col-lg-9">
-                <input type="email" class="form-control" placeholder="Enter email" />
-                <small class="form-text text-muted">Please enter your email</small>
+                <input type="email" class="form-control" [placeholder]="'Enter email' | translate" />
+                <small class="form-text text-muted">{{ 'Please enter your email' | translate }}</small>
               </div>
             </div>
           </div>
           <div class="col-lg-4">
             <div class="row">
-              <label class="col-lg-3 col-form-label text-lg-end px-lg-0">Password:</label>
+              <label class="col-lg-3 col-form-label text-lg-end px-lg-0">{{ 'Password:' | translate }}</label>
               <div class="col-lg-9">
                 <div class="input-group">
                   <span class="input-group-text"><i class="feather icon-lock"></i></span>
-                  <input type="text" class="form-control" placeholder="Enter Password" />
+                  <input type="text" class="form-control" [placeholder]="'Enter Password' | translate" />
                 </div>
-                <small class="form-text text-muted">Please enter your Password</small>
+                <small class="form-text text-muted">{{ 'Please enter your Password' | translate }}</small>
               </div>
             </div>
           </div>
@@ -212,31 +212,31 @@
         <div class="form-group row">
           <div class="col-lg-4">
             <div class="row">
-              <label class="col-lg-3 col-form-label text-lg-end px-lg-0">Contact:</label>
+              <label class="col-lg-3 col-form-label text-lg-end px-lg-0">{{ 'Contact:' | translate }}</label>
               <div class="col-lg-9">
-                <input type="email" class="form-control" placeholder="Enter contact number" />
-                <small class="form-text text-muted">Please enter your contact</small>
+                <input type="email" class="form-control" [placeholder]="'Enter contact number' | translate" />
+                <small class="form-text text-muted">{{ 'Please enter your contact' | translate }}</small>
               </div>
             </div>
           </div>
           <div class="col-lg-4">
             <div class="row">
-              <label class="col-lg-3 col-form-label text-lg-end px-lg-0">Profile URL:</label>
+              <label class="col-lg-3 col-form-label text-lg-end px-lg-0">{{ 'Profile URL:' | translate }}</label>
               <div class="col-lg-9">
                 <div class="input-group search-form">
-                  <input type="text" class="form-control" placeholder="Fax Profile URL" />
+                  <input type="text" class="form-control" [placeholder]="'Fax Profile URL' | translate" />
                   <span class="input-group-text bg-transparent"><i class="feather icon-alert-circle"></i></span>
                 </div>
-                <small class="form-text text-muted">Please enter Profile URL</small>
+                <small class="form-text text-muted">{{ 'Please enter Profile URL' | translate }}</small>
               </div>
             </div>
           </div>
           <div class="col-lg-4">
             <div class="row">
-              <label class="col-lg-3 col-form-label text-lg-end px-lg-0">Pincode:</label>
+              <label class="col-lg-3 col-form-label text-lg-end px-lg-0">{{ 'Pincode:' | translate }}</label>
               <div class="col-lg-9">
-                <input type="text" class="form-control" placeholder="Enter your postcode" />
-                <small class="form-text text-muted">Please enter your postcode</small>
+                <input type="text" class="form-control" [placeholder]="'Enter your postcode' | translate" />
+                <small class="form-text text-muted">{{ 'Please enter your postcode' | translate }}</small>
               </div>
             </div>
           </div>
@@ -245,28 +245,28 @@
         <div class="form-group row">
           <div class="col-lg-4">
             <div class="row">
-              <label class="col-lg-3 col-form-label text-lg-end px-lg-0">Address:</label>
+              <label class="col-lg-3 col-form-label text-lg-end px-lg-0">{{ 'Address:' | translate }}</label>
               <div class="col-lg-9">
-                <input type="text" class="form-control" placeholder="Enter your address" />
-                <small class="form-text text-muted">Please enter your address</small>
+                <input type="text" class="form-control" [placeholder]="'Enter your address' | translate" />
+                <small class="form-text text-muted">{{ 'Please enter your address' | translate }}</small>
               </div>
             </div>
           </div>
           <div class="col-lg-4">
             <div class="row">
-              <label class="col-lg-3 col-form-label text-lg-end px-lg-0">User Type:</label>
+              <label class="col-lg-3 col-form-label text-lg-end px-lg-0">{{ 'User Type:' | translate }}</label>
               <div class="col-lg-9 col-form-label">
                 <div>
                   <div class="form-check form-check-inline">
                     <input type="radio" id="customRadioInline231" name="customRadioInline1" class="form-check-input" checked />
-                    <label class="form-check-label" for="customRadioInline231">Administrator</label>
+                    <label class="form-check-label" for="customRadioInline231">{{ 'Administrator' | translate }}</label>
                   </div>
                   <div class="form-check form-check-inline">
                     <input type="radio" id="customRadioInline232" name="customRadioInline1" class="form-check-input" />
-                    <label class="form-check-label" for="customRadioInline232">Author</label>
+                    <label class="form-check-label" for="customRadioInline232">{{ 'Author' | translate }}</label>
                   </div>
                 </div>
-                <small class="form-text text-muted">Please select User Type</small>
+                <small class="form-text text-muted">{{ 'Please select User Type' | translate }}</small>
               </div>
             </div>
           </div>

@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -14,7 +15,7 @@ export interface ManagedBuildingDTO {
 @Component({
   selector: 'app-building-selector-inline',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [TranslateModule, CommonModule, FormsModule],
   templateUrl: './building-selector-inline.component.html',
   styleUrls: ['./building-selector-inline.component.scss']
 })

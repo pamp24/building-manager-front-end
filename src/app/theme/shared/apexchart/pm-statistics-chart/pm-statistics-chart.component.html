@@ -1,18 +1,19 @@
 <app-card [showHeader]="false" [padding]="24">
   <div class="d-flex align-items-start justify-content-between">
     <div>
-      <h5 class="mb-1">Οικονομική Εικόνα</h5>
-      <p class="text-muted mb-2">Εκδοθέντα • Πληρωμένα • Ληξιπρόθεσμα</p>
+      <h5 class="mb-1">{{ 'Financial Image' | translate }}</h5>
+      <p class="text-muted mb-2">{{ 'Issued • Paid • Due' | translate }}</p>
     </div>
     <select class="form-select rounded-3 form-select-sm w-auto" [(ngModel)]="selectType">
-      <option value="month">Μηνιαία</option>
-      <option value="quarter">Τριμηνιαία</option>
-      <option value="halfyear">Εξαμηνιαία</option>
-      <option value="year">Ετήσια</option>
+      <option value="month">{{ 'Monthly' | translate }}</option>
+      <option value="quarter">{{ 'Quarterly' | translate }}</option>
+      <option value="halfyear">{{ 'Semi-annually' | translate }}</option>
+      <option value="year">{{ 'Annually' | translate }}</option>
     </select>
   </div>
   <div id="chart">
     <apx-chart
+      *ngIf="labels().length; else noData"
       [series]="chartOptions.series"
       [chart]="chartOptions.chart"
       [dataLabels]="chartOptions.dataLabels"
@@ -25,5 +26,10 @@
       [markers]="chartOptions.markers"
       [fill]="chartOptions.fill"
     ></apx-chart>
+    <ng-template #noData>
+      <div class="dashboard-empty-state" [style.min-height.px]="height()">
+        {{ 'There is no financial data for the selected period.' | translate }}
+      </div>
+    </ng-template>
   </div>
 </app-card>

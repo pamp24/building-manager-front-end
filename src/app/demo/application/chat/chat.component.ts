@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // angular import
 import { Component, OnDestroy, OnInit, TemplateRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -62,6 +63,8 @@ import {
   styleUrl: './chat.component.scss'
 })
 export class ChatComponent implements OnInit, OnDestroy {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private offcanvasService = inject(NgbOffcanvas);
   private iconService = inject(IconService);
   private modalService = inject(NgbModal);
@@ -88,7 +91,36 @@ export class ChatComponent implements OnInit, OnDestroy {
   editingMessageId: number | null = null;
   editContent = '';
   emojiPanelVisible = false;
-  emojis = ['😀', '😁', '😂', '😊', '😍', '😘', '😎', '🤔', '😢', '😡', '👍', '👎', '👏', '🙏', '💪', '🔥', '❤️', '💔', '🎉', '✅', '❌', '⚠️', '☕', '🏠', '🔑', '📅', '💰', '🙂']; 
+  emojis = [
+    '😀',
+    '😁',
+    '😂',
+    '😊',
+    '😍',
+    '😘',
+    '😎',
+    '🤔',
+    '😢',
+    '😡',
+    '👍',
+    '👎',
+    '👏',
+    '🙏',
+    '💪',
+    '🔥',
+    '❤️',
+    '💔',
+    '🎉',
+    '✅',
+    '❌',
+    '⚠️',
+    '☕',
+    '🏠',
+    '🔑',
+    '📅',
+    '💰',
+    '🙂'
+  ];
   conversations: ConversationDTO[] = [];
   activeConversation: ConversationDTO | null = null;
   messages: ChatMessageDTO[] = [];
@@ -144,7 +176,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   get myName(): string {
     const user = this.authService.currentUserValue;
-    return user ? `${user.firstName} ${user.lastName}` : 'Εγώ';
+    return user ? `${user.firstName} ${user.lastName}` : this.uiLocale.text('Me');
   }
 
   get myAvatar(): string {
@@ -232,7 +264,10 @@ export class ChatComponent implements OnInit, OnDestroy {
         );
         this.members = Array.from(map.values());
       })
-      .catch(() => { this.members = []; this.membersLoadError = true; })
+      .catch(() => {
+        this.members = [];
+        this.membersLoadError = true;
+      })
       .finally(() => (this.membersLoading = false));
   }
 
@@ -260,7 +295,9 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.bindViewportScroll();
         setTimeout(() => this.scrollToBottomIfNeeded(), 0);
       },
-      error: () => { if (this.activeConversation?.id === id) this.errorMessage = 'Δεν ήταν δυνατή η φόρτωση των μηνυμάτων.'; }
+      error: () => {
+        if (this.activeConversation?.id === id) this.errorMessage = this.uiLocale.text('Messages could not be loaded.');
+      }
     });
   }
 
@@ -309,7 +346,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
     const content = this.message.trim();
     if (!content) {
-      this.errorMessage = 'Γράψε ένα μήνυμα για να το στείλεις.';
+      this.errorMessage = this.uiLocale.text('Write a message to send it.');
       return;
     }
     const id = this.activeConversation.id;
@@ -323,7 +360,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         setTimeout(() => this.scrollToBottomIfNeeded(), 0);
         this.refreshConversations();
       },
-      error: () => (this.errorMessage = 'Δεν στάλθηκε το μήνυμα. Προσπάθησε ξανά.')
+      error: () => (this.errorMessage = this.uiLocale.text('The message was not sent. Try again.'))
     });
   }
 
@@ -358,7 +395,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       },
       error: () => {
         this.loading = false;
-        this.errorMessage = 'Δεν στάλθηκε η φωτογραφία. Προσπάθησε ξανά.';
+        this.errorMessage = this.uiLocale.text('Photo not sent. Try again.');
       }
     });
   }
@@ -374,13 +411,16 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.selectConversation(conversation);
         this.refreshConversations();
       },
-      error: () => { this.openingChat = false; this.memberError = 'Δεν μπορείς να ξεκινήσεις συνομιλία με αυτόν τον χρήστη.'; }
+      error: () => {
+        this.openingChat = false;
+        this.memberError = this.uiLocale.text("You can't start a conversation with this user.");
+      }
     });
   }
 
   hideConversation(conversation: ConversationDTO) {
     const id = conversation.id;
-    if (!id || this.actionLoading || !confirm('Απόκρυψη αυτής της συνομιλίας για εσένα; Τα μηνύματα θα διατηρηθούν.')) return;
+    if (!id || this.actionLoading || !confirm(this.uiLocale.text('Hide this conversation for you? Messages will be preserved.'))) return;
     this.actionLoading = true;
     this.errorMessage = '';
     this.chatService.hideConversation(id).subscribe({
@@ -394,7 +434,10 @@ export class ChatComponent implements OnInit, OnDestroy {
         }
         this.refreshConversations();
       },
-      error: () => { this.actionLoading = false; this.errorMessage = 'Δεν ήταν δυνατή η απόκρυψη της συνομιλίας.'; }
+      error: () => {
+        this.actionLoading = false;
+        this.errorMessage = this.uiLocale.text('The conversation could not be hidden.');
+      }
     });
   }
 
@@ -408,30 +451,45 @@ export class ChatComponent implements OnInit, OnDestroy {
     const id = this.activeConversation?.id;
     const content = this.editContent.trim();
     if (!id || this.actionLoading) return;
-    if ((!content && !message.imageUrl) || content.length > 4000) { this.errorMessage = 'Το μήνυμα πρέπει να περιέχει έως 4000 χαρακτήρες.'; return; }
-    if (!confirm('Αποθήκευση αλλαγών στο μήνυμα;')) return;
+    if ((!content && !message.imageUrl) || content.length > 4000) {
+      this.errorMessage = this.uiLocale.text('The message must contain up to 4000 characters.');
+      return;
+    }
+    if (!confirm(this.uiLocale.text('Save changes to message?'))) return;
     this.actionLoading = true;
     this.errorMessage = '';
     this.chatService.editMessage(id, message.id, content).subscribe({
-      next: (saved) => { this.actionLoading = false; this.applyMessage(id, saved); },
-      error: () => { this.actionLoading = false; this.errorMessage = 'Δεν ήταν δυνατή η επεξεργασία του μηνύματος.'; }
+      next: (saved) => {
+        this.actionLoading = false;
+        this.applyMessage(id, saved);
+      },
+      error: () => {
+        this.actionLoading = false;
+        this.errorMessage = this.uiLocale.text('The message could not be edited.');
+      }
     });
   }
 
   deleteMessage(message: ChatMessageDTO) {
     const id = this.activeConversation?.id;
-    if (!id || this.actionLoading || !confirm('Διαγραφή αυτού του μηνύματος για όλους;')) return;
+    if (!id || this.actionLoading || !confirm(this.uiLocale.text('Delete this message for everyone?'))) return;
     this.actionLoading = true;
     this.errorMessage = '';
     this.chatService.deleteMessage(id, message.id).subscribe({
-      next: (saved) => { this.actionLoading = false; this.applyMessage(id, saved); },
-      error: () => { this.actionLoading = false; this.errorMessage = 'Δεν ήταν δυνατή η διαγραφή του μηνύματος.'; }
+      next: (saved) => {
+        this.actionLoading = false;
+        this.applyMessage(id, saved);
+      },
+      error: () => {
+        this.actionLoading = false;
+        this.errorMessage = this.uiLocale.text('The message could not be deleted.');
+      }
     });
   }
 
   private applyMessage(id: number, saved: ChatMessageDTO) {
     if (this.activeConversation?.id === id) {
-      this.messages = this.messages.map((m) => m.id === saved.id ? saved : m);
+      this.messages = this.messages.map((m) => (m.id === saved.id ? saved : m));
       this.editingMessageId = null;
     }
     this.refreshConversations();
@@ -459,7 +517,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   conversationTypeLabel(conversation: ConversationDTO): string {
-    return conversation.type === 'BUILDING' ? 'Ομαδική' : 'Προσωπική';
+    return conversation.type === 'BUILDING' ? this.uiLocale.text('Group') : this.uiLocale.text('Personal');
   }
 
   truncatePreview(text: string, max = 12): string {

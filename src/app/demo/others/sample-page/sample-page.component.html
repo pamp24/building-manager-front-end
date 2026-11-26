@@ -1,9 +1,11 @@
 <div class="row">
   <div class="col-sm-12">
-    <app-card cardTitle="Hello">
+    <app-card [cardTitle]="'Hello' | translate">
       <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate dignissimos nemo animi quisquam, fugit repellat velit? Doloremque
-        maxime eveniet autem repellendus officia est! Ex dolore, quae reprehenderit enim vel reiciendis?
+        {{
+          'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate dignissimos nemo animi quisquam, fugit repellat velit? Doloremque maxime eveniet autem repellendus officia est! Ex dolore, quae reprehenderit enim vel reiciendis?'
+            | translate
+        }}
       </p>
     </app-card>
   </div>

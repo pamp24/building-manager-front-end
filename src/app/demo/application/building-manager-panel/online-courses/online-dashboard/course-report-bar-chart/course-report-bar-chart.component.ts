@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // angular project
 import { Component, effect, OnInit, inject } from '@angular/core';
 
@@ -15,6 +16,8 @@ import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
   styleUrl: './course-report-bar-chart.component.scss'
 })
 export class CourseReportBarChartComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private themeService = inject(ThemeService);
 
   // public props
@@ -75,11 +78,11 @@ export class CourseReportBarChartComponent implements OnInit {
       colors: this.themeColors,
       series: [
         {
-          name: 'Net Profit',
+          name: this.uiLocale.text('Net Profit'),
           data: [180, 90, 135, 114, 120, 145, 180, 90, 135, 114, 120, 145]
         },
         {
-          name: 'Revenue',
+          name: this.uiLocale.text('Revenue'),
           data: [120, 45, 78, 150, 168, 99, 120, 45, 78, 150, 168, 99]
         }
       ],

@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
 import { Component, inject, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
@@ -38,6 +39,8 @@ import { BulkApartmentsComponent } from './bulk-apartments.component';
   styleUrls: ['./user-card.component.scss']
 })
 export class UserCardComponent implements OnInit, OnChanges {
+  private readonly uiLocale = inject(UiLocaleService);
+
   @Input() pmView = false;
   @Input() buildingId?: number;
 
@@ -128,7 +131,7 @@ export class UserCardComponent implements OnInit, OnChanges {
       },
       error: (err) => {
         console.error('Σφάλμα φόρτωσης πολυκατοικίας για PM:', err);
-        this.messageApartments = 'Αποτυχία φόρτωσης πολυκατοικίας.';
+        this.messageApartments = this.uiLocale.text('Failed to load apartment building.');
       }
     });
   }
@@ -143,38 +146,38 @@ export class UserCardComponent implements OnInit, OnChanges {
           next: (data) => {
             this.card_detail = data.map((ap) => ({
               apartment: ap,
-              name: ap.ownerLastName && ap.ownerFirstName ? `${ap.ownerLastName} ${ap.ownerFirstName}` : 'Άγνωστο Όνομα',
+              name: ap.ownerLastName && ap.ownerFirstName ? `${ap.ownerLastName} ${ap.ownerFirstName}` : this.uiLocale.text('Unknown Name'),
               position: `Διαμ. ${ap.number}, Όροφος ${ap.floor}`,
               src: this.imgSrc(ap.ownerProfileImageUrl),
-              description: ap.apDescription || 'Δεν υπάρχει περιγραφή',
-              email: ap.ownerEmail || 'Δεν είναι διαθέσιμο',
-              phone: ap.ownerPhone || 'Δεν είναι διαθέσιμο',
-              street: ap.ownerStreet || 'Δεν είναι διαθέσιμο',
-              streetNumber: ap.ownerStreetNumber || 'Δεν είναι διαθέσιμο',
-              buildingName: ap.buildingName || 'Δεν είναι διαθέσιμο',
-              buildingStreet: ap.buildingStreet || 'Δεν είναι διαθέσιμο',
+              description: ap.apDescription || this.uiLocale.text('There is no description'),
+              email: ap.ownerEmail || this.uiLocale.text('Not available'),
+              phone: ap.ownerPhone || this.uiLocale.text('Not available'),
+              street: ap.ownerStreet || this.uiLocale.text('Not available'),
+              streetNumber: ap.ownerStreetNumber || this.uiLocale.text('Not available'),
+              buildingName: ap.buildingName || this.uiLocale.text('Not available'),
+              buildingStreet: ap.buildingStreet || this.uiLocale.text('Not available'),
               buildingStreetNumber: ap.buildingStreetNumber || '',
-              buildingCity: ap.buildingCity || 'Άγνωστη Πόλη',
-              city: ap.ownerCity || 'Άγνωστη Πόλη',
-              lastModifiedDate: ap.lastModifiedDate || 'Άγνωστη ημερομηνία',
+              buildingCity: ap.buildingCity || this.uiLocale.text('Unknown City'),
+              city: ap.ownerCity || this.uiLocale.text('Unknown City'),
+              lastModifiedDate: ap.lastModifiedDate || this.uiLocale.text('Unknown date'),
               user_skill: [
-                { skill: 'Χιλιοστά κοινοχρήστων: ' + ap.commonPercent },
-                { skill: 'Χιλιοστά Ασανσέρ: ' + ap.elevatorPercent },
-                { skill: 'Χιλιοστά Θέρμανσης: ' + ap.heatingPercent }
+                { skill: this.uiLocale.text('Thousands of Users') + ap.commonPercent },
+                { skill: this.uiLocale.text('Elevator kilometers') + ap.elevatorPercent },
+                { skill: this.uiLocale.text('Kilometers of Heating') + ap.heatingPercent }
               ]
             }));
 
             this.sortCards();
 
             if (data.length === 0) {
-              this.messageApartments = 'Δεν υπάρχουν ακόμα καταχωρημένα διαμερίσματα σε αυτήν την πολυκατοικία.';
+              this.messageApartments = this.uiLocale.text('There are still no registered apartments in this building.');
             } else {
               this.messageApartments = '';
             }
           },
           error: (err) => {
             console.error('Σφάλμα φόρτωσης διαμερισμάτων:', err);
-            this.messageApartments = 'Αποτυχία φόρτωσης διαμερισμάτων.';
+            this.messageApartments = this.uiLocale.text('Failed to load partitions.');
           }
         });
       },
@@ -211,7 +214,7 @@ export class UserCardComponent implements OnInit, OnChanges {
   openAddApartment() {
     const buildingId = Number(localStorage.getItem('buildingId'));
     if (!buildingId) {
-      alert('Δεν μπορείτε να προσθέσετε νέο διαμέρισμα.\nΠρέπει πρώτα να τροποποιήσετε την πολυκατοικία.');
+      alert(this.uiLocale.text('You cannot add a new partition. You must modify the apartment building first.'));
       return;
     }
 
@@ -219,7 +222,7 @@ export class UserCardComponent implements OnInit, OnChanges {
       const noParking = building.parkingSpacesNum > 0 && this.currentUsedParking >= building.parkingSpacesNum;
       const noStorage = building.storageNum > 0 && this.currentUsedStorages >= building.storageNum;
       if (noParking || noStorage) {
-        alert('Πρέπει  να τροποποιήσετε την πολυκατοικία.');
+        alert(this.uiLocale.text('You need to modify the apartment building.'));
         return;
       }
 

@@ -1,17 +1,15 @@
+import { TranslateModule } from '@ngx-translate/core';
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { BuildingRequest } from 'src/app/theme/shared/models/buildingRequest';
 import { AuthenticationService } from 'src/app/theme/shared/service/authentication.service';
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
 
-import {
-  LOCATION_COUNTRIES,
-  SupportedLocationRegion,
-  resolveCountryLocations,
-  resolveCountryName
-} from '../location-form.utils';
+import { LOCATION_COUNTRIES, SupportedLocationRegion, resolveCountryLocations, resolveCountryName } from '../location-form.utils';
 
 export interface BuildingFormSubmission {
   buildingId: number;
@@ -21,11 +19,13 @@ export interface BuildingFormSubmission {
 
 @Component({
   selector: 'app-building-form',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [TranslateModule, CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './building-form.component.html',
   styleUrls: ['./building-form.component.scss']
 })
 export class BuildingFormComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   @Input() selectedAction!: 'many' | 'new' | 'existing';
   @Input() form!: FormGroup;
   @Output() backClicked = new EventEmitter<void>();
@@ -184,17 +184,17 @@ export class BuildingFormComponent implements OnInit {
       }
 
       if (!this.isAllowedFile(file)) {
-        alert(`Το αρχείο "${file.name}" δεν υποστηρίζεται.`);
+        alert(this.uiLocale.text('The file "{{p0}}" is not supported.', { p0: file.name }));
         continue;
       }
 
       if (file.size > this.maxFileSizeMb * 1024 * 1024) {
-        alert(`Το αρχείο "${file.name}" ξεπερνά το όριο των ${this.maxFileSizeMb}MB.`);
+        alert(this.uiLocale.text('The file "{{p0}}" exceeds the limit of {{p1}}MB.', { p0: file.name, p1: this.maxFileSizeMb }));
         continue;
       }
 
       if (nextFiles.length >= this.maxFiles) {
-        alert(`Μπορείτε να επιλέξετε έως ${this.maxFiles} αρχεία.`);
+        alert(this.uiLocale.text('You can select up to {{p0}} files.', { p0: this.maxFiles }));
         break;
       }
 
@@ -210,11 +210,11 @@ export class BuildingFormComponent implements OnInit {
   }
 
   getFileTypeLabel(file: File): string {
-    if (file.type.includes('pdf')) return 'PDF';
-    if (file.type.includes('image')) return 'Εικόνα';
-    if (file.type.includes('sheet') || file.name.match(/\.(xls|xlsx)$/i)) return 'Spreadsheet';
-    if (file.type.includes('word') || file.name.match(/\.(doc|docx)$/i)) return 'Έγγραφο';
-    return 'Αρχείο';
+    if (file.type.includes('pdf')) return this.uiLocale.text('PDF');
+    if (file.type.includes('image')) return this.uiLocale.text('Image');
+    if (file.type.includes('sheet') || file.name.match(/\.(xls|xlsx)$/i)) return this.uiLocale.text('Spreadsheet');
+    if (file.type.includes('word') || file.name.match(/\.(doc|docx)$/i)) return this.uiLocale.text('Document');
+    return this.uiLocale.text('Archive');
   }
 
   formatFileSize(bytes: number): string {

@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, inject, OnInit } from '@angular/core';
 import { SharedModule } from '../../shared.module';
@@ -15,11 +16,15 @@ import { UserDashboardService } from '../../service/userDashboard.service';
   styleUrls: ['./last-statement-card.component.scss']
 })
 export class LastStatementCardComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private themeService = inject(ThemeService);
   private dashboardService = inject(UserDashboardService);
 
   chartOptions!: ApexOptions;
 
+  loadError = false;
+  hasHistory = false;
   debt = 0;
   month: string | null = null;
   role: string | null = null;
@@ -39,7 +44,6 @@ export class LastStatementCardComponent implements OnInit {
     this.initChart();
     this.loadDashboard();
     this.loadHistory();
-    
   }
 
   private initChart() {
@@ -64,9 +68,9 @@ export class LastStatementCardComponent implements OnInit {
   private loadDashboard() {
     this.dashboardService.getDashboard().subscribe({
       next: (res) => {
-        this.debt = res.latestDebt ?? 0;
-        this.month = res.statementMonth;
-        this.role = res.role;
+        this.debt = res?.latestDebt ?? 0;
+        this.month = res?.statementMonth ?? null;
+        this.role = res?.role ?? null;
       },
       error: (err) => console.error('Dashboard error:', err)
     });
@@ -75,7 +79,8 @@ export class LastStatementCardComponent implements OnInit {
   private loadHistory() {
     this.dashboardService.getHistory().subscribe({
       next: (history) => {
-        if (!history || history.length === 0) return;
+        this.hasHistory = !!history?.length;
+        if (!this.hasHistory) return;
 
         // Αν το backend δεν στέλνει startDate, μην κάνεις sort με startDate
         // Κάνε sort με month (YYYY-MM) που είναι safe:
@@ -129,9 +134,12 @@ export class LastStatementCardComponent implements OnInit {
           }
         };
       },
-      error: (err) => console.error('History error:', err)
+      error: () => {
+        this.loadError = true;
+        this.hasHistory = false;
+      }
     });
-    console.log(history)
+    console.log(history);
   }
 
   private monthToGreek(date: string | null): string {
@@ -139,18 +147,18 @@ export class LastStatementCardComponent implements OnInit {
 
     const [year, month] = date.split('-');
     const months = [
-      'Ιανουάριος',
-      'Φεβρουάριος',
-      'Μάρτιος',
-      'Απρίλιος',
-      'Μάιος',
-      'Ιούνιος',
-      'Ιούλιος',
-      'Αύγουστος',
-      'Σεπτέμβριος',
-      'Οκτώβριος',
-      'Νοέμβριος',
-      'Δεκέμβριος'
+      this.uiLocale.text('January'),
+      this.uiLocale.text('February'),
+      this.uiLocale.text('March'),
+      this.uiLocale.text('April'),
+      this.uiLocale.text('May'),
+      this.uiLocale.text('June'),
+      this.uiLocale.text('July'),
+      this.uiLocale.text('August'),
+      this.uiLocale.text('September'),
+      this.uiLocale.text('October'),
+      this.uiLocale.text('November'),
+      this.uiLocale.text('December')
     ];
 
     return `${months[parseInt(month) - 1]} ${year}`;

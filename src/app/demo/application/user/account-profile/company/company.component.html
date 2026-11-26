@@ -1,8 +1,8 @@
 <div class="row">
   <div class="col-12">
-    <app-card cardTitle="Η Εταιρία" [padding]="24">
+    <app-card [cardTitle]="'The Company' | translate" [padding]="24">
       <ng-container *ngIf="loading">
-        <div class="py-4">Φόρτωση...</div>
+        <div class="py-4">{{ 'Loading...' | translate }}</div>
       </ng-container>
       <ng-container *ngIf="!loading && error">
         <div class="alert alert-warning mb-0">
@@ -12,52 +12,52 @@
       <ng-container *ngIf="!loading && !error && company">
         <form [formGroup]="companyForm" class="row g-3">
           <div class="col-md-6">
-            <label class="form-label">Επωνυμία</label>
+            <label class="form-label">{{ 'Name' | translate }}</label>
             <input class="form-control" formControlName="companyName" />
           </div>
           <div class="col-md-6">
-            <label class="form-label">ΑΦΜ</label>
+            <label class="form-label">{{ 'VAT number' | translate }}</label>
             <input class="form-control" formControlName="taxNumber" />
           </div>
           <div class="col-md-6">
-            <label class="form-label">Υπεύθυνος</label>
+            <label class="form-label">{{ 'Responsible' | translate }}</label>
             <input class="form-control" formControlName="managerName" />
           </div>
           <div class="col-md-6">
-            <label class="form-label">Email</label>
+            <label class="form-label">{{ 'Email' | translate }}</label>
             <input class="form-control" formControlName="email" />
           </div>
           <div class="col-md-4">
-            <label class="form-label">Τηλέφωνο</label>
+            <label class="form-label">{{ 'Telephone' | translate }}</label>
             <input class="form-control" formControlName="phone" />
           </div>
           <div class="col-md-4">
-            <label class="form-label">Διεύθυνση</label>
+            <label class="form-label">{{ 'Address' | translate }}</label>
             <input class="form-control" formControlName="address" />
           </div>
           <div class="col-md-4">
-            <label class="form-label">Αριθμός</label>
+            <label class="form-label">{{ 'Number' | translate }}</label>
             <input class="form-control" formControlName="addressNumber" />
           </div>
           <div class="col-md-4">
-            <label class="form-label">Περιοχή</label>
+            <label class="form-label">{{ 'Area' | translate }}</label>
             <input class="form-control" formControlName="region" />
           </div>
           <div class="col-md-4">
-            <label class="form-label">Τ.Κ.</label>
+            <label class="form-label">{{ 'P.C.' | translate }}</label>
             <input class="form-control" formControlName="postalCode" />
           </div>
           <div class="col-md-4">
-            <label class="form-label">Πόλη</label>
+            <label class="form-label">{{ 'City' | translate }}</label>
             <input class="form-control" formControlName="city" />
           </div>
         </form>
         <div *ngIf="hasRole('PropertyManager')" class="mt-4 text-end">
           <button type="button" class="btn btn-secondary me-2" (click)="toggleEdit()">
-            {{ isEditing ? 'Ακύρωση' : 'Επεξεργασία' }}
+            {{ isEditing ? ('Cancellation' | translate) : ('Processing' | translate) }}
           </button>
           <button type="button" class="btn btn-success" [disabled]="!isEditing || companyForm.invalid" (click)="submitChanges()">
-            Αποθήκευση
+            {{ 'Save' | translate }}
           </button>
         </div>
       </ng-container>

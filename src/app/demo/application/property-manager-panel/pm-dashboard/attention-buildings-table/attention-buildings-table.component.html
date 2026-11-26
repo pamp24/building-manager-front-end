@@ -1,49 +1,47 @@
 <div class="card">
   <div class="card-header">
-    <h5 class="mb-0">Πολυκατοικίες που Χρειάζονται Προσοχή</h5>
+    <h5 class="mb-0">{{ 'Apartment buildings that need attention' | translate }}</h5>
   </div>
 
   <div class="card-body p-0">
-    @if (attentionBuildings.length === 0) {
-      <div class="p-4 text-center text-muted">
-        Δεν υπάρχουν πολυκατοικίες που να απαιτούν άμεση προσοχή.
-      </div>
-    } @else {
-      <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
-          <thead>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead>
+          <tr>
+            <th>{{ 'Building' | translate }}</th>
+            <th>{{ 'City' | translate }}</th>
+            <th>{{ 'Problem' | translate }}</th>
+            <th class="text-center">{{ 'Seriousness' | translate }}</th>
+            <th class="text-center">{{ 'Energy' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (attentionBuildings.length === 0) {
             <tr>
-              <th>Πολυκατοικία</th>
-              <th>Πόλη</th>
-              <th>Πρόβλημα</th>
-              <th class="text-center">Σοβαρότητα</th>
-              <th class="text-center">Ενέργεια</th>
+              <td colspan="5" class="text-center text-muted py-4">
+                {{ 'There are no apartment buildings that require immediate attention.' | translate }}
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            @for (building of attentionBuildings; track building.buildingId) {
-              <tr>
-                <td>{{ building.name }}</td>
-                <td>{{ building.city }}</td>
-                <td>{{ building.issue }}</td>
-                <td class="text-center">
-                  <span class="badge rounded-pill px-3 py-2" [ngClass]="getSeverityBadgeClass(building.severity)">
-                    {{ getSeverityLabel(building.severity) }}
-                  </span>
-                </td>
-                <td class="text-center">
-                  <a
-                    class="btn btn-sm btn-outline-primary"
-                    [routerLink]="['/pm/buildings', building.buildingId]"
-                  >
-                    Προβολή
-                  </a>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-    }
+          }
+          @for (building of attentionBuildings; track building.buildingId) {
+            <tr>
+              <td>{{ building.name }}</td>
+              <td>{{ building.city }}</td>
+              <td>{{ building.issue }}</td>
+              <td class="text-center">
+                <span class="badge rounded-pill px-3 py-2" [ngClass]="getSeverityBadgeClass(building.severity)">
+                  {{ getSeverityLabel(building.severity) }}
+                </span>
+              </td>
+              <td class="text-center">
+                <a class="btn btn-sm btn-outline-primary" [routerLink]="['/pm/buildings', building.buildingId]">
+                  {{ 'Projection' | translate }}
+                </a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

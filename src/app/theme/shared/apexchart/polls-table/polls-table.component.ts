@@ -1,13 +1,14 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, OnInit } from '@angular/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
-import { Component } from '@angular/core';
 
 // project import
 import { SharedModule } from '../../shared.module';
 
 // third party
 import { NgApexchartsModule } from 'ng-apexcharts';
-import { OnInit } from '@angular/core';
+
 import { PollService } from '../../service/poll.service';
 import { Router } from '@angular/router';
 
@@ -18,6 +19,8 @@ import { Router } from '@angular/router';
   styleUrl: './polls-table.component.scss'
 })
 export class PollsTableComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   polls: any[] = [];
   buildingId!: number;
   isManager: any;
@@ -34,6 +37,10 @@ export class PollsTableComponent implements OnInit {
   }
 
   loadPolls() {
+    if (!this.buildingId) {
+      this.polls = [];
+      return;
+    }
     this.pollService.getByBuilding(this.buildingId).subscribe({
       next: (data) => (this.polls = data || []),
       error: (err) => console.error(err)
@@ -46,7 +53,7 @@ export class PollsTableComponent implements OnInit {
   }
 
   deactivatePoll(poll: any) {
-    if (!confirm('Είστε σίγουροι ότι θέλετε να απενεργοποιήσετε τη ψηφοφορία;')) return;
+    if (!confirm(this.uiLocale.text('Are you sure you want to disable voting?'))) return;
 
     this.pollService.deactivate(poll.id).subscribe({
       next: () => this.loadPolls(),

@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 // Angular import
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -16,7 +17,7 @@ import { DpDatePickerModule } from 'ng2-date-picker';
   selector: 'app-datepicker',
   templateUrl: './datepicker.component.html',
   styleUrls: ['./datepicker.component.scss'],
-  imports: [CardComponent, DpDatePickerModule, FormsModule, ReactiveFormsModule, ConfigFormComponent]
+  imports: [TranslateModule, CardComponent, DpDatePickerModule, FormsModule, ReactiveFormsModule, ConfigFormComponent]
 })
 export class DatepickerComponent extends DateComponent implements OnInit {
   // private Props

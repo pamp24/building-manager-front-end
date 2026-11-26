@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { inject, Component } from '@angular/core';
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 
@@ -13,6 +15,8 @@ import { RegistrationRequest } from '../../../../theme/shared/models/registratio
   styleUrls: ['./auth-register.component.scss']
 })
 export class AuthRegisterComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   registerRequest: RegistrationRequest = { email: '', firstName: '', lastName: '', password: '' };
   errorMsg: Array<string> = [];
 
@@ -40,7 +44,7 @@ export class AuthRegisterComponent {
         } else if (typeof err?.error === 'string') {
           this.errorMsg = [err.error];
         } else {
-          this.errorMsg = ['Κάτι πήγε στραβά. Προσπαθήστε ξανά.'];
+          this.errorMsg = [this.uiLocale.text('Something went wrong. Try again.')];
         }
       }
     });

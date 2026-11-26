@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
 import { Component } from '@angular/core';
 
@@ -6,6 +7,8 @@ import { ToastrService } from './toastr/toastr.service';
 import { ToastPackage } from './toastr/toastr-config';
 
 @Component({
+  imports: [TranslateModule],
+
   selector: 'app-pink-toast-component',
   styles: [
     `
@@ -51,7 +54,7 @@ import { ToastPackage } from './toastr/toastr-config';
           </a>
         }
         @if (options.closeButton) {
-          <a (click)="remove()" class="btn btn-pink btn-sm">close</a>
+          <a (click)="remove()" class="btn btn-pink btn-sm">{{ 'close' | translate }}</a>
         }
       </div>
     </div>

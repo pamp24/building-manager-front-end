@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // angular project
 import { Component, OnInit, effect, inject } from '@angular/core';
 
@@ -15,6 +16,8 @@ import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
   styleUrl: './earning-courses-line-chart.component.scss'
 })
 export class EarningCoursesLineChartComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private themeService = inject(ThemeService);
 
   // public props
@@ -60,7 +63,7 @@ export class EarningCoursesLineChartComponent implements OnInit {
       },
       series: [
         {
-          name: 'Today',
+          name: this.uiLocale.text('Today'),
           data: [200, 320, 275, 400, 300, 440]
         }
       ],
@@ -93,7 +96,7 @@ export class EarningCoursesLineChartComponent implements OnInit {
       case 'today':
         this.chartOptions.series = [
           {
-            name: 'Today',
+            name: this.uiLocale.text('Today'),
             data: [200, 320, 275, 400, 300, 440]
           }
         ];
@@ -101,7 +104,7 @@ export class EarningCoursesLineChartComponent implements OnInit {
       case 'week':
         this.chartOptions.series = [
           {
-            name: 'Week',
+            name: this.uiLocale.text('Week'),
             data: [750, 550, 650, 450, 500, 350]
           }
         ];
@@ -109,7 +112,7 @@ export class EarningCoursesLineChartComponent implements OnInit {
       case 'month':
         this.chartOptions.series = [
           {
-            name: 'Month',
+            name: this.uiLocale.text('Month'),
             data: [500, 700, 300, 600, 200, 400]
           }
         ];

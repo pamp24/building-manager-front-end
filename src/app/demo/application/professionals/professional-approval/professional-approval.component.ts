@@ -1,5 +1,6 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
 
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { ProfessionalAdminStatsDTO, ProfessionalBusinessDTO } from 'src/app/theme/shared/models/professional.model';
@@ -13,6 +14,8 @@ import { ProfessionalService } from 'src/app/theme/shared/service/professional.s
   styleUrls: ['./professional-approval.component.scss']
 })
 export class ProfessionalApprovalComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   pendingBusinesses: ProfessionalBusinessDTO[] = [];
 
   loading = false;
@@ -66,7 +69,7 @@ export class ProfessionalApprovalComponent implements OnInit {
       },
       error: (err) => {
         this.loading = false;
-        this.error = err?.businessErrorDescription || err?.error || err?.message || 'Αποτυχία φόρτωσης αιτήσεων.';
+        this.error = err?.businessErrorDescription || err?.error || err?.message || this.uiLocale.text('Failed to load applications.');
       }
     });
   }
@@ -74,19 +77,19 @@ export class ProfessionalApprovalComponent implements OnInit {
   approve(id: number): void {
     this.professionalService.approve(id).subscribe({
       next: () => {
-        this.success = 'Η επιχείρηση εγκρίθηκε επιτυχώς.';
+        this.success = this.uiLocale.text('The operation was successfully approved.');
         this.pendingBusinesses = this.pendingBusinesses.filter((business) => business.id !== id);
         this.loadStats();
         this.loadBusinesses();
       },
       error: (err) => {
-        this.error = err?.businessErrorDescription || err?.error || err?.message || 'Αποτυχία έγκρισης επιχείρησης.';
+        this.error = err?.businessErrorDescription || err?.error || err?.message || this.uiLocale.text('Failed to approve business.');
       }
     });
   }
 
   reject(id: number): void {
-    const confirmed = confirm('Θέλετε σίγουρα να απορρίψετε αυτή την επιχείρηση;');
+    const confirmed = confirm(this.uiLocale.text('Are you sure you want to reject this business?'));
 
     if (!confirmed) {
       return;
@@ -94,13 +97,13 @@ export class ProfessionalApprovalComponent implements OnInit {
 
     this.professionalService.deactivate(id).subscribe({
       next: () => {
-        this.success = 'Η επιχείρηση απορρίφθηκε.';
+        this.success = this.uiLocale.text('The operation was rejected.');
         this.pendingBusinesses = this.pendingBusinesses.filter((business) => business.id !== id);
         this.loadStats();
         this.loadBusinesses();
       },
       error: (err) => {
-        this.error = err?.businessErrorDescription || err?.error || err?.message || 'Αποτυχία απόρριψης επιχείρησης.';
+        this.error = err?.businessErrorDescription || err?.error || err?.message || this.uiLocale.text('Business rejection failed.');
       }
     });
   }
@@ -108,27 +111,27 @@ export class ProfessionalApprovalComponent implements OnInit {
   getCategoryLabel(category: string): string {
     switch (category) {
       case 'ELECTRICIAN':
-        return 'Ηλεκτρολόγος';
+        return this.uiLocale.text('Electrician');
       case 'PLUMBER':
-        return 'Υδραυλικός';
+        return this.uiLocale.text('Plumber');
       case 'ELEVATOR_TECHNICIAN':
-        return 'Τεχνικός Ασανσέρ';
+        return this.uiLocale.text('Elevator technician');
       case 'CLEANING_SERVICE':
-        return 'Καθαρισμός';
+        return this.uiLocale.text('Cleaning');
       case 'HEATING_TECHNICIAN':
-        return 'Θέρμανση';
+        return this.uiLocale.text('Heating');
       case 'LOCKSMITH':
-        return 'Κλειδαράς';
+        return this.uiLocale.text('Locker');
       case 'AIR_CONDITION_TECHNICIAN':
-        return 'Κλιματισμός';
+        return this.uiLocale.text('Air conditioning');
       case 'PAINTER':
-        return 'Ελαιοχρωματιστής';
+        return this.uiLocale.text('Oil painter');
       case 'PEST_CONTROL':
-        return 'Απεντομώσεις';
+        return this.uiLocale.text('Exterminations');
       case 'GENERAL_REPAIRS':
-        return 'Γενικές Επισκευές';
+        return this.uiLocale.text('General Repairs');
       case 'OTHER':
-        return 'Άλλο';
+        return this.uiLocale.text('Other');
       default:
         return category;
     }
@@ -145,7 +148,7 @@ export class ProfessionalApprovalComponent implements OnInit {
         this.businessesLoading = false;
       },
       error: (err) => {
-        this.error = err?.businessErrorDescription || err?.error || err?.message || 'Αποτυχία φόρτωσης επιχειρήσεων.';
+        this.error = err?.businessErrorDescription || err?.error || err?.message || this.uiLocale.text('Failed to load business.');
         this.businessesLoading = false;
       }
     });
@@ -172,50 +175,50 @@ export class ProfessionalApprovalComponent implements OnInit {
   }
 
   deactivateBusiness(id: number): void {
-    if (!confirm('Θέλετε να απενεργοποιήσετε αυτή την επιχείρηση;')) return;
+    if (!confirm(this.uiLocale.text('Do you want to disable this business?'))) return;
 
     this.professionalService.deactivate(id).subscribe({
       next: () => {
-        this.success = 'Η επιχείρηση απενεργοποιήθηκε.';
+        this.success = this.uiLocale.text('The operation was shut down.');
         this.loadBusinesses();
         this.loadStats();
         this.loadPending();
       },
       error: (err) => {
-        this.error = err?.businessErrorDescription || err?.error || err?.message || 'Αποτυχία απενεργοποίησης.';
+        this.error = err?.businessErrorDescription || err?.error || err?.message || this.uiLocale.text('Failed to disable.');
       }
     });
   }
 
   deleteBusiness(id: number): void {
-    if (!confirm('Θέλετε ΟΡΙΣΤΙΚΗ διαγραφή της επιχείρησης;')) return;
+    if (!confirm(this.uiLocale.text('Do you want to FINALLY delete the business?'))) return;
 
     this.professionalService.deleteBusiness(id).subscribe({
       next: () => {
-        this.success = 'Η επιχείρηση διαγράφηκε οριστικά.';
+        this.success = this.uiLocale.text('The operation was permanently deleted.');
         this.loadBusinesses();
         this.loadStats();
         this.loadPending();
       },
       error: (err) => {
-        this.error = err?.businessErrorDescription || err?.error || err?.message || 'Αποτυχία διαγραφής.';
+        this.error = err?.businessErrorDescription || err?.error || err?.message || this.uiLocale.text('Delete failed.');
       }
     });
   }
 
   toggleBusinessActive(business: ProfessionalBusinessDTO): void {
     if (business.active) {
-      if (!confirm('Θέλετε να απενεργοποιήσετε αυτή την επιχείρηση;')) return;
+      if (!confirm(this.uiLocale.text('Do you want to disable this business?'))) return;
 
       this.professionalService.deactivate(business.id).subscribe({
         next: () => {
-          this.success = 'Η επιχείρηση απενεργοποιήθηκε.';
+          this.success = this.uiLocale.text('The operation was shut down.');
           this.loadBusinesses();
           this.loadStats();
           this.loadPending();
         },
         error: (err) => {
-          this.error = err?.businessErrorDescription || err?.error || err?.message || 'Αποτυχία απενεργοποίησης.';
+          this.error = err?.businessErrorDescription || err?.error || err?.message || this.uiLocale.text('Failed to disable.');
         }
       });
 
@@ -224,13 +227,13 @@ export class ProfessionalApprovalComponent implements OnInit {
 
     this.professionalService.approve(business.id).subscribe({
       next: () => {
-        this.success = 'Η επιχείρηση ενεργοποιήθηκε.';
+        this.success = this.uiLocale.text('The operation was activated.');
         this.loadBusinesses();
         this.loadStats();
         this.loadPending();
       },
       error: (err) => {
-        this.error = err?.businessErrorDescription || err?.error || err?.message || 'Αποτυχία ενεργοποίησης.';
+        this.error = err?.businessErrorDescription || err?.error || err?.message || this.uiLocale.text('Activation failed.');
       }
     });
   }

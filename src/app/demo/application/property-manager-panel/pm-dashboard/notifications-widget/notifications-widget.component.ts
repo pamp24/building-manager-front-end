@@ -1,3 +1,5 @@
+import { TranslateModule } from '@ngx-translate/core';
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 import { CommonModule } from '@angular/common';
 import { Component, Input, inject } from '@angular/core';
 import { IconService } from '@ant-design/icons-angular';
@@ -8,11 +10,13 @@ import { DashboardNotification } from 'src/app/theme/shared/models/pmDashboardDT
 @Component({
   selector: 'app-notifications-widget',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [TranslateModule, CommonModule, RouterModule],
   templateUrl: './notifications-widget.component.html',
   styleUrl: './notifications-widget.component.scss'
 })
 export class NotificationsWidgetComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private iconService = inject(IconService);
 
   @Input() notifications: DashboardNotification[] = [];
@@ -22,7 +26,7 @@ export class NotificationsWidgetComponent {
   }
 
   get unreadCount(): number {
-    return this.notifications.filter(item => !item.read).length;
+    return this.notifications.filter((item) => !item.read).length;
   }
 
   formatDate(date: string): string {
@@ -30,7 +34,7 @@ export class NotificationsWidgetComponent {
       return '-';
     }
 
-    return new Intl.DateTimeFormat('el-GR', {
+    return new Intl.DateTimeFormat(this.uiLocale.locale, {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',

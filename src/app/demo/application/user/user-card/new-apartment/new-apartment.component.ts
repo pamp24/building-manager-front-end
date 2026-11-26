@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, OnInit } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApartmentService } from 'src/app/theme/shared/service/apartment.service';
@@ -10,11 +13,13 @@ import { ApartmentRequest } from 'src/app/theme/shared/models/apartmentRequest';
 @Component({
   selector: 'app-new-apartment',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [TranslateModule, CommonModule, ReactiveFormsModule],
   templateUrl: './new-apartment.component.html',
   styleUrls: ['./new-apartment.component.scss']
 })
 export class NewApartmentComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   form!: FormGroup;
   isSubmitted = false;
 
@@ -41,7 +46,7 @@ export class NewApartmentComponent implements OnInit {
 
     const buildingId = Number(localStorage.getItem('buildingId'));
     if (!buildingId) {
-      alert('Δεν βρέθηκε κωδικός πολυκατοικίας');
+      alert(this.uiLocale.text('Apartment code not found'));
       return;
     }
     // Φόρτωμα στοιχείων πολυκατοικίας
@@ -158,7 +163,7 @@ export class NewApartmentComponent implements OnInit {
   }
 
   onCancel(): void {
-    if (confirm('Είστε σίγουρος ότι θέλετε να ακυρώσετε;')) {
+    if (confirm(this.uiLocale.text('Are you sure you want to cancel?'))) {
       this.form.reset();
       this.apartments.clear();
       this.apartments.push(this.createApartmentGroup());
@@ -176,7 +181,7 @@ export class NewApartmentComponent implements OnInit {
 
     const buildingId = Number(localStorage.getItem('buildingId'));
     if (!buildingId) {
-      alert('Δεν βρέθηκε κωδικός πολυκατοικίας.');
+      alert(this.uiLocale.text('Apartment code not found.'));
       return;
     }
 
@@ -204,7 +209,7 @@ export class NewApartmentComponent implements OnInit {
 
     this.apartmentService.saveMultiple(apartmentsToSave).subscribe({
       next: () => {
-        alert('Τα διαμερίσματα αποθηκεύτηκαν!');
+        alert(this.uiLocale.text('Apartments saved!'));
         this.activeModal.close({
           saved: true
         });

@@ -1,32 +1,32 @@
 <app-card [cardTitle]="currentTitle">
   <ng-template #headerOptionsTemplate>
-  <div ngbDropdown placement="bottom-end">
-    <a class="avatar avatar-s btn-link-secondary arrow-none" href="javascript:" ngbDropdownToggle>
-      <i class="f-18" antIcon type="more" theme="outline"></i>
-    </a>
-    <div ngbDropdownMenu>
-      <a ngbDropdownItem (click)="onPeriodChange('month')">Τρέχοντος Μήνα</a>
-      <a ngbDropdownItem (click)="onPeriodChange('year')">Τρέχοντος Έτους</a>
-      <a ngbDropdownItem (click)="onPeriodChange('all')">Συνολικά</a>
+    <div ngbDropdown placement="bottom-end">
+      <a class="avatar avatar-s btn-link-secondary arrow-none" href="javascript:" ngbDropdownToggle>
+        <i class="f-18" antIcon type="more" theme="outline"></i>
+      </a>
+      <div ngbDropdownMenu>
+        <a ngbDropdownItem (click)="onPeriodChange('month')">{{ 'Current Month' | translate }}</a>
+        <a ngbDropdownItem (click)="onPeriodChange('year')">{{ 'Current Year' | translate }}</a>
+        <a ngbDropdownItem (click)="onPeriodChange('all')">{{ 'Overall' | translate }}</a>
+      </div>
     </div>
-  </div>
-</ng-template>
+  </ng-template>
 
   <div *ngIf="chartOptions?.series?.length; else noData">
-  <apx-chart
-    [chart]="chartOptions.chart"
-    [series]="chartOptions.series"
-    [labels]="chartOptions.labels"
-    [colors]="chartOptions.colors"
-    [plotOptions]="chartOptions.plotOptions"
-    [legend]="chartOptions.legend"
-    [tooltip]="chartOptions.tooltip"
-  ></apx-chart>
-</div>
+    <apx-chart
+      [chart]="chartOptions.chart"
+      [series]="chartOptions.series"
+      [labels]="chartOptions.labels"
+      [colors]="chartOptions.colors"
+      [plotOptions]="chartOptions.plotOptions"
+      [legend]="chartOptions.legend"
+      [tooltip]="chartOptions.tooltip"
+    ></apx-chart>
+  </div>
 
-<ng-template #noData>
-  <div class="text-center text-muted mt-3">Δεν υπάρχουν διαθέσιμα δεδομένα για εμφάνιση</div>
-</ng-template>
+  <ng-template #noData>
+    <div class="dashboard-empty-state" style="--empty-state-height: 280px">{{ 'No data available to display' | translate }}</div>
+  </ng-template>
 
   @for (list of expenses; track list; let last = $last; let first = $first) {
     <div class="d-flex align-items-center justify-content-between" [ngClass]="{ 'mb-2': !last, 'mt-3': first }">

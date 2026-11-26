@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -18,6 +19,8 @@ import { environment } from 'src/environments/environment';
   styleUrl: './admin-buildings.component.scss'
 })
 export class AdminBuildingsComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private iconService = inject(IconService);
 
   buildings: BuildingDTO[] = [];
@@ -35,11 +38,11 @@ export class AdminBuildingsComponent implements OnInit {
   error?: string;
 
   readonly heatingTypes = [
-    { value: 'OIL', label: 'Πετρέλαιο' },
-    { value: 'NATURAL_GAS', label: 'Φυσικό Αέριο' },
-    { value: 'ELECTRIC', label: 'Ηλεκτρικό' },
-    { value: 'HEAT_PUMP', label: 'Αντλία Θερμότητας' },
-    { value: 'NONE', label: 'Καθόλου θέρμανση' }
+    { value: 'OIL', label: this.uiLocale.text('Oil') },
+    { value: 'NATURAL_GAS', label: this.uiLocale.text('Natural Gas') },
+    { value: 'ELECTRIC', label: this.uiLocale.text('Electric') },
+    { value: 'HEAT_PUMP', label: this.uiLocale.text('Heat Pump') },
+    { value: 'NONE', label: this.uiLocale.text('No heating at all') }
   ];
 
   constructor(private buildingService: BuildingService) {
@@ -62,7 +65,7 @@ export class AdminBuildingsComponent implements OnInit {
       error: (err) => {
         console.error(err);
         this.loading = false;
-        this.error = 'Αποτυχία φόρτωσης όλων των πολυκατοικιών.';
+        this.error = this.uiLocale.text('Failed to load all apartment buildings.');
       }
     });
   }
@@ -102,8 +105,7 @@ export class AdminBuildingsComponent implements OnInit {
         (this.selectedStatus === 'active' && building.active) ||
         (this.selectedStatus === 'inactive' && !building.active);
 
-      const matchesCompany =
-        !this.selectedCompanyId || building.company?.companyId === Number(this.selectedCompanyId);
+      const matchesCompany = !this.selectedCompanyId || building.company?.companyId === Number(this.selectedCompanyId);
 
       const matchesManager = !this.selectedManager || building.managerFullName === this.selectedManager;
 
@@ -112,7 +114,17 @@ export class AdminBuildingsComponent implements OnInit {
         (this.selectedHeating === 'NONE' && !building.heatingType) ||
         building.heatingType === this.selectedHeating;
 
-      return matchesSearch && matchesCountry && matchesRegion && matchesCity && matchesAssignment && matchesStatus && matchesCompany && matchesManager && matchesHeating;
+      return (
+        matchesSearch &&
+        matchesCountry &&
+        matchesRegion &&
+        matchesCity &&
+        matchesAssignment &&
+        matchesStatus &&
+        matchesCompany &&
+        matchesManager &&
+        matchesHeating
+      );
     });
   }
 
@@ -200,9 +212,16 @@ export class AdminBuildingsComponent implements OnInit {
 
   toggleBuildingActive(building: BuildingDTO): void {
     const newValue = !building.active;
-    const action = newValue ? 'Ενεργοποίηση' : 'Απενεργοποίηση';
+    const action = newValue ? this.uiLocale.text('Activation') : this.uiLocale.text('Disable');
 
-    if (!confirm(`Είστε σίγουροι ότι θέλετε ${action.toLowerCase()} της πολυκατοικίας "${building.name}";`)) {
+    if (
+      !confirm(
+        this.uiLocale.text('Are you sure you want {{p0}} of the apartment building "{{p1}}"?', {
+          p0: action.toLowerCase(),
+          p1: building.name
+        })
+      )
+    ) {
       return;
     }
 
@@ -213,13 +232,13 @@ export class AdminBuildingsComponent implements OnInit {
       },
       error: (err) => {
         console.error(err);
-        alert('Αποτυχία αλλαγής κατάστασης της πολυκατοικίας.');
+        alert(this.uiLocale.text('Failed to change apartment building status.'));
       }
     });
   }
 
   softDeleteBuilding(building: BuildingDTO): void {
-    if (!confirm(`Είστε σίγουροι ότι θέλετε να διαγράψετε (soft-delete) την πολυκατοικία "${building.name}";`)) {
+    if (!confirm(this.uiLocale.text('Are you sure you want to soft-delete the apartment building "{{p0}}"?', { p0: building.name }))) {
       return;
     }
 
@@ -230,7 +249,7 @@ export class AdminBuildingsComponent implements OnInit {
       },
       error: (err) => {
         console.error(err);
-        alert('Αποτυχία διαγραφής της πολυκατοικίας.');
+        alert(this.uiLocale.text('Failed to delete apartment building.'));
       }
     });
   }

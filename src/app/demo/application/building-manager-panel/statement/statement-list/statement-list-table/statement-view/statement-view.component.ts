@@ -1,10 +1,12 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, Input, OnChanges, OnInit } from '@angular/core';
+
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonExpenseItem, CommonExpenseStatement } from 'src/app/theme/shared/models/commonExpenseStatement';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
 import { ApartmentService } from 'src/app/theme/shared/service/apartment.service';
-import { OnInit } from '@angular/core';
+
 import { ApartmentDTO } from 'src/app/theme/shared/models/apartmentDTO';
 import { BuildingDTO } from 'src/app/theme/shared/models/buildingDTO';
 import { ManagerDTO } from 'src/app/theme/shared/models/managerDTO';
@@ -39,6 +41,8 @@ interface ApartmentStatementRow {
   imports: [SharedModule]
 })
 export class StatementViewComponent implements OnChanges, OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   @Input() statement!: CommonExpenseStatement;
 
   selectedBuilding?: BuildingDTO;
@@ -46,22 +50,40 @@ export class StatementViewComponent implements OnChanges, OnInit {
   apartments: ApartmentDTO[] = [];
 
   readonly greekMonths = [
-    'Ιανουάριος',
-    'Φεβρουάριος',
-    'Μάρτιος',
-    'Απρίλιος',
-    'Μάιος',
-    'Ιούνιος',
-    'Ιούλιος',
-    'Αύγουστος',
-    'Σεπτέμβριος',
-    'Οκτώβριος',
-    'Νοέμβριος',
-    'Δεκέμβριος'
+    this.uiLocale.text('January'),
+    this.uiLocale.text('February'),
+    this.uiLocale.text('March'),
+    this.uiLocale.text('April'),
+    this.uiLocale.text('May'),
+    this.uiLocale.text('June'),
+    this.uiLocale.text('July'),
+    this.uiLocale.text('August'),
+    this.uiLocale.text('September'),
+    this.uiLocale.text('October'),
+    this.uiLocale.text('November'),
+    this.uiLocale.text('December')
   ];
 
-  readonly summaryCategoryOrder: StatementCategoryKey[] = ['COMMON', 'HEATING', 'ELEVATOR', 'EQUAL', 'BOILER', 'SPECIAL', 'OWNERS', 'OTHER'];
-  readonly apartmentAmountCategories: StatementCategoryKey[] = ['COMMON', 'ELEVATOR', 'HEATING', 'EQUAL', 'BOILER', 'SPECIAL', 'OWNERS', 'OTHER'];
+  readonly summaryCategoryOrder: StatementCategoryKey[] = [
+    'COMMON',
+    'HEATING',
+    'ELEVATOR',
+    'EQUAL',
+    'BOILER',
+    'SPECIAL',
+    'OWNERS',
+    'OTHER'
+  ];
+  readonly apartmentAmountCategories: StatementCategoryKey[] = [
+    'COMMON',
+    'ELEVATOR',
+    'HEATING',
+    'EQUAL',
+    'BOILER',
+    'SPECIAL',
+    'OWNERS',
+    'OTHER'
+  ];
 
   ngOnChanges() {
     console.log('StatementViewComponent statement:', this.statement);
@@ -154,18 +176,18 @@ export class StatementViewComponent implements OnChanges, OnInit {
   }
 
   translateStatus(status: string | undefined, isPaid?: boolean): string {
-    if (isPaid) return 'Πληρώθηκε';
+    if (isPaid) return this.uiLocale.text('It was paid');
     switch (status) {
       case 'PAID':
-        return 'Πληρώθηκε';
+        return this.uiLocale.text('It was paid');
       case 'ISSUED':
-        return 'Εκκρεμεί';
+        return this.uiLocale.text('It is pending');
       case 'EXPIRED':
-        return 'Έληξε';
+        return this.uiLocale.text("It's over");
       case 'CLOSED':
-        return 'Ακυρώθηκε';
+        return this.uiLocale.text('Canceled');
       case 'DRAFT':
-        return 'Πρόχειρο';
+        return this.uiLocale.text('Draft');
       default:
         return status ?? '';
     }
@@ -190,14 +212,14 @@ export class StatementViewComponent implements OnChanges, OnInit {
   }
 
   categoryLabelMap: Record<string, string> = {
-    COMMON: 'ΚΟΙΝΟΧΡΗΣΤΑ',
-    HEATING: 'ΘΕΡΜΑΝΣΗ',
-    ELEVATOR: 'ΑΣΑΝΣΕΡ',
-    EQUAL: 'ΔΑΠΑΝΕΣ ΣΕ ΙΣΑ ΜΕΡΗ',
+    COMMON: this.uiLocale.text('SHARE USERS'),
+    HEATING: this.uiLocale.text('HEATING'),
+    ELEVATOR: this.uiLocale.text('ELEVATOR'),
+    EQUAL: this.uiLocale.text('EXPENDITURE IN EQUAL PARTS'),
     BOILER: 'BOILER',
-    SPECIAL: 'ΕΙΔΙΚΕΣ ΔΑΠΑΝΕΣ',
-    OWNERS: 'ΙΔΙΟΚΤΗΤΩΝ',
-    OTHER: 'ΛΟΙΠΕΣ ΔΑΠΑΝΕΣ'
+    SPECIAL: this.uiLocale.text('SPECIAL EXPENSES'),
+    OWNERS: this.uiLocale.text('OWNERS'),
+    OTHER: this.uiLocale.text('OTHER EXPENSES')
   };
 
   translateCategory(category: string | undefined): string {
@@ -207,17 +229,16 @@ export class StatementViewComponent implements OnChanges, OnInit {
 
   get categorySections(): StatementCategorySection[] {
     const items = this.statement?.items ?? [];
-    return this.summaryCategoryOrder
-      .map((key) => {
-        const sectionItems = items.filter((item) => item.category === key);
-        return {
-          key,
-          label: this.categoryLabelMap[key],
-          items: sectionItems,
-          total: sectionItems.reduce((sum, item) => sum + this.getItemAmount(item), 0),
-          emptyRows: Array.from({ length: Math.max(1, 4 - sectionItems.length) }, (_, index) => index)
-        };
-      });
+    return this.summaryCategoryOrder.map((key) => {
+      const sectionItems = items.filter((item) => item.category === key);
+      return {
+        key,
+        label: this.categoryLabelMap[key],
+        items: sectionItems,
+        total: sectionItems.reduce((sum, item) => sum + this.getItemAmount(item), 0),
+        emptyRows: Array.from({ length: Math.max(1, 4 - sectionItems.length) }, (_, index) => index)
+      };
+    });
   }
 
   get apartmentRows(): ApartmentStatementRow[] {
@@ -253,7 +274,11 @@ export class StatementViewComponent implements OnChanges, OnInit {
       return {
         apartmentId: apartment.id,
         displayIndex: index + 1,
-        displayName: apartment.residentFullName || apartment.ownerFullName || `${apartment.ownerLastName ?? ''} ${apartment.ownerFirstName ?? ''}`.trim() || '—',
+        displayName:
+          apartment.residentFullName ||
+          apartment.ownerFullName ||
+          `${apartment.ownerLastName ?? ''} ${apartment.ownerFirstName ?? ''}`.trim() ||
+          '—',
         apartmentLabel: apartment.fullApartmentName || `${apartment.floor ?? ''}${apartment.number ?? ''}`,
         commonPercent: Number(apartment.commonPercent ?? 0),
         elevatorPercent: Number(apartment.elevatorPercent ?? 0),
@@ -330,12 +355,12 @@ export class StatementViewComponent implements OnChanges, OnInit {
   displayAmount(value: number | undefined | null): string {
     const amount = Number(value ?? 0);
     if (!amount) return '';
-    return amount.toLocaleString('el-GR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return amount.toLocaleString(this.uiLocale.locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
   displayPercent(value: number | undefined | null): string {
     const amount = Number(value ?? 0);
     if (!amount) return '';
-    return amount.toLocaleString('el-GR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return amount.toLocaleString(this.uiLocale.locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 }

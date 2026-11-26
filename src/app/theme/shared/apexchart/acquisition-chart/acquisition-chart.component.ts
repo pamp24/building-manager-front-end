@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // angular import
 import { Component, effect, inject } from '@angular/core';
 
@@ -15,6 +16,8 @@ import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
   styleUrl: './acquisition-chart.component.scss'
 })
 export class AcquisitionChartComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private themeService = inject(ThemeService);
 
   // public props
@@ -50,15 +53,15 @@ export class AcquisitionChartComponent {
       colors: ['#141414', '#1677ff', '#91caff'],
       series: [
         {
-          name: 'Direct',
+          name: this.uiLocale.text('Direct'),
           data: [21, 17, 15, 13, 15, 13, 16, 13, 8, 14, 11, 9, 7, 5, 3, 3, 7]
         },
         {
-          name: 'Referral',
+          name: this.uiLocale.text('Referral'),
           data: [28, 30, 20, 26, 18, 27, 22, 28, 20, 21, 15, 14, 12, 10, 8, 18, 16]
         },
         {
-          name: 'Social',
+          name: this.uiLocale.text('Social'),
           data: [50, 51, 60, 54, 53, 48, 55, 40, 44, 42, 44, 44, 42, 40, 42, 32, 16]
         }
       ],
@@ -147,7 +150,7 @@ export class AcquisitionChartComponent {
   // public methods
   channels = [
     {
-      title: 'Top Channels',
+      title: this.uiLocale.text('Top Channels'),
       icon: 'ti ti-device-analytics',
       background: 'text-secondary bg-light-secondary',
       time: 'Today, 2:00 AM',
@@ -155,7 +158,7 @@ export class AcquisitionChartComponent {
       percentage: '35%'
     },
     {
-      title: 'Top Pages',
+      title: this.uiLocale.text('Top Pages'),
       icon: 'ti ti-file-text',
       background: 'text-primary bg-light-primary',
       time: 'Today, 6:00 AM',

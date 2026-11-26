@@ -155,15 +155,17 @@ export class NavContentComponent implements AfterViewInit, OnInit {
     this.layout = MantisConfig.layout;
 
     this.reloadMenu();
-    this.router.events.pipe(
-      filter((event) => event instanceof NavigationEnd),
-      startWith(null),
-      switchMap(() => this.professionalService.hasMyBusiness().pipe(catchError(() => EMPTY))),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe((hasBusiness) => {
-      this.hasMyBusiness = hasBusiness;
-      this.reloadMenu();
-    });
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        startWith(null),
+        switchMap(() => this.professionalService.hasMyBusiness().pipe(catchError(() => EMPTY))),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((hasBusiness) => {
+        this.hasMyBusiness = hasBusiness;
+        this.reloadMenu();
+      });
     this.userService.getCurrentUser().subscribe({
       next: (user) => {
         this.hasJoinedBuilding = user.buildingMember === true;

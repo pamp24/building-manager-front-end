@@ -1,5 +1,7 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component } from '@angular/core';
 // angular import
-import { Component } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 
 // project import
@@ -49,6 +51,8 @@ const ALERTS: Alert[] = [
   styleUrls: ['./alert.component.scss']
 })
 export class AlertComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   // public props
   closableAlerts!: Alert[];
 
@@ -61,31 +65,31 @@ export class AlertComponent {
   basicAlerts = [
     {
       type: 'primary',
-      message: 'A simple primary alert—check it out!'
+      message: this.uiLocale.text('A simple primary alert—check it out!')
     },
     {
       type: 'secondary',
-      message: 'A simple secondary alert—check it out!'
+      message: this.uiLocale.text('A simple secondary alert—check it out!')
     },
     {
       type: 'success',
-      message: 'A simple success alert—check it out!'
+      message: this.uiLocale.text('A simple success alert—check it out!')
     },
     {
       type: 'danger',
-      message: 'A simple danger alert—check it out!'
+      message: this.uiLocale.text('A simple danger alert—check it out!')
     },
     {
       type: 'warning',
-      message: 'A simple warning alert—check it out!'
+      message: this.uiLocale.text('A simple warning alert—check it out!')
     },
     {
       type: 'info',
-      message: 'A simple info alert—check it out!'
+      message: this.uiLocale.text('A simple info alert—check it out!')
     },
     {
       type: 'dark',
-      message: 'A simple dark alert—check it out!'
+      message: this.uiLocale.text('A simple dark alert—check it out!')
     }
   ];
 

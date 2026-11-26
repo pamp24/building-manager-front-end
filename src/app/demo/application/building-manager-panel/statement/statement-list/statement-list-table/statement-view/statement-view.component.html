@@ -2,21 +2,21 @@
   <div class="col-sm-12">
     <app-card [showHeader]="false">
       <div class="d-flex justify-content-end gap-2 mb-3 d-print-none">
-        <button class="btn btn-primary" (click)="printStatement()">Εκτύπωση</button>
-        <button class="btn btn-primary" (click)="downloadPDF()">Λήψη PDF</button>
-        <button class="btn btn-danger" (click)="close()">Κλείσιμο</button>
+        <button class="btn btn-primary" (click)="printStatement()">{{ 'Printing' | translate }}</button>
+        <button class="btn btn-primary" (click)="downloadPDF()">{{ 'Download PDF' | translate }}</button>
+        <button class="btn btn-danger" (click)="close()">{{ 'Closing' | translate }}</button>
       </div>
 
-        <div id="print-section" class="statement-print-sheet">
-          <div class="statement-app-brand">
-            <img src="assets/images/oikio-icon.png" alt="Oikio" class="statement-app-logo" />
-            <div class="statement-app-brand-text">
-              <div class="statement-app-name">Building Manager Network</div>
-              <div class="statement-app-subtitle">Εκδοση Κοινοχρήστων</div>
-            </div>
+      <div id="print-section" class="statement-print-sheet">
+        <div class="statement-app-brand">
+          <img src="assets/images/oikio-icon.png" alt="Oikio" class="statement-app-logo" />
+          <div class="statement-app-brand-text">
+            <div class="statement-app-name">{{ 'Building Manager Network' | translate }}</div>
+            <div class="statement-app-subtitle">{{ 'Public Edition' | translate }}</div>
           </div>
+        </div>
 
-          <div class="statement-top-layout">
+        <div class="statement-top-layout">
           <div class="statement-left-column">
             <div class="issuer-panel">
               <div class="issuer-line issuer-title">{{ issuerName || selectedBuilding?.name }}</div>
@@ -28,31 +28,31 @@
 
             <table class="statement-meta-table">
               <tr>
-                <th>ΚΩΔΙΚΟΣ</th>
+                <th>{{ 'CODE' | translate }}</th>
                 <td>{{ statement.code }}</td>
-                <th>ΗΜ/ΝΙΑ</th>
+                <th>{{ 'DATE/YYYY' | translate }}</th>
                 <td>{{ statement.startDate | date: 'd/M/yyyy' }}</td>
               </tr>
               <tr>
-                <th>ΜΗΝΑΣ</th>
+                <th>{{ 'MONTH' | translate }}</th>
                 <td colspan="3">{{ formatMonth(statement.month) }}</td>
               </tr>
               <tr>
-                <th>ΔΙΑΧΕΙΡΙΣΤΗΣ</th>
+                <th>{{ 'MANAGER' | translate }}</th>
                 <td colspan="3">{{ selectedBuilding?.managerFullName || manager?.fullName || '—' }}</td>
               </tr>
               <tr>
-                <th>ΔΙΕΥΘΥΝΣΗ</th>
+                <th>{{ 'ADDRESS' | translate }}</th>
                 <td colspan="3">{{ buildingAddress || '—' }}</td>
               </tr>
               <tr>
-                <th>ΠΕΡΙΟΧΗ</th>
+                <th>{{ 'AREA' | translate }}</th>
                 <td colspan="3">{{ selectedBuilding?.city || '—' }}</td>
               </tr>
             </table>
 
             <div class="announcement-panel">
-              <div class="announcement-title">ΑΝΑΚΟΙΝΩΣΗ</div>
+              <div class="announcement-title">{{ 'NOTICE' | translate }}</div>
               <div class="announcement-body">{{ statement.description || '—' }}</div>
             </div>
           </div>
@@ -68,7 +68,7 @@
                   <thead>
                     <tr>
                       <th>{{ section.label }}</th>
-                      <th class="text-end">ΠΟΣΟ</th>
+                      <th class="text-end">{{ 'HOW MUCH' | translate }}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -81,7 +81,7 @@
                       <td>&nbsp;</td>
                     </tr>
                     <tr class="expense-total-row">
-                      <td>ΣΥΝΟΛΟ</td>
+                      <td>{{ 'TOTAL' | translate }}</td>
                       <td class="text-end">{{ section.total | number: '1.2-2' }}</td>
                     </tr>
                   </tbody>
@@ -90,7 +90,7 @@
             </div>
 
             <div class="grand-total-box">
-              <span>ΓΕΝΙΚΟ ΣΥΝΟΛΟ</span>
+              <span>{{ 'GENERAL TOTAL' | translate }}</span>
               <strong>{{ statement.total | number: '1.2-2' }}</strong>
             </div>
           </div>
@@ -100,25 +100,25 @@
           <table class="allocations-table">
             <thead>
               <tr>
-                <th rowspan="2">Α/Α</th>
-                <th rowspan="2">ΟΝΟΜΑΤΕΠΩΝΥΜΟ</th>
-                <th rowspan="2">ΑΡ. ΔΙΑΜ.</th>
-                <th colspan="3">ΧΙΛΙΟΣΤΑ</th>
-                <th colspan="8">ΠΟΣΟ ΑΝΑΛΟΓΙΑΣ ΣΕ ΕΥΡΩ</th>
-                <th rowspan="2">ΓΕΝΙΚΟ ΣΥΝΟΛΟ</th>
+                <th rowspan="2">{{ 'N/A' | translate }}</th>
+                <th rowspan="2">{{ 'NAME' | translate }}</th>
+                <th rowspan="2">{{ 'NO. DIAM.' | translate }}</th>
+                <th colspan="3">{{ 'THOUSANDS' | translate }}</th>
+                <th colspan="8">{{ 'PROPORTION AMOUNT IN EUROS' | translate }}</th>
+                <th rowspan="2">{{ 'GENERAL TOTAL' | translate }}</th>
               </tr>
               <tr>
-                <th>ΚΟΙΝ/ΤΑ</th>
-                <th>ΑΣΑΝΣΕΡ</th>
-                <th>ΘΕΡ/ΝΣΗ</th>
-                <th>ΚΟΙΝ/ΤΑ</th>
-                <th>ΑΣΑΝΣΕΡ</th>
-                <th>ΘΕΡ/ΝΣΗ</th>
-                <th>ΙΣΑ ΜΕΡΗ</th>
-                <th>BOILER</th>
-                <th>ΕΙΔΙΚΕΣ</th>
-                <th>ΙΔΙΟΚΤΗΤΩΝ</th>
-                <th>ΛΟΙΠΑ</th>
+                <th>{{ 'COMMUNITIES' | translate }}</th>
+                <th>{{ 'ELEVATOR' | translate }}</th>
+                <th>{{ 'THER/NSI' | translate }}</th>
+                <th>{{ 'COMMUNITIES' | translate }}</th>
+                <th>{{ 'ELEVATOR' | translate }}</th>
+                <th>{{ 'THER/NSI' | translate }}</th>
+                <th>{{ 'EQUAL PARTS' | translate }}</th>
+                <th>{{ 'BOILER' | translate }}</th>
+                <th>{{ 'SPECIAL' | translate }}</th>
+                <th>{{ 'OWNERS' | translate }}</th>
+                <th>{{ 'OTHERS' | translate }}</th>
               </tr>
             </thead>
             <tbody>
@@ -142,7 +142,7 @@
             </tbody>
             <tfoot>
               <tr>
-                <th colspan="3" class="text-end">ΓΕΝΙΚΑ ΣΥΝΟΛΑ =&gt;</th>
+                <th colspan="3" class="text-end">{{ 'GENERAL SETS =&gt;' | translate }}</th>
                 <th>{{ displayPercent(commonPercentTotal) }}</th>
                 <th>{{ displayPercent(elevatorPercentTotal) }}</th>
                 <th>{{ displayPercent(heatingPercentTotal) }}</th>

@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-sm-12">
-    <app-card cardTitle="Ημερολόγιο">
+    <app-card [cardTitle]="'Calendar' | translate">
       <div class="row text-center">
         <div class="col-md-4">
           <div class="btn-group">
@@ -11,22 +11,28 @@
               [(viewDate)]="viewDate"
               (viewDateChange)="closeOpenMonthViewDay()"
             >
-              Προηγούμενο
+              {{ 'Previous' | translate }}
             </div>
-            <div class="btn btn-outline-primary" mwlCalendarToday [(viewDate)]="viewDate">Σήμερα</div>
+            <div class="btn btn-outline-primary" mwlCalendarToday [(viewDate)]="viewDate">{{ 'Today' | translate }}</div>
             <div class="btn btn-muted" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
-              Επόμενο
+              {{ 'Next' | translate }}
             </div>
           </div>
         </div>
         <div class="col-md-4">
-          <h3>{{ viewDate | calendarDate: view + 'ViewTitle' : 'el' }}</h3>
+          <h3>{{ viewDate | calendarDate: view + 'ViewTitle' : locale }}</h3>
         </div>
         <div class="col-md-4">
           <div class="btn-group">
-            <div class="btn btn-primary" (click)="setView(calendarView.Month)" [class.active]="view === calendarView.Month">Μήνας</div>
-            <div class="btn btn-primary" (click)="setView(calendarView.Week)" [class.active]="view === calendarView.Week">Εβδομάδα</div>
-            <div class="btn btn-primary" (click)="setView(calendarView.Day)" [class.active]="view === calendarView.Day">Μέρα</div>
+            <div class="btn btn-primary" (click)="setView(calendarView.Month)" [class.active]="view === calendarView.Month">
+              {{ 'Month' | translate }}
+            </div>
+            <div class="btn btn-primary" (click)="setView(calendarView.Week)" [class.active]="view === calendarView.Week">
+              {{ 'Week' | translate }}
+            </div>
+            <div class="btn btn-primary" (click)="setView(calendarView.Day)" [class.active]="view === calendarView.Day">
+              {{ 'Day' | translate }}
+            </div>
           </div>
         </div>
       </div>
@@ -35,6 +41,7 @@
         @switch (view) {
           @case (calendarView.Month) {
             <mwl-calendar-month-view
+              [locale]="locale"
               [viewDate]="viewDate"
               [events]="events"
               [refresh]="refresh"
@@ -46,6 +53,7 @@
           }
           @case (calendarView.Week) {
             <mwl-calendar-week-view
+              [locale]="locale"
               [viewDate]="viewDate"
               [events]="events"
               [refresh]="refresh"
@@ -55,6 +63,7 @@
           }
           @case (calendarView.Day) {
             <mwl-calendar-day-view
+              [locale]="locale"
               [viewDate]="viewDate"
               [events]="events"
               [refresh]="refresh"
@@ -68,45 +77,53 @@
       <br />
       <br />
       <h3>
-        <button *ngIf="canCreateAnnouncement" class="btn btn-primary float-end" (click)="openAddModal()">Προσθήκη</button>
+        <button *ngIf="canCreateAnnouncement" class="btn btn-primary float-end" (click)="openAddModal()">
+          {{ 'Addition' | translate }}
+        </button>
         <div class="clearfix"></div>
       </h3>
-      <h3>Επεξεργασία Ανακοινώσεων</h3>
+      <h3>{{ 'Edit Announcements' | translate }}</h3>
 
       <div class="table-responsive mt-4">
-        <h5 class="mb-3">Γεγονότα που έχουν προστεθεί</h5>
+        <h5 class="mb-3">{{ 'Added facts' | translate }}</h5>
 
         <!-- Φίλτρα ενεργών / ανενεργών -->
-        <div class="btn-group btn-group-sm mb-3" role="group" aria-label="Φίλτρο κατάστασης">
+        <div class="btn-group btn-group-sm mb-3" role="group" [attr.aria-label]="'Status filter' | translate">
           <button
             type="button"
             class="btn"
             [ngClass]="statusFilter === 'all' ? 'btn-primary' : 'btn-outline-secondary'"
             (click)="setStatusFilter('all')"
-          >Όλες</button>
+          >
+            {{ 'All of them' | translate }}
+          </button>
           <button
             type="button"
             class="btn"
             [ngClass]="statusFilter === 'active' ? 'btn-success' : 'btn-outline-secondary'"
             (click)="setStatusFilter('active')"
-          >Ενεργές</button>
+          >
+            {{ 'Active' | translate }}
+          </button>
           <button
             type="button"
             class="btn"
             [ngClass]="statusFilter === 'inactive' ? 'btn-secondary' : 'btn-outline-secondary'"
             (click)="setStatusFilter('inactive')"
-          >Ανενεργές</button>
+          >
+            {{ 'Inactive' | translate }}
+          </button>
         </div>
 
         <table class="table table-bordered align-middle text-center">
           <thead class="table-light">
             <tr>
-              <th>Τίτλος</th>
-              <th>Ανακοίνωση</th>
-              <th>Αρχή</th>
-              <th>Λήξη</th>
-              <th>Κατάσταση</th>
-              <th *ngIf="isManager">Ενέργειες</th>
+              <th>{{ 'Title' | translate }}</th>
+              <th>{{ 'Announcement' | translate }}</th>
+              <th>{{ 'Authority' | translate }}</th>
+              <th>{{ 'Expiration' | translate }}</th>
+              <th>{{ 'Status' | translate }}</th>
+              <th *ngIf="isManager">{{ 'Actions' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -118,7 +135,7 @@
                 <td>{{ event.end | date: 'medium' }}</td>
                 <td>
                   <span class="badge px-3 py-2" [ngClass]="$any(event).active ? 'bg-success' : 'bg-secondary'">
-                    {{ $any(event).active ? 'Ενεργή' : 'Ανενεργή' }}
+                    {{ $any(event).active ? ('Active' | translate) : ('Inactive' | translate) }}
                   </span>
                 </td>
                 <td *ngIf="isManager">
@@ -129,7 +146,7 @@
                         href="javascript:void(0)"
                         class="avatar avatar-xs"
                         [ngClass]="$any(event).pinned ? 'btn-link-warning' : 'btn-link-secondary'"
-                        ngbTooltip="Pin / Unpin"
+                        [ngbTooltip]="'Pin / Unpin' | translate"
                         (click)="togglePin(event)"
                       >
                         <i class="f-16 d-flex" antIcon type="pushpin" [theme]="$any(event).pinned ? 'fill' : 'outline'"></i>
@@ -141,7 +158,7 @@
                       <a
                         href="javascript:void(0)"
                         class="avatar avatar-xs btn-link-primary"
-                        ngbTooltip="Επεξεργασία"
+                        [ngbTooltip]="'Processing' | translate"
                         (click)="openEditModal(event)"
                       >
                         <i class="f-16 text-primary d-flex" antIcon type="edit" theme="outline"></i>
@@ -152,7 +169,7 @@
                       <a
                         href="javascript:void(0)"
                         class="avatar avatar-xs btn-link-danger"
-                        ngbTooltip="Διαγραφή"
+                        [ngbTooltip]="'Delete' | translate"
                         (click)="deleteEvent(event)"
                       >
                         <i class="f-16 text-danger d-flex" antIcon type="delete" theme="outline"></i>
@@ -163,7 +180,7 @@
               </tr>
             } @empty {
               <tr>
-                <td [attr.colspan]="isManager ? 6 : 5" class="text-muted text-center">Δεν έχουν προστεθεί γεγονότα ακόμα</td>
+                <td [attr.colspan]="isManager ? 6 : 5" class="text-muted text-center">{{ 'No events have been added yet' | translate }}</td>
               </tr>
             }
           </tbody>
@@ -172,7 +189,7 @@
         <nav *ngIf="filteredEvents.length > 0" class="mt-3">
           <ul class="pagination pagination-sm justify-content-center mb-0">
             <li class="page-item" [class.disabled]="page === 1">
-              <a class="page-link" href="javascript:void(0)" (click)="goToPage(page - 1)">Προηγ</a>
+              <a class="page-link" href="javascript:void(0)" (click)="goToPage(page - 1)">{{ 'Previous' | translate }}</a>
             </li>
             @for (p of pageArray; track p) {
               <li class="page-item" [class.active]="p === page">
@@ -180,7 +197,7 @@
               </li>
             }
             <li class="page-item" [class.disabled]="page === totalPages">
-              <a class="page-link" href="javascript:void(0)" (click)="goToPage(page + 1)">Επόμ</a>
+              <a class="page-link" href="javascript:void(0)" (click)="goToPage(page + 1)">{{ 'Adm' | translate }}</a>
             </li>
           </ul>
         </nav>

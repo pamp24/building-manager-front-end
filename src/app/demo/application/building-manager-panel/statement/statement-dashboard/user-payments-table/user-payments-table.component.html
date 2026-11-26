@@ -2,14 +2,14 @@
   <table class="table table-sm table-striped align-middle mb-0">
     <thead>
       <tr>
-        <th>Χρήστης</th>
-        <th>Διαμέρισμα</th>
-        <th>Οφειλή</th>
-        <th>Πληρωμένο</th>
-        <th>Ημερομηνία</th>
-        <th>Τρόπος</th>
-        <th>Κατάσταση</th>
-        <th>Ενέργειες</th>
+        <th>{{ 'User' | translate }}</th>
+        <th>{{ 'Apartment' | translate }}</th>
+        <th>{{ 'Due' | translate }}</th>
+        <th>{{ 'Paid' | translate }}</th>
+        <th>{{ 'Date' | translate }}</th>
+        <th>{{ 'Way' | translate }}</th>
+        <th>{{ 'Status' | translate }}</th>
+        <th>{{ 'Actions' | translate }}</th>
       </tr>
     </thead>
 
@@ -42,7 +42,9 @@
               'btn-link-primary': p.status !== 'PAID',
               'btn-link-secondary disabled': p.status === 'PAID'
             }"
-            ngbTooltip="{{ p.status === 'PAID' ? 'Έχει εξοφληθεί' : 'Επεξεργασία' }}"
+            ngbTooltip="{{
+              p.status === 'PAID' ? ('It has been paid off' | translate) : ('Processing' | translate)
+            }}: ('Processing' | translate) }}"
             (click)="p.status !== 'PAID' && onEdit(p)"
           >
             <i
@@ -61,14 +63,14 @@
 
       <tr *ngIf="!statementUserPayments.length && !paymentsLoading">
         <td colspan="8" class="text-center text-muted">
-          Δεν υπάρχουν δεδομένα χρηστών για αυτό το παραστατικό
+          {{ 'There is no user data for this document' | translate }}
         </td>
       </tr>
 
       <tr *ngIf="paymentsLoading">
         <td colspan="8" class="text-center">
           <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Φόρτωση...</span>
+            <span class="visually-hidden">{{ 'Loading...' | translate }}</span>
           </div>
         </td>
       </tr>

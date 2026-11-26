@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-lg-4 col-xxl-3">
-    <app-card cardTitle="Φωτογραφία Πολυκατοικίας">
+    <app-card [cardTitle]="'Apartment building photo' | translate">
       <div class="text-center">
         <img class="building-cover-img img-fluid w-100 rounded" [src]="buildingCoverUrl" alt="Building image" />
       </div>
@@ -8,13 +8,20 @@
       <div *ngIf="hasRole('BuildingManager') || hasRole('PropertyManager')" class="mt-3">
         <div *ngIf="!selectedBuildingImage">
           <input type="file" class="form-control" [accept]="acceptedBuildingImageTypes" (change)="onBuildingImageSelected($event)" />
-          <small class="text-muted d-block mt-2">JPG, PNG ή WEBP. Έως {{ maxBuildingImageSizeMb }}MB.</small>
+          <small class="text-muted d-block mt-2">
+            {{ 'JPG, PNG or WEBP. Until' | translate }} {{ maxBuildingImageSizeMb }}{{ 'MB.' | translate }}
+          </small>
         </div>
 
         <div *ngIf="selectedBuildingImage" class="d-flex align-items-center justify-content-between gap-2 mb-2">
           <span class="text-truncate">{{ selectedBuildingImage.name }}</span>
-          <button type="button" class="btn btn-sm btn-outline-danger flex-shrink-0" [disabled]="isUploadingBuildingImage" (click)="selectedBuildingImage = undefined">
-            Αφαίρεση
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-danger flex-shrink-0"
+            [disabled]="isUploadingBuildingImage"
+            (click)="selectedBuildingImage = undefined"
+          >
+            {{ 'Removal' | translate }}
           </button>
         </div>
 
@@ -25,14 +32,14 @@
           [disabled]="isUploadingBuildingImage"
           (click)="uploadSelectedBuildingImage()"
         >
-          {{ isUploadingBuildingImage ? 'Μεταφόρτωση...' : 'Ανέβασμα φωτογραφίας' }}
+          {{ isUploadingBuildingImage ? ('Uploading...' | translate) : ('Upload photo' | translate) }}
         </button>
       </div>
     </app-card>
 
-    <app-card cardTitle="Κωδικός Πολυκατοικίας">
+    <app-card [cardTitle]="'Apartment code' | translate">
       <h5 class="mb-0">{{ buildingData?.buildingCode }}</h5>
-      <p class="text-muted mb-0 small">Με τον κωδικό αυτό μπορείτε να προσθέσετε και άλλους χρήστες στην πολυκατοικία.</p>
+      <p class="text-muted mb-0 small">{{ 'With this code you can add other users to the apartment building.' | translate }}</p>
     </app-card>
 
     <app-card *ngIf="buildingData?.company as c" [showHeader]="false" blockClass="position-relative">
@@ -42,13 +49,13 @@
         </div>
 
         <h5 class="mb-0">{{ c.companyName }}</h5>
-        <p class="text-muted mb-0">Εταιρεία Διαχείρισης</p>
+        <p class="text-muted mb-0">{{ 'Management Company' | translate }}</p>
 
         <hr class="my-3" />
 
         <div class="row g-3">
           <div class="col-12">
-            <p class="mb-0 text-muted">ΑΦΜ: {{ c.taxNumber || '—' }}</p>
+            <p class="mb-0 text-muted">{{ 'VAT number:' | translate }} {{ c.taxNumber || '—' }}</p>
           </div>
         </div>
 
@@ -89,15 +96,15 @@
         <div class="row g-3">
           <div class="col-4 border border-top-0 border-bottom-0">
             <h5 class="mb-0">{{ buildingData?.floors }}</h5>
-            <p class="text-muted">Όροφοι</p>
+            <p class="text-muted">{{ 'Floors' | translate }}</p>
           </div>
           <div class="col-4">
             <h5 class="mb-0">{{ buildingData?.apartmentsNum }}</h5>
-            <p class="text-muted">Διαμερίσματα</p>
+            <p class="text-muted">{{ 'Apartments' | translate }}</p>
           </div>
           <div class="col-4">
             <h5 class="mb-0">{{ buildingData?.apartmentsNum }}</h5>
-            <p class="text-muted">Μέλη</p>
+            <p class="text-muted">{{ 'Members' | translate }}</p>
           </div>
         </div>
         <hr class="my-3" />
@@ -110,11 +117,11 @@
       </div>
     </app-card>
 
-    <app-card cardTitle="Αρχεία Πολυκατοικίας">
+    <app-card [cardTitle]="'Apartment Building Files' | translate">
       <div *ngIf="isEditing && (hasRole('BuildingManager') || hasRole('PropertyManager'))" class="documents-upload mb-3">
         <div class="row g-3">
           <div class="col-12">
-            <label class="form-label">Κατηγορία αρχείων</label>
+            <label class="form-label">{{ 'File category' | translate }}</label>
             <select class="form-select" [(ngModel)]="selectedDocumentCategory" [ngModelOptions]="{ standalone: true }">
               <option *ngFor="let category of documentCategories" [value]="category">
                 {{ category | translate }}
@@ -123,10 +130,11 @@
           </div>
 
           <div class="col-12">
-            <label class="form-label">Μεταφόρτωση αρχείων</label>
+            <label class="form-label">{{ 'Upload files' | translate }}</label>
             <input type="file" multiple class="form-control" [accept]="acceptedDocumentTypes" (change)="onDocumentFilesSelected($event)" />
             <small class="text-muted d-block mt-2">
-              Υποστηρίζονται PDF, εικόνες, Word και Excel. Έως {{ maxUploadFiles }} αρχεία, {{ maxUploadFileSizeMb }}MB το καθένα.
+              {{ 'PDF, images, Word and Excel are supported. Until' | translate }} {{ maxUploadFiles }} {{ 'files,' | translate }}
+              {{ maxUploadFileSizeMb }}{{ 'MB each.' | translate }}
             </small>
           </div>
         </div>
@@ -137,24 +145,36 @@
               <div class="selected-file-name">{{ file.name }}</div>
               <div class="selected-file-meta">{{ getSelectedUploadFileTypeLabel(file) }} • {{ getDocumentSizeLabel(file.size) }}</div>
             </div>
-            <button type="button" class="btn btn-sm btn-outline-danger" [disabled]="isUploadingDocuments" (click)="removeSelectedUploadFile(i)">Αφαίρεση</button>
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-danger"
+              [disabled]="isUploadingDocuments"
+              (click)="removeSelectedUploadFile(i)"
+            >
+              {{ 'Removal' | translate }}
+            </button>
           </div>
         </div>
 
         <div class="text-end mt-3">
-          <button type="button" class="btn btn-primary" [disabled]="selectedUploadFiles.length === 0 || isUploadingDocuments" (click)="uploadSelectedDocuments()">
-            {{ isUploadingDocuments ? 'Μεταφόρτωση...' : 'Ανέβασμα αρχείων' }}
+          <button
+            type="button"
+            class="btn btn-primary"
+            [disabled]="selectedUploadFiles.length === 0 || isUploadingDocuments"
+            (click)="uploadSelectedDocuments()"
+          >
+            {{ isUploadingDocuments ? ('Uploading...' | translate) : ('Upload files' | translate) }}
           </button>
         </div>
       </div>
 
       <div *ngIf="isLoadingDocuments" class="documents-empty">
-        <div class="documents-empty-title">Φόρτωση αρχείων...</div>
+        <div class="documents-empty-title">{{ 'Loading files...' | translate }}</div>
       </div>
 
       <div *ngIf="!isLoadingDocuments && buildingDocuments.length === 0" class="documents-empty">
-        <div class="documents-empty-title">Δεν υπάρχουν διαθέσιμα αρχεία</div>
-        <div class="documents-empty-text">Δεν έχουν καταχωρηθεί ακόμη έγγραφα για την πολυκατοικία.</div>
+        <div class="documents-empty-title">{{ 'No files available' | translate }}</div>
+        <div class="documents-empty-text">{{ 'No documents have been registered for the apartment building yet.' | translate }}</div>
       </div>
 
       <div *ngIf="!isLoadingDocuments && buildingDocuments.length > 0" class="documents-list">
@@ -164,10 +184,12 @@
               <span class="document-badge">{{ getDocumentTypeLabel(document) }}</span>
               <div>
                 <div class="document-name">{{ document.fileName }}</div>
-                <div class="document-meta">{{ getDocumentCategoryKey(document.category) | translate }} • {{ getDocumentSizeLabel(document.sizeBytes) }}</div>
+                <div class="document-meta">
+                  {{ getDocumentCategoryKey(document.category) | translate }} • {{ getDocumentSizeLabel(document.sizeBytes) }}
+                </div>
               </div>
             </div>
-            <span class="document-open">Άνοιγμα</span>
+            <span class="document-open">{{ 'Opening' | translate }}</span>
           </a>
         }
       </div>
@@ -175,13 +197,13 @@
   </div>
 
   <div class="col-lg-8 col-xxl-9">
-    <app-card cardTitle="Περιγραφή" [padding]="24">
+    <app-card [cardTitle]="'Description' | translate" [padding]="24">
       <p class="mb-0">
-        {{ buildingData?.buildingDescription || 'Δεν έχει οριστεί περιγραφή για την πολυκατοικία.' }}
+        {{ buildingData?.buildingDescription || ('No description has been set for the apartment building.' | translate) }}
       </p>
     </app-card>
 
-    <app-card cardTitle="Στοιχεία Πολυκατοικίας" [padding]="24">
+    <app-card [cardTitle]="'Details of Apartment Building' | translate" [padding]="24">
       <form [formGroup]="buildingForm" (ngSubmit)="submitChanges()">
         <div class="row">
           <div
@@ -210,65 +232,65 @@
           </div>
 
           <div class="col-md-6 form-group" *ngIf="buildingForm.get('parkingExist')?.value">
-            <label>Αριθμός Θέσεων Πάρκινγκ</label>
+            <label>{{ 'Number of Parking Spaces' | translate }}</label>
             <input type="number" class="form-control" formControlName="parkingSpacesNum" />
           </div>
 
           <div class="col-md-6 form-group" *ngIf="buildingForm.get('storageExist')?.value">
-            <label>Αριθμός Αποθηκών</label>
+            <label>{{ 'Number of Warehouses' | translate }}</label>
             <input type="number" class="form-control" formControlName="storageNum" />
           </div>
 
           <div class="col-md-6 form-group">
-            <label>Διαθέτει Υπόγειο</label>
+            <label>{{ 'It has a basement' | translate }}</label>
             <select class="form-select" formControlName="undergroundFloorExist">
-              <option [value]="true">Ναι</option>
-              <option [value]="false">Όχι</option>
+              <option [value]="true">{{ 'Yes' | translate }}</option>
+              <option [value]="false">{{ 'Nope' | translate }}</option>
             </select>
           </div>
 
           <div class="col-md-6 form-group">
-            <label>Διαθέτει Ημιόροφο</label>
+            <label>{{ 'It has a mezzanine' | translate }}</label>
             <select class="form-select" formControlName="halfFloorExist">
-              <option [value]="true">Ναι</option>
-              <option [value]="false">Όχι</option>
+              <option [value]="true">{{ 'Yes' | translate }}</option>
+              <option [value]="false">{{ 'Nope' | translate }}</option>
             </select>
           </div>
 
           <div class="col-md-6 form-group">
-            <label>Διαθέτει Δώμα</label>
+            <label>{{ 'It has a roof' | translate }}</label>
             <select class="form-select" formControlName="overTopFloorExist">
-              <option [value]="true">Ναι</option>
-              <option [value]="false">Όχι</option>
+              <option [value]="true">{{ 'Yes' | translate }}</option>
+              <option [value]="false">{{ 'Nope' | translate }}</option>
             </select>
           </div>
 
           <div class="col-md-6 form-group">
-            <label>Διαθέτει Κεντρική Θέρμανση</label>
+            <label>{{ 'It has Central Heating' | translate }}</label>
             <select class="form-select" formControlName="hasCentralHeating">
-              <option [value]="true">Ναι</option>
-              <option [value]="false">Όχι</option>
+              <option [value]="true">{{ 'Yes' | translate }}</option>
+              <option [value]="false">{{ 'Nope' | translate }}</option>
             </select>
           </div>
         </div>
       </form>
     </app-card>
 
-    <app-card cardTitle="Θέρμανση" [padding]="24">
+    <app-card [cardTitle]="'Heating' | translate" [padding]="24">
       <div [formGroup]="buildingForm">
         <div class="row">
           <div class="col-md-6 form-group">
-            <label>Τύπος Θέρμανσης</label>
+            <label>{{ 'Heating Type' | translate }}</label>
             <select class="form-select" formControlName="heatingType">
-              <option value="OIL">Πετρέλαιο</option>
-              <option value="NATURAL_GAS">Φυσικό Αέριο</option>
-              <option value="ELECTRIC">Ηλεκτρικό</option>
-              <option value="HEAT_PUMP">Αντλία Θερμότητας</option>
-              <option value="NONE">Καθόλου θέρμανση</option>
+              <option value="OIL">{{ 'Oil' | translate }}</option>
+              <option value="NATURAL_GAS">{{ 'Natural Gas' | translate }}</option>
+              <option value="ELECTRIC">{{ 'Electric' | translate }}</option>
+              <option value="HEAT_PUMP">{{ 'Heat Pump' | translate }}</option>
+              <option value="NONE">{{ 'No heating at all' | translate }}</option>
             </select>
           </div>
           <div class="col-md-6 form-group">
-            <label>Χωρητικότητα (Λίτρα)</label>
+            <label>{{ 'Capacity (Liters)' | translate }}</label>
             <input type="number" class="form-control" formControlName="heatingCapacityLitres" />
           </div>
         </div>
@@ -277,10 +299,10 @@
 
     <div *ngIf="hasRole('BuildingManager') || hasRole('PropertyManager')" class="mt-4 text-end">
       <button type="button" class="btn btn-secondary me-2" (click)="toggleEdit()">
-        {{ isEditing ? 'Ακύρωση' : 'Επεξεργασία' }}
+        {{ isEditing ? ('Cancellation' | translate) : ('Processing' | translate) }}
       </button>
       <button type="button" class="btn btn-success" [disabled]="!isEditing || buildingForm.invalid" (click)="submitChanges()">
-        Αποθήκευση
+        {{ 'Save' | translate }}
       </button>
     </div>
   </div>
@@ -297,5 +319,5 @@
 </div>
 
 <div *ngIf="pmView" class="mb-3">
-  <a class="btn btn-outline-primary" [routerLink]="['/pm/buildings']">Πίσω</a>
+  <a class="btn btn-outline-primary" [routerLink]="['/pm/buildings']">{{ 'Back' | translate }}</a>
 </div>

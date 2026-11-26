@@ -1,34 +1,205 @@
 <app-public-header />
 <main>
-  <section class="hero"><div class="wrap"><p class="eyebrow">OIKIO / ΤΙΜΟΛΟΓΗΣΗ</p><h1>Μια πιο απλή διαχείριση,<br /><em>στο δικό σας μέτρο.</em></h1><p>Συγκρίνετε τα πακέτα με βάση τις ανάγκες της πολυκατοικίας ή της επιχείρησής σας.</p></div></section>
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">{{ 'OIKIO / INVOICING' | translate }}</p>
+      <h1>
+        {{ 'A simpler management,' | translate }}
+        <br />
+        <em>{{ 'at your own pace.' | translate }}</em>
+      </h1>
+      <p>{{ 'Compare packages based on the needs of your apartment building or business.' | translate }}</p>
+    </div>
+  </section>
   <section class="pricing wrap">
     <div class="controls">
-      <div><span class="control-label">ΓΙΑ ΠΟΙΟΝ</span><div class="segmented" aria-label="Τύπος διαχειριστή"><button [class.active]="type === 'individual'" [attr.aria-pressed]="type === 'individual'" (click)="type = 'individual'">Ιδιώτες</button><button [class.active]="type === 'business'" [attr.aria-pressed]="type === 'business'" (click)="type = 'business'">Επιχειρήσεις</button></div></div>
-      <div><span class="control-label">ΧΡΕΩΣΗ</span><div class="segmented"><button [class.active]="!annual" [attr.aria-pressed]="!annual" (click)="annual = false">Μηνιαία</button><button [class.active]="annual" [attr.aria-pressed]="annual" (click)="annual = true">Ετήσια @if (catalog) { −{{ catalog.annualDiscountBasisPoints / 100 }}% }</button></div></div>
+      <div>
+        <span class="control-label">{{ 'FOR WHOM' | translate }}</span>
+        <div class="segmented" [attr.aria-label]="'Admin type' | translate">
+          <button [class.active]="type === 'individual'" [attr.aria-pressed]="type === 'individual'" (click)="type = 'individual'">
+            {{ 'Individuals' | translate }}
+          </button>
+          <button [class.active]="type === 'business'" [attr.aria-pressed]="type === 'business'" (click)="type = 'business'">
+            {{ 'Businesses' | translate }}
+          </button>
+        </div>
+      </div>
+      <div>
+        <span class="control-label">{{ 'CHARGE' | translate }}</span>
+        <div class="segmented">
+          <button [class.active]="!annual" [attr.aria-pressed]="!annual" (click)="annual = false">
+            {{ 'Monthly' | translate }}
+          </button>
+          <button [class.active]="annual" [attr.aria-pressed]="annual" (click)="annual = true">
+            {{ 'Annually' | translate }}
+            @if (catalog) {
+              −{{ catalog.annualDiscountBasisPoints / 100 }}%
+            }
+          </button>
+        </div>
+      </div>
     </div>
-    <div class="estimator"><div><p class="eyebrow">ΥΠΟΛΟΓΙΣΜΟΣ</p><h2>Πείτε μας το μέγεθός σας</h2><p>Προσαρμόστε τα στοιχεία για να δείτε την επιλεξιμότητα και την εκτιμώμενη χρέωση.</p></div>
-      <div class="inputs"><label>Πολυκατοικίες <input type="number" min="1" max="100000" [(ngModel)]="buildings" /></label><label>Διαμερίσματα <input type="number" min="1" max="100000" [(ngModel)]="apartments" /></label><label class="range">Διαμερίσματα (1–250) <input type="range" min="1" max="250" [(ngModel)]="apartments" /></label></div>
+    <div class="estimator">
+      <div>
+        <p class="eyebrow">{{ 'CALCULATION' | translate }}</p>
+        <h2>{{ 'Please tell us your size' | translate }}</h2>
+        <p>{{ 'Adjust details to see eligibility and estimated fee.' | translate }}</p>
+      </div>
+      <div class="inputs">
+        <label>
+          {{ 'Apartment buildings' | translate }}
+          <input type="number" min="1" max="100000" [(ngModel)]="buildings" />
+        </label>
+        <label>
+          {{ 'Apartments' | translate }}
+          <input type="number" min="1" max="100000" [(ngModel)]="apartments" />
+        </label>
+        <label class="range">
+          {{ 'Apartments (1–250)' | translate }}
+          <input type="range" min="1" max="250" [(ngModel)]="apartments" />
+        </label>
+      </div>
     </div>
-    @if (!validCounts) { <p class="error" role="alert">Εισάγετε ακέραιους αριθμούς από 1 έως 100.000.</p> }
-    @if (error) { <div class="state" role="alert">Ο κατάλογος τιμών δεν είναι διαθέσιμος. <button (click)="load()">Δοκιμάστε ξανά</button></div> }
-    @else if (!catalog) { <p class="state">Φόρτωση τιμών...</p> }
-    @else {
+    @if (!validCounts) {
+      <p class="error" role="alert">{{ 'Enter whole numbers from 1 to 100,000.' | translate }}</p>
+    }
+    @if (error) {
+      <div class="state" role="alert">
+        {{ 'Price list not available.' | translate }}
+        <button (click)="load()">{{ 'Please try again' | translate }}</button>
+      </div>
+    } @else if (!catalog) {
+      <p class="state">{{ 'Loading prices...' | translate }}</p>
+    } @else {
       <div class="cards">
         @for (plan of plans; track plan.id; let i = $index) {
-          <article class="plan" [class.featured]="i === 1"><div class="plan-top"><span class="number">0{{ i + 1 }} / {{ type === 'individual' ? 'ΙΔΙΩΤΕΣ' : 'ΕΠΙΧΕΙΡΗΣΕΙΣ' }}</span><h3>{{ planName(plan.id) }}</h3>
-            <div class="amount">@if (plan.quoteOnly) { Προσφορά } @else if (validCounts && eligible(plan, buildings, apartments)) { @if (price(plan, catalog, apartments, annual); as result) { {{ result.total / 100 | currency:catalog.currency }} <small>/ {{ annual ? 'έτος' : 'μήνα' }}</small> } } @else { Μη επιλέξιμο }</div>
-            @if (plan.quoteOnly) { <p>Για ανάγκες που απαιτούν εξατομικευμένη πρόταση.</p> }
-            @else if (validCounts && eligible(plan, buildings, apartments)) { @if (price(plan, catalog, apartments, annual); as result) { @if (result.vat !== null) { <p>Καθαρή αξία {{ result.amount / 100 | currency:catalog.currency }} + ΦΠΑ {{ catalog.businessVatBasisPoints / 100 }}% ({{ result.vat / 100 | currency:catalog.currency }}).</p> } @else { <p>Η τιμή περιλαμβάνει ΦΠΑ.</p> } } }
-            @else { <p>Τα στοιχεία σας υπερβαίνουν τα όρια του πακέτου ή δεν είναι έγκυρα.</p> }
-          </div>
-          <ul><li>{{ plan.maxBuildings === null ? 'Όριο πολυκατοικιών κατόπιν προσφοράς' : plan.id === 'INDIVIDUAL_FREE' && plan.maxBuildings === 1 ? plan.maxBuildings + ' πολυκατοικία' : 'Έως ' + plan.maxBuildings + ' πολυκατοικίες' }}</li><li>{{ plan.maxApartments === null ? (plan.quoteOnly ? 'Όριο διαμερισμάτων κατόπιν προσφοράς' : 'Χωρίς όριο διαμερισμάτων') : 'Έως ' + plan.maxApartments + ' διαμερίσματα' }}</li>@if (plan.id === 'INDIVIDUAL_PLUS') { <li>Όλες οι λειτουργίες του Free</li> @if (plan.includedApartments !== null) { <li>{{ plan.includedApartments }} διαμερίσματα στη βασική τιμή</li> } @if (plan.extraApartmentMonthlyCents !== null) { <li>+{{ plan.extraApartmentMonthlyCents / 100 | currency:catalog.currency }} / μήνα ανά επιπλέον διαμέρισμα</li> } @for (feature of plusFeatures; track feature) { <li>{{ feature }}</li> } } @else if (plan.extraApartmentMonthlyCents && plan.includedApartments !== null) { <li>{{ plan.includedApartments }} διαμερίσματα περιλαμβάνονται, επιπλέον {{ plan.extraApartmentMonthlyCents / 100 | currency:catalog.currency }} / μήνα ανά διαμέρισμα</li> } @if (plan.id === 'INDIVIDUAL_FREE') { @for (feature of freeFeatures; track feature) { <li>{{ feature }}</li> } }</ul>
-          @if (plan.id === 'INDIVIDUAL_EXTENDED') { <ul>@for (feature of extendedFeatures; track feature) { <li>{{ feature }}</li> }</ul> }
-          <a class="plan-link" [routerLink]="plan.quoteOnly ? '/contact-us' : '/register'">{{ plan.quoteOnly ? 'Ζητήστε προσφορά' : 'Δημιουργία λογαριασμού' }} <span>↗</span></a></article>
+          <article class="plan" [class.featured]="i === 1">
+            <div class="plan-top">
+              <span class="number">
+                0{{ i + 1 }} / {{ type === 'individual' ? ('INDIVIDUALS' | translate) : ('BUSINESSES' | translate) }}
+              </span>
+              <h3>{{ planName(plan.id) }}</h3>
+              <div class="amount">
+                @if (plan.quoteOnly) {
+                  {{ 'Offer' | translate }}
+                } @else if (validCounts && eligible(plan, buildings, apartments)) {
+                  @if (price(plan, catalog, apartments, annual); as result) {
+                    {{ result.total / 100 | currency: catalog.currency }}
+                    <small>/ {{ annual ? ('year' | translate) : ('month' | translate) }}</small>
+                  }
+                } @else {
+                  {{ 'Not eligible' | translate }}
+                }
+              </div>
+              @if (plan.quoteOnly) {
+                <p>{{ 'For needs that require a personalized proposal.' | translate }}</p>
+              } @else if (validCounts && eligible(plan, buildings, apartments)) {
+                @if (price(plan, catalog, apartments, annual); as result) {
+                  @if (result.vat !== null) {
+                    <p>
+                      {{ 'Net worth' | translate }} {{ result.amount / 100 | currency: catalog.currency }} {{ '+ VAT' | translate }}
+                      {{ catalog.businessVatBasisPoints / 100 }}% ({{ result.vat / 100 | currency: catalog.currency }}).
+                    </p>
+                  } @else {
+                    <p>{{ 'The price includes VAT.' | translate }}</p>
+                  }
+                }
+              } @else {
+                <p>{{ 'Your details exceed the package limits or are invalid.' | translate }}</p>
+              }
+            </div>
+            <ul>
+              <li>
+                {{
+                  plan.maxBuildings === null
+                    ? ('Apartment limit by offer' | translate)
+                    : plan.id === 'INDIVIDUAL_FREE' && plan.maxBuildings === 1
+                      ? plan.maxBuildings + ('apartment building' | translate)
+                      : ('Until' | translate) + plan.maxBuildings + ('apartment buildings' | translate)
+                }}
+              </li>
+              <li>
+                {{
+                  plan.maxApartments === null
+                    ? plan.quoteOnly
+                      ? ('Limit of apartments upon offer' | translate)
+                      : ('No apartment limit' | translate)
+                    : ('Until' | translate) + plan.maxApartments + ('apartments' | translate)
+                }}
+              </li>
+              @if (plan.id === 'INDIVIDUAL_PLUS') {
+                <li>{{ 'All features of Free' | translate }}</li>
+                @if (plan.includedApartments !== null) {
+                  <li>{{ plan.includedApartments }} {{ 'apartments at the base price' | translate }}</li>
+                }
+                @if (plan.extraApartmentMonthlyCents !== null) {
+                  <li>
+                    +{{ plan.extraApartmentMonthlyCents / 100 | currency: catalog.currency }}
+                    {{ '/ month per additional apartment' | translate }}
+                  </li>
+                }
+                @for (feature of plusFeatures; track feature) {
+                  <li>{{ feature | translate }}</li>
+                }
+              } @else if (plan.extraApartmentMonthlyCents && plan.includedApartments !== null) {
+                <li>
+                  {{ plan.includedApartments }} {{ 'apartments included, extra' | translate }}
+                  {{ plan.extraApartmentMonthlyCents / 100 | currency: catalog.currency }} {{ '/ month per apartment' | translate }}
+                </li>
+              }
+              @if (plan.id === 'INDIVIDUAL_FREE') {
+                @for (feature of freeFeatures; track feature) {
+                  <li>{{ feature | translate }}</li>
+                }
+              }
+            </ul>
+            @if (plan.id === 'INDIVIDUAL_EXTENDED') {
+              <ul>
+                @for (feature of extendedFeatures; track feature) {
+                  <li>{{ feature | translate }}</li>
+                }
+              </ul>
+            }
+            <a class="plan-link" [routerLink]="plan.quoteOnly ? '/contact-us' : '/register'">
+              {{ plan.quoteOnly ? ('Request a quote' | translate) : ('Create an account' | translate) }}
+              <span>↗</span>
+            </a>
+          </article>
         }
       </div>
-      <p class="disclaimer">Οι τιμές αποτελούν εκτίμηση βάσει του τρέχοντος καταλόγου. Η ενεργοποίηση συνδρομών και η πληρωμή δεν είναι ακόμη διαθέσιμες. Οι δυνατότητες και η διαθεσιμότητά τους ανά πακέτο είναι υπό επιβεβαίωση.</p>
+      <p class="disclaimer">
+        {{
+          'Prices are an estimate based on the current catalog. Subscription activation and payment are not yet available. Features and their availability per package are subject to confirmation.'
+            | translate
+        }}
+      </p>
     }
   </section>
-  <section class="features"><div class="wrap feature-grid"><div><p class="eyebrow">ΜΙΑ ΚΟΙΝΗ ΑΦΕΤΗΡΙΑ</p><h2>Η καθημερινότητα της πολυκατοικίας, σε ένα μέρος.</h2></div><div><p>Το Oikio συγκεντρώνει εργαλεία για την οργάνωση κοινοχρήστων, την επικοινωνία και τη συμμετοχή των μελών.</p><p>Η διάθεση λειτουργιών ανά πακέτο δεν έχει ακόμη επιβεβαιωθεί. Επικοινωνήστε μαζί μας για τις δυνατότητες που χρειάζεστε.</p><a routerLink="/features">Δείτε τις λειτουργίες →</a></div></div></section>
-  <section class="cta"><div class="wrap"><p class="eyebrow">ΞΕΚΙΝΗΣΤΕ ΜΕ ΤΟ OIKIO</p><h2>Ας οργανώσουμε τη διαχείριση μαζί.</h2><div><a routerLink="/register">Εγγραφή</a><a class="secondary" routerLink="/contact-us">Επικοινωνία</a><a class="secondary" routerLink="/login">Σύνδεση</a></div></div></section>
-</main><app-public-footer />
+  <section class="features">
+    <div class="wrap feature-grid">
+      <div>
+        <p class="eyebrow">{{ 'A COMMON STARTING POINT' | translate }}</p>
+        <h2>{{ 'The everyday life of the apartment building, in one place.' | translate }}</h2>
+      </div>
+      <div>
+        <p>{{ 'Oikio brings together tools for community organization, communication and member engagement.' | translate }}</p>
+        <p>
+          {{ 'The availability of features per package has not yet been confirmed. Contact us for the features you need.' | translate }}
+        </p>
+        <a routerLink="/features">{{ 'See functions →' | translate }}</a>
+      </div>
+    </div>
+  </section>
+  <section class="cta">
+    <div class="wrap">
+      <p class="eyebrow">{{ 'START WITH OIKIO' | translate }}</p>
+      <h2>{{ "Let's organize management together." | translate }}</h2>
+      <div>
+        <a routerLink="/register">{{ 'Registration' | translate }}</a>
+        <a class="secondary" routerLink="/contact-us">{{ 'Communication' | translate }}</a>
+        <a class="secondary" routerLink="/login">{{ 'Connection' | translate }}</a>
+      </div>
+    </div>
+  </section>
+</main>
+<app-public-footer />

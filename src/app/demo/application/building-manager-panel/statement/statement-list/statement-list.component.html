@@ -1,5 +1,5 @@
 <div class="row">
-  <app-card cardTitle="Πολυκατοικία" [padding]="24" class="mb-3" *ngIf="showBuildingSelector && managedBuildings?.length > 0">
+  <app-card [cardTitle]="'Building' | translate" [padding]="24" class="mb-3" *ngIf="showBuildingSelector && managedBuildings?.length > 0">
     <div class="col-12 mb-3">
       <app-building-selector-inline
         [buildings]="managedBuildings"
@@ -31,7 +31,7 @@
                 <div class="col-6">
                   <h5 class="mb-2 mt-3">{{ cards.value }}</h5>
                   <div class="d-flex align-items-center gap-1">
-                    <p class="mb-0 text-muted d-flex align-items-center gap-2">Παραστατικά:</p>
+                    <p class="mb-0 text-muted d-flex align-items-center gap-2">{{ 'Documents:' | translate }}</p>
                     <h5 class="mb-0">{{ cards.statement }}</h5>
                   </div>
                 </div>
@@ -53,18 +53,18 @@
             <i antIcon type="bank" theme="outline" class="text-white d-flex f-20"></i>
           </div>
           <div class="ms-2">
-            <p class="mb-0 text-white">Συνολικό Ποσό Εκκρεμών Πληρωμών</p>
+            <p class="mb-0 text-white">{{ 'Total Amount of Outstanding Payments' | translate }}</p>
             <p class="mb-0 text-white text-sm">
-              Τελευταία Ημερομηνία Λήξης:
+              {{ 'Latest Expiration Date:' | translate }}
               <strong>
-                {{ summary?.lastDueDate ? (summary.lastDueDate | date: 'longDate') : 'Χωρίς Εκκρεμείς Πληρωμές' }}
+                {{ summary?.lastDueDate ? (summary.lastDueDate | date: 'longDate') : ('No Pending Payments' | translate) }}
               </strong>
             </p>
           </div>
         </div>
       </div>
 
-      <h4 class="mt-3 text-white mb-1">Απομένουν: {{ totalUnpaidAmount | currency: 'EUR' : 'symbol' : '1.2-2' }}</h4>
+      <h4 class="mt-3 text-white mb-1">{{ 'Remaining:' | translate }} {{ totalUnpaidAmount | currency: 'EUR' : 'symbol' : '1.2-2' }}</h4>
 
       <div class="d-flex align-items-center mt-2">
         <div class="flex-grow-1 me-3" style="width: 70%">
@@ -83,61 +83,91 @@
         <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs profile-tabs mb-3">
           <li [ngbNavItem]="1">
             <button ngbNavLink>
-              Όλα
+              {{ 'Everything' | translate }}
               <span class="avatar bg-light-primary lh-1">{{ totalCount }}</span>
             </button>
             <ng-template ngbNavContent>
-              <app-statement-list-table [statements]="statements" [isManagementRole]="isManagementRole" [myApartments]="myApartments" (refreshRequested)="reloadStatements()" />
+              <app-statement-list-table
+                [statements]="statements"
+                [isManagementRole]="isManagementRole"
+                [myApartments]="myApartments"
+                (refreshRequested)="reloadStatements()"
+              />
             </ng-template>
           </li>
 
           <li [ngbNavItem]="2">
             <button ngbNavLink>
-              Πληρώθηκαν
+              {{ 'They were paid' | translate }}
               <span class="avatar bg-light-success lh-1">{{ paidCount }}</span>
             </button>
             <ng-template ngbNavContent>
-              <app-statement-list-table [statements]="paidStatements" [isManagementRole]="isManagementRole" [myApartments]="myApartments" (refreshRequested)="reloadStatements()" />
+              <app-statement-list-table
+                [statements]="paidStatements"
+                [isManagementRole]="isManagementRole"
+                [myApartments]="myApartments"
+                (refreshRequested)="reloadStatements()"
+              />
             </ng-template>
           </li>
 
           <li [ngbNavItem]="3">
             <button ngbNavLink>
-              Τρέχοντα
+              {{ 'Current' | translate }}
               <span class="avatar bg-light-warning lh-1">{{ pendingCount }}</span>
             </button>
             <ng-template ngbNavContent>
-              <app-statement-list-table [statements]="pendingStatements" [isManagementRole]="isManagementRole" [myApartments]="myApartments" (refreshRequested)="reloadStatements()" />
+              <app-statement-list-table
+                [statements]="pendingStatements"
+                [isManagementRole]="isManagementRole"
+                [myApartments]="myApartments"
+                (refreshRequested)="reloadStatements()"
+              />
             </ng-template>
           </li>
 
           <li [ngbNavItem]="4">
             <button ngbNavLink>
-              Ληξιπρόθεσμα
+              {{ 'Overdue' | translate }}
               <span class="avatar bg-light-danger lh-1">{{ expiredCount }}</span>
             </button>
             <ng-template ngbNavContent>
-              <app-statement-list-table [statements]="expiredStatements" [isManagementRole]="isManagementRole" [myApartments]="myApartments" (refreshRequested)="reloadStatements()" />
+              <app-statement-list-table
+                [statements]="expiredStatements"
+                [isManagementRole]="isManagementRole"
+                [myApartments]="myApartments"
+                (refreshRequested)="reloadStatements()"
+              />
             </ng-template>
           </li>
 
           <li [ngbNavItem]="5">
             <button ngbNavLink>
-              Ακυρωμένα
+              {{ 'Cancelled' | translate }}
               <span class="avatar bg-light-danger lh-1">{{ closedCount }}</span>
             </button>
             <ng-template ngbNavContent>
-              <app-statement-list-table [statements]="closedStatements" [isManagementRole]="isManagementRole" [myApartments]="myApartments" (refreshRequested)="reloadStatements()" />
+              <app-statement-list-table
+                [statements]="closedStatements"
+                [isManagementRole]="isManagementRole"
+                [myApartments]="myApartments"
+                (refreshRequested)="reloadStatements()"
+              />
             </ng-template>
           </li>
 
           <li [ngbNavItem]="6">
             <button ngbNavLink>
-              Πρόχειρα
+              {{ 'Roughly' | translate }}
               <span class="avatar bg-light-primary lh-1">{{ draftCount }}</span>
             </button>
             <ng-template ngbNavContent>
-              <app-statement-list-table [statements]="draftStatements" [isManagementRole]="isManagementRole" [myApartments]="myApartments" (refreshRequested)="reloadStatements()" />
+              <app-statement-list-table
+                [statements]="draftStatements"
+                [isManagementRole]="isManagementRole"
+                [myApartments]="myApartments"
+                (refreshRequested)="reloadStatements()"
+              />
             </ng-template>
           </li>
         </ul>

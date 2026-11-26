@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { Component } from '@angular/core';
 
 import { ToastComponent } from './toastr/toast.component';
@@ -5,13 +6,15 @@ import { ToastrService } from './toastr/toastr.service';
 import { ToastPackage } from './toastr/toastr-config';
 
 @Component({
+  imports: [TranslateModule],
+
   selector: 'app-bootstrap-toast-component',
   template: `
     <div class="toast" role="alert" [style.display]="state().value === 'inactive' ? 'none' : ''">
       <div class="toast-header">
         <strong class="me-auto">{{ title || 'default header' }}</strong>
         @if (options.closeButton) {
-          <button type="button" class="btn-close" aria-label="Close" (click)="remove()"></button>
+          <button type="button" class="btn-close" [attr.aria-label]="'Close' | translate" (click)="remove()"></button>
         }
       </div>
       <div class="toast-body">

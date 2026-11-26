@@ -5,203 +5,209 @@
     <!-- Basic Inputs -->
     <div class="card">
       <div class="card-header">
-        <h5>Basic Inputs</h5>
+        <h5>{{ 'Basic Inputs' | translate }}</h5>
       </div>
       <div class="card-body">
         <div class="alert alert-primary">
           <div class="media align-items-center">
             <i class="feather icon-alert-circle h2"></i>
-            <div class="media-body ms-3">Basic HTML form components with custom style.</div>
+            <div class="media-body ms-3">{{ 'Basic HTML form components with custom style.' | translate }}</div>
           </div>
         </div>
         <div class="form-group">
-          <label class="form-label">Email address</label>
-          <input type="email" class="form-control form-control" placeholder="email@company.com" />
+          <label class="form-label">{{ 'Email address' | translate }}</label>
+          <input type="email" class="form-control form-control" [placeholder]="'email@company.com' | translate" />
         </div>
         <div class="form-group">
-          <label class="form-label" for="exampleInputPassword1">Password</label>
-          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" />
-          <small>Your password must be between 8 and 30 characters.</small>
+          <label class="form-label" for="exampleInputPassword1">{{ 'Password' | translate }}</label>
+          <input type="password" class="form-control" id="exampleInputPassword1" [placeholder]="'Password' | translate" />
+          <small>{{ 'Your password must be between 8 and 30 characters.' | translate }}</small>
         </div>
         <div class="form-group">
-          <label class="form-label" for="exampleSelect1">Select</label>
+          <label class="form-label" for="exampleSelect1">{{ 'Select' | translate }}</label>
           <select class="form-select" id="exampleSelect1">
-            <option>Option 1</option>
-            <option>Option 2</option>
-            <option>Option 3</option>
+            <option>{{ 'Option 1' | translate }}</option>
+            <option>{{ 'Option 2' | translate }}</option>
+            <option>{{ 'Option 3' | translate }}</option>
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label" for="exampleSelect2">Multiple select</label>
+          <label class="form-label" for="exampleSelect2">{{ 'Multiple select' | translate }}</label>
           <select multiple="" class="form-select" id="exampleSelect2">
-            <option>Option 1</option>
-            <option>Option 2</option>
-            <option>Option 3</option>
+            <option>{{ 'Option 1' | translate }}</option>
+            <option>{{ 'Option 2' | translate }}</option>
+            <option>{{ 'Option 3' | translate }}</option>
           </select>
-          <small>Hold shift or press ctrl for multi select.</small>
+          <small>{{ 'Hold shift or press ctrl for multi select.' | translate }}</small>
         </div>
         <div class="form-group mb-0">
-          <label class="form-label" for="exampleTextarea">Textarea</label>
+          <label class="form-label" for="exampleTextarea">{{ 'Textarea' | translate }}</label>
           <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
         </div>
       </div>
       <div class="card-footer">
-        <button class="btn btn-primary me-2">Submit</button>
-        <button type="reset" class="btn btn-light">Reset</button>
+        <button class="btn btn-primary me-2">{{ 'Submit' | translate }}</button>
+        <button type="reset" class="btn btn-light">{{ 'Reset' | translate }}</button>
       </div>
     </div>
     <!-- HTML Input Types -->
     <div class="card">
       <div class="card-header">
-        <h5>HTML Input Types</h5>
+        <h5>{{ 'HTML Input Types' | translate }}</h5>
       </div>
       <div class="card-body">
         <div class="alert alert-primary">
           <div class="media align-items-center">
             <i class="feather icon-alert-circle h2"></i>
             <div class="media-body ms-3">
-              Here are the different input types you can use in HTML. Check more at
-              <a href="https://www.w3schools.com/html/html_form_input_types.asp" rel="nofollow">W3Schools</a>
+              {{ 'Here are the different input types you can use in HTML. Check more at' | translate }}
+              <a href="https://www.w3schools.com/html/html_form_input_types.asp" rel="nofollow">{{ 'W3Schools' | translate }}</a>
             </div>
           </div>
         </div>
         <div class="form-group">
-          <label for="demo-text-input" class="col-form-label">Simple Input Text</label>
+          <label for="demo-text-input" class="col-form-label">{{ 'Simple Input Text' | translate }}</label>
           <input class="form-control" type="text" value="John Doe" id="demo-text-input" />
         </div>
         <div class="form-group">
-          <label for="demo-number-input" class="col-form-label">Number</label>
+          <label for="demo-number-input" class="col-form-label">{{ 'Number' | translate }}</label>
           <input class="form-control" type="number" value="100" id="demo-number-input" />
         </div>
         <div class="form-group">
-          <label for="demo-tel-input" class="col-form-label">Telephone</label>
+          <label for="demo-tel-input" class="col-form-label">{{ 'Telephone' | translate }}</label>
           <input class="form-control" type="tel" value="+918888888888" id="demo-tel-input" />
         </div>
         <div class="form-group">
-          <label for="demo-email-input" class="col-form-label">Email</label>
+          <label for="demo-email-input" class="col-form-label">{{ 'Email' | translate }}</label>
           <input class="form-control" type="email" value="demo@example.com" id="demo-email-input" />
         </div>
         <div class="form-group">
-          <label for="demo-password-input" class="col-form-label">Password</label>
+          <label for="demo-password-input" class="col-form-label">{{ 'Password' | translate }}</label>
           <input class="form-control" type="password" value="password123" id="demo-password-input" />
         </div>
         <div class="form-group">
-          <label for="demo-input-file" class="col-form-label">File</label>
+          <label for="demo-input-file" class="col-form-label">{{ 'File' | translate }}</label>
           <input class="form-control" type="file" id="demo-input-file" />
         </div>
         <div class="form-group">
-          <label for="demo-multi-input-file" class="col-form-label">Multi Files</label>
+          <label for="demo-multi-input-file" class="col-form-label">{{ 'Multi Files' | translate }}</label>
           <input class="form-control" type="file" id="demo-multi-input-file" multiple />
-          <small>Try selecting more than one file when browsing for files.</small>
+          <small>{{ 'Try selecting more than one file when browsing for files.' | translate }}</small>
         </div>
         <div class="form-group">
-          <label for="demo-URL-input" class="col-form-label">URL</label>
+          <label for="demo-URL-input" class="col-form-label">{{ 'URL' | translate }}</label>
           <input class="form-control" type="url" value="https://validator.w3.org/" id="demo-URL-input" />
         </div>
         <div class="form-group">
-          <label for="demo-search-input" class="col-form-label">Search</label>
+          <label for="demo-search-input" class="col-form-label">{{ 'Search' | translate }}</label>
           <input class="form-control" type="search" value="Best Admin Template" id="demo-search-input" />
-          <small>a search field behaves like a regular text field</small>
+          <small>{{ 'a search field behaves like a regular text field' | translate }}</small>
         </div>
         <div class="form-group">
-          <label for="demo-datetime-local" class="col-form-label">Date Time Local</label>
+          <label for="demo-datetime-local" class="col-form-label">{{ 'Date Time Local' | translate }}</label>
           <input class="form-control" type="datetime-local" value="2021-12-31T04:03:20" id="demo-datetime-local" />
         </div>
         <div class="form-group">
-          <label for="demo-date-only" class="col-form-label">Date only</label>
+          <label for="demo-date-only" class="col-form-label">{{ 'Date only' | translate }}</label>
           <input class="form-control" type="date" value="2021-12-31" id="demo-date-only" />
         </div>
         <div class="form-group">
-          <label for="demo-time-only" class="col-form-label">Time only</label>
+          <label for="demo-time-only" class="col-form-label">{{ 'Time only' | translate }}</label>
           <input class="form-control" type="time" value="04:03:20" id="demo-time-only" />
         </div>
         <div class="form-group">
-          <label for="demo-month-only" class="col-form-label">Month only</label>
+          <label for="demo-month-only" class="col-form-label">{{ 'Month only' | translate }}</label>
           <input class="form-control" type="month" value="2021-12" id="demo-month-only" />
         </div>
         <div class="form-group">
-          <label for="demo-week-only" class="col-form-label">Week only</label>
+          <label for="demo-week-only" class="col-form-label">{{ 'Week only' | translate }}</label>
           <input class="form-control" type="week" value="2021-W41" id="demo-week-only" />
         </div>
         <div class="form-group">
-          <label for="demo-color-input" class="col-form-label">Color</label>
+          <label for="demo-color-input" class="col-form-label">{{ 'Color' | translate }}</label>
           <input class="form-control form-control-color-picker" type="color" value="#5052FC" id="demo-color-input" />
         </div>
         <div class="form-group mb-0">
-          <label for="demo-range-input" class="col-form-label">Range</label>
+          <label for="demo-range-input" class="col-form-label">{{ 'Range' | translate }}</label>
           <input class="form-range" type="range" min="0" max="50" id="demo-range-input" />
         </div>
       </div>
       <div class="card-footer">
-        <button class="btn btn-primary me-2">Submit</button>
-        <button class="btn btn-secondary">Cancel</button>
+        <button class="btn btn-primary me-2">{{ 'Submit' | translate }}</button>
+        <button class="btn btn-secondary">{{ 'Cancel' | translate }}</button>
       </div>
     </div>
   </div>
   <div class="col-sm-6">
     <div class="card">
       <div class="card-header">
-        <h5>Sizing</h5>
+        <h5>{{ 'Sizing' | translate }}</h5>
       </div>
       <div class="card-body">
         <div class="alert alert-primary">
           <div class="media align-items-center">
             <i class="feather icon-alert-circle h2"></i>
             <div class="media-body ms-3">
-              Input sizing using
-              <code>.form-control-lg</code>
-              and
-              <code>.form-control-sm</code>
-              class.
+              {{ 'Input sizing using' | translate }}
+              <code>{{ '.form-control-lg' | translate }}</code>
+              {{ 'and' | translate }}
+              <code>{{ '.form-control-sm' | translate }}</code>
+              {{ 'class.' | translate }}
             </div>
           </div>
         </div>
         <div class="form-group">
-          <input class="form-control form-control-sm" type="text" placeholder=".form-control-sm" />
-          <small><code>.form-control-sm</code></small>
+          <input class="form-control form-control-sm" type="text" [placeholder]="'.form-control-sm' | translate" />
+          <small>
+            <code>{{ '.form-control-sm' | translate }}</code>
+          </small>
         </div>
         <div class="form-group">
-          <input class="form-control" type="text" placeholder="Default Input" />
-          <small><code>.form-control</code></small>
+          <input class="form-control" type="text" [placeholder]="'Default Input' | translate" />
+          <small>
+            <code>{{ '.form-control' | translate }}</code>
+          </small>
         </div>
         <div class="form-group">
-          <input class="form-control form-control-lg" type="text" placeholder=".form-control-lg" />
-          <small><code>.form-control-lg</code></small>
+          <input class="form-control form-control-lg" type="text" [placeholder]="'.form-control-lg' | translate" />
+          <small>
+            <code>{{ '.form-control-lg' | translate }}</code>
+          </small>
         </div>
         <hr />
         <div class="form-group">
-          <label class="form-label">Large select</label>
-          <select class="form-select form-select-lg" title="select">
-            <option>Option 1</option>
-            <option>Option 2</option>
-            <option>Option 3</option>
+          <label class="form-label">{{ 'Large select' | translate }}</label>
+          <select class="form-select form-select-lg" [title]="'select' | translate">
+            <option>{{ 'Option 1' | translate }}</option>
+            <option>{{ 'Option 2' | translate }}</option>
+            <option>{{ 'Option 3' | translate }}</option>
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">Default select</label>
-          <select class="form-select" title="select">
-            <option>Option 1</option>
-            <option>Option 2</option>
-            <option>Option 3</option>
-            <option>Option 4</option>
+          <label class="form-label">{{ 'Default select' | translate }}</label>
+          <select class="form-select" [title]="'select' | translate">
+            <option>{{ 'Option 1' | translate }}</option>
+            <option>{{ 'Option 2' | translate }}</option>
+            <option>{{ 'Option 3' | translate }}</option>
+            <option>{{ 'Option 4' | translate }}</option>
           </select>
         </div>
         <div class="form-group mb-0">
-          <label class="form-label">Small select</label>
-          <select class="form-select form-select-sm" title="select">
-            <option>Option 1</option>
-            <option>Option 2</option>
+          <label class="form-label">{{ 'Small select' | translate }}</label>
+          <select class="form-select form-select-sm" [title]="'select' | translate">
+            <option>{{ 'Option 1' | translate }}</option>
+            <option>{{ 'Option 2' | translate }}</option>
           </select>
         </div>
       </div>
       <div class="card-footer">
-        <button class="btn btn-primary me-2">Submit</button>
-        <button type="reset" class="btn btn-light">Reset</button>
+        <button class="btn btn-primary me-2">{{ 'Submit' | translate }}</button>
+        <button type="reset" class="btn btn-light">{{ 'Reset' | translate }}</button>
       </div>
     </div>
     <div class="card">
       <div class="card-header">
-        <h5>Input Attributes</h5>
+        <h5>{{ 'Input Attributes' | translate }}</h5>
       </div>
       <form>
         <div class="card-body">
@@ -209,62 +215,62 @@
             <div class="media align-items-center">
               <i class="feather icon-alert-circle h2"></i>
               <div class="media-body ms-3">
-                Examples of
-                <code>autofocus, value, readonly, disabled, required</code>
-                attributes in Input .
+                {{ 'Examples of' | translate }}
+                <code>{{ 'autofocus, value, readonly, disabled, required' | translate }}</code>
+                {{ 'attributes in Input .' | translate }}
               </div>
             </div>
           </div>
           <div class="form-group">
-            <label class="form-label" for="example-auto-focus">Auto focus</label>
-            <input type="email" class="form-control" placeholder="Enter email" />
-            <small>autofocus on page load</small>
+            <label class="form-label" for="example-auto-focus">{{ 'Auto focus' | translate }}</label>
+            <input type="email" class="form-control" [placeholder]="'Enter email' | translate" />
+            <small>{{ 'autofocus on page load' | translate }}</small>
           </div>
           <div class="form-group">
-            <label class="form-label" for="example-value">Value</label>
-            <input type="text" class="form-control" value="John Doe" placeholder="Name" />
+            <label class="form-label" for="example-value">{{ 'Value' | translate }}</label>
+            <input type="text" class="form-control" value="John Doe" [placeholder]="'Name' | translate" />
           </div>
           <div class="form-group">
-            <label class="form-label" for="example-required">Required</label>
+            <label class="form-label" for="example-required">{{ 'Required' | translate }}</label>
             <input type="text" class="form-control" id="example-required" id="example-required" required />
-            <small>Submit the form to see it in action</small>
+            <small>{{ 'Submit the form to see it in action' | translate }}</small>
           </div>
           <div class="form-group">
-            <label class="form-label" for="example-read-only">Readonly</label>
+            <label class="form-label" for="example-read-only">{{ 'Readonly' | translate }}</label>
             <input type="text" class="form-control" value="demo@email.com" id="example-read-only" readonly />
             <small>
-              The input
-              <code>readonly</code>
-              attribute specifies that an input field is read-only
+              {{ 'The input' | translate }}
+              <code>{{ 'readonly' | translate }}</code>
+              {{ 'attribute specifies that an input field is read-only' | translate }}
             </small>
           </div>
           <div class="form-group">
-            <label class="form-label" for="example-disabled">Disabled</label>
+            <label class="form-label" for="example-disabled">{{ 'Disabled' | translate }}</label>
             <input type="text" class="form-control" value="26" id="example-disabled" disabled />
             <small>
-              The value of a
-              <code>disabled</code>
-              input field will not be sent when submitting the form
+              {{ 'The value of a' | translate }}
+              <code>{{ 'disabled' | translate }}</code>
+              {{ 'input field will not be sent when submitting the form' | translate }}
             </small>
           </div>
           <div class="form-group mb-0">
-            <label class="form-label" for="example-disabled-select">Disabled select</label>
+            <label class="form-label" for="example-disabled-select">{{ 'Disabled select' | translate }}</label>
             <select class="form-select" id="example-disabled-select" disabled>
-              <option>Option 1</option>
-              <option>Option 2</option>
-              <option>Option 3</option>
+              <option>{{ 'Option 1' | translate }}</option>
+              <option>{{ 'Option 2' | translate }}</option>
+              <option>{{ 'Option 3' | translate }}</option>
             </select>
           </div>
         </div>
         <div class="card-footer">
-          <button class="btn btn-primary me-2">Submit</button>
-          <button type="reset" class="btn btn-light">Reset</button>
+          <button class="btn btn-primary me-2">{{ 'Submit' | translate }}</button>
+          <button type="reset" class="btn btn-light">{{ 'Reset' | translate }}</button>
         </div>
       </form>
     </div>
     <div class="card">
       <div class="card-header">
-        <h5>Advance Input attributes</h5>
+        <h5>{{ 'Advance Input attributes' | translate }}</h5>
       </div>
       <form>
         <div class="card-body">
@@ -272,49 +278,55 @@
             <div class="media align-items-center">
               <i class="feather icon-alert-circle h2"></i>
               <div class="media-body ms-3">
-                Examples of
-                <code>maxlength, min, max, step, pattern, list</code>
-                attributes of Input.
+                {{ 'Examples of' | translate }}
+                <code>{{ 'maxlength, min, max, step, pattern, list' | translate }}</code>
+                {{ 'attributes of Input.' | translate }}
                 <br />
-                Submit form for checkout attribute functionality.
+                {{ 'Submit form for checkout attribute functionality.' | translate }}
               </div>
             </div>
           </div>
           <div class="form-group">
-            <label class="form-label" for="example-max-length">Max Length</label>
-            <input type="text" class="form-control" placeholder="Enter PIN" id="example-max-length" maxlength="4" />
-            <small>maxlength set to 4 characters</small>
+            <label class="form-label" for="example-max-length">{{ 'Max Length' | translate }}</label>
+            <input type="text" class="form-control" [placeholder]="'Enter PIN' | translate" id="example-max-length" maxlength="4" />
+            <small>{{ 'maxlength set to 4 characters' | translate }}</small>
           </div>
           <div class="form-group">
-            <label class="form-label" for="example-datemax">Date</label>
+            <label class="form-label" for="example-datemax">{{ 'Date' | translate }}</label>
             <input type="date" class="form-control" id="example-datemax" max="1979-12-31" />
-            <small>Enter a date before 1980-01-01</small>
+            <small>{{ 'Enter a date before 1980-01-01' | translate }}</small>
           </div>
           <div class="form-group">
-            <label class="form-label" for="example-datemin">Date</label>
+            <label class="form-label" for="example-datemin">{{ 'Date' | translate }}</label>
             <input type="date" class="form-control" id="example-datemin" min="2000-01-02" />
-            <small>Enter a date after 2000-01-01</small>
+            <small>{{ 'Enter a date after 2000-01-01' | translate }}</small>
           </div>
           <div class="form-group">
-            <label class="form-label" for="example-quantity">Quantity</label>
+            <label class="form-label" for="example-quantity">{{ 'Quantity' | translate }}</label>
             <input type="number" class="form-control" id="example-quantity" min="1" max="5" />
-            <small>i.e.between 1 and 5</small>
+            <small>{{ 'i.e.between 1 and 5' | translate }}</small>
           </div>
           <div class="form-group">
-            <label class="form-label" for="example-steps">Points</label>
+            <label class="form-label" for="example-steps">{{ 'Points' | translate }}</label>
             <input type="number" class="form-control" id="example-steps" step="3" value="1" />
-            <small>step set to 3</small>
+            <small>{{ 'step set to 3' | translate }}</small>
           </div>
           <div class="form-group">
-            <label class="form-label" for="example-country-code">Country code</label>
-            <input type="text" class="form-control" id="example-country-code" pattern="[A-Za-z]{3}" title="Three letter country code" />
+            <label class="form-label" for="example-country-code">{{ 'Country code' | translate }}</label>
+            <input
+              type="text"
+              class="form-control"
+              id="example-country-code"
+              pattern="[A-Za-z]{3}"
+              [title]="'Three letter country code' | translate"
+            />
             <small>
-              <code>pattern</code>
-              attribute - three letter country code
+              <code>{{ 'pattern' | translate }}</code>
+              {{ 'attribute - three letter country code' | translate }}
             </small>
           </div>
           <div class="form-group mb-0">
-            <label class="form-label" for="example-data-list">List (Browsers)</label>
+            <label class="form-label" for="example-data-list">{{ 'List (Browsers)' | translate }}</label>
             <input type="text" class="form-control" id="example-data-list" list="browsers" />
             <datalist id="browsers">
               <option value="Internet Explorer"></option>
@@ -324,12 +336,12 @@
               <option value="Safari"></option>
             </datalist>
 
-            <small>The datalist tag is not supported in Safari 12.0 (or earlier).</small>
+            <small>{{ 'The datalist tag is not supported in Safari 12.0 (or earlier).' | translate }}</small>
           </div>
         </div>
         <div class="card-footer">
-          <button type="submit" class="btn btn-primary me-2">Submit</button>
-          <button type="reset" class="btn btn-light">Reset</button>
+          <button type="submit" class="btn btn-primary me-2">{{ 'Submit' | translate }}</button>
+          <button type="reset" class="btn btn-light">{{ 'Reset' | translate }}</button>
         </div>
       </form>
     </div>

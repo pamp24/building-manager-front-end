@@ -1,7 +1,7 @@
 <div class="row">
   <!-- [ basic-alert ] start -->
   <div class="col-md-12">
-    <app-card cardTitle="Basic Alerts" blockClass="pc-component">
+    <app-card [cardTitle]="'Basic Alerts' | translate" blockClass="pc-component">
       @for (alert of basicAlerts; track alert) {
         <ngb-alert type="{{ alert.type }}" [dismissible]="false">{{ alert.message }}</ngb-alert>
       }
@@ -10,12 +10,12 @@
   <!-- [ basic-alert ] end -->
   <!-- [ link-alert ] start -->
   <div class="col-md-6">
-    <app-card cardTitle="Link Alerts" blockClass="pc-component">
+    <app-card [cardTitle]="'Link Alerts' | translate" blockClass="pc-component">
       @for (alert of linkAlert; track alert) {
         <ngb-alert type="{{ alert.type }}" [dismissible]="false">
-          A simple primary alert with
-          <a href="javascript:" class="alert-link">an example link</a>
-          . Give it a click if you like.
+          {{ 'A simple primary alert with' | translate }}
+          <a href="javascript:" class="alert-link">{{ 'an example link' | translate }}</a>
+          {{ '. Give it a click if you like.' | translate }}
         </ngb-alert>
       }
     </app-card>
@@ -23,35 +23,37 @@
   <!-- [ link-alert ] end -->
   <!-- [ dismiss-alert ] start -->
   <div class="col-md-6">
-    <app-card cardTitle="Dismissing" blockClass="pc-component">
+    <app-card [cardTitle]="'Dismissing' | translate" blockClass="pc-component">
       @for (alert of closableAlerts; track alert) {
         <ngb-alert [type]="alert.type" (closed)="close(alert)">
-          <strong>Holy guacamole!</strong>
-          You should check in on some of those fields below.
+          <strong>{{ 'Holy guacamole!' | translate }}</strong>
+          {{ 'You should check in on some of those fields below.' | translate }}
         </ngb-alert>
       }
-      <button type="button" class="btn btn-primary" (click)="reset()">Reset</button>
+      <button type="button" class="btn btn-primary" (click)="reset()">{{ 'Reset' | translate }}</button>
     </app-card>
   </div>
   <!-- [ dismiss-alert ] end -->
   <!-- [ additional-alert ] start -->
   <div class="col-md-6">
-    <app-card cardTitle="Additional Content" blockClass="pc-component">
+    <app-card [cardTitle]="'Additional Content' | translate" blockClass="pc-component">
       <ngb-alert type="success" [dismissible]="false">
-        <h4 class="alert-heading">Well done!</h4>
+        <h4 class="alert-heading">{{ 'Well done!' | translate }}</h4>
         <p>
-          Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see
-          how spacing within an alert works with this kind of content.
+          {{
+            'Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.'
+              | translate
+          }}
         </p>
         <hr />
-        <p class="mb-0">Whenever you need to, be sure to use margin utilities to keep things nice and tidy.</p>
+        <p class="mb-0">{{ 'Whenever you need to, be sure to use margin utilities to keep things nice and tidy.' | translate }}</p>
       </ngb-alert>
     </app-card>
   </div>
   <!-- [ additional-alert ] end -->
   <!-- [ Icons ] start -->
   <div class="col-md-6">
-    <app-card cardTitle="Icons" blockClass="pc-component">
+    <app-card [cardTitle]="'Icons' | translate" blockClass="pc-component">
       <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
         <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
           <path
@@ -74,25 +76,25 @@
         <svg class="bi flex-shrink-0 me-2" width="24" height="24">
           <use xlink:href="#info-fill"></use>
         </svg>
-        <div>An example alert with an icon</div>
+        <div>{{ 'An example alert with an icon' | translate }}</div>
       </ngb-alert>
       <ngb-alert type="success" [dismissible]="false" class="d-flex align-items-center">
         <svg class="bi flex-shrink-0 me-2" width="24" height="24">
           <use xlink:href="#check-circle-fill"></use>
         </svg>
-        <div>An example success alert with an icon</div>
+        <div>{{ 'An example success alert with an icon' | translate }}</div>
       </ngb-alert>
       <ngb-alert type="warning" [dismissible]="false" class="d-flex align-items-center">
         <svg class="bi flex-shrink-0 me-2" width="24" height="24">
           <use xlink:href="#exclamation-triangle-fill"></use>
         </svg>
-        <div>An example success alert with an icon</div>
+        <div>{{ 'An example success alert with an icon' | translate }}</div>
       </ngb-alert>
       <ngb-alert type="danger" [dismissible]="false" class="d-flex align-items-center">
         <svg class="bi flex-shrink-0 me-2" width="24" height="24">
           <use xlink:href="#exclamation-triangle-fill"></use>
         </svg>
-        <div>An example danger alert with an icon</div>
+        <div>{{ 'An example danger alert with an icon' | translate }}</div>
       </ngb-alert>
     </app-card>
   </div>

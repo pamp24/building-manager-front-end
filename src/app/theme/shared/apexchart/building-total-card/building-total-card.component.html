@@ -1,20 +1,20 @@
 <div class="card h-100">
   <div class="card-body">
-    <h6 class="mb-2 f-w-400 text-muted">Σύνολο Πολυκατοικίας ({{month || '-'}})</h6>
+    <h6 class="mb-2 f-w-400 text-muted">{{ 'Apartment Building Total (' | translate }}{{ month || '-' }})</h6>
 
     <h4 class="mb-0 d-flex align-items-center gap-2">
-      {{ lastAmount | number:'1.2-2' }} €
+      {{ lastAmount | number: '1.2-2' }} €
 
-      
-      <span class="badge" [ngClass]="badgeClass">
+      <span *ngIf="hasData" class="badge" [ngClass]="badgeClass">
         <i antIcon [type]="iconType" theme="outline"></i>
-        {{ percentage | number:'1.1-1' }}%
+        {{ percentage | number: '1.1-1' }}%
       </span>
     </h4>
   </div>
 
   <div id="chart">
     <apx-chart
+      *ngIf="hasData"
       [series]="chartOptions.series"
       [chart]="chartOptions.chart"
       [plotOptions]="chartOptions.plotOptions"
@@ -22,5 +22,8 @@
       [colors]="chartOptions.colors"
       [tooltip]="chartOptions.tooltip"
     ></apx-chart>
+    <div *ngIf="!hasData" class="dashboard-empty-state" style="--empty-state-height: 100px">
+      {{ loadError ? ('The data could not be loaded.' | translate) : ('No apartment building data.' | translate) }}
+    </div>
   </div>
 </div>

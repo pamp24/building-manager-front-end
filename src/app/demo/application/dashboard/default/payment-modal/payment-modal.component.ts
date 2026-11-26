@@ -1,20 +1,28 @@
+import { TranslateModule } from '@ngx-translate/core';
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
+import { inject, Component, Input, OnInit } from '@angular/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, Input, OnInit } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { PaymentGatewayService, CreateIntentRequest } from 'src/app/theme/shared/service/payment-gateway.service';
 import { UserDashboardService } from 'src/app/theme/shared/service/userDashboard.service';
 import { StripeCheckoutComponent } from '../../../payment/stripe-checkout/stripe-checkout.component';
-import { PaymentMethodSelectionComponent, PaymentMethod } from '../../../payment/payment-method-selection/payment-method-selection.component';
+import {
+  PaymentMethodSelectionComponent,
+  PaymentMethod
+} from '../../../payment/payment-method-selection/payment-method-selection.component';
 
 @Component({
   selector: 'app-payment-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule, StripeCheckoutComponent, PaymentMethodSelectionComponent],
+  imports: [TranslateModule, CommonModule, FormsModule, StripeCheckoutComponent, PaymentMethodSelectionComponent],
   templateUrl: './payment-modal.component.html'
 })
 export class PaymentModalComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   @Input() allocation: any;
   @Input() currentUserId = 0;
 
@@ -78,12 +86,12 @@ export class PaymentModalComponent implements OnInit {
           this.step = 'stripe';
         } else {
           this.step = 'error';
-          this.errorMessage = 'Failed to initialize payment. No client secret received.';
+          this.errorMessage = this.uiLocale.text('Failed to initialize payment. No client secret received.');
         }
       },
       error: (err) => {
         this.step = 'error';
-        this.errorMessage = err.error?.message || 'Failed to initialize payment. Please try again.';
+        this.errorMessage = err.error?.message || this.uiLocale.text('Failed to initialize payment. Please try again.');
       }
     });
   }
@@ -108,12 +116,12 @@ export class PaymentModalComponent implements OnInit {
           window.location.href = res.checkoutUrl;
         } else {
           this.step = 'error';
-          this.errorMessage = 'Failed to initialize Viva Wallet checkout.';
+          this.errorMessage = this.uiLocale.text('Failed to initialize Viva Wallet checkout.');
         }
       },
       error: (err) => {
         this.step = 'error';
-        this.errorMessage = err.error?.message || 'Failed to initialize payment. Please try again.';
+        this.errorMessage = err.error?.message || this.uiLocale.text('Failed to initialize payment. Please try again.');
       }
     });
   }
@@ -128,7 +136,7 @@ export class PaymentModalComponent implements OnInit {
       },
       error: (err) => {
         this.step = 'error';
-        this.errorMessage = err.error?.message || 'Payment failed. Please try again.';
+        this.errorMessage = err.error?.message || this.uiLocale.text('Payment failed. Please try again.');
       }
     });
   }

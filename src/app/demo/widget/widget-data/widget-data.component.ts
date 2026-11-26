@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // angular import
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -36,6 +37,8 @@ import {
   styleUrls: ['./widget-data.component.scss']
 })
 export class WidgetDataComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private iconService = inject(IconService);
 
   // constructor
@@ -67,56 +70,56 @@ export class WidgetDataComponent {
   // public method
   todoList = [
     {
-      text: 'Check your Email',
+      text: this.uiLocale.text('Check your Email'),
       checked: true
     },
     {
-      text: 'Make YouTube Video',
+      text: this.uiLocale.text('Make YouTube Video'),
       checked: true
     },
     {
-      text: 'Create Banner',
+      text: this.uiLocale.text('Create Banner'),
       checked: true
     },
     {
-      text: 'Upload Project',
+      text: this.uiLocale.text('Upload Project'),
       checked: false
     },
     {
-      text: 'Upload Task',
+      text: this.uiLocale.text('Upload Task'),
       checked: false
     },
     {
-      text: 'Task Issue',
+      text: this.uiLocale.text('Task Issue'),
       checked: false
     },
     {
-      text: 'Deploy Project',
+      text: this.uiLocale.text('Deploy Project'),
       checked: false
     }
   ];
 
   TrafficSources = [
     {
-      title: 'Referral',
+      title: this.uiLocale.text('Referral'),
       percentage: '20%',
       background: 'progress-primary',
       value: '20'
     },
     {
-      title: 'Bounce',
+      title: this.uiLocale.text('Bounce'),
       percentage: '58%',
       background: 'progress-secondary',
       value: '58'
     },
     {
-      title: 'Internet',
+      title: this.uiLocale.text('Internet'),
       percentage: '40%',
       background: 'progress-primary',
       value: '40'
     },
     {
-      title: 'Social',
+      title: this.uiLocale.text('Social'),
       percentage: '90%',
       background: 'progress-primary',
       value: '90'
@@ -126,29 +129,29 @@ export class WidgetDataComponent {
   team_members = [
     {
       src: 'assets/images/user/avatar-1.jpg',
-      title: 'David Jones',
-      text: 'Project Leader',
+      title: this.uiLocale.text('David Jones'),
+      text: this.uiLocale.text('Project Leader'),
       time: '5 min ago',
       space: 'mb-4'
     },
     {
       src: 'assets/images/user/avatar-2.jpg',
-      title: 'David Jones',
-      text: 'HR Manager',
+      title: this.uiLocale.text('David Jones'),
+      text: this.uiLocale.text('HR Manager'),
       time: '1 min ago',
       space: 'mb-4'
     },
     {
       src: 'assets/images/user/avatar-4.jpg',
-      title: 'David Jones',
-      text: 'Developer',
+      title: this.uiLocale.text('David Jones'),
+      text: this.uiLocale.text('Developer'),
       time: 'Yesterday',
       space: 'mb-4'
     },
     {
       src: 'assets/images/user/avatar-3.jpg',
-      title: 'David Jones',
-      text: 'UI/UX Designer',
+      title: this.uiLocale.text('David Jones'),
+      text: this.uiLocale.text('UI/UX Designer'),
       time: '02-05-2021'
     }
   ];
@@ -157,32 +160,32 @@ export class WidgetDataComponent {
     {
       time: '2 hrs ago',
       icon: 'twitter',
-      title: '+ 1652 Followers',
+      title: this.uiLocale.text('+ 1652 Followers'),
       color: 'text-info bg-light-info',
-      text: 'You’re getting more and more followers, keep it up!',
+      text: this.uiLocale.text('You’re getting more and more followers, keep it up!'),
       space: 'p-t-20 p-b-30'
     },
     {
       time: '4 hrs ago',
       icon: 'shopping',
-      title: '+ 5 New Products were added!',
-      text: 'Congratulations!',
+      title: this.uiLocale.text('+ 5 New Products were added!'),
+      text: this.uiLocale.text('Congratulations!'),
       color: 'text-danger bg-light-danger',
       space: 'p-b-30'
     },
     {
       time: '1 day ago',
       icon: 'check',
-      title: 'Database backup completed!',
-      text: 'Download the latest backup',
+      title: this.uiLocale.text('Database backup completed!'),
+      text: this.uiLocale.text('Download the latest backup'),
       color: 'text-success bg-light-success',
       space: 'p-b-30'
     },
     {
       time: '2 day ago',
       icon: 'user',
-      title: '+2 Friend Requests',
-      text: 'This is great, keep it up!',
+      title: this.uiLocale.text('+2 Friend Requests'),
+      text: this.uiLocale.text('This is great, keep it up!'),
       color: 'text-primary bg-light-primary',
       space: 'p-b-0'
     }
@@ -214,7 +217,7 @@ export class WidgetDataComponent {
   ProjectTable = [
     {
       src: 'assets/images/user/avatar-4.jpg',
-      name: 'John Deo',
+      name: this.uiLocale.text('John Deo'),
       position: 'Graphics Designer',
       theme: 'Mantis Pro',
       date: 'Jun, 26',
@@ -223,7 +226,7 @@ export class WidgetDataComponent {
     },
     {
       src: 'assets/images/user/avatar-2.jpg',
-      name: 'Jenifer Vintage',
+      name: this.uiLocale.text('Jenifer Vintage'),
       position: 'Web Designer',
       theme: 'MashAble',
       date: 'March, 31',
@@ -232,7 +235,7 @@ export class WidgetDataComponent {
     },
     {
       src: 'assets/images/user/avatar-3.jpg',
-      name: 'William Jem',
+      name: this.uiLocale.text('William Jem'),
       position: 'Developer',
       theme: 'FlatAble',
       date: 'Aug, 02',
@@ -241,7 +244,7 @@ export class WidgetDataComponent {
     },
     {
       src: 'assets/images/user/avatar-1.jpg',
-      name: 'David Jones',
+      name: this.uiLocale.text('David Jones'),
       position: 'Developer',
       theme: 'GuruAble',
       date: 'Sep, 22',
@@ -250,7 +253,7 @@ export class WidgetDataComponent {
     },
     {
       src: 'assets/images/user/avatar-5.jpg',
-      name: 'Stebin Ben',
+      name: this.uiLocale.text('Stebin Ben'),
       position: 'Leader',
       theme: 'Mantis',
       date: 'Sep, 22',
@@ -341,50 +344,50 @@ export class WidgetDataComponent {
     {
       icon: 'feather icon-check f-w-600 bg-success',
       time: '8:50',
-      text: 'Call to customer Jacob and discuss the'
+      text: this.uiLocale.text('Call to customer Jacob and discuss the')
     },
     {
       icon: 'bg-primary',
       time: 'Sat, 5 Mar',
-      text: 'Design mobile Application'
+      text: this.uiLocale.text('Design mobile Application')
     },
     {
       icon: 'bg-danger',
       time: 'Sun, 17 Feb',
-      text: 'Jeny assign you a task Mockup Design.'
+      text: this.uiLocale.text('Jeny assign you a task Mockup Design.')
     },
     {
       icon: 'bg-warning',
       time: 'Sat, 18 Mar',
-      text: 'Design logo'
+      text: this.uiLocale.text('Design logo')
     }
   ];
 
   applicationSales = [
     {
       application: 'Mantis Pro',
-      text: 'Powerful Admin Theme',
+      text: this.uiLocale.text('Powerful Admin Theme'),
       sale: '16,300',
       price: '$53',
       total: '$15,652'
     },
     {
       application: 'PhotoShop',
-      text: 'Design Software',
+      text: this.uiLocale.text('Design Software'),
       sale: '26,421',
       price: '$35',
       total: '$18,785'
     },
     {
       application: 'GuruAble',
-      text: 'Best Admin Template',
+      text: this.uiLocale.text('Best Admin Template'),
       sale: '8,265',
       price: '$98',
       total: '$9,652'
     },
     {
       application: 'FlatAble',
-      text: 'Admin App',
+      text: this.uiLocale.text('Admin App'),
       sale: '10,652',
       price: '$20',
       total: '$7,856'
@@ -396,29 +399,29 @@ export class WidgetDataComponent {
       time: '12',
       src: 'assets/images/user/avatar-4.jpg',
       user: 'John Deo',
-      text: '[#1183] Workaround for OS X selects printing bug',
-      description: 'Chrome fixed the bug several versions ago, thus rendering this...'
+      text: this.uiLocale.text('[#1183] Workaround for OS X selects printing bug'),
+      description: this.uiLocale.text('Chrome fixed the bug several versions ago, thus rendering this...')
     },
     {
       time: '16',
       src: 'assets/images/user/avatar-3.jpg',
       user: 'Jems Win',
-      text: '[#1249] Vertically center carousel controls',
-      description: 'Try any carousel control and reduce the screen width below...'
+      text: this.uiLocale.text('[#1249] Vertically center carousel controls'),
+      description: this.uiLocale.text('Try any carousel control and reduce the screen width below...')
     },
     {
       time: '40',
       src: 'assets/images/user/avatar-2.jpg',
       user: 'Jeny Wiliiam',
-      text: '[#1254] Inaccurate small pagination height',
-      description: 'The height of pagination elements is not consistent with... '
+      text: this.uiLocale.text('[#1254] Inaccurate small pagination height'),
+      description: this.uiLocale.text('The height of pagination elements is not consistent with...')
     },
     {
       time: '16',
       src: 'assets/images/user/avatar-3.jpg',
       user: 'Jems Win',
-      text: '[#1249] Vertically center carousel controls',
-      description: 'Try any carousel control and reduce the screen width below...'
+      text: this.uiLocale.text('[#1249] Vertically center carousel controls'),
+      description: this.uiLocale.text('Try any carousel control and reduce the screen width below...')
     }
   ];
 
@@ -433,31 +436,31 @@ export class WidgetDataComponent {
 
   FeedsCard = [
     {
-      title: 'You have 3 pending tasks.',
+      title: this.uiLocale.text('You have 3 pending tasks.'),
       time: 'Just Now',
       icon: 'message',
       background: 'bg-primary'
     },
     {
-      title: 'New order received',
+      title: this.uiLocale.text('New order received'),
       time: '1 day ago',
       icon: 'shopping',
       background: 'bg-danger'
     },
     {
-      title: 'You have 3 pending tasks.',
+      title: this.uiLocale.text('You have 3 pending tasks.'),
       time: '3 week ago',
       icon: 'file-text',
       background: 'bg-success'
     },
     {
-      title: 'New order received',
+      title: this.uiLocale.text('New order received'),
       time: 'around month',
       icon: 'message',
       background: 'bg-primary'
     },
     {
-      title: 'Order cancelled',
+      title: this.uiLocale.text('Order cancelled'),
       time: '2 month ago',
       icon: 'shopping',
       background: 'bg-warning'
@@ -468,49 +471,49 @@ export class WidgetDataComponent {
     {
       src: 'assets/images/widget/GERMANY.jpg',
       country: 'Germany',
-      name: 'Anjalina Jolly',
+      name: this.uiLocale.text('Anjalina Jolly'),
       avrange: '56.23%'
     },
     {
       src: 'assets/images/widget/USA.jpg',
       country: 'USA',
-      name: 'John Deo',
+      name: this.uiLocale.text('John Deo'),
       avrange: '25.23%'
     },
     {
       src: 'assets/images/widget/AUSTRALIA.jpg',
       country: 'Australia',
-      name: 'Jenifer Vintage',
+      name: this.uiLocale.text('Jenifer Vintage'),
       avrange: '12.45%'
     },
     {
       src: 'assets/images/widget/UK.jpg',
       country: 'United Kingdom',
-      name: 'Lori Moore',
+      name: this.uiLocale.text('Lori Moore'),
       avrange: '8.65%'
     },
     {
       src: 'assets/images/widget/BRAZIL.jpg',
       country: 'Brazilm',
-      name: 'Allina D’croze',
+      name: this.uiLocale.text('Allina D’croze'),
       avrange: '3.56%%'
     },
     {
       src: 'assets/images/widget/AUSTRALIA.jpg',
       country: 'Australia',
-      name: 'Jenifer Vintage',
+      name: this.uiLocale.text('Jenifer Vintage'),
       avrange: '12.45%'
     },
     {
       src: 'assets/images/widget/USA.jpg',
       country: 'USA',
-      name: 'John Deo',
+      name: this.uiLocale.text('John Deo'),
       avrange: '25.23%'
     },
     {
       src: 'assets/images/widget/UK.jpg',
       country: 'United Kingdom',
-      name: 'Lori Moore',
+      name: this.uiLocale.text('Lori Moore'),
       avrange: '8.65%'
     }
   ];
@@ -560,47 +563,47 @@ export class WidgetDataComponent {
 
   incomingList = [
     {
-      text: 'Incoming requests',
+      text: this.uiLocale.text('Incoming requests'),
       color: 'bg-primary'
     },
     {
-      text: 'You have 2 pending requests..',
+      text: this.uiLocale.text('You have 2 pending requests..'),
       color: 'bg-success'
     },
     {
-      text: 'You have 3 pending requests..',
+      text: this.uiLocale.text('You have 3 pending requests..'),
       color: 'bg-danger'
     },
     {
-      text: 'New order received',
+      text: this.uiLocale.text('New order received'),
       color: 'bg-warning'
     },
     {
-      text: 'Incoming requests',
+      text: this.uiLocale.text('Incoming requests'),
       color: 'bg-info'
     },
     {
-      text: 'The 3 Golden Rules Professional Design..',
+      text: this.uiLocale.text('The 3 Golden Rules Professional Design..'),
       color: 'bg-success'
     },
     {
-      text: 'You have 4 pending tasks',
+      text: this.uiLocale.text('You have 4 pending tasks'),
       color: 'bg-danger'
     },
     {
-      text: 'New order received',
+      text: this.uiLocale.text('New order received'),
       color: 'bg-warning'
     },
     {
-      text: 'Incoming requests',
+      text: this.uiLocale.text('Incoming requests'),
       color: 'bg-info'
     },
     {
-      text: 'The 3 Golden Rules Professional Design..',
+      text: this.uiLocale.text('The 3 Golden Rules Professional Design..'),
       color: 'bg-success'
     },
     {
-      text: 'You have 4 pending tasks',
+      text: this.uiLocale.text('You have 4 pending tasks'),
       color: 'bg-danger'
     }
   ];
@@ -609,49 +612,49 @@ export class WidgetDataComponent {
     {
       src: 'assets/images/user/avatar-1.jpg',
       user: 'Alex Thompson',
-      text: 'Cheers!',
+      text: this.uiLocale.text('Cheers!'),
       status: 'active'
     },
     {
       src: 'assets/images/user/avatar-2.jpg',
       user: 'John Doue',
-      text: 'stay hungry stay foolish!',
+      text: this.uiLocale.text('stay hungry stay foolish!'),
       status: 'active'
     },
     {
       src: 'assets/images/user/avatar-3.jpg',
       user: 'Alex Thompson',
-      text: 'Cheers!',
+      text: this.uiLocale.text('Cheers!'),
       time: '30 min ago'
     },
     {
       src: 'assets/images/user/avatar-4.jpg',
       user: 'John Doue',
-      text: 'Cheers!',
+      text: this.uiLocale.text('Cheers!'),
       time: '10 min ago'
     },
     {
       src: 'assets/images/user/avatar-5.jpg',
       user: 'Shirley Hoe',
-      text: 'stay hungry stay foolish!',
+      text: this.uiLocale.text('stay hungry stay foolish!'),
       status: 'active'
     },
     {
       src: 'assets/images/user/avatar-1.jpg',
       user: 'John Doue',
-      text: 'Cheers!',
+      text: this.uiLocale.text('Cheers!'),
       status: 'active'
     },
     {
       src: 'assets/images/user/avatar-2.jpg',
       user: 'Shirley HoJames Alexander',
-      text: 'stay hungry stay foolish!',
+      text: this.uiLocale.text('stay hungry stay foolish!'),
       status: 'active'
     },
     {
       src: 'assets/images/user/avatar-3.jpg',
       user: 'John Doue',
-      text: 'Cheers!',
+      text: this.uiLocale.text('Cheers!'),
       time: '10 min ago'
     }
   ];
@@ -718,77 +721,77 @@ export class WidgetDataComponent {
   totalRevenue = [
     {
       color: 'text-success',
-      name: 'Bitcoin',
+      name: this.uiLocale.text('Bitcoin'),
       percentage: '+ $145.85'
     },
     {
       color: 'text-danger',
-      name: 'Ethereum',
+      name: this.uiLocale.text('Ethereum'),
       percentage: '- $6.368'
     },
     {
       color: 'text-success',
-      name: 'Ripple',
+      name: this.uiLocale.text('Ripple'),
       percentage: '+ $458.63'
     },
     {
       color: 'text-danger',
-      name: 'Neo',
+      name: this.uiLocale.text('Neo'),
       percentage: '- $5.631'
     },
     {
       color: 'text-danger',
-      name: 'Bitcoin',
+      name: this.uiLocale.text('Bitcoin'),
       percentage: '- $75.86'
     },
     {
       color: 'text-success',
-      name: 'Ethereum',
+      name: this.uiLocale.text('Ethereum'),
       percentage: '+ $453.63'
     },
     {
       color: 'text-danger',
-      name: 'Ripple',
+      name: this.uiLocale.text('Ripple'),
       percentage: '+ $786.63'
     },
     {
       color: 'text-success',
-      name: 'Neo',
+      name: this.uiLocale.text('Neo'),
       percentage: '+ $145.85'
     },
     {
       color: 'text-success',
-      name: 'Bitcoin',
+      name: this.uiLocale.text('Bitcoin'),
       percentage: '- $6.368'
     },
     {
       color: 'text-success',
-      name: 'Ethereum',
+      name: this.uiLocale.text('Ethereum'),
       percentage: '+ $458.63'
     },
     {
       color: 'text-danger',
-      name: 'Neo',
+      name: this.uiLocale.text('Neo'),
       percentage: '- $5.631'
     },
     {
       color: 'text-danger',
-      name: 'Ripple',
+      name: this.uiLocale.text('Ripple'),
       percentage: '+ $145.85'
     },
     {
       color: 'text-success',
-      name: 'Bitcoin',
+      name: this.uiLocale.text('Bitcoin'),
       percentage: '- $75.86'
     },
     {
       color: 'text-success',
-      name: 'Bitcoin',
+      name: this.uiLocale.text('Bitcoin'),
       percentage: '+ $453.63'
     },
     {
       color: 'text-danger',
-      name: 'Ethereum',
+      name: this.uiLocale.text('Ethereum'),
       percentage: '+ $786.63'
     }
   ];

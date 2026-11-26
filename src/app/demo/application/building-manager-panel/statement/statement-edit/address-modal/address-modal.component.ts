@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // angular import
 import { Component, effect, inject } from '@angular/core';
 
@@ -15,6 +16,8 @@ import { ThemeService } from 'src/app/theme/shared/service/customs-theme.service
   styleUrl: './address-modal.component.scss'
 })
 export class AddressModalComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   activeModal = inject(NgbActiveModal);
   themeService = inject(ThemeService);
 
@@ -41,19 +44,19 @@ export class AddressModalComponent {
   addressList = [
     {
       checked: true,
-      name: 'Ian Carpenter',
+      name: this.uiLocale.text('Ian Carpenter'),
       address: '1754 Ureate Path, 695 Newga View, Seporcus, Rhode Island, Belgium - SA5 5BO',
       phone: '+91 1234567890'
     },
     {
       checked: false,
-      name: 'Ian Carpenter',
+      name: this.uiLocale.text('Ian Carpenter'),
       address: '1754 Ureate Path, 695 Newga View, Seporcus, Rhode Island, Belgium - SA5 5BO',
       phone: '+91 1234567890'
     },
     {
       checked: false,
-      name: 'Ian Carpenter',
+      name: this.uiLocale.text('Ian Carpenter'),
       address: '1754 Ureate Path, 695 Newga View, Seporcus, Rhode Island, Belgium - SA5 5BO',
       phone: '+91 1234567890'
     }
@@ -61,32 +64,32 @@ export class AddressModalComponent {
 
   inputList = [
     {
-      label: 'First Name :',
+      label: this.uiLocale.text('First Name :'),
       subTitle: 'Enter your first name',
       type: 'text'
     },
     {
-      label: 'Last Name :',
+      label: this.uiLocale.text('Last Name :'),
       subTitle: 'Enter your last name',
       type: 'text'
     },
     {
-      label: 'Email Id :',
+      label: this.uiLocale.text('Email Id :'),
       subTitle: 'Enter Email id',
       type: 'email'
     },
     {
-      label: 'Date of Birth :',
+      label: this.uiLocale.text('Date of Birth :'),
       subTitle: 'Enter the date of birth',
       type: 'date'
     },
     {
-      label: 'Phone number :',
+      label: this.uiLocale.text('Phone number :'),
       subTitle: 'Enter Phone number',
       type: 'number'
     },
     {
-      label: 'City :',
+      label: this.uiLocale.text('City :'),
       subTitle: 'Enter City name',
       type: 'text'
     }

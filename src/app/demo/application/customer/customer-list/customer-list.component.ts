@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // angular import
 import { AsyncPipe, DecimalPipe, CommonModule } from '@angular/common';
 import { Component, ElementRef, inject } from '@angular/core';
@@ -37,6 +38,8 @@ import {
   providers: [CustomerDataService, DecimalPipe]
 })
 export class CustomerListComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   service = inject(CustomerDataService);
   private modalService = inject(NgbModal);
   private iconService = inject(IconService);
@@ -79,13 +82,13 @@ export class CustomerListComponent {
   }
 
   user = {
-    name: 'Aaron Poole',
+    name: this.uiLocale.text('Aaron Poole'),
     avatar: 'assets/images/user/avatar-5.jpg',
     jobTitle: 'Manufacturing Director',
     info: [
-      { label: 'Age', value: '45' },
-      { label: 'Progress', value: '86%', style: 'border border-top-0 border-bottom-0' },
-      { label: 'Visits', value: '7634' }
+      { label: this.uiLocale.text('Age'), value: '45' },
+      { label: this.uiLocale.text('Progress'), value: '86%', style: 'border border-top-0 border-bottom-0' },
+      { label: this.uiLocale.text('Visits'), value: '7634' }
     ],
     contacts: [
       { iconClass: 'mail', value: 'bo@gmail.com' },
@@ -98,14 +101,14 @@ export class CustomerListComponent {
   userInformation = [
     {
       fields: [
-        { label: 'Full Name', value: 'Aaron Poole' },
-        { label: 'Father Name', value: 'Mr. Ralph Sabatini' }
+        { label: this.uiLocale.text('Full Name'), value: 'Aaron Poole' },
+        { label: this.uiLocale.text('Father Name'), value: 'Mr. Ralph Sabatini' }
       ]
     },
     {
       fields: [
-        { label: 'Country', value: 'Lesotho' },
-        { label: 'Zip Code', value: '247 849' }
+        { label: this.uiLocale.text('Country'), value: 'Lesotho' },
+        { label: this.uiLocale.text('Zip Code'), value: '247 849' }
       ]
     }
   ];

@@ -123,23 +123,8 @@ export class ConfigurationComponent implements OnInit {
   }
 
   setDarkLayout(isDark: boolean) {
-    localStorage.setItem('theme-mode', isDark ? 'dark' : 'light');
-    sessionStorage.setItem('theme-mode', isDark ? 'dark' : 'light');
-
-    // Το dark theme εφαρμόζεται μόνο σε συνδεδεμένο χρήστη (η σελίδα Login μένει πάντα ανοιχτή/light)
-    const loggedIn = !!this.authenticationService.currentUserValue;
-    const applyDark = isDark && loggedIn;
-
-    if (applyDark) {
-      document.querySelector('body')?.classList.add('mantis-dark');
-      document.querySelector('html')?.classList.add('dark');
-      this.layoutType = true;
-    } else {
-      document.querySelector('body')?.classList.remove('mantis-dark');
-      document.querySelector('html')?.classList.remove('dark');
-      this.layoutType = false;
-    }
-    this.themeService.isDarkMode.set(this.layoutType);
+    this.themeService.setDarkMode(isDark, !!this.authenticationService.currentUserValue);
+    this.layoutType = this.themeService.isDarkMode();
   }
 
   setBoxContainer(isContainer: boolean) {

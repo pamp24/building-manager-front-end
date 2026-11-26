@@ -1,20 +1,20 @@
 <div class="modal-header">
-  <h5 class="modal-title">Προσοχή: Χιλιοστά</h5>
+  <h5 class="modal-title">{{ 'Attention: Kilometers' | translate }}</h5>
   <button type="button" class="btn-close" (click)="activeModal.dismiss()"></button>
 </div>
 
 <div class="modal-body">
   <p class="mb-1">
-    Το άθροισμα των χιλιοστών της πολυκατοικίας είναι
-    <b>{{ currentSum | number: '1.2-2' }}</b> / 1000.
+    {{ 'The sum of the thousandths of the apartment building is' | translate }}
+    <b>{{ currentSum | number: '1.2-2' }}</b>
+    / 1000.
   </p>
   <p class="mb-0">
-    Θέλεις να μοιραστούν τα υπόλοιπα χιλιοστά ισόποσα στα διαμερίσματα
-    και να συνεχίσεις τη δημιουργία της κατάστασης;
+    {{ 'Do you want to divide the remaining thousand equally among the apartments and continue creating the situation?' | translate }}
   </p>
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-outline-secondary" (click)="activeModal.dismiss()">Ακύρωση</button>
-  <button class="btn btn-primary" (click)="activeModal.close('continue')">Συνέχεια</button>
+  <button class="btn btn-outline-secondary" (click)="activeModal.dismiss()">{{ 'Cancellation' | translate }}</button>
+  <button class="btn btn-primary" (click)="activeModal.close('continue')">{{ 'Continuation' | translate }}</button>
 </div>

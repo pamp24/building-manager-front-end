@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -43,6 +44,8 @@ interface DashboardStatCard {
   styleUrl: './admin-dashboard.component.scss'
 })
 export class AdminDashboardComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private iconService = inject(IconService);
   private dashboardService = inject(AdminDashboardService);
   private professionalService = inject(ProfessionalService);
@@ -50,7 +53,33 @@ export class AdminDashboardComponent implements OnInit {
   loading = false;
   errorMessage = '';
 
-  dashboard: AdminDashboardResponse | null = null;
+  dashboard: AdminDashboardResponse = this.normalizeDashboard(null);
+
+  private normalizeDashboard(data: AdminDashboardResponse | null): AdminDashboardResponse {
+    return {
+      overview: { totalBuildings: 0, totalUsers: 0, totalCompanies: 0, totalManagers: 0, ...data?.overview },
+      userActivity: { activeUsersToday: 0, activeUsersThisWeek: 0, newRegistrationsThisMonth: 0, ...data?.userActivity },
+      buildingActivity: {
+        newBuildingsThisMonth: 0,
+        totalBuildings: 0,
+        buildingsWithoutManager: 0,
+        buildingsWithoutApartments: 0,
+        ...data?.buildingActivity
+      },
+      apartmentUsage: { totalApartments: 0, assignedApartments: 0, vacantApartments: 0, ...data?.apartmentUsage },
+      operationalIssues: { buildingsWithoutManager: 0, apartmentsWithoutOwner: 0, pendingInvites: 0, ...data?.operationalIssues },
+      engagementStats: {
+        announcementsCount: 0,
+        votingsCount: 0,
+        participationRate: 0,
+        invitesSent: 0,
+        invitesAccepted: 0,
+        pendingInvites: 0,
+        ...data?.engagementStats
+      },
+      growthStats: { userGrowth: [], buildingGrowth: [], inviteGrowth: [], ...data?.growthStats }
+    };
+  }
   professionalStats: ProfessionalAdminStatsDTO | null = null;
 
   overviewCards: DashboardStatCard[] = [];
@@ -90,6 +119,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.buildCards();
     this.loadDashboard();
   }
 
@@ -104,12 +134,12 @@ export class AdminDashboardComponent implements OnInit {
       .pipe(finalize(() => (this.loading = false)))
       .subscribe({
         next: ({ dashboard, professionalStats }) => {
-          this.dashboard = dashboard;
+          this.dashboard = this.normalizeDashboard(dashboard);
           this.professionalStats = professionalStats;
           this.buildCards();
         },
         error: (err) => {
-          this.errorMessage = err?.error?.message || 'Σφάλμα φόρτωσης dashboard';
+          this.errorMessage = err?.error?.message || this.uiLocale.text('Error loading dashboard');
         }
       });
   }
@@ -124,28 +154,28 @@ export class AdminDashboardComponent implements OnInit {
 
     this.overviewCards = [
       {
-        title: 'Συνολικές Πολυκατοικίες',
+        title: this.uiLocale.text('Total Apartment Buildings'),
         value: this.dashboard.overview.totalBuildings,
         icon: 'bank',
         background: 'bg-light-primary',
         color: 'text-primary'
       },
       {
-        title: 'Συνολικοί Χρήστες',
+        title: this.uiLocale.text('Total Users'),
         value: this.dashboard.overview.totalUsers,
         icon: 'team',
         background: 'bg-light-success',
         color: 'text-success'
       },
       {
-        title: 'Εταιρίες Διαχείρισης',
+        title: this.uiLocale.text('Management Companies'),
         value: this.dashboard.overview.totalCompanies,
         icon: 'shop',
         background: 'bg-light-warning',
         color: 'text-warning'
       },
       {
-        title: 'Συνολικοί Διαχειριστές',
+        title: this.uiLocale.text('General Managers'),
         value: this.dashboard.overview.totalManagers,
         icon: 'user-switch',
         background: 'bg-light-info',
@@ -155,28 +185,28 @@ export class AdminDashboardComponent implements OnInit {
 
     this.professionalCards = [
       {
-        title: 'Συνολικοί Επαγγελματίες',
+        title: this.uiLocale.text('Total Professionals'),
         value: this.professionalStats?.totalBusinesses || 0,
         icon: 'team',
         background: 'bg-light-primary',
         color: 'text-primary'
       },
       {
-        title: 'Ενεργοί Επαγγελματίες',
+        title: this.uiLocale.text('Active Professionals'),
         value: this.professionalStats?.approvedBusinesses || 0,
         icon: 'check-circle',
         background: 'bg-light-success',
         color: 'text-success'
       },
       {
-        title: 'Ανενεργοί Επαγγελματίες',
+        title: this.uiLocale.text('Inactive Professionals'),
         value: this.professionalStats?.inactiveBusinesses || 0,
         icon: 'warning',
         background: 'bg-light-danger',
         color: 'text-danger'
       },
       {
-        title: 'Εκκρεμείς Εγγραφές',
+        title: this.uiLocale.text('Pending Entries'),
         value: this.professionalStats?.pendingBusinesses || 0,
         icon: 'notification',
         background: 'bg-light-warning',
@@ -186,21 +216,21 @@ export class AdminDashboardComponent implements OnInit {
 
     this.activityCards = [
       {
-        title: 'Ενεργοί Σήμερα',
+        title: this.uiLocale.text('Active Today'),
         value: this.dashboard.userActivity.activeUsersToday,
         icon: 'login',
         background: 'bg-light-primary',
         color: 'text-primary'
       },
       {
-        title: 'Ενεργοί Εβδομάδας',
+        title: this.uiLocale.text('Active of the Week'),
         value: this.dashboard.userActivity.activeUsersThisWeek,
         icon: 'calendar',
         background: 'bg-light-success',
         color: 'text-success'
       },
       {
-        title: 'Νέες Εγγραφές',
+        title: this.uiLocale.text('New Registrations'),
         value: this.dashboard.userActivity.newRegistrationsThisMonth,
         icon: 'user-add',
         background: 'bg-light-warning',
@@ -259,7 +289,7 @@ export class AdminDashboardComponent implements OnInit {
         type: 'donut',
         height: 280
       },
-      labels: ['Κατειλημμένα', 'Κενά'],
+      labels: [this.uiLocale.text('Busy'), this.uiLocale.text('Empty')],
       dataLabels: {
         enabled: true
       },

@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { finalize } from 'rxjs';
@@ -19,7 +20,6 @@ type TicketCategorySummary = {
   background: string;
 };
 
-
 type TicketBuildingOption = {
   id: number;
   name: string;
@@ -36,6 +36,8 @@ type TicketBuildingOption = {
   styleUrl: './ticket-list.component.scss'
 })
 export class TicketListComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private iconService = inject(IconService);
   private supportTicketService = inject(SupportTicketService);
 
@@ -51,7 +53,6 @@ export class TicketListComponent implements OnInit {
   buildings: TicketBuildingOption[] = [];
   selectedBuildingId: number | null = null;
 
-
   constructor(
     private buildingService: BuildingService,
     private authenticationService: AuthenticationService
@@ -60,7 +61,6 @@ export class TicketListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     const role = this.getCurrentUserRole();
 
     if (role === 'ADMIN') {
@@ -88,7 +88,7 @@ export class TicketListComponent implements OnInit {
           this.categorySummary = this.buildCategorySummary(this.ticketCards);
         },
         error: (error) => {
-          this.errorMessage = error?.error?.message || 'Αποτυχία φόρτωσης tickets.';
+          this.errorMessage = error?.error?.message || this.uiLocale.text('Failed to load tickets.');
           this.ticketCards = [];
           this.categorySummary = [];
         }
@@ -110,10 +110,9 @@ export class TicketListComponent implements OnInit {
           this.categorySummary = this.buildCategorySummary(this.ticketCards);
         },
         error: (error) => {
-          this.errorMessage = error?.error?.message || 'Αποτυχία φόρτωσης tickets.';
+          this.errorMessage = error?.error?.message || this.uiLocale.text('Failed to load tickets.');
           this.ticketCards = [];
           this.categorySummary = [];
-
         }
       });
   }
@@ -212,17 +211,17 @@ export class TicketListComponent implements OnInit {
   getStatusLabel(status: string): string {
     switch (status) {
       case 'OPEN':
-        return 'Ανοιχτό';
+        return this.uiLocale.text('Open');
       case 'IN_PROGRESS':
-        return 'Σε Εξέλιξη';
+        return this.uiLocale.text('In Evolution');
       case 'WAITING_FOR_RESIDENT':
-        return 'Αναμονή από κάτοικο';
+        return this.uiLocale.text('Waiting by a resident');
       case 'RESOLVED':
-        return 'Επιλύθηκε';
+        return this.uiLocale.text('It has been resolved');
       case 'CLOSED':
-        return 'Κλειστό';
+        return this.uiLocale.text('Closed');
       case 'REJECTED':
-        return 'Απορρίφθηκε';
+        return this.uiLocale.text('It was rejected');
       default:
         return status;
     }
@@ -231,13 +230,13 @@ export class TicketListComponent implements OnInit {
   getPriorityLabel(priority: string): string {
     switch (priority) {
       case 'LOW':
-        return 'Χαμηλή';
+        return this.uiLocale.text('Low');
       case 'MEDIUM':
-        return 'Μεσαία';
+        return this.uiLocale.text('Medium');
       case 'HIGH':
-        return 'Υψηλή';
+        return this.uiLocale.text('High');
       case 'URGENT':
-        return 'Επείγουσα';
+        return this.uiLocale.text('Urgent');
       default:
         return priority;
     }
@@ -246,25 +245,25 @@ export class TicketListComponent implements OnInit {
   getCategoryLabel(category: string): string {
     switch (category) {
       case 'MAINTENANCE':
-        return 'Συντήρηση';
+        return this.uiLocale.text('Maintenance');
       case 'PAYMENTS':
-        return 'Πληρωμές';
+        return this.uiLocale.text('Payments');
       case 'DOCUMENTS':
-        return 'Έγγραφα';
+        return this.uiLocale.text('Documents');
       case 'COMPLAINT':
-        return 'Παράπονο';
+        return this.uiLocale.text('Complaint');
       case 'CLEANING':
-        return 'Καθαρισμός';
+        return this.uiLocale.text('Cleaning');
       case 'HEATING':
-        return 'Θέρμανση';
+        return this.uiLocale.text('Heating');
       case 'ELEVATOR':
-        return 'Ασανσέρ';
+        return this.uiLocale.text('Elevator');
       case 'PLUMBING':
-        return 'Υδραυλικά';
+        return this.uiLocale.text('Plumbing');
       case 'ELECTRICAL':
-        return 'Ηλεκτρολογικά';
+        return this.uiLocale.text('Electrically');
       case 'OTHER':
-        return 'Άλλο';
+        return this.uiLocale.text('Other');
       default:
         return category;
     }
@@ -288,7 +287,7 @@ export class TicketListComponent implements OnInit {
       return '-';
     }
 
-    return new Date(dateString).toLocaleString('el-GR');
+    return new Date(dateString).toLocaleString(this.uiLocale.locale);
   }
 
   private buildCategorySummary(items: SupportTicketResponse[]): TicketCategorySummary[] {
@@ -316,5 +315,4 @@ export class TicketListComponent implements OnInit {
 
     return role === 'PROPERTYMANAGER' || role === 'PROPERTY_MANAGER' || role === 'ADMIN';
   }
-
 }

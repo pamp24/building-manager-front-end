@@ -9,7 +9,7 @@
                 <h4 class="mb-0 {{ list.color }}">{{ list.name }}</h4>
                 <div class="price-price mt-3">
                   {{ list.price }}
-                  <span class="text-muted">month</span>
+                  <span class="text-muted">{{ 'month' | translate }}</span>
                 </div>
               </div>
               <ul class="list-group list-group-flush product-list v3">
@@ -20,7 +20,9 @@
                   </li>
                 }
               </ul>
-              <div class="d-grid"><a class="btn btn-dark mt-4" href="javascript:">Buy Now</a></div>
+              <div class="d-grid">
+                <a class="btn btn-dark mt-4" href="javascript:">{{ 'Buy Now' | translate }}</a>
+              </div>
             </div>
           </div>
         </div>

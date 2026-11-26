@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 // Angular Import
 import { Component, inject } from '@angular/core';
 
@@ -11,7 +12,7 @@ import { CardComponent } from 'src/app/theme/shared/components/card/card.compone
   selector: 'app-adv-notification',
   templateUrl: './adv-notification.component.html',
   styleUrls: ['./adv-notification.component.scss'],
-  imports: [CardComponent, NotifierModule]
+  imports: [TranslateModule, CardComponent, NotifierModule]
 })
 export class AdvNotificationComponent {
   /**

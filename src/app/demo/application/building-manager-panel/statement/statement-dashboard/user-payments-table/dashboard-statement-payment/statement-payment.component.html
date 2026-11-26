@@ -1,14 +1,26 @@
 <div class="modal-header">
-  <h5 class="modal-title">Καταχώριση Πληρωμής</h5>
-  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss()"></button>
+  <h5 class="modal-title">{{ 'Payment Entry' | translate }}</h5>
+  <button type="button" class="btn-close" [attr.aria-label]="'Close' | translate" (click)="activeModal.dismiss()"></button>
 </div>
 
 <div class="modal-body">
   <div class="mb-3">
-    <p class="mb-1"><strong>Ένοικος:</strong> {{ payment?.userFullName }}</p>
-    <p class="mb-1"><strong>Σύνολο:</strong> {{ payment?.amountToPay | currency:'EUR' }}</p>
-    <p class="mb-1"><strong>Έχει πληρωθεί:</strong> {{ payment?.paidAmount | currency:'EUR' }}</p>
-    <p class="mb-2"><strong>Απομένει:</strong> {{ remainingAmount | currency:'EUR' }}</p>
+    <p class="mb-1">
+      <strong>{{ 'Tenant:' | translate }}</strong>
+      {{ payment?.userFullName }}
+    </p>
+    <p class="mb-1">
+      <strong>{{ 'Total:' | translate }}</strong>
+      {{ payment?.amountToPay | currency: 'EUR' }}
+    </p>
+    <p class="mb-1">
+      <strong>{{ 'Has been paid:' | translate }}</strong>
+      {{ payment?.paidAmount | currency: 'EUR' }}
+    </p>
+    <p class="mb-2">
+      <strong>{{ 'Remaining:' | translate }}</strong>
+      {{ remainingAmount | currency: 'EUR' }}
+    </p>
   </div>
 
   <form [formGroup]="form">
@@ -19,37 +31,31 @@
         id="fullAmount"
         [(ngModel)]="fullAmountChecked"
         (change)="onFullAmountToggle($event.target.checked)"
-        [checked]="true" 
+        [checked]="true"
       />
-      <label class="form-check-label" for="fullAmount">Πλήρες ποσό</label>
+      <label class="form-check-label" for="fullAmount">{{ 'Full amount' | translate }}</label>
     </div>
 
     <div class="mb-3">
-      <label for="amount" class="form-label">Ποσό Πληρωμής (€)</label>
-      <input
-        type="number"
-        id="amount"
-        formControlName="paymentAmount"
-        class="form-control"
-        [readonly]="fullAmountChecked"
-      />
+      <label for="amount" class="form-label">{{ 'Payment Amount (€)' | translate }}</label>
+      <input type="number" id="amount" formControlName="paymentAmount" class="form-control" [readonly]="fullAmountChecked" />
       <div *ngIf="form.get('paymentAmount')?.invalid && form.get('paymentAmount')?.touched" class="text-danger small">
-        Εισάγετε έγκυρο ποσό
+        {{ 'Please enter a valid amount' | translate }}
       </div>
     </div>
 
     <div class="mb-3">
-      <label for="method" class="form-label">Τρόπος Πληρωμής</label>
+      <label for="method" class="form-label">{{ 'Method of Payment' | translate }}</label>
       <select id="method" formControlName="paymentMethod" class="form-select">
-        <option value="CASH">Μετρητά</option>
-        <option value="BANK_TRANSFER">Τραπεζική Κατάθεση</option>
-        <option value="CARD">Κάρτα</option>
+        <option value="CASH">{{ 'Cash' | translate }}</option>
+        <option value="BANK_TRANSFER">{{ 'Bank Deposit' | translate }}</option>
+        <option value="CARD">{{ 'Card' | translate }}</option>
       </select>
     </div>
   </form>
 </div>
 
 <div class="modal-footer">
-  <button type="button" class="btn btn-outline-secondary" (click)="activeModal.dismiss()">Άκυρο</button>
-  <button type="button" class="btn btn-primary" (click)="save()">Αποθήκευση</button>
+  <button type="button" class="btn btn-outline-secondary" (click)="activeModal.dismiss()">{{ 'Invalid' | translate }}</button>
+  <button type="button" class="btn btn-primary" (click)="save()">{{ 'Save' | translate }}</button>
 </div>

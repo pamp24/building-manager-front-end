@@ -1,111 +1,122 @@
 <div class="row">
   <div class="col-12">
-    <app-card cardTitle="Basic Information">
+    <app-card [cardTitle]="'Basic Information' | translate">
       <form [formGroup]="basicInfoForm" (ngSubmit)="onSubmit()">
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label class="form-label">First Name</label>
-            <input type="text" class="form-control" placeholder="Enter first name" formControlName="firstName" />
+            <label class="form-label">{{ 'First Name' | translate }}</label>
+            <input type="text" class="form-control" [placeholder]="'Enter first name' | translate" formControlName="firstName" />
             @if (basicInfoForm.get('firstName')?.touched && basicInfoForm.get('firstName')?.invalid) {
-              <div class="text-danger">First name is required.</div>
+              <div class="text-danger">{{ 'First name is required.' | translate }}</div>
             }
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label">Last Name</label>
-            <input type="text" class="form-control" placeholder="Enter last name" formControlName="lastName" />
+            <label class="form-label">{{ 'Last Name' | translate }}</label>
+            <input type="text" class="form-control" [placeholder]="'Enter last name' | translate" formControlName="lastName" />
             @if (basicInfoForm.get('lastName')?.touched && basicInfoForm.get('lastName')?.invalid) {
-              <div class="text-danger">Last name is required.</div>
+              <div class="text-danger">{{ 'Last name is required.' | translate }}</div>
             }
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label">Email</label>
-            <input type="email" class="form-control" placeholder="Enter email" formControlName="email" />
+            <label class="form-label">{{ 'Email' | translate }}</label>
+            <input type="email" class="form-control" [placeholder]="'Enter email' | translate" formControlName="email" />
             @if (basicInfoForm.get('email')?.touched && basicInfoForm.get('email')?.invalid) {
-              <div class="text-danger">Email is required.</div>
+              <div class="text-danger">{{ 'Email is required.' | translate }}</div>
             }
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label">Joining Date</label>
+            <label class="form-label">{{ 'Joining Date' | translate }}</label>
             <input type="date" class="form-control" formControlName="joiningDate" />
             @if (basicInfoForm.get('joiningDate')?.touched && basicInfoForm.get('joiningDate')?.invalid) {
-              <div class="text-danger">Date is required.</div>
+              <div class="text-danger">{{ 'Date is required.' | translate }}</div>
             }
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label">Password</label>
-            <input type="password" class="form-control" placeholder="Enter Password" formControlName="password" />
+            <label class="form-label">{{ 'Password' | translate }}</label>
+            <input type="password" class="form-control" [placeholder]="'Enter Password' | translate" formControlName="password" />
             @if (basicInfoForm.get('password')?.touched && basicInfoForm.get('password')?.invalid) {
-              <div class="text-danger">Password is required.</div>
+              <div class="text-danger">{{ 'Password is required.' | translate }}</div>
             }
           </div>
 
           <div class="col-md-6 mb-3">
             <div class="position-relative">
-              <label class="form-label">Confirm Password</label>
-              <input type="password" class="form-control" placeholder="Enter confirm password" formControlName="confirmPassword" />
+              <label class="form-label">{{ 'Confirm Password' | translate }}</label>
+              <input
+                type="password"
+                class="form-control"
+                [placeholder]="'Enter confirm password' | translate"
+                formControlName="confirmPassword"
+              />
               @if (basicInfoForm.get('confirmPassword')?.touched && basicInfoForm.get('confirmPassword')?.invalid) {
-                <div class="text-danger">Confirm Password is required.</div>
+                <div class="text-danger">{{ 'Confirm Password is required.' | translate }}</div>
               }
             </div>
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label">Mobile Number</label>
-            <input type="number" class="form-control" placeholder="Enter Mobile number" formControlName="mobileNumber" maxlength="10" />
+            <label class="form-label">{{ 'Mobile Number' | translate }}</label>
+            <input
+              type="number"
+              class="form-control"
+              [placeholder]="'Enter Mobile number' | translate"
+              formControlName="mobileNumber"
+              maxlength="10"
+            />
             @if (basicInfoForm.get('mobileNumber')?.touched && basicInfoForm.get('mobileNumber')?.invalid) {
-              <div class="text-danger">Mobile Number is required.</div>
+              <div class="text-danger">{{ 'Mobile Number is required.' | translate }}</div>
             }
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label">Gender</label>
+            <label class="form-label">{{ 'Gender' | translate }}</label>
             <select class="form-select" formControlName="gender">
-              <option value="">Select Gender</option>
-              <option value="Female">Female</option>
-              <option value="Male">Male</option>
+              <option value="">{{ 'Select Gender' | translate }}</option>
+              <option value="Female">{{ 'Female' | translate }}</option>
+              <option value="Male">{{ 'Male' | translate }}</option>
             </select>
             @if (basicInfoForm.get('gender')?.touched && basicInfoForm.get('gender')?.invalid) {
-              <div class="text-danger">Gender is required.</div>
+              <div class="text-danger">{{ 'Gender is required.' | translate }}</div>
             }
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label">Designation</label>
-            <input type="text" class="form-control" placeholder="Designation" formControlName="designation" />
+            <label class="form-label">{{ 'Designation' | translate }}</label>
+            <input type="text" class="form-control" [placeholder]="'Designation' | translate" formControlName="designation" />
             @if (basicInfoForm.get('designation')?.touched && basicInfoForm.get('designation')?.invalid) {
-              <div class="text-danger">Designation is required.</div>
+              <div class="text-danger">{{ 'Designation is required.' | translate }}</div>
             }
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label">Department</label>
+            <label class="form-label">{{ 'Department' | translate }}</label>
             <select class="form-select" formControlName="department">
-              <option value="">Select Department</option>
-              <option value="Department 1">Department 1</option>
-              <option value="Department 2">Department 2</option>
+              <option value="">{{ 'Select Department' | translate }}</option>
+              <option value="Department 1">{{ 'Department 1' | translate }}</option>
+              <option value="Department 2">{{ 'Department 2' | translate }}</option>
             </select>
             @if (basicInfoForm.get('department')?.touched && basicInfoForm.get('department')?.invalid) {
-              <div class="text-danger">Department is required.</div>
+              <div class="text-danger">{{ 'Department is required.' | translate }}</div>
             }
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label">Date of Birth</label>
+            <label class="form-label">{{ 'Date of Birth' | translate }}</label>
             <input type="date" class="form-control" formControlName="dateOfBirth" />
             @if (basicInfoForm.get('dateOfBirth')?.touched && basicInfoForm.get('dateOfBirth')?.invalid) {
-              <div class="text-danger">DOB is required.</div>
+              <div class="text-danger">{{ 'DOB is required.' | translate }}</div>
             }
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label">Education</label>
-            <input type="text" class="form-control" placeholder="Education" formControlName="education" />
+            <label class="form-label">{{ 'Education' | translate }}</label>
+            <input type="text" class="form-control" [placeholder]="'Education' | translate" formControlName="education" />
             @if (basicInfoForm.get('education')?.touched && basicInfoForm.get('education')?.invalid) {
-              <div class="text-danger">Education is required.</div>
+              <div class="text-danger">{{ 'Education is required.' | translate }}</div>
             }
           </div>
 
@@ -114,7 +125,7 @@
           </div>
 
           <div class="col-md-12 text-end">
-            <button class="btn btn-primary" [disabled]="!basicInfoForm.valid">Submit</button>
+            <button class="btn btn-primary" [disabled]="!basicInfoForm.valid">{{ 'Submit' | translate }}</button>
           </div>
         </div>
       </form>

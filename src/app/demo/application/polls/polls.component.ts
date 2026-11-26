@@ -1,6 +1,7 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 /* eslint-disable no-var */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PollService } from 'src/app/theme/shared/service/poll.service';
@@ -8,7 +9,7 @@ import { CreatePollComponent } from './create-poll/create-poll.component';
 import { CardComponent } from 'src/app/theme/shared/components/card/card.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IconService } from '@ant-design/icons-angular';
-import { inject } from '@angular/core';
+
 import { CaretDownOutline, CaretUpOutline, DeleteOutline, EditOutline } from '@ant-design/icons-angular/icons';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { BuildingService } from 'src/app/theme/shared/service/building.service';
@@ -22,6 +23,8 @@ declare var bootstrap: any;
   styleUrls: ['./polls.component.scss']
 })
 export class PollsComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private iconService = inject(IconService);
   polls: any[] = [];
   buildingId!: number;
@@ -66,35 +69,35 @@ export class PollsComponent implements OnInit {
   }
 
   loadMyBuildings() {
-  this.buildingService.getMyBuildings().subscribe({
-    next: (buildings: any[]) => {
-      console.log('MY BUILDINGS = ', buildings);
+    this.buildingService.getMyBuildings().subscribe({
+      next: (buildings: any[]) => {
+        console.log('MY BUILDINGS = ', buildings);
 
-      this.buildings = buildings || [];
-      this.manageableBuildings = this.buildings;
+        this.buildings = buildings || [];
+        this.manageableBuildings = this.buildings;
 
-      this.isManager = this.manageableBuildings.length > 0;
-      this.notMember = !this.isManager && this.buildings.length === 0;
+        this.isManager = this.manageableBuildings.length > 0;
+        this.notMember = !this.isManager && this.buildings.length === 0;
 
-      if (!this.selectedBuildingId && this.buildings.length) {
-        this.selectedBuildingId = this.buildings[0].id;
-      }
+        if (!this.selectedBuildingId && this.buildings.length) {
+          this.selectedBuildingId = this.buildings[0].id;
+        }
 
-      const checkId = this.selectedBuildingId || this.buildings[0]?.id;
-      if (checkId) {
-        this.loadCanCreate(checkId);
-      } else {
+        const checkId = this.selectedBuildingId || this.buildings[0]?.id;
+        if (checkId) {
+          this.loadCanCreate(checkId);
+        } else {
+          this.canCreatePoll = false;
+        }
+      },
+      error: (err) => {
+        console.error(err);
+        this.notMember = true;
+        this.isManager = false;
         this.canCreatePoll = false;
       }
-    },
-    error: (err) => {
-      console.error(err);
-      this.notMember = true;
-      this.isManager = false;
-      this.canCreatePoll = false;
-    }
-  });
-}
+    });
+  }
 
   loadCanCreate(buildingId: number): void {
     this.buildingService.getMyPermissions(buildingId).subscribe({
@@ -125,7 +128,7 @@ export class PollsComponent implements OnInit {
       error: (err) => {
         console.error(err);
         this.loading = false;
-        this.voteError = 'Σφάλμα φόρτωσης ψηφοφοριών.';
+        this.voteError = this.uiLocale.text('Vote loading error.');
       }
     });
   }
@@ -168,12 +171,12 @@ export class PollsComponent implements OnInit {
           this.loadVotes(pollId);
         }
 
-        this.toastMessage = 'Η ψήφος σου καταγράφηκε.';
+        this.toastMessage = this.uiLocale.text('Your vote has been recorded.');
         setTimeout(() => (this.toastMessage = null), 3000);
       },
       error: (err) => {
         console.error(err);
-        this.voteError = 'Σφάλμα κατά την ψήφο. Προσπάθησε ξανά.';
+        this.voteError = this.uiLocale.text('Error during voting. Try again.');
         setTimeout(() => (this.voteError = null), 3000);
       }
     });
@@ -232,14 +235,14 @@ export class PollsComponent implements OnInit {
 
   openAddModal() {
     if (!this.manageableBuildings.length) {
-      this.voteError = 'Δεν έχετε δικαίωμα δημιουργίας ψηφοφορίας σε κάποια πολυκατοικία.';
+      this.voteError = this.uiLocale.text('You do not have the right to create a vote in any apartment building.');
       return;
     }
 
     const buildingId = this.selectedBuildingId || this.manageableBuildings[0]?.id;
 
     if (!buildingId) {
-      this.voteError = 'Δεν βρέθηκε πολυκατοικία για δημιουργία ψηφοφορίας.';
+      this.voteError = this.uiLocale.text('No apartment building was found to create a vote.');
       return;
     }
 
@@ -255,13 +258,13 @@ export class PollsComponent implements OnInit {
   }
 
   confirmDelete(pollId: number) {
-    if (!confirm('Θέλετε σίγουρα να διαγράψετε αυτή τη ψηφοφορία;')) return;
+    if (!confirm(this.uiLocale.text('Are you sure you want to delete this poll?'))) return;
 
     this.pollService.deactivate(pollId).subscribe({
       next: () => this.loadPolls(),
       error: (err) => {
         console.error('Σφάλμα διαγραφής:', err);
-        alert('Σφάλμα κατά τη διαγραφή.');
+        alert(this.uiLocale.text('Error deleting.'));
       }
     });
   }

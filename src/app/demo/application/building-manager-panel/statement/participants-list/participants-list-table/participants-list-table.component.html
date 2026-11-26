@@ -2,10 +2,16 @@
 <form class="dt-responsive">
   <div class="d-flex align-items-center justify-content-between p-3">
     <div class="dataTable-dropdown">
-      <select class="form-select" title="select item per page" style="width: auto" name="pageSize" [(ngModel)]="service.pageSize">
-        <option [ngValue]="5">5 items per page</option>
-        <option [ngValue]="10">10 items per page</option>
-        <option [ngValue]="15">15 items per page</option>
+      <select
+        class="form-select"
+        [title]="'select item per page' | translate"
+        style="width: auto"
+        name="pageSize"
+        [(ngModel)]="service.pageSize"
+      >
+        <option [ngValue]="5">{{ '5 items per page' | translate }}</option>
+        <option [ngValue]="10">{{ '10 items per page' | translate }}</option>
+        <option [ngValue]="15">{{ '15 items per page' | translate }}</option>
       </select>
     </div>
     <div class="dataTable-search d-flex align-items-center">
@@ -15,7 +21,7 @@
         class="form-control"
         name="searchTerm"
         [(ngModel)]="service.searchTerm"
-        placeholder="Search..."
+        [placeholder]="'Search...' | translate"
       />
     </div>
   </div>
@@ -23,13 +29,13 @@
     <table class="table table-hover mb-0">
       <thead>
         <tr>
-          <th scope="col" sortable="id">INVOICE ID</th>
-          <th scope="col" sortable="name">USER NAME</th>
-          <th scope="col" sortable="create_date">CREATE DATE</th>
-          <th scope="col" sortable="due_date">DUE DATE</th>
-          <th scope="col" sortable="quantity">QUANTITY</th>
-          <th scope="col" sortable="status">STATUS</th>
-          <th scope="col" sortable="action" class="text-center">ACTIONS</th>
+          <th scope="col" sortable="id">{{ 'INVOICE ID' | translate }}</th>
+          <th scope="col" sortable="name">{{ 'USER NAME' | translate }}</th>
+          <th scope="col" sortable="create_date">{{ 'CREATE DATE' | translate }}</th>
+          <th scope="col" sortable="due_date">{{ 'DUE DATE' | translate }}</th>
+          <th scope="col" sortable="quantity">{{ 'QUANTITY' | translate }}</th>
+          <th scope="col" sortable="status">{{ 'STATUS' | translate }}</th>
+          <th scope="col" sortable="action" class="text-center">{{ 'ACTIONS' | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -78,17 +84,17 @@
             <td class="text-center">
               <ul class="list-inline me-auto mb-0">
                 <li class="list-inline-item align-bottom">
-                  <a href="javascript:" class="avatar avatar-xs btn-link-secondary" ngbTooltip="View">
+                  <a href="javascript:" class="avatar avatar-xs btn-link-secondary" [ngbTooltip]="'View' | translate">
                     <i class="f-16 text-secondary d-flex" antIcon type="eye" theme="outline"></i>
                   </a>
                 </li>
                 <li class="list-inline-item align-bottom">
-                  <a href="javascript:" class="avatar avatar-xs btn-link-primary" ngbTooltip="Edit">
+                  <a href="javascript:" class="avatar avatar-xs btn-link-primary" [ngbTooltip]="'Edit' | translate">
                     <i class="f-16 text-primary d-flex" antIcon type="edit" theme="outline"></i>
                   </a>
                 </li>
                 <li class="list-inline-item align-bottom">
-                  <a href="javascript:" ngbTooltip="Delete" class="avatar avatar-xs btn-link-danger">
+                  <a href="javascript:" [ngbTooltip]="'Delete' | translate" class="avatar avatar-xs btn-link-danger">
                     <i class="f-16 text-danger d-flex" antIcon type="delete" theme="outline"></i>
                   </a>
                 </li>
@@ -100,7 +106,7 @@
     </table>
   </div>
   <div class="p-3 d-sm-flex align-items-center justify-content-between">
-    <div class="datatable-info">Showing 1 to {{ service.pageSize }} of 15 entries</div>
+    <div class="datatable-info">{{ 'Showing 1 to' | translate }} {{ service.pageSize }} {{ 'of 15 entries' | translate }}</div>
     <ngb-pagination
       [collectionSize]="(total$ | async)!"
       [(page)]="service.page"

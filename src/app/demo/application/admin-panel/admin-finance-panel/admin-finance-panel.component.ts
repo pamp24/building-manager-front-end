@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // Angular import
 import { Component, effect, inject } from '@angular/core';
 
@@ -20,6 +21,8 @@ import { CategoryChartComponent } from 'src/app/theme/shared/apexchart/category-
   styleUrl: './admin-finance-panel.component.scss'
 })
 export class AdminFinancePanelComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private iconService = inject(IconService);
   private themeService = inject(ThemeService);
 
@@ -43,8 +46,8 @@ export class AdminFinancePanelComponent {
   transactionsList = [
     {
       icon: 'AI',
-      title: 'Apple Inc.',
-      description: '#ABLE-PRO-T00232',
+      title: this.uiLocale.text('Apple Inc.'),
+      description: this.uiLocale.text('#ABLE-PRO-T00232'),
       amount: '$210,000',
       progress: 'ti ti-arrow-down-left',
       status_color: 'text-danger',
@@ -52,8 +55,8 @@ export class AdminFinancePanelComponent {
     },
     {
       icon: 'SM',
-      title: 'Spotify Music',
-      description: '#ABLE-PRO-T10232',
+      title: this.uiLocale.text('Spotify Music'),
+      description: this.uiLocale.text('#ABLE-PRO-T10232'),
       amount: '- 10,000',
       progress: 'ti ti-arrow-up-right',
       status_color: 'text-success',
@@ -62,8 +65,8 @@ export class AdminFinancePanelComponent {
     {
       icon: 'MD',
       background: 'bg-light-primary',
-      title: 'Medium',
-      description: '06:30 pm',
+      title: this.uiLocale.text('Medium'),
+      description: this.uiLocale.text('06:30 pm'),
       amount: '- 26',
       progress: 'ti ti-arrows-left-right',
       status_color: 'text-warning',
@@ -71,8 +74,8 @@ export class AdminFinancePanelComponent {
     },
     {
       icon: 'U',
-      title: 'Uber',
-      description: '08:40 pm',
+      title: this.uiLocale.text('Uber'),
+      description: this.uiLocale.text('08:40 pm'),
       amount: '+210,000',
       progress: 'ti ti-arrow-up-right',
       status_color: 'text-success',
@@ -81,8 +84,8 @@ export class AdminFinancePanelComponent {
     {
       icon: 'OC',
       background: 'bg-light-warning',
-      title: 'Ola Cabs',
-      description: '07:40 pm',
+      title: this.uiLocale.text('Ola Cabs'),
+      description: this.uiLocale.text('07:40 pm'),
       amount: '+210,000',
       progress: 'ti ti-arrow-up-right',
       status_color: 'text-success',
@@ -93,25 +96,25 @@ export class AdminFinancePanelComponent {
   moneyGoList = [
     {
       image: 'assets/images/widget/img-food.png',
-      title: 'Food & Drink',
+      title: this.uiLocale.text('Food & Drink'),
       progress: 65,
       total: '$1000'
     },
     {
       image: 'assets/images/widget/img-travel.png',
-      title: 'Travel',
+      title: this.uiLocale.text('Travel'),
       progress: 30,
       total: '$400'
     },
     {
       image: 'assets/images/widget/img-shopping.png',
-      title: 'Shopping',
+      title: this.uiLocale.text('Shopping'),
       progress: 52,
       total: '$900'
     },
     {
       image: 'assets/images/widget/img-health.png',
-      title: 'Healthcare',
+      title: this.uiLocale.text('Healthcare'),
       progress: 26,
       total: '$250'
     }
@@ -157,21 +160,21 @@ export class AdminFinancePanelComponent {
     {
       amount: '-$750.00',
       color: 'text-danger',
-      name: 'Starbucks Coffee',
+      name: this.uiLocale.text('Starbucks Coffee'),
       date: 'yesterday',
       image: 'assets/images/widget/img-acitivity-3.svg'
     },
     {
       amount: '-$26.00',
       color: 'text-danger',
-      name: 'Liberty Trading',
+      name: this.uiLocale.text('Liberty Trading'),
       date: '10:40 AM',
       image: 'assets/images/widget/liberty.svg'
     },
     {
       amount: '-29.00',
       color: 'text-danger',
-      name: 'Croma',
+      name: this.uiLocale.text('Croma'),
       date: '05:41 PM',
       image: 'assets/images/widget/croma.svg'
     }
@@ -180,7 +183,7 @@ export class AdminFinancePanelComponent {
   transactionsHistoryList = [
     {
       image: 'assets/images/user/avatar-1.jpg',
-      name: 'John lu',
+      name: this.uiLocale.text('John lu'),
       category: 'Salary Payment',
       date: '2023/02/07',
       time: '09:05 PM',
@@ -189,7 +192,7 @@ export class AdminFinancePanelComponent {
     },
     {
       image: 'assets/images/user/avatar-2.jpg',
-      name: 'Ashton Cox',
+      name: this.uiLocale.text('Ashton Cox'),
       category: 'Project Payment',
       date: '2023/02/01',
       time: '02:14 PM',
@@ -198,7 +201,7 @@ export class AdminFinancePanelComponent {
     },
     {
       image: 'assets/images/user/avatar-3.jpg',
-      name: 'Bradley Greer',
+      name: this.uiLocale.text('Bradley Greer'),
       category: 'You Tube Subscribe',
       date: '2023/01/22',
       time: '10:32 AM',
@@ -207,7 +210,7 @@ export class AdminFinancePanelComponent {
     },
     {
       image: 'assets/images/user/avatar-4.jpg',
-      name: 'Brielle Williamson',
+      name: this.uiLocale.text('Brielle Williamson'),
       category: 'Slary Payment',
       date: '2023/02/07',
       time: '09:05 PM',
@@ -216,7 +219,7 @@ export class AdminFinancePanelComponent {
     },
     {
       image: 'assets/images/user/avatar-5.jpg',
-      name: 'Airi Satou',
+      name: this.uiLocale.text('Airi Satou'),
       category: 'Spotify Subscribe',
       date: '2023/02/07',
       time: '09:05 PM',

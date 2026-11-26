@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // angular import
 import { Component, effect, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -20,6 +21,8 @@ import { NgxPrintModule } from 'ngx-print';
   styleUrl: './statement-details.component.scss'
 })
 export class StatementDetailsComponent {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private iconService = inject(IconService);
   private themeService = inject(ThemeService);
 
@@ -58,14 +61,14 @@ export class StatementDetailsComponent {
   address = [
     {
       type: 'Form',
-      name: 'Garcia-Cameron and Sons',
+      name: this.uiLocale.text('Garcia-Cameron and Sons'),
       street: '8534 Saunders Hill Apt. 583',
       phone: '(970) 982-3353',
       email: 'brandon07@pierce.com'
     },
     {
       type: 'To',
-      name: 'Dickinson-Cummerata',
+      name: this.uiLocale.text('Dickinson-Cummerata'),
       street: '55D Leatha Way Ernaburgh, NT 2146',
       phone: '75-9079921',
       email: 'kasandra.conn@borer.com'
@@ -75,22 +78,22 @@ export class StatementDetailsComponent {
   products = [
     {
       id: 1,
-      name: 'Mauris',
-      description: 'Malesuada adipiscing',
+      name: this.uiLocale.text('Mauris'),
+      description: this.uiLocale.text('Malesuada adipiscing'),
       qty: 2,
       price: 80.0
     },
     {
       id: 2,
-      name: 'Vitae',
-      description: 'Hac egestas',
+      name: this.uiLocale.text('Vitae'),
+      description: this.uiLocale.text('Hac egestas'),
       qty: 3,
       price: 40.0
     },
     {
       id: 3,
-      name: 'Mauris',
-      description: 'Malesuada adipiscing',
+      name: this.uiLocale.text('Mauris'),
+      description: this.uiLocale.text('Malesuada adipiscing'),
       qty: 4,
       price: 80.0
     }

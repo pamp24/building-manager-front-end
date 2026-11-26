@@ -22,23 +22,23 @@
   </div>
 
   @if (images.length > 1) {
-  <div class="d-flex gap-2 mb-4 overflow-auto">
-    @for (image of images; track image.id; let i = $index) {
-      <img
-        [src]="getFullImageUrl(image.imageUrl)"
-        class="rounded border"
-        [class.border-primary]="i === currentImageIndex"
-        style="width: 64px; height: 48px; object-fit: cover; cursor: pointer"
-        (click)="currentImageIndex = i"
-        alt="thumbnail"
-      />
-    }
-  </div>
-}
+    <div class="d-flex gap-2 mb-4 overflow-auto">
+      @for (image of images; track image.id; let i = $index) {
+        <img
+          [src]="getFullImageUrl(image.imageUrl)"
+          class="rounded border"
+          [class.border-primary]="i === currentImageIndex"
+          style="width: 64px; height: 48px; object-fit: cover; cursor: pointer"
+          (click)="currentImageIndex = i"
+          alt="thumbnail"
+        />
+      }
+    </div>
+  }
 
   <div class="d-flex gap-2 mb-3">
     @if (professional.verified) {
-      <span class="badge bg-success">Verified</span>
+      <span class="badge bg-success">{{ 'Verified' | translate }}</span>
     }
 
     <span class="badge bg-dark">
@@ -47,23 +47,23 @@
   </div>
 
   <p class="text-muted">
-    {{ professional.description || 'Δεν υπάρχει περιγραφή.' }}
+    {{ professional.description || ('There is no description.' | translate) }}
   </p>
 
   <hr />
 
   <div class="mb-3">
-    <strong>Υπεύθυνος:</strong>
+    <strong>{{ 'Responsible:' | translate }}</strong>
     {{ professional.ownerFullName || '-' }}
   </div>
 
   <div class="mb-3">
-    <strong>Πόλη:</strong>
+    <strong>{{ 'City:' | translate }}</strong>
     {{ professional.city || '-' }}
   </div>
 
   <div class="mb-3">
-    <strong>Τηλέφωνο:</strong>
+    <strong>{{ 'Telephone:' | translate }}</strong>
 
     @if (professional.phone) {
       <a [href]="'tel:' + professional.phone">
@@ -76,7 +76,7 @@
 
   @if (professional.email) {
     <div class="mb-3">
-      <strong>Email:</strong>
+      <strong>{{ 'Email:' | translate }}</strong>
 
       <a [href]="'mailto:' + professional.email">
         {{ professional.email }}
@@ -86,25 +86,25 @@
 
   @if (professional.website) {
     <div class="mb-3">
-      <strong>Website:</strong>
+      <strong>{{ 'Website:' | translate }}</strong>
 
-      <a [href]="professional.website" target="_blank">Άνοιγμα Website</a>
+      <a [href]="professional.website" target="_blank">{{ 'Open Website' | translate }}</a>
     </div>
   }
 
   <div class="mb-3">
-    <strong>Αξιολόγηση:</strong>
+    <strong>{{ 'Rating:' | translate }}</strong>
 
-    ⭐ {{ professional.ratingAverage || 0 }} ({{ professional.reviewCount || 0 }} αξιολογήσεις)
+    ⭐ {{ professional.ratingAverage || 0 }} ({{ professional.reviewCount || 0 }} {{ 'ratings)' | translate }}
   </div>
   <hr />
 
-  <h5 class="mb-3">Αξιολογήσεις</h5>
+  <h5 class="mb-3">{{ 'Evaluations' | translate }}</h5>
 
   <div class="border rounded p-3 mb-4">
     <div class="row">
       <div class="col-md-4 mb-3">
-        <label class="form-label">Βαθμολογία</label>
+        <label class="form-label">{{ 'Rating' | translate }}</label>
 
         <select class="form-select" [(ngModel)]="rating">
           <option [ngValue]="5">5 ⭐</option>
@@ -116,23 +116,23 @@
       </div>
 
       <div class="col-md-8 mb-3">
-        <label class="form-label">Σχόλιο</label>
+        <label class="form-label">{{ 'Comment' | translate }}</label>
 
-        <textarea class="form-control" rows="3" [(ngModel)]="comment" placeholder="Γράψτε την αξιολόγησή σας..."></textarea>
+        <textarea class="form-control" rows="3" [(ngModel)]="comment" [placeholder]="'Write your review...' | translate"></textarea>
       </div>
     </div>
 
     <button class="btn btn-primary" [disabled]="submittingReview" (click)="submitReview()">
-      {{ submittingReview ? 'Υποβολή...' : 'Υποβολή Αξιολόγησης' }}
+      {{ submittingReview ? ('Submit...' | translate) : ('Submit an Evaluation' | translate) }}
     </button>
   </div>
 
   @if (loadingReviews) {
-    <div class="text-center py-3">Φόρτωση αξιολογήσεων...</div>
+    <div class="text-center py-3">{{ 'Loading reviews...' | translate }}</div>
   }
 
   @if (!loadingReviews && reviews.length === 0) {
-    <div class="alert alert-info">Δεν υπάρχουν ακόμα αξιολογήσεις.</div>
+    <div class="alert alert-info">{{ 'There are no reviews yet.' | translate }}</div>
   }
 
   @for (review of reviews; track review.id) {
@@ -165,12 +165,12 @@
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-outline-secondary" (click)="activeModal.close()">Κλείσιμο</button>
+  <button class="btn btn-outline-secondary" (click)="activeModal.close()">{{ 'Closing' | translate }}</button>
 
   @if (professional.phone) {
-    <a class="btn btn-success" [href]="'tel:' + professional.phone">Κλήση</a>
+    <a class="btn btn-success" [href]="'tel:' + professional.phone">{{ 'Call' | translate }}</a>
   }
   @if (canManageBusiness()) {
-    <button class="btn btn-primary" (click)="goToManage()">Διαχείριση Επιχείρησης</button>
+    <button class="btn btn-primary" (click)="goToManage()">{{ 'Business Management' | translate }}</button>
   }
 </div>

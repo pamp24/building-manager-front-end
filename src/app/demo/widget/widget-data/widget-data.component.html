@@ -1,6 +1,6 @@
 <div class="row widget-data">
   <div class="col-xl-4 col-md-12">
-    <app-card cardTitle="To Do List" cardClass="todoList" [padding]="14">
+    <app-card [cardTitle]="'To Do List' | translate" cardClass="todoList" [padding]="14">
       <ng-template #headerOptionsTemplate>
         <a class="avatar avatar-xs btn btn-link-primary">
           <i antIcon type="plus-circle" theme="outline"></i>
@@ -19,9 +19,9 @@
     </app-card>
   </div>
   <div class="col-xl-4 col-md-6">
-    <app-card cardTitle="Traffic Sources">
+    <app-card [cardTitle]="'Traffic Sources' | translate">
       <ng-template #headerTitleTemplate>
-        <div class="text-sm text-muted">You’re getting more and more sources, keep it up!</div>
+        <div class="text-sm text-muted">{{ 'You’re getting more and more sources, keep it up!' | translate }}</div>
       </ng-template>
       @for (traffic of TrafficSources; track traffic; let i = $last) {
         <div [ngClass]="{ 'mb-4': !i }">
@@ -40,9 +40,9 @@
     </app-card>
   </div>
   <div class="col-xl-4 col-md-6">
-    <app-card cardTitle="Team Members" cardClass="user-activity-card">
+    <app-card [cardTitle]="'Team Members' | translate" cardClass="user-activity-card">
       <ng-template #headerOptionsTemplate>
-        <a href="javascript:" class="link-primary">View all</a>
+        <a href="javascript:" class="link-primary">{{ 'View all' | translate }}</a>
       </ng-template>
       @for (task of team_members; track task; let i = $last) {
         <div class="row align-items-center" [ngClass]="{ 'mb-4': !i }">
@@ -66,9 +66,9 @@
   </div>
 
   <div class="col-xl-6 col-md-12">
-    <app-card cardTitle="Latest Updates" cardClass="latest-update-card">
+    <app-card [cardTitle]="'Latest Updates' | translate" cardClass="latest-update-card">
       <ng-template #headerOptionsTemplate>
-        <a href="javascript:" class="link-primary">View all</a>
+        <a href="javascript:" class="link-primary">{{ 'View all' | translate }}</a>
       </ng-template>
       <div class="latest-update-box">
         @for (message of latestMessages; track message; let i = $last, f = $first) {
@@ -91,9 +91,9 @@
     </app-card>
   </div>
   <div class="col-xl-6 col-md-12">
-    <app-card cardTitle="User Activity" cardClass="user-activity-card">
+    <app-card [cardTitle]="'User Activity' | translate" cardClass="user-activity-card">
       <ng-template #headerOptionsTemplate>
-        <a href="javascript:" class="link-primary">View all</a>
+        <a href="javascript:" class="link-primary">{{ 'View all' | translate }}</a>
       </ng-template>
       @for (user of userActivity; track user; let last = $last) {
         <div class="row" [ngClass]="{ 'mb-4': !last }">
@@ -111,9 +111,9 @@
               </p>
             </div>
             <a>
-              <h6 class="mb-0">John Deo</h6>
+              <h6 class="mb-0">{{ 'John Deo' | translate }}</h6>
             </a>
-            <p class="text-muted text-sm mb-0">Lorem Ipsum is simply dummy text.</p>
+            <p class="text-muted text-sm mb-0">{{ 'Lorem Ipsum is simply dummy text.' | translate }}</p>
           </div>
         </div>
       }
@@ -121,18 +121,18 @@
   </div>
 
   <div class="col-xl-6 col-md-12">
-    <app-card cardTitle="Projects" cardClass="table-card" blockClass="p-0">
+    <app-card [cardTitle]="'Projects' | translate" cardClass="table-card" blockClass="p-0">
       <ng-template #headerOptionsTemplate>
-        <a href="javascript:" class="link-primary">View all</a>
+        <a href="javascript:" class="link-primary">{{ 'View all' | translate }}</a>
       </ng-template>
       <div class="table-responsive">
         <table class="table table-hover mb-0">
           <thead>
             <tr>
-              <th>ASSIGNED</th>
-              <th>NAME</th>
-              <th>DUE DATE</th>
-              <th class="text-end">PRIORITY</th>
+              <th>{{ 'ASSIGNED' | translate }}</th>
+              <th>{{ 'NAME' | translate }}</th>
+              <th>{{ 'DUE DATE' | translate }}</th>
+              <th class="text-end">{{ 'PRIORITY' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -160,18 +160,18 @@
     </app-card>
   </div>
   <div class="col-xl-6 col-md-12">
-    <app-card cardTitle="Product Sales" blockClass="p-0">
+    <app-card [cardTitle]="'Product Sales' | translate" blockClass="p-0">
       <div class="d-flex align-items-center justify-content-around p-20">
         <div class="d-flex align-items-center flex-column">
-          <span class="text-muted text-sm">Earning</span>
+          <span class="text-muted text-sm">{{ 'Earning' | translate }}</span>
           <h4 class="mt-2 f-w-600">20,569$</h4>
         </div>
         <div class="d-flex align-items-center flex-column">
-          <span class="text-muted text-sm">Yesterday</span>
+          <span class="text-muted text-sm">{{ 'Yesterday' | translate }}</span>
           <h4 class="mt-2 f-w-600">580$</h4>
         </div>
         <div class="d-flex align-items-center flex-column">
-          <span class="text-muted text-sm">This Week</span>
+          <span class="text-muted text-sm">{{ 'This Week' | translate }}</span>
           <h4 class="mt-2 f-w-600">5,789$</h4>
         </div>
       </div>
@@ -180,9 +180,9 @@
           <table class="table table-hover mb-0">
             <thead>
               <tr>
-                <th>LAST SALES</th>
-                <th>PRODUCT NAME</th>
-                <th class="text-end">PRICE</th>
+                <th>{{ 'LAST SALES' | translate }}</th>
+                <th>{{ 'PRODUCT NAME' | translate }}</th>
+                <th class="text-end">{{ 'PRICE' | translate }}</th>
               </tr>
             </thead>
             <tbody>
@@ -204,9 +204,9 @@
     </app-card>
   </div>
   <div class="col-xl-4 col-md-12">
-    <app-card cardTitle="Tasks" cardClass="task-card" blockClass="position-relative">
+    <app-card [cardTitle]="'Tasks' | translate" cardClass="task-card" blockClass="position-relative">
       <ng-template #headerOptionsTemplate>
-        <a href="javascript:" class="link-primary">View all</a>
+        <a href="javascript:" class="link-primary">{{ 'View all' | translate }}</a>
       </ng-template>
       <ul class="list-unstyled task-list">
         @for (task of TasksCard; track $index; let last = $last) {
@@ -226,18 +226,18 @@
     </app-card>
   </div>
   <div class="col-xl-8 col-md-12">
-    <app-card cardTitle="Application Sales" cardClass="table-card" blockClass="p-0">
+    <app-card [cardTitle]="'Application Sales' | translate" cardClass="table-card" blockClass="p-0">
       <ng-template #headerOptionsTemplate>
-        <a href="javascript:" class="link-primary">View all</a>
+        <a href="javascript:" class="link-primary">{{ 'View all' | translate }}</a>
       </ng-template>
       <div class="table-responsive">
         <table class="table table-hover mb-0">
           <thead>
             <tr>
-              <th>APPLICATION</th>
-              <th class="text-end">SALES</th>
-              <th class="text-end">AVG. PRICE</th>
-              <th class="text-end">TOTAL</th>
+              <th>{{ 'APPLICATION' | translate }}</th>
+              <th class="text-end">{{ 'SALES' | translate }}</th>
+              <th class="text-end">{{ 'AVG. PRICE' | translate }}</th>
+              <th class="text-end">{{ 'TOTAL' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -261,9 +261,9 @@
   </div>
 
   <div class="col-xl-8 col-md-12">
-    <app-card cardTitle="Active Tickets" cardClass="table-card" blockClass="p-0">
+    <app-card [cardTitle]="'Active Tickets' | translate" cardClass="table-card" blockClass="p-0">
       <ng-template #headerOptionsTemplate>
-        <a href="javascript:" class="link-primary">View all</a>
+        <a href="javascript:" class="link-primary">{{ 'View all' | translate }}</a>
       </ng-template>
       <div class="table-responsive">
         <table class="table table-hover mb-0">
@@ -271,11 +271,11 @@
             <tr>
               <th>
                 <div class="form-check">
-                  <label class="form-check-label">DUE</label>
+                  <label class="form-check-label">{{ 'DUE' | translate }}</label>
                 </div>
               </th>
-              <th>NAME</th>
-              <th>POSITION</th>
+              <th>{{ 'NAME' | translate }}</th>
+              <th>{{ 'POSITION' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -285,7 +285,7 @@
                   <div class="form-check">
                     <label class="form-check-label">
                       <h6 class="mb-0 text-center">{{ ticket.time }}</h6>
-                      <div class="text-muted text-sm f-w-500">hours</div>
+                      <div class="text-muted text-sm f-w-500">{{ 'hours' | translate }}</div>
                     </label>
                   </div>
                 </td>
@@ -309,9 +309,9 @@
     </app-card>
   </div>
   <div class="col-xl-4 col-md-12">
-    <app-card cardTitle="Latest Posts" cardClass="latest-posts-card">
+    <app-card [cardTitle]="'Latest Posts' | translate" cardClass="latest-posts-card">
       <ng-template #headerOptionsTemplate>
-        <a href="javascript:" class="link-primary">View all</a>
+        <a href="javascript:" class="link-primary">{{ 'View all' | translate }}</a>
       </ng-template>
       @for (post of latestPost; track post) {
         <div class="row m-b-30">
@@ -321,9 +321,9 @@
           <div class="col d-flex align-items-center">
             <div>
               <a href="javascript:">
-                <h6 class="mb-0">Up unpacked friendly</h6>
+                <h6 class="mb-0">{{ 'Up unpacked friendly' | translate }}</h6>
               </a>
-              <p class="text-muted text-sm">Video | 14 minutes ago</p>
+              <p class="text-muted text-sm">{{ 'Video | 14 minutes ago' | translate }}</p>
             </div>
           </div>
         </div>
@@ -331,7 +331,7 @@
       <div class="row">
         <div class="col-auto p-r-0">
           <iframe
-            title="Latest Posts Video"
+            [title]="'Latest Posts Video' | translate"
             class="embed-responsive-item latest-posts-img rounded"
             src="//www.youtube.com/embed/b0fI60sBMV0"
           ></iframe>
@@ -339,9 +339,9 @@
         <div class="col d-flex align-items-center">
           <div>
             <a href="javascript:">
-              <h6 class="mb-0">Up unpacked friendly</h6>
+              <h6 class="mb-0">{{ 'Up unpacked friendly' | translate }}</h6>
             </a>
-            <p class="text-muted">tutorials | 14 minutes ago</p>
+            <p class="text-muted">{{ 'tutorials | 14 minutes ago' | translate }}</p>
           </div>
         </div>
       </div>
@@ -387,9 +387,9 @@
   </div>
 
   <div class="col-xl-4 col-md-12">
-    <app-card cardTitle="Feeds" cardClass="feed-card">
+    <app-card [cardTitle]="'Feeds' | translate" cardClass="feed-card">
       <ng-template #headerOptionsTemplate>
-        <a href="javascript:" class="link-primary">View all</a>
+        <a href="javascript:" class="link-primary">{{ 'View all' | translate }}</a>
       </ng-template>
       @for (card of FeedsCard; track card; let last = $last) {
         <div class="row align-items-center" [ngClass]="{ 'mb-4': !last }">
@@ -411,9 +411,9 @@
     </app-card>
   </div>
   <div class="col-xl-8 col-md-12">
-    <app-card cardTitle="Latest Customers" cardClass="table-card" blockClass="p-0">
+    <app-card [cardTitle]="'Latest Customers' | translate" cardClass="table-card" blockClass="p-0">
       <ng-template #headerOptionsTemplate>
-        <a href="javascript:" class="link-primary">View all</a>
+        <a href="javascript:" class="link-primary">{{ 'View all' | translate }}</a>
       </ng-template>
       <app-scrollbar [customStyle]="'305px'">
         <div class="table-responsive">
@@ -421,9 +421,9 @@
             <thead>
               <tr>
                 <th>#</th>
-                <th>COUNTRY</th>
-                <th>NAME</th>
-                <th class="text-end">AVERAGE</th>
+                <th>{{ 'COUNTRY' | translate }}</th>
+                <th>{{ 'NAME' | translate }}</th>
+                <th class="text-end">{{ 'AVERAGE' | translate }}</th>
               </tr>
             </thead>
             <tbody>
@@ -445,22 +445,22 @@
   </div>
 
   <div class="col-md-12">
-    <app-card cardTitle="Latest Order" cardClass="table-card latest-order" blockClass="p-0">
+    <app-card [cardTitle]="'Latest Order' | translate" cardClass="table-card latest-order" blockClass="p-0">
       <ng-template #headerOptionsTemplate>
-        <a href="javascript:" class="link-primary">View all</a>
+        <a href="javascript:" class="link-primary">{{ 'View all' | translate }}</a>
       </ng-template>
       <div class="table-responsive">
         <table class="table table-hover mb-0">
           <thead>
             <tr>
-              <th>CUSTOMER</th>
-              <th>ORDER ID</th>
-              <th>PHOTO</th>
-              <th>PRODUCT</th>
-              <th class="text-end">TOTAL</th>
-              <th class="text-center">DATE</th>
-              <th>STATUS</th>
-              <th class="text-center">ACTION</th>
+              <th>{{ 'CUSTOMER' | translate }}</th>
+              <th>{{ 'ORDER ID' | translate }}</th>
+              <th>{{ 'PHOTO' | translate }}</th>
+              <th>{{ 'PRODUCT' | translate }}</th>
+              <th class="text-end">{{ 'TOTAL' | translate }}</th>
+              <th class="text-center">{{ 'DATE' | translate }}</th>
+              <th>{{ 'STATUS' | translate }}</th>
+              <th class="text-center">{{ 'ACTION' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -494,9 +494,9 @@
   </div>
 
   <div class="col-xl-4 col-md-6">
-    <app-card cardTitle="Incoming Requests" cardClass="income-request" blockClass="p-0">
+    <app-card [cardTitle]="'Incoming Requests' | translate" cardClass="income-request" blockClass="p-0">
       <ng-template #headerOptionsTemplate>
-        <a href="javascript:" class="link-primary">View all</a>
+        <a href="javascript:" class="link-primary">{{ 'View all' | translate }}</a>
       </ng-template>
       <app-scrollbar [customStyle]="'328px'">
         @for (task of incomingList; track task) {
@@ -516,9 +516,9 @@
     </app-card>
   </div>
   <div class="col-xl-4 col-md-6">
-    <app-card cardTitle="Total Revenue" blockClass="p-0" cardClass="revenue-list">
+    <app-card [cardTitle]="'Total Revenue' | translate" blockClass="p-0" cardClass="revenue-list">
       <ng-template #headerOptionsTemplate>
-        <a href="javascript:" class="link-primary">View all</a>
+        <a href="javascript:" class="link-primary">{{ 'View all' | translate }}</a>
       </ng-template>
       <app-scrollbar [customStyle]="'328px'">
         @for (revenue of totalRevenue; track revenue) {
@@ -543,9 +543,9 @@
     </app-card>
   </div>
   <div class="col-xl-4 col-md-12">
-    <app-card cardTitle="New Customers" cardClass="new-customer-card" blockClass="p-0">
+    <app-card [cardTitle]="'New Customers' | translate" cardClass="new-customer-card" blockClass="p-0">
       <ng-template #headerOptionsTemplate>
-        <a href="javascript:" class="link-primary">View all</a>
+        <a href="javascript:" class="link-primary">{{ 'View all' | translate }}</a>
       </ng-template>
       <app-scrollbar [customStyle]="'328px'">
         <div class="p-20">
@@ -573,18 +573,18 @@
     </app-card>
   </div>
   <div class="col-xl-8 col-md-12">
-    <app-card cardTitle="Recent Tickets" blockClass="p-0" cardClass="table-card ticket-table">
+    <app-card [cardTitle]="'Recent Tickets' | translate" blockClass="p-0" cardClass="table-card ticket-table">
       <ng-template #headerOptionsTemplate>
-        <a href="javascript:" class="link-primary">View all</a>
+        <a href="javascript:" class="link-primary">{{ 'View all' | translate }}</a>
       </ng-template>
       <div class="table-responsive">
         <table class="table table-hover mb-0">
           <thead>
             <tr>
-              <th>SUBJECT</th>
-              <th>DEPARTMENT</th>
-              <th>DATE</th>
-              <th class="text-end">STATUS</th>
+              <th>{{ 'SUBJECT' | translate }}</th>
+              <th>{{ 'DEPARTMENT' | translate }}</th>
+              <th>{{ 'DATE' | translate }}</th>
+              <th class="text-end">{{ 'STATUS' | translate }}</th>
             </tr>
           </thead>
           <tbody>

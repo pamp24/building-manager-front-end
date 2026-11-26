@@ -1,29 +1,28 @@
 <div class="card h-100">
   <div class="card-body">
-
-    <h6 class="mb-2 f-w-400 text-muted">
-      Υπόλοιπο Εκδοτέου Λογαριασμού ({{month || '-'}})
-    </h6>
+    <h6 class="mb-2 f-w-400 text-muted">{{ 'Outstanding Account Balance (' | translate }}{{ month || '-' }})</h6>
 
     <h4 class="mb-0 d-flex align-items-center gap-2">
+      {{ debt | number: '1.2-2' }} €
 
-      {{ debt | number:'1.2-2' }} €
-
-      <span class="badge" [ngClass]="badgeClass">
+      <span *ngIf="hasHistory" class="badge" [ngClass]="badgeClass">
         <i antIcon [type]="badgeIcon" theme="outline"></i>
-        {{ differencePercent | number:'1.1-1' }}%
+        {{ differencePercent | number: '1.1-1' }}%
       </span>
-
     </h4>
   </div>
 
   <div id="chart">
     <apx-chart
+      *ngIf="hasHistory"
       [series]="chartOptions.series"
       [chart]="chartOptions.chart"
       [plotOptions]="chartOptions.plotOptions"
       [colors]="chartOptions.colors"
       [tooltip]="chartOptions.tooltip"
     ></apx-chart>
+    <div *ngIf="!hasHistory" class="dashboard-empty-state" style="--empty-state-height: 100px">
+      {{ loadError ? ('The data could not be loaded.' | translate) : ('No account data.' | translate) }}
+    </div>
   </div>
 </div>

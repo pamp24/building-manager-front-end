@@ -1,13 +1,13 @@
 <div class="card">
   <div class="card-body">
     <div class="d-flex align-items-center justify-content-between">
-      <h5 class="mb-0">Ποσοστό Είσπραξης Κοινοχρήστων</h5>
+      <h5 class="mb-0">{{ 'Common User Collection Rate' | translate }}</h5>
 
       <select class="form-select rounded-3 form-select-sm w-auto" [(ngModel)]="selectedPeriod" (change)="onPeriodChange()">
-        <option value="month">Μηνιαία</option>
-        <option value="quarter">Τριμηνιαία</option>
-        <option value="halfyear">Εξαμηνιαία</option>
-        <option value="year">Ετήσια</option>
+        <option value="month">{{ 'Monthly' | translate }}</option>
+        <option value="quarter">{{ 'Quarterly' | translate }}</option>
+        <option value="halfyear">{{ 'Semi-annually' | translate }}</option>
+        <option value="year">{{ 'Annually' | translate }}</option>
       </select>
     </div>
 
@@ -22,28 +22,29 @@
       ></apx-chart>
     </div>
 
+    <div *ngIf="!issuedAmount" class="text-center text-muted pb-3">{{ 'There is no user data for the selected period.' | translate }}</div>
     <div class="text-center">
       <span class="badge bg-light-primary rounded-pill f-12 py-2 px-3">{{ collectionRate }}%</span>
-      <p class="text-muted mb-1">Ποσοστό των εκδοθέντων κοινοχρήστων που έχουν πληρωθεί</p>
+      <p class="text-muted mb-1">{{ 'Percentage of issued shares that have been paid' | translate }}</p>
 
       <div class="row">
         <div class="col-4">
           <div class="text-center d-inline-block px-md-3">
-            <p class="mb-1 text-muted">Εκδοθέντα</p>
+            <p class="mb-1 text-muted">{{ 'Issued' | translate }}</p>
             <h5 class="mb-0">{{ formatCurrency(issuedAmount) }}</h5>
           </div>
         </div>
 
         <div class="col-4">
           <div class="text-center d-inline-block px-md-3">
-            <p class="mb-1 text-muted">Πληρωμένα</p>
+            <p class="mb-1 text-muted">{{ 'Paid' | translate }}</p>
             <h5 class="mb-0 text-success">{{ formatCurrency(paidAmount) }}</h5>
           </div>
         </div>
 
         <div class="col-4">
           <div class="text-center d-inline-block px-md-3">
-            <p class="mb-1 text-muted">Ληξιπρόθεσμα</p>
+            <p class="mb-1 text-muted">{{ 'Overdue' | translate }}</p>
             <h5 class="mb-0 text-danger">{{ formatCurrency(overdueAmount) }}</h5>
           </div>
         </div>

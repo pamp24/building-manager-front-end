@@ -1,6 +1,6 @@
 @if (loading) {
   <div class="card">
-    <div class="card-body">Φόρτωση dashboard...</div>
+    <div class="card-body">{{ 'Loading dashboard...' | translate }}</div>
   </div>
 }
 
@@ -14,7 +14,7 @@
   <div class="col-xl col-md-6">
     <div class="card summary-card h-100">
       <div class="card-body">
-        <div class="summary-label">Συνολικά Tickets</div>
+        <div class="summary-label">{{ 'Total Tickets' | translate }}</div>
         <div class="summary-value">{{ summary.total }}</div>
       </div>
     </div>
@@ -23,7 +23,7 @@
   <div class="col-xl col-md-6">
     <div class="card summary-card h-100">
       <div class="card-body">
-        <div class="summary-label">Ανοιχτά</div>
+        <div class="summary-label">{{ 'Open' | translate }}</div>
         <div class="summary-value text-primary">{{ summary.open }}</div>
       </div>
     </div>
@@ -32,7 +32,7 @@
   <div class="col-xl col-md-6">
     <div class="card summary-card h-100">
       <div class="card-body">
-        <div class="summary-label">Σε Διαχείριση</div>
+        <div class="summary-label">{{ 'In Management' | translate }}</div>
         <div class="summary-value text-warning">{{ summary.active }}</div>
       </div>
     </div>
@@ -41,7 +41,7 @@
   <div class="col-xl col-md-6">
     <div class="card summary-card h-100">
       <div class="card-body">
-        <div class="summary-label">Ολοκληρωμένα</div>
+        <div class="summary-label">{{ 'Completed' | translate }}</div>
         <div class="summary-value text-success">{{ summary.completed }}</div>
       </div>
     </div>
@@ -60,29 +60,28 @@
 </div>
 
 <div class="row g-3">
-
   <!-- TicketActionTableComponent -->
   <div class="col-xl-12">
-  <app-ticket-action-table
-    [tickets]="actionTickets"
-    title="Αιτήματα που χρειάζονται ενέργεια"
-    emptyMessage="Δεν υπάρχουν tickets που χρειάζονται άμεση ενέργεια."
-    detailsRoute="/helpdesk/ticket/details"
-    [showAgentColumn]="isPmOrAdmin()"
-  />
-</div>
+    <app-ticket-action-table
+      [tickets]="actionTickets"
+      [title]="'Requests that need energy' | translate"
+      [emptyMessage]="'There are no tickets that require immediate action.' | translate"
+      detailsRoute="/helpdesk/ticket/details"
+      [showAgentColumn]="isPmOrAdmin()"
+    />
+  </div>
 
   <!-- TicketRecentActivityTableComponent -->
   <div [class]="isPmOrAdmin() ? 'col-xl-7' : 'col-xl-12'">
-  <app-ticket-recent-activity-table
-    [tickets]="latestTickets"
-    title="Πρόσφατες κινήσεις"
-    emptyMessage="Δεν υπάρχουν πρόσφατες κινήσεις."
-    detailsRoute="/helpdesk/ticket/details"
-  />
-</div>
+    <app-ticket-recent-activity-table
+      [tickets]="latestTickets"
+      [title]="'Recent movements' | translate"
+      [emptyMessage]="'There are no recent movements.' | translate"
+      detailsRoute="/helpdesk/ticket/details"
+    />
+  </div>
 
-<!-- AgentWorkloadTableComponent -->
+  <!-- AgentWorkloadTableComponent -->
   <!-- @if (isPmOrAdmin()) {
     <div class="col-xl-5">
       <app-agent-workload-table
@@ -92,5 +91,4 @@
       />
     </div>
   } -->
-
 </div>

@@ -1,3 +1,4 @@
+import { UiLocaleService } from 'src/app/theme/shared/service/ui-locale.service';
 // angular import
 import { Component, OnInit, effect, inject } from '@angular/core';
 
@@ -15,6 +16,8 @@ import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
   styleUrl: './cash-flow-chart.component.scss'
 })
 export class CashFlowChartComponent implements OnInit {
+  private readonly uiLocale = inject(UiLocaleService);
+
   private themeService = inject(ThemeService);
 
   // public props
@@ -77,11 +80,11 @@ export class CashFlowChartComponent implements OnInit {
       colors: ['#1677ff', '#1677ff66'],
       series: [
         {
-          name: 'Income',
+          name: this.uiLocale.text('Income'),
           data: [180, 90, 135, 114, 120, 145, 180, 90]
         },
         {
-          name: 'Expends',
+          name: this.uiLocale.text('Expends'),
           data: [120, 45, 78, 150, 168, 99, 120, 45]
         }
       ],
@@ -160,11 +163,11 @@ export class CashFlowChartComponent implements OnInit {
       case 'today':
         this.chartOptions.series = [
           {
-            name: 'Income',
+            name: this.uiLocale.text('Income'),
             data: [90, 135, 114, 120, 145, 180, 180, 90, 145, 180, 90, 135]
           },
           {
-            name: 'Expends',
+            name: this.uiLocale.text('Expends'),
             data: [150, 168, 99, 120, 45, 78, 150, 168, 78, 150, 168, 99]
           }
         ];
@@ -172,11 +175,11 @@ export class CashFlowChartComponent implements OnInit {
       case 'week':
         this.chartOptions.series = [
           {
-            name: 'Income',
+            name: this.uiLocale.text('Income'),
             data: [145, 180, 90, 114, 120, 145, 114, 120, 145, 114, 120, 145]
           },
           {
-            name: 'Expends',
+            name: this.uiLocale.text('Expends'),
             data: [150, 168, 99, 150, 120, 45, 78, 45, 78, 150, 168, 99]
           }
         ];
@@ -184,11 +187,11 @@ export class CashFlowChartComponent implements OnInit {
       case 'month':
         this.chartOptions.series = [
           {
-            name: 'Income',
+            name: this.uiLocale.text('Income'),
             data: [180, 90, 135, 114, 120, 145, 180, 90, 135, 114, 120, 145]
           },
           {
-            name: 'Expends',
+            name: this.uiLocale.text('Expends'),
             data: [120, 45, 78, 150, 168, 99, 120, 45, 78, 150, 168, 99]
           }
         ];
